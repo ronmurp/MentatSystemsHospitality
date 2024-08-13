@@ -17,6 +17,23 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
     public Config? GetConfig(string configType) => 
         configDbContext.Configs.FirstOrDefault(a => a.ConfigType == configType);
 
+    public T GetConfigContent<T>(string configType)
+    {
+        var config = GetConfig(configType);
+        if (config == null)
+        {
+            throw new NullConfigException($"Missing Config Type {configType}");
+        }
+
+        var obj = JsonSerializer.Deserialize<T>(config.Content);
+        if (obj == null)
+        {
+            throw new NullConfigException($"Missing Config Type Content {configType}");
+        }
+
+        return obj;
+    }
+
     /// <summary>
     /// Save the current type = must exist. NullConfigException = thrown if not.
     /// </summary>

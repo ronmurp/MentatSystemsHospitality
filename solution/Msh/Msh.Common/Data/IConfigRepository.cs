@@ -14,6 +14,8 @@ public interface IConfigRepository
     /// <returns>Null if not found</returns>
     Config? GetConfig(string configType);
 
+    T GetConfigContent<T>(string configType);
+
     /// <summary>
     /// Used by Admin to save the configuration, including Notes
     /// </summary>
