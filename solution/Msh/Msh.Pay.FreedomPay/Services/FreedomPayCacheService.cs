@@ -15,6 +15,9 @@ public class FreedomPayCacheService(IMemoryCache memoryCache, IConfigRepository 
     : DataCacheService(memoryCache, configRepository), IFreedomPayCacheService
 {
 
+    public async Task<FpConfig> GetFpConfig() => 
+        await base.GetData<FpConfig>(ConstFp.FpConfig);
+
     /// <summary>
     /// Get the bank of common error messages
     /// </summary>
@@ -47,6 +50,12 @@ public class FreedomPayCacheService(IMemoryCache memoryCache, IConfigRepository 
         return errorCodes;
     }
 
+    public async Task<List<PaymentTypeItem>> GetPaymentTypes() => await base.GetData<List<PaymentTypeItem>>(ConstFp.FpPaymentType);
+
+    public async Task<List<KmapConfig>> GetFpKmaps() => 
+        await base.GetData<List<KmapConfig>>(ConstFp.FpKmapConfig);
+
+    public void ReloadConfig() => base.Reload(ConstFp.FpConfig);
 
     /// <summary>
     /// Clear the bank, so the cache is reloaded when next used
@@ -57,4 +66,8 @@ public class FreedomPayCacheService(IMemoryCache memoryCache, IConfigRepository 
     /// Clear the error codes cache, so the cache is reloaded when next used
     /// </summary>
     public void ReloadErrorCodes() => base.Reload(ConstFp.FpErrorCode);
+
+    public void ReloadPaymentTypes() => base.Reload(ConstFp.FpPaymentType);
+
+    public void ReloadFpKmaps() => base.Reload(ConstFp.FpKmapConfig);
 }
