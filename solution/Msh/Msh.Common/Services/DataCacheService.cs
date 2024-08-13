@@ -7,7 +7,7 @@ namespace Msh.Common.Services;
 /// A MemoryCache service with ConfigDbContext source data
 /// </summary>
 /// <param name="memoryCache"></param>
-public abstract class DataCacheService(IMemoryCache memoryCache, IConfigRepository configRepository) : IDataCacheService
+public abstract class DataCacheService(IMemoryCache memoryCache, IConfigRepository configRepository)
 {
 
     public async Task<T> GetData<T>(string cacheName, bool loadRaw = false)
