@@ -11,6 +11,7 @@ public class Config
     /// A name given to the config record - typically the data type or class name.
     /// </summary>
     [Key]
+    [MaxLength(100)]
     public string ConfigType { get; set; } = string.Empty;
 
     /// <summary>
