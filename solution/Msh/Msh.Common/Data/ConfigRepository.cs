@@ -7,27 +7,30 @@ namespace Msh.Common.Data;
 /// <summary>
 /// A repository for Config models
 /// </summary>
-public class ConfigRepository : IConfigRepository
+public class ConfigRepository(ConfigDbContext configDbContext) : IConfigRepository
 {
-    private readonly ConfigDbContext _configDbContext;
+    /// <summary>
+    /// Get a config record by ConfigType key
+    /// </summary>
+    /// <param name="configType"></param>
+    /// <returns>Null if not found</returns>
+    public Config? GetConfig(string configType) => 
+        configDbContext.Configs.FirstOrDefault(a => a.ConfigType == configType);
 
-    public ConfigRepository(ConfigDbContext configDbContext)
-    {
-        _configDbContext = configDbContext;
-    }
-
-    public Config? GetConfig(string configType)
-    {
-        return _configDbContext.Configs.FirstOrDefault(a => a.ConfigType == configType) ?? new Config();
-    }
-
+    /// <summary>
+    /// Save the current type = must exist. NullConfigException = thrown if not.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="configType"></param>
+    /// <param name="value"></param>
+    /// <exception cref="NullConfigException"></exception>
     public void SaveConfig<T>(string configType, T value)
     {
         var json = JsonSerializer.Serialize(value);
         var config = GetConfig(configType);
         if (config == null)
         {
-            throw new NullConfigException($"Config type not found: {configType}");
+            throw new NullConfigException($"Save: Config type not found: {configType}");
         }
         config.Content = json;
         SaveConfig(config);
@@ -39,9 +42,10 @@ public class ConfigRepository : IConfigRepository
     /// <param name="config"></param>
     public void SaveConfig(Config config)
     {
-        _configDbContext.Configs.Update(config);
-        _configDbContext.SaveChanges();
+        configDbContext.Configs.Update(config);
+        configDbContext.SaveChanges();
     }
+
 
     /// <summary>
     /// Used by Admin to create a new config
@@ -49,7 +53,24 @@ public class ConfigRepository : IConfigRepository
     /// <param name="config"></param>
     public void AddConfig(Config config)
     {
-        _configDbContext.Configs.Add(config);
-        _configDbContext.SaveChanges();
+        configDbContext.Configs.Add(config);
+        configDbContext.SaveChanges();
+    }
+
+    /// <summary>
+    /// Should be used only in admin and tests
+    /// </summary>
+    /// <param name="configType"></param>
+    /// <exception cref="NullConfigException"></exception>
+    public void RemoveConfig(string configType)
+    {
+        var config = configDbContext.Configs.FirstOrDefault(c => c.ConfigType == configType);
+        if (config == null)
+        {
+            throw new NullConfigException($"Remove: Config type not found: {configType}");
+        }
+
+        configDbContext.Configs.Remove(config);
+        configDbContext.SaveChanges();
     }
 }

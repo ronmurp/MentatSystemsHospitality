@@ -1,24 +1,51 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Msh.Common.Models.Configuration;
 
 namespace Msh.Common.Data;
 
+/// <summary>
+/// This context is only for configuration data
+/// </summary>
 public class ConfigDbContext : DbContext
 {
-    private readonly string _connectionString;
-    public ConfigDbContext(IConfiguration configuration)
+ 
+    private readonly string? _connectionString;
+
+    public ConfigDbContext(DbContextOptions<ConfigDbContext> options)
+        : base(options)
     {
-        var connectionString = configuration["Modules:Users:Database"];
-
-        _connectionString =
-            @"Server=RONMURP4\SqlExpress;Database=Msh1;User Id=ron;Password=Sooty@1234;TrustServerCertificate=true;";
+        
     }
-    public DbSet<Config> Configs { get; set; }
 
+    /// <summary>
+    /// Used for testing
+    /// </summary>
+    /// <param name="connectionString"></param>
+    public ConfigDbContext(string connectionString)
+    {
+        _connectionString = connectionString;
+    }
+
+    /// <summary>
+    /// Default OnConfiguring unless connection string is passed during testing
+    /// </summary>
+    /// <param name="optionsBuilder"></param>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(_connectionString)
-            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        if (string.IsNullOrEmpty(_connectionString))
+        {
+            base.OnConfiguring(optionsBuilder);
+            return;
+        }
+        
+        optionsBuilder.UseSqlServer(_connectionString);
+
     }
+    
+
+    /// <summary>
+    /// Common configs location, where Content is json for specific config classes
+    /// </summary>
+    public DbSet<Config> Configs { get; set; }
+
 }
