@@ -5,7 +5,7 @@ namespace Msh.Pay.CoinCorner.Models;
 /// <summary>
 /// All must be lower-case.
 /// </summary>
-public class CoinCornerConfig() : ConfigBase("CoinCornerConfig")
+public class CoinCornerConfig() : ConfigBase(ConstCc.CcConfig)
 {
     public string UserId { get; set; }
     public string PublicKey { get; set; }
