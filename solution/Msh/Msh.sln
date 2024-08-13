@@ -8,6 +8,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Msh.WebApp", "Msh.WebApp\Msh.WebApp.csproj", "{7A0D72F6-3DDB-4DDA-97BB-E34F797D78A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Msh.Pay.CoinCorner", "Msh.Pay.CoinCorner\Msh.Pay.CoinCorner.csproj", "{DF0F19DE-16C3-42A6-B89B-C66ADB29F3BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Msh.UnitTests", "Msh.UnitTests\Msh.UnitTests.csproj", "{BA384E8D-7DDD-4574-BCB4-9C3A94785086}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Msh.TestSupport", "Msh.TestSupport\Msh.TestSupport.csproj", "{F5B24538-4816-4DFA-9369-45FFD0ABD6CB}"
 EndProject
 Global
