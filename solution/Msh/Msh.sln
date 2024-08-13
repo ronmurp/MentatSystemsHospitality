@@ -1,4 +1,4 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35122.118
@@ -8,7 +8,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Msh.WebApp", "Msh.WebApp\Msh.WebApp.csproj", "{7A0D72F6-3DDB-4DDA-97BB-E34F797D78A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Msh.Pay.CoinCorner", "Msh.Pay.CoinCorner\Msh.Pay.CoinCorner.csproj", "{DF0F19DE-16C3-42A6-B89B-C66ADB29F3BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{9B1EE009-63E5-4898-8B51-32C0E51B9A75}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Msh.UnitTests", "Msh.UnitTests\Msh.UnitTests.csproj", "{BA384E8D-7DDD-4574-BCB4-9C3A94785086}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Msh.Imports", "Msh.Imports\Msh.Imports.csproj", "{FC3A050F-8049-4B01-88D1-0A7981164B4E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Msh.TestSupport", "Msh.TestSupport\Msh.TestSupport.csproj", "{F5B24538-4816-4DFA-9369-45FFD0ABD6CB}"
 EndProject
