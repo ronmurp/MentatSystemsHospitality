@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Msh.Common.Data;
 using Msh.Common.Startup;
 using Msh.WebApp.Data;
+using Msh.WebApp.Startup;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,10 +22,11 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddControllersWithViews();
 
 // Register our services
-builder.Services.RegisterCommonServices();
+builder.LoadServices();
 
 var app = builder.Build();
 

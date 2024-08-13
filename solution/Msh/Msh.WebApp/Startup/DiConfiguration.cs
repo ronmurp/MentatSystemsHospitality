@@ -1,4 +1,5 @@
 ﻿using Msh.Common.Startup;
+using Msh.HotelCache.Startup;
 using Msh.Pay.CoinCorner.Startup;
 using Msh.Pay.FreedomPay.Startup;
 
@@ -13,5 +14,6 @@ public static class DiConfiguration
         services.RegisterCommonServices();
         services.RegisterFpServices();
         services.RegisterCcServices();
+        services.RegisterHotelServices();
     }
 }
