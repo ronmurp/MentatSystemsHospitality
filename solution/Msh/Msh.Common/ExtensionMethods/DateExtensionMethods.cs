@@ -13,15 +13,34 @@ public static class DateExtensionMethods
 
     public static string DateString(this DateTime date) => $"{date:yyyy-MM-dd}";
 
+    /// <summary>
+    /// Return the last date in the year for the date submitted
+    /// </summary>
     public static DateTime YearEndDate(this DateTime date) => new DateTime(date.Year, 12, 31);
 
+    /// <summary>
+    /// Return the end of the month for the date submitted.
+    /// </summary>
     public static DateTime MonthEndDate(this DateTime date) => new DateTime(date.AddMonths(1).Year, date.AddMonths(1).Month, 1).AddDays(-1);
+    
+    /// <summary>
+    /// Is the submitted date the MinValue (set as a default)
+    /// </summary>
     public static bool IsMin(this DateTime dt) => dt.Equals(DateTime.MinValue);
 
+    /// <summary>
+    /// Is the submitted date the MaxValue (set as a default)
+    /// </summary>
     public static bool IsMax(this DateTime dt) => dt.Equals(DateTime.MaxValue);
 
+    /// <summary>
+    /// Is the submitted date the MinValue or the MaxValue
+    /// </summary>
     public static bool IsMinMax(this DateTime dt) => IsMin(dt) || IsMax(dt);
 
+    /// <summary>
+    /// Number of minutes 
+    /// </summary>
     public static int CalculatedMinutes(this object obj, string startHoursMinutes, string endHoursMinutes)
     {
         var today = DateTime.Now.Date;
@@ -34,6 +53,9 @@ public static class DateExtensionMethods
         return minutes;
     }
 
+    /// <summary>
+    /// Combine a time with a date
+    /// </summary>
     public static DateTime CombinedDateTime(this DateTime date, string timeHoursMinutes) =>
         DateTime.Parse($"{date:yyyy-MM-dd}T{timeHoursMinutes}");
 
