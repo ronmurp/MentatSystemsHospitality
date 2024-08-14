@@ -1,8 +1,8 @@
-﻿using Msh.Common.Models;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using Msh.Common.Models;
 using Msh.Common.Models.Dates;
 
-namespace Msh.HotelCache.Models;
+namespace Msh.HotelCache.Models.RatePlans;
 
 public class RoomRatePlan : BaseTexts
 {

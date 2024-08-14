@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Msh.HotelCache.Models;
+﻿namespace Msh.HotelCache.Models.Hotels;
 
 /// <summary>
 /// Data representing a single hotel

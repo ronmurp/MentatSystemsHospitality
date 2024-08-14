@@ -1,4 +1,5 @@
 ﻿using Msh.HotelCache.Models;
+using Msh.HotelCache.Models.Hotels;
 
 namespace Msh.HotelCache.ExtensionMethods;
 

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Msh.HotelCache.Models;
+namespace Msh.HotelCache.Models.RoomTypes;
 
 public class RoomTypeFilter
 {

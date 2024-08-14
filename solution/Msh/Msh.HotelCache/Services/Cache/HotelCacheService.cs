@@ -2,6 +2,7 @@
 using Msh.Common.Data;
 using Msh.Common.Services;
 using Msh.HotelCache.Models;
+using Msh.HotelCache.Models.Hotels;
 
 namespace Msh.HotelCache.Services.Cache;
 

@@ -1,4 +1,4 @@
-﻿namespace Msh.HotelCache.Models;
+﻿namespace Msh.HotelCache.Models.RoomTypes;
 
 public class HotelRoomTypesFilters
 {
