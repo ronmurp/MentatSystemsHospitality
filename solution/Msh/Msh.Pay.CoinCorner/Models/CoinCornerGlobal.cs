@@ -6,7 +6,7 @@ namespace Msh.Pay.CoinCorner.Models;
 /// Coin Corner Global Data - as opposed to Config.
 /// Global can be edited by admin, Config only by Super/Dev
 /// </summary>
-public class CoinCornerGlobal() : ConfigBase(ConstCc.CcGlobal)
+public class CoinCornerGlobal() : ConfigBase(ConstCc.CoinCornerGlobal)
 {
     /// <summary>
     /// Determined whether or not the Lightning option is enabled in the popup

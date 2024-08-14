@@ -13,11 +13,11 @@ namespace Msh.Pay.CoinCorner.Services;
 public class CoinCornerCacheService(IMemoryCache memoryCache, IConfigRepository configRepository)
     : DataCacheService(memoryCache, configRepository), ICoinCornerCacheService
 {
-    public async Task<CoinCornerConfig> GetCcConfig() => await base.GetData<CoinCornerConfig>(ConstCc.CcConfig);
+    public async Task<CoinCornerConfig> GetCcConfig() => await base.GetData<CoinCornerConfig>(ConstCc.CoinCornerConfig);
 
-    public async Task<CoinCornerGlobal> GetCcGlobal() => await base.GetData<CoinCornerGlobal>(ConstCc.CcGlobal);
+    public async Task<CoinCornerGlobal> GetCcGlobal() => await base.GetData<CoinCornerGlobal>(ConstCc.CoinCornerGlobal);
 
-    public void ReloadConfig() => base.Reload(ConstCc.CcConfig);
+    public void ReloadConfig() => base.Reload(ConstCc.CoinCornerConfig);
 
-    public void ReloadGlobal() => base.Reload(ConstCc.CcGlobal);
+    public void ReloadGlobal() => base.Reload(ConstCc.CoinCornerGlobal);
 }
