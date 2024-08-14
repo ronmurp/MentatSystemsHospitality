@@ -19,5 +19,4 @@ public partial class HotelCacheService(IMemoryCache memoryCache, IConfigReposito
 
     public void ReloadHotels() => base.Reload(ConstHotel.Cache.Hotel);
 
-    private string GetCacheName(string cacheName, string hotelCode) => $"{cacheName}-{hotelCode}";
 }

@@ -35,4 +35,12 @@ public abstract class DataCacheService(IMemoryCache memoryCache, IConfigReposito
     {
         memoryCache.Remove(cacheName);
     }
+
+    /// <summary>
+    /// Form the cache id from the cacheName + some code
+    /// </summary>
+    /// <param name="cacheName"></param>
+    /// <param name="code"></param>
+    /// <returns></returns>
+    protected string GetCacheName(string cacheName, string code) => $"{cacheName}-{code}";
 }
