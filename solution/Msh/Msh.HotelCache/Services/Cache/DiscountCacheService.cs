@@ -9,6 +9,12 @@ namespace Msh.HotelCache.Services.Cache;
 public partial class DiscountCacheService(IMemoryCache memoryCache, IConfigRepository configRepository)
     : DataCacheService(memoryCache, configRepository), IDiscountCacheService
 {
+
+    public async Task<DiscountCodesConfig> GetDiscountConfig() =>
+        await base.GetData<DiscountCodesConfig>(ConstHotel.Cache.DiscountConfig);
+
+    public void ReloadDiscountConfig() => base.Reload(ConstHotel.Cache.DiscountConfig);
+
     public async Task<List<DiscountCode>> GetDiscountCodes(string groupCode) =>
         await base.GetData<List<DiscountCode>>(GetCacheName(ConstHotel.Cache.DiscountCodes, groupCode));
 
