@@ -1,5 +1,4 @@
-﻿using Msh.HotelCache.Models;
-using Msh.HotelCache.Models.RatePlans;
+﻿using Msh.HotelCache.Models.RatePlans;
 
 namespace Msh.HotelCache.Services.Cache;
 
