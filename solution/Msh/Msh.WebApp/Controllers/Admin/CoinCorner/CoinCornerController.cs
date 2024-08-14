@@ -2,7 +2,7 @@
 
 namespace Msh.WebApp.Controllers.Admin.CoinCorner;
 
-[Route("admin/coincorner")]
+[Route("admin/payments/coincorner")]
 public class CoinCornerController : Controller
 {
     private readonly ILogger<HomeController> _logger;
@@ -18,9 +18,9 @@ public class CoinCornerController : Controller
         return View("~/Views/Admin/CoinCorner/Index.cshtml");
     }
 
-    [Route("xxx")]
+    [Route("Config")]
     public IActionResult Xxx()
     {
-        return View("~/Views/Admin/CoinCorner/Xxx.cshtml");
+        return View("~/Views/Admin/CoinCorner/Config.cshtml");
     }
 }
