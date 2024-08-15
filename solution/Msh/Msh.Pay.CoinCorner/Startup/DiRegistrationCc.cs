@@ -8,5 +8,6 @@ public static class DiRegistrationCc
     public static void RegisterCcServices(this IServiceCollection services)
     {
         services.AddScoped<ICoinCornerCacheService, CoinCornerCacheService>();
+        services.AddScoped<ICoinCornerRepoService, CoinCornerRepoService>();
     }
 }
