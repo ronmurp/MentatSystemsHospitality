@@ -1,36 +1,119 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.Common.Models.Configuration
+@using Msh.Pay.CoinCorner.Models;
+@using Msh.WebApp.TagHelpers
+
+@model CoinCornerConfig;
+@{
     ViewData["Title"] = "Coin Corner Config";
 }
 
 <div class="text-center">
 	<h1 class="display-4">Coin Corner Config</h1>
 	<p></p>
-	
-
 </div>
+
 <div class="row">
-	<div class="col-12">
-		<div class="mb-3">
-			<label for="userId" class="form-label">UserId</label>
-			<input type="text" class="form-control" id="userId" placeholder="UserId">
-		</div>
-		<div class="mb-3">
-			<label for="publicKey" class="form-label">PublicKey</label>
-			<input type="text" class="form-control" id="publicKey" rows="3"/>
-		</div>
-		<div class="form-check form-switch mb-3">
-			<input type="checkbox" class="form-check-input" id="logEnabled" />
-			<label class="form-check-label" for="logEnabled">
-				Log Enabled
-			</label>
-		</div>
+	<div class="col-6">
+
+		<form asp-action="ConfigEdit">
+			<div class="form-group mb-3">
+				<label asp-for="UserId" class="control-label">User ID <info-icon name="info-user-id" /></label>
+				<input asp-for="UserId" class="form-control"/>
+				<span asp-validation-for="UserId" class="text-danger"></span>
+			</div>
+			<div class="form-group mb-3">
+				<label asp-for="PublicKey" class="control-label">Public Key <info-icon name="info-public-key" /></label>
+				<input asp-for="PublicKey" class="form-control"/>
+				<span asp-validation-for="PublicKey" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="Secret.SecretSource" class="control-label">Secret Source <span><i class="fa fa-info-circle"></i></span></label>
+				<select asp-for="Secret.SecretSource" class="form-control">
+					@foreach (var source in Enum.GetValues(typeof(ConfigSecretSource)))
+					{
+						<option value="@source">@source</option>
+					}
+				</select>
+				<span asp-validation-for="Secret.SecretSource" class="text-danger"></span>
+			</div>
+			<div class="form-group mb-3">
+				<label asp-for="Secret.Name" class="control-label">Secret Name <span><i class="fa fa-info-circle"></i></span></label>
+				<input asp-for="Secret.Name" class="form-control" />
+				<span asp-validation-for="Secret.Name" class="text-danger"></span>
+			</div>
+			<div class="form-group mb-3">
+				<label asp-for="Secret.Target" class="control-label">Secret Target <span><i class="fa fa-info-circle"></i></span></label>
+				<select asp-for="Secret.Target" class="form-control">
+					@foreach (var target in Enum.GetValues(typeof(EnvironmentVariableTarget)))
+					{
+						<option value="@target">@target</option>
+					}
+				</select>
+				<span asp-validation-for="Secret.Target" class="text-danger"></span>
+			</div>
+
+			
+			
+			<div class="form-group mb-3">
+				<label asp-for="Secret.Secret" class="control-label">Secret <span><i class="fa fa-info-circle"></i></span></label>
+				<input asp-for="Secret.Secret" class="form-control" />
+				<span asp-validation-for="Secret.Secret" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="CheckoutUrl" class="control-label">Checkout URL <span><i class="fa fa-info-circle"></i></span></label>
+				<input asp-for="CheckoutUrl" class="form-control" />
+				<span asp-validation-for="CheckoutUrl" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="SuccessRedirectUrl" class="control-label">Success Redirect URL <span><i class="fa fa-info-circle"></i></span></label>
+				<input asp-for="SuccessRedirectUrl" class="form-control" />
+				<span asp-validation-for="SuccessRedirectUrl" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="FailRedirectUrl" class="control-label">Failed Redirect URL</label>
+				<input asp-for="FailRedirectUrl" class="form-control" />
+				<span asp-validation-for="FailRedirectUrl" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="NotificationUrl" class="control-label">Notification Redirect URL</label>
+				<input asp-for="NotificationUrl" class="form-control" />
+				<span asp-validation-for="NotificationUrl" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="LogFilePath" class="control-label">Logfile Path <span><i class="fa fa-info-circle"></i></span></label>
+				<input asp-for="LogFilePath" class="form-control" />
+				<span asp-validation-for="LogFilePath" class="text-danger"></span>
+			</div>
+
+			
+			<div class="form-check form-switch mb-3">
+				<input asp-for="LogEnable" type="checkbox" class="form-check-input" />
+				<label asp-for="LogEnable" class="form-check-label">
+					Log Enabled <span><i class="fa fa-info-circle"></i></span>
+				</label>
+			</div>
+			
+			<div class="input-group">
+				<input type="submit" value="Save" class="btn btn-outline-primary" />
+				<input type="button" value="Cancel" class="btn btn-outline-secondary" />
+			</div>
+		</form>
+
 	</div>
 </div>
-<div class="row">
-	<div class="col-12">
-		<div class="input-group mb-3">
-			<button class="btn btn-outline-primary" type="button">Save</button>
-			<button class="btn btn-outline-secondary" type="button">Cancel</button>
+
+<div style="display:none;">
+	<div id="info-user-id">
+		<span>User ID</span>
+		<div>
+			<p>Info about the User ID</p>
 		</div>
 	</div>
 </div>
