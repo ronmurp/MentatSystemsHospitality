@@ -9,7 +9,7 @@
 }
 
 <div class="text-center">
-	<h1 class="display-4">Coin Corner Config</h1>
+	<h1 class="display-4">@ViewData["Title"]</h1>
 	<p></p>
 </div>
 
@@ -17,19 +17,21 @@
 	<div class="col-6">
 
 		<form asp-action="ConfigEdit">
+
 			<div class="form-group mb-3">
-				<label asp-for="UserId" class="control-label">User ID <info-icon name="info-user-id" /></label>
+				<label asp-for="UserId" class="control-label">User ID <info-icon name="info-user-id"/></label>
 				<input asp-for="UserId" class="form-control"/>
 				<span asp-validation-for="UserId" class="text-danger"></span>
 			</div>
+
 			<div class="form-group mb-3">
-				<label asp-for="PublicKey" class="control-label">Public Key <info-icon name="info-public-key" /></label>
+				<label asp-for="PublicKey" class="control-label">Public Key <info-icon name="info-public-key"/></label>
 				<input asp-for="PublicKey" class="form-control"/>
 				<span asp-validation-for="PublicKey" class="text-danger"></span>
 			</div>
-			
+
 			<div class="form-group mb-3">
-				<label asp-for="Secret.SecretSource" class="control-label">Secret Source <span><i class="fa fa-info-circle"></i></span></label>
+				<label asp-for="Secret.SecretSource" class="control-label">Secret Source <info-icon name="info-secret-source" /></label>
 				<select asp-for="Secret.SecretSource" class="form-control">
 					@foreach (var source in Enum.GetValues(typeof(ConfigSecretSource)))
 					{
@@ -39,12 +41,12 @@
 				<span asp-validation-for="Secret.SecretSource" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="Secret.Name" class="control-label">Secret Name <span><i class="fa fa-info-circle"></i></span></label>
-				<input asp-for="Secret.Name" class="form-control" />
+				<label asp-for="Secret.Name" class="control-label">Secret Name <info-icon name="info-secret-name" /></label>
+				<input asp-for="Secret.Name" class="form-control"/>
 				<span asp-validation-for="Secret.Name" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="Secret.Target" class="control-label">Secret Target <span><i class="fa fa-info-circle"></i></span></label>
+				<label asp-for="Secret.Target" class="control-label">Secret Target <info-icon name="info-secret-target" /></label>
 				<select asp-for="Secret.Target" class="form-control">
 					@foreach (var target in Enum.GetValues(typeof(EnvironmentVariableTarget)))
 					{
@@ -54,55 +56,54 @@
 				<span asp-validation-for="Secret.Target" class="text-danger"></span>
 			</div>
 
-			
-			
+
+
 			<div class="form-group mb-3">
-				<label asp-for="Secret.Secret" class="control-label">Secret <span><i class="fa fa-info-circle"></i></span></label>
-				<input asp-for="Secret.Secret" class="form-control" />
+				<label asp-for="Secret.Secret" class="control-label">Secret <info-icon name="info-secret" /></label>
+				<input asp-for="Secret.Secret" class="form-control"/>
 				<span asp-validation-for="Secret.Secret" class="text-danger"></span>
 			</div>
-			
+
 			<div class="form-group mb-3">
-				<label asp-for="CheckoutUrl" class="control-label">Checkout URL <span><i class="fa fa-info-circle"></i></span></label>
-				<input asp-for="CheckoutUrl" class="form-control" />
+				<label asp-for="CheckoutUrl" class="control-label">Checkout URL <info-icon name="info-checkout-url" /></label>
+				<input asp-for="CheckoutUrl" class="form-control"/>
 				<span asp-validation-for="CheckoutUrl" class="text-danger"></span>
 			</div>
-			
+
 			<div class="form-group mb-3">
-				<label asp-for="SuccessRedirectUrl" class="control-label">Success Redirect URL <span><i class="fa fa-info-circle"></i></span></label>
-				<input asp-for="SuccessRedirectUrl" class="form-control" />
+				<label asp-for="SuccessRedirectUrl" class="control-label">Success Redirect URL <info-icon name="info-success-url" /></label>
+				<input asp-for="SuccessRedirectUrl" class="form-control"/>
 				<span asp-validation-for="SuccessRedirectUrl" class="text-danger"></span>
 			</div>
-			
+
 			<div class="form-group mb-3">
-				<label asp-for="FailRedirectUrl" class="control-label">Failed Redirect URL</label>
-				<input asp-for="FailRedirectUrl" class="form-control" />
+				<label asp-for="FailRedirectUrl" class="control-label">Failed Redirect URL <info-icon name="info-fail-url" /></label>
+				<input asp-for="FailRedirectUrl" class="form-control"/>
 				<span asp-validation-for="FailRedirectUrl" class="text-danger"></span>
 			</div>
-			
+
 			<div class="form-group mb-3">
-				<label asp-for="NotificationUrl" class="control-label">Notification Redirect URL</label>
-				<input asp-for="NotificationUrl" class="form-control" />
+				<label asp-for="NotificationUrl" class="control-label">Notification Redirect URL <info-icon name="info-notify-url" /></label>
+				<input asp-for="NotificationUrl" class="form-control"/>
 				<span asp-validation-for="NotificationUrl" class="text-danger"></span>
 			</div>
-			
-			<div class="form-group mb-3">
-				<label asp-for="LogFilePath" class="control-label">Logfile Path <span><i class="fa fa-info-circle"></i></span></label>
-				<input asp-for="LogFilePath" class="form-control" />
-				<span asp-validation-for="LogFilePath" class="text-danger"></span>
-			</div>
-
 			
 			<div class="form-check form-switch mb-3">
 				<input asp-for="LogEnable" type="checkbox" class="form-check-input" />
 				<label asp-for="LogEnable" class="form-check-label">
-					Log Enabled <span><i class="fa fa-info-circle"></i></span>
+					Log Enabled <info-icon name="info-log-enabled" />
 				</label>
 			</div>
-			
+
+			<div class="form-group mb-3">
+				<label asp-for="LogFilePath" class="control-label">Logfile Path <info-icon name="info-logfile" /></label>
+				<input asp-for="LogFilePath" class="form-control"/>
+				<span asp-validation-for="LogFilePath" class="text-danger"></span>
+			</div>
+
 			<div class="input-group">
-				<input type="submit" value="Save" class="btn btn-outline-primary" />
-				<input type="button" value="Cancel" class="btn btn-outline-secondary" />
+				<input type="submit" value="Save" class="btn btn-outline-primary"/>
+				<input type="button" value="Cancel" class="btn btn-outline-secondary"/>
 			</div>
 		</form>
 
@@ -110,10 +111,95 @@
 </div>
 
 <div style="display:none;">
+
 	<div id="info-user-id">
 		<span>User ID</span>
 		<div>
 			<p>Info about the User ID</p>
 		</div>
 	</div>
+	
+	<div id="info-public-key">
+		<span>Public Key</span>
+		<div>
+			<p>Info about the Public Key</p>
+		</div>
+	</div>
+	
+	<div id="info-secret-source">
+		<span>Secret Source</span>
+		<div>
+			<p>Where is the secret stored?</p>
+			<ul>
+				<li>Config - Directly in the config</li>
+				<li>Env - In an environment variable (as in name)</li>
+				<li>Azure - In Azure</li>
+			</ul>
+		</div>
+	</div>
+	
+	<div id="info-secret-target">
+		<span>Environment Variable Target</span>
+		<div>
+			<p></p>
+		</div>
+	</div>
+	
+	<div id="info-secret-name">
+		<span>Environment Variable Name</span>
+		<div>
+			<p></p>
+		</div>
+	</div>
+	
+	<div id="info-secret">
+		<span>The Secret</span>
+		<div>
+			<p>This should be empty if the secret is stored elsewhere.</p>
+		</div>
+	</div>
+	
+	<div id="info-checkout-url">
+		<span>Checkout URL</span>
+		<div>
+			<p></p>
+		</div>
+	</div>
+	
+	<div id="info-success-url">
+		<span>Success Redirect URL</span>
+		<div>
+			<p></p>
+		</div>
+	</div>
+	
+	<div id="info-fail-url">
+		<span>Fail Redirect URL</span>
+		<div>
+			<p></p>
+		</div>
+	</div>
+	
+	<div id="info-notify-url">
+		<span>Notify URL</span>
+		<div>
+			<p></p>
+		</div>
+	</div>
+	
+	<div id="info-logfile">
+		<span>Logfile Path</span>
+		<div>
+			<p></p>
+		</div>
+	</div>
+	
+	<div id="info-log-enabled">
+		<span>Log Enabled</span>
+		<div>
+			<p>Set this to enable the logging of Coin Corner API records (as json files)</p>
+		</div>
+	</div>
 </div>
+
+@{ await Html.RenderPartialAsync("_Modal"); }
