@@ -4,6 +4,7 @@ using Msh.Pay.CoinCorner.Services;
 
 namespace Msh.WebApp.Controllers.Admin.CoinCorner;
 
+
 [Route("admin/payments/coincorner")]
 public class CoinCornerController : Controller
 {

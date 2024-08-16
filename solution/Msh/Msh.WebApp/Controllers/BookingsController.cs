@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace Msh.WebApp.Controllers
 {
+    // [Route("bookings")]
     public class BookingsController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -13,32 +14,38 @@ namespace Msh.WebApp.Controllers
             _logger = logger;
         }
 
+        //[Route("")]
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Search()
+        //[Route("Search")]
+		public IActionResult Search()
         {
             return View();
         }
 
-        public IActionResult Results()
+        //[Route("Results")]
+		public IActionResult Results()
         {
             return View();
         }
 
-        public IActionResult Details()
+        //[Route("Details")]
+		public IActionResult Details()
         {
             return View();
         }
 
-        public IActionResult Payment()
+        //[Route("Payment")]
+		public IActionResult Payment()
         {
             return View();
         }
 
-        public IActionResult Confirmation()
+        //[Route("Confirmation")]
+		public IActionResult Confirmation()
         {
             return View();
         }
