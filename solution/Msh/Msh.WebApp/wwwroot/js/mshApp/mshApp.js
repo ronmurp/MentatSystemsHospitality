@@ -7,6 +7,19 @@
     if (!window.mshMethods)
         window.mshMethods = {};
 
+    window.mshPageApp.methodsService = (function () {
+        function extendMethods(newIconMethods) {
+            if (!window.mshMethods)
+                window.mshMethods = {};
+            window.mshMethods = $.extend({}, window.mshMethods, newIconMethods);
+        }
+
+        return {
+            extendMethods: extendMethods
+        }
+
+    })();
+
     window.mshPageApp.mathService = (function () {
 
         function parseInt(value, defaultValue) {
@@ -291,9 +304,9 @@
 
     })();
 
-    window.wbsAdminPageApp.htmlTextService = (function ($) {
+    window.mshPageApp.htmlTextService = (function ($) {
 
-        var app = window.wbsAdminPageApp;
+        var app = window.mshPageApp;
         var htmlS = app.htmlService;
 
         var filterTemplate = htmlS.iconTemplate('filter'); // '<a href="javascript:{Script}"><i class="fa-solid fa-filter"></i></a>&nbsp;';
@@ -349,7 +362,6 @@
         }
 
     })(jQuery);
-
 
     window.mshPageApp.pageErrorService = (function () {
 
@@ -475,11 +487,146 @@
 
     })();
 
+    window.mshPageApp.modalService = (function ($) {
+
+        var app = window.mshPageApp;
+        var meth = app.methodsService;
+
+        var optionsInitial = {
+
+            outerClass: '',
+            outerStyle: '',
+
+            innerClass: '',
+            innerStyle: '',
+
+            bodyStyle: '',
+
+            closeButtonText: 'Close',
+            footerOk: false,
+            okButtonClickScript: '',
+            okButtonText: 'OK'
+
+        };
+        function processOptions(optionsBase, optionsInput) {
+
+            var options = optionsBase;
+
+            if (optionsInput) {
+                options = $.extend({}, optionsBase, optionsInput);
+            }
+
+            return {
+                outerStyle: options.outerStyle ? `style="${options.outerStyle}"` : '',
+                outerclass: options.outerClass ? options.outerClass : '',
+
+                innerStyle: options.innerStyle ? `style="${options.innerStyle}""` : '',
+                innerClass: options.innerClass ? options.innerClass : '',
+
+                bodyStyle: options.bodyStyle ? `style="${options.bodyStyle}"` : '',
+
+                closeButtonText: options.closeButtonText ? options.closeButtonText : '',
+                footerOk: options.footerOk,
+                okButtonClickScript: options.okButtonClickScript ? options.okButtonClickScript : '',
+                okButtonText: options.okButtonText ? options.okButtonText : ''
+            };
+        }
+
+        function showModal(id, title, body, optionsInput) {
+
+            $(`#${id}`).remove(); // Remove any previous instance under this id
+
+            var o = processOptions(optionsInitial, optionsInput);
+
+            var html = '';
+            html += `<div id="${id}" class="modal-base-outer ${o.outerClass}" ${o.outerStyle}>`;
+            html += `	<div class="modal-base-inner ${o.innerClass} flex-column justify-content-between" ${o.innerStyle}>`;
+            html += `		<div class="modal-base-cross">`
+            html += `			<a href="javascript:window.mshMethods.hideModal('${id}')"><i class="fa fa-times"></i></a>`;
+            html += `		</div>`;
+            html += `		<div class="modal-base-container flex-column justify-content-between">`;
+            html += `			<div class="modal-base-title"><h3>${title}</h3></div>`;
+            html += `			<div class="modal-base-body" ${o.bodyStyle}>${body}</div>`;
+            html += `			<div>`;
+            html += `				<button class="btn btn-secondary" onclick="window.mshMethods.hideModal('${id}')">${o.closeButtonText}</button>`;
+            if (o.footerOk) {
+                html += `				<button class="btn btn-secondary" ${o.okButtonClickScript}>${o.okButtonText}</button>`;
+            }
+            html += `			</div>`;
+            html += `		</div>`;
+            html += `	</div>`;
+            html += `</div>`;
+
+
+            $('body').append(html);
+
+            $(`#${id}`).show();
+        }
+
+        function hideModal(id) {
+            $(`#${id}`).hide();
+            $(`#${id}`).remove(); 
+        }
+
+        function injectInfo() {
+            // Get the info div on the page: page-info
+            $('#page-info').children().each(function () {
+                var $currentElement = $(this);
+                var infoIdList = $currentElement.attr('data-info-for');
+                var warn = $currentElement.attr('data-warn') === 'warn';
+                var noIcon = $currentElement.attr('data-info-noicon');
+                var skipIcon = (noIcon !== undefined) && noIcon.toLowerCase() === 'true' ? true : false;
+                if (!skipIcon) {
+                    var result = infoIdList.split(' ').map(element => element.trim());
+                    result.forEach(id => {
+                        var appending = '<span> <a href="javascript:mshShowInfo(' + "'" + id + "'" + ');" ><i class="fa-solid fa-info-circle"></i></a></span>';
+                        if (warn) {
+                            appending = '<span> <a href="javascript:mshShowInfo(' + "'" + id + "'" + ');" ><i class="fa-sharp fa-solid fa-triangle-exclamation" style="color:#ffcc00;"></i></a></span>';
+                        }
+                        $(appending).insertAfter('#' + id);
+                    });
+                }
+            });
+        }
+
+        function showInfo(id) {
+            var selector = `[data-info-for="${id}"]`;
+            var title = $(selector + ' span').first().text();
+            var html = $(selector + ' div').html();
+            window.mshPageApp
+                .modalService.showModal(id, title, html);
+
+        }
+
+        window.mshShowInfo = showInfo;
+
+        meth.extendMethods({
+            showModal: showModal,
+            hideModal: hideModal,
+
+            showInfo: showInfo
+        });
+
+        return {
+            showModal: showModal,
+            hideModal: hideModal,
+           
+            injectInfo: injectInfo,
+            showInfo: showInfo,
+            
+        }
+
+
+
+    })(jQuery);
+
+
 
     window.mshPageApp.utilityService = (function () {
 
         var app = window.mshPageApp;
-        var modal = app.modalService;
+        var modal = app.modalService
+
         var math = app.mathService;
         var err = app.pageErrorService;
 
@@ -592,10 +739,6 @@
             return js;
         }
 
-        function selfHide(id, clearHtml) {
-            $(id).html('');
-            $(id).hide();
-        }
 
         function hasString(message) {
             return (message !== undefined && message !== null && message.length > 0);
@@ -661,12 +804,6 @@
             getJavascript: getJavascript,
 
             queryString: queryString,
-
-            extendIconMethods: function (newIconMethods) {
-                if (!window.mshMethods)
-                    window.mshMethods = {};
-                window.mshMethods = $.extend({}, window.mshMethods, { selfHide: selfHide }, newIconMethods);
-            },
 
             scrollTop: scrollTop,
             copyText: copyText
@@ -1372,6 +1509,7 @@
         var app = window.mshPageApp;
         var mom = app.momentDateService;
         var modal = app.modalService;
+        var meth = app.methodsService;
         var html = app.htmlService;
         var util = app.utilityService;
 
@@ -2115,7 +2253,7 @@
             this.draw();
         };
 
-        util.extendIconMethods({
+        meth.extendMethods({
             today: function () {
 
             }
