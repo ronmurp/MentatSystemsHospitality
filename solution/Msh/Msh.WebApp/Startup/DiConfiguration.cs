@@ -1,4 +1,5 @@
-﻿using Msh.Common.Models;
+﻿using Msh.Admin.Startup;
+using Msh.Common.Models;
 using Msh.Common.Startup;
 using Msh.HotelCache.Startup;
 using Msh.Pay.CoinCorner.Startup;
@@ -19,5 +20,7 @@ public static class DiConfiguration
         services.RegisterFpServices();
         services.RegisterCcServices();
         services.RegisterHotelServices();
+        services.RegisterAdminServices();
+
     }
 }
