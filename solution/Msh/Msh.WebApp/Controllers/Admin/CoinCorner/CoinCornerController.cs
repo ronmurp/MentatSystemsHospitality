@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Msh.Common.Models.Configuration;
 using Msh.Pay.CoinCorner.Models;
 using Msh.Pay.CoinCorner.Services;
 
@@ -32,23 +33,40 @@ public class CoinCornerController : Controller
     [Route("Config")]
     public async Task<IActionResult> Config()
     {
-	    await Task.Delay(0);
+		try
+		{
+			await Task.Delay(0);
 
-	    var config = _coinCornerRepoService.GetConfig();
+			var config = _coinCornerRepoService.GetConfig();
 
-		return View("~/Views/Admin/CoinCorner/Config.cshtml", config);
-    }
+			return View("~/Views/Admin/CoinCorner/Config.cshtml", config);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"{ex.Message}");
+			return View("~/Views/Admin/CoinCorner/Config.cshtml", new CoinCornerConfig());
+		}
+	}
 
     [HttpPost]
-    [Route("ConfigEdit")]
-    public async Task<IActionResult> ConfigEdit([FromForm] CoinCornerConfig config)
+    [Route("ConfigSave")]
+    public async Task<IActionResult> ConfigSave([FromForm] CoinCornerConfig config)
     {
-	    await Task.Delay(0);
+	    try
+	    {
+		    await Task.Delay(0);
 
-	    _coinCornerRepoService.SaveConfig(config);
+		    _coinCornerRepoService.SaveConfig(config);
 
 
-		return RedirectToAction("Config");
-	    // return View("~/Views/Admin/CoinCorner/Config.cshtml", config);
-    }
+		    return RedirectToAction("Config");
+	    }
+	    catch (Exception ex)
+	    {
+			_logger.LogError($"{ex.Message}");
+		}
+
+		return View("~/Views/Admin/CoinCorner/Config.cshtml", config);
+
+	}
 }
