@@ -20,3 +20,59 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.modal-base-outer {
+    display: none;
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(125,125,125,0.5);
+    overflow: auto;
+    padding: 0;
+}
+.modal-base-inner {
+    width: 80%;
+    background-color: white;
+    margin: auto;
+    margin-top: 20px;
+    border: 1px solid #808080;
+    border-radius: 5px;
+}
+.modal-base-cross {
+    height:30px;
+    width: 30px;
+    text-align: center;
+}
+.modal-base-cross a {
+    text-decoration: none;
+    font-size: x-large;
+}
+.modal-base-title h3{
+    margin-top: -20px;
+}
+
+.modal-base-container{
+    padding: 10px;
+}
+.modal-base-title {
+    text-align: center;
+}
+.modal-base-body {
+    padding: 10px 0 10px 0;
+}
+
+@media only screen and (min-width: 500px) {
+    .modal-base-inner {
+        width: 400px;
+    }
+}
+
+@media only screen and (min-width: 1000px) {
+    .modal-base-inner {
+        width: 400px;
+    }
+}
+
