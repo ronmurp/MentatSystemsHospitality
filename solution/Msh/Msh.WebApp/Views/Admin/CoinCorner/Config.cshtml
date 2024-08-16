@@ -5,11 +5,14 @@
 
 @model CoinCornerConfig;
 @{
-    ViewData["Title"] = "Coin Corner Config";
+	var title = "Coin Corner Config";
+    ViewData["Title"] = title;
+
+	await Html.RenderPartialAsync("Admin/Menus/_AdminMenuCoinCorner", "CcConfig");
 }
 
 <div class="text-center">
-	<h1 class="display-4">@ViewData["Title"]</h1>
+	<h1 class="display-4">@title</h1>
 	<p></p>
 </div>
 
@@ -29,7 +32,12 @@
 				<input asp-for="PublicKey" class="form-control"/>
 				<span asp-validation-for="PublicKey" class="text-danger"></span>
 			</div>
-
+			
+			<div class="form-group mb-3">
+				<label asp-for="Secret.Secret" class="control-label">Secret <info-icon name="info-secret" /></label>
+				<input asp-for="Secret.Secret" class="form-control" />
+				<span asp-validation-for="Secret.Secret" class="text-danger"></span>
+			</div>
 			<div class="form-group mb-3">
 				<label asp-for="Secret.SecretSource" class="control-label">Secret Source <info-icon name="info-secret-source" /></label>
 				<select asp-for="Secret.SecretSource" class="form-control">
@@ -58,11 +66,7 @@
 
 
 
-			<div class="form-group mb-3">
-				<label asp-for="Secret.Secret" class="control-label">Secret <info-icon name="info-secret" /></label>
-				<input asp-for="Secret.Secret" class="form-control"/>
-				<span asp-validation-for="Secret.Secret" class="text-danger"></span>
-			</div>
+			
 
 			<div class="form-group mb-3">
 				<label asp-for="CheckoutUrl" class="control-label">Checkout URL <info-icon name="info-checkout-url" /></label>
@@ -110,25 +114,29 @@
 	</div>
 </div>
 
-<div style="display:none;">
+<div id="page-info" style="display:none;">
 
-	<div id="info-user-id">
+	<div data-info-for="info-user-id">
 		<span>User ID</span>
 		<div>
-			<p>Info about the User ID</p>
+			<p>One of the unique fields that is used to send to Coin Corner as part of the data that identifies the ELH account.</p>
 		</div>
 	</div>
 	
-	<div id="info-public-key">
+	<div data-info-for="info-public-key">
 		<span>Public Key</span>
 		<div>
-			<p>Info about the Public Key</p>
+			<p>One of the unique fields that is used to send to Coin Corner as part of the data that identifies the ELH account.</p>
 		</div>
 	</div>
 	
-	<div id="info-secret-source">
+	<div data-info-for="info-secret-source">
 		<span>Secret Source</span>
 		<div>
+			<p>
+				The Coin Corner API requires a secret key be sent with each API call.
+				The secret should not be stored in the application source code. 
+			</p>
 			<p>Where is the secret stored?</p>
 			<ul>
 				<li>Config - Directly in the config</li>
@@ -138,63 +146,80 @@
 		</div>
 	</div>
 	
-	<div id="info-secret-target">
+	<div data-info-for="info-secret-target">
 		<span>Environment Variable Target</span>
 		<div>
-			<p></p>
+			<p>If the secret is stored in an Environment Variable, this determines the target.</p>
 		</div>
 	</div>
 	
-	<div id="info-secret-name">
+	<div data-info-for="info-secret-name">
 		<span>Environment Variable Name</span>
 		<div>
-			<p></p>
+			<p>
+				This is the name of the Environment Variable, used if the secret is stored in an Environment Variable.
+				If stored in Azure, this will identify the location.
+			</p>
 		</div>
 	</div>
 	
-	<div id="info-secret">
+	<div data-info-for="info-secret">
 		<span>The Secret</span>
 		<div>
-			<p>This should be empty if the secret is stored elsewhere.</p>
+			<p>
+				The Coin Corner API requires a secret key be sent with each API call.
+				The secret should not be stored in the application source code.
+				This should be empty if the secret is stored elsewhere - as determined by the other Secret configuration values.
+			</p>
 		</div>
 	</div>
 	
-	<div id="info-checkout-url">
+	<div data-info-for="info-checkout-url">
 		<span>Checkout URL</span>
 		<div>
 			<p></p>
 		</div>
 	</div>
 	
-	<div id="info-success-url">
+	<div data-info-for="info-success-url">
 		<span>Success Redirect URL</span>
 		<div>
 			<p></p>
 		</div>
 	</div>
 	
-	<div id="info-fail-url">
+	<div data-info-for="info-fail-url">
 		<span>Fail Redirect URL</span>
 		<div>
 			<p></p>
 		</div>
 	</div>
 	
-	<div id="info-notify-url">
+	<div data-info-for="info-notify-url">
 		<span>Notify URL</span>
 		<div>
-			<p></p>
+			<p>
+				When the status of a transaction occurs in Coin Corner, this address will be used to 
+				notify our booking system that a state change has occurred. The booking system should then perform a status
+				check to get the actual status.
+			</p>
+			<p>
+				Refer to the <a href="https://checkout.coincorner.com/Help/WebHook" target="_blank">WebHook</a> information from Coin Corner.
+			</p>
 		</div>
 	</div>
 	
-	<div id="info-logfile">
+	<div data-info-for="info-logfile">
 		<span>Logfile Path</span>
 		<div>
-			<p></p>
+			<p>
+				If logging of API calls is enabled (Log Enabled), this is the path to the file system where these logs are stored.
+				You will need to understand the way logs are stored to determine this value.
+			</p>
 		</div>
 	</div>
 	
-	<div id="info-log-enabled">
+	<div data-info-for="info-log-enabled">
 		<span>Log Enabled</span>
 		<div>
 			<p>Set this to enable the logging of Coin Corner API records (as json files)</p>
@@ -202,4 +227,7 @@
 	</div>
 </div>
 
-@{ await Html.RenderPartialAsync("_Modal"); }
+@section Scripts{
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/pay/msh-admin-coincorner.js"></script>
+}

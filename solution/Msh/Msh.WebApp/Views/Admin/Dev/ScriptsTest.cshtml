@@ -1,0 +1,21 @@
+﻿@{
+	var title = "Scripts Test";
+	ViewData["Title"] = title;
+
+	await Html.RenderPartialAsync("Admin/Menus/_AdminMenuDev", "DevScriptsTest");
+}
+
+
+<div class="text-center">
+	<h1 class="display-4">@title</h1>
+	<div>
+		<input type="button" id="show-modal" class="btn btn-primary" value="Show Modal" />
+	</div>
+
+</div>
+
+@section Scripts{
+
+	<script src="/js/mshapp/mshapp.js"></script>
+	<script src="/js/admin/dev/msh-dev-scripts-test.js"></script>
+}

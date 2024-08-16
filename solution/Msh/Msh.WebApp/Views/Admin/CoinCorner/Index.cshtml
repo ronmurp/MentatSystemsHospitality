@@ -1,9 +1,12 @@
 ﻿@{
-    ViewData["Title"] = "Admin Coin Corner Page";
+	var title = "Coin Corner";
+	ViewData["Title"] = title;
+
+	await Html.RenderPartialAsync("Admin/Menus/_AdminMenuCoinCorner", "CcIndex");
 }
 
 <div class="text-center">
-	<h1 class="display-4">Welcome</h1>
+	<h1 class="display-4">@title</h1>
 	
 
 </div>
