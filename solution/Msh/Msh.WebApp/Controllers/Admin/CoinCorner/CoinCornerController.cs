@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Msh.Common.Models.Configuration;
 using Msh.Pay.CoinCorner.Models;
 using Msh.Pay.CoinCorner.Services;
 
@@ -50,14 +49,20 @@ public class CoinCornerController : Controller
 
     [HttpPost]
     [Route("ConfigSave")]
-    public async Task<IActionResult> ConfigSave([FromForm] CoinCornerConfig config)
+    public async Task<IActionResult> ConfigSave([FromForm] CoinCornerConfig config, string command)
     {
 	    try
 	    {
 		    await Task.Delay(0);
 
-		    _coinCornerRepoService.SaveConfig(config);
-
+		    if (command == "Save")
+		    {
+			    _coinCornerRepoService.SaveConfig(config);
+			}
+			else if (command == "Publish")
+			{
+				_coinCornerCacheService.ReloadConfig();
+			}
 
 		    return RedirectToAction("Config");
 	    }
@@ -69,4 +74,5 @@ public class CoinCornerController : Controller
 		return View("~/Views/Admin/CoinCorner/Config.cshtml", config);
 
 	}
+
 }

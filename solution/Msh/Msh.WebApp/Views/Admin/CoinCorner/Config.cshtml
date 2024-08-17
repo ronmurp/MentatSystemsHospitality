@@ -106,9 +106,12 @@
 			</div>
 
 			<div class="input-group">
-				<input type="submit" value="Save" class="btn btn-outline-primary"/>
+				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary" >Save</button>
 				<input type="button" value="Cancel" class="btn btn-outline-secondary"/>
-			</div>
+
+				<button type="submit" name="Command" value="Publish" id="publish-button" class="btn btn-outline-success">Publish <info-icon name="info-publish" /></button>
+		 
+				</div>
 		</form>
 
 	</div>
@@ -225,9 +228,15 @@
 			<p>Set this to enable the logging of Coin Corner API records (as json files)</p>
 		</div>
 	</div>
+	
+	@{
+		await Html.RenderPartialAsync("Admin/_AdminPublish", "Coin Corner Config");
+	}
+	
 </div>
 
-@section Scripts{
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
 	<script src="~/js/admin/pay/msh-admin-coincorner.js"></script>
 }
