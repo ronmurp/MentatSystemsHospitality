@@ -18,9 +18,9 @@ public class CoinCornerGlobal() : ConfigBase(ConstCc.CoinCornerGlobal)
     /// </summary>
     public bool EnableOnChain { get; set; }
 
-    public bool EnabledActivities { get; set; }
+    public bool EnableActivities { get; set; }
 
-    public bool EnabledBedrooms { get; set; }
+    public bool EnableBedrooms { get; set; }
 
     /// <summary>
     /// Number of times to retry if the API fails
@@ -41,11 +41,9 @@ public class CoinCornerGlobal() : ConfigBase(ConstCc.CoinCornerGlobal)
     /// </summary>
     public decimal LightningLimit { get; set; } = 500M;
 
-#if DEBUG
     public bool OnePencePayment { get; set; }
-#endif
 
-    public string LightningLimitMessage { get; set; } = string.Empty;
+	public string LightningLimitMessage { get; set; } = string.Empty;
     public string NotAvailableMessage { get; set; } = string.Empty;
     public string NotAvailableActivitiesMessage { get; set; } = string.Empty;
     public string NotAvailableBookingsMessage { get; set; } = string.Empty;

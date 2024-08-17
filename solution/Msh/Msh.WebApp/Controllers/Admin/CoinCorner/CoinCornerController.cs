@@ -74,5 +74,53 @@ public class CoinCornerController : Controller
 		return View("~/Views/Admin/CoinCorner/Config.cshtml", config);
 
 	}
+    
+    
+    [Route("Global")]
+    public async Task<IActionResult> Global()
+    {
+	    try
+	    {
+		    await Task.Delay(0);
+
+		    var global = _coinCornerRepoService.GetGlobal();
+
+		    return View("~/Views/Admin/CoinCorner/Global.cshtml", global);
+	    }
+	    catch (Exception ex)
+	    {
+		    _logger.LogError($"{ex.Message}");
+		    return View("~/Views/Admin/CoinCorner/Global.cshtml", new CoinCornerGlobal());
+	    }
+    }
+
+    [HttpPost]
+    [Route("GlobalSave")]
+    public async Task<IActionResult> GlobalSave([FromForm] CoinCornerGlobal global, string command)
+    {
+	    try
+	    {
+		    await Task.Delay(0);
+
+		    if (command == "Save")
+		    {
+			    _coinCornerRepoService.SaveGlobal(global);
+		    }
+		    else if (command == "Publish")
+		    {
+			    _coinCornerCacheService.ReloadGlobal();
+		    }
+
+		    return RedirectToAction("Global");
+	    }
+	    catch (Exception ex)
+	    {
+		    _logger.LogError($"{ex.Message}");
+	    }
+
+	    return View("~/Views/Admin/CoinCorner/Global.cshtml", global);
+
+    }
+
 
 }

@@ -46,8 +46,8 @@ public class ImportCoinCorner
     {
         var config = new CoinCornerGlobal
         {
-            EnabledActivities = false,
-            EnabledBedrooms = true,
+            EnableActivities = false,
+            EnableBedrooms = true,
             Retries = 3,
             RetryInterval = 2,
             SettleCurrency = "GBP",
