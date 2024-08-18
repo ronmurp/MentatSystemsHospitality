@@ -63,6 +63,21 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
         configDbContext.SaveChanges();
     }
 
+    public void SaveMissingConfig<T>(string configType, T defaultObject)
+    {
+	    var config = GetConfig(configType);
+	    if (config == null)
+	    {
+		    var json = JsonSerializer.Serialize(defaultObject);
+		    config = new Config
+		    {
+                ConfigType = configType,
+                Content = json
+		    };
+            AddConfig(config);
+	    }
+	}
+
 
     /// <summary>
     /// Used by Admin to create a new config

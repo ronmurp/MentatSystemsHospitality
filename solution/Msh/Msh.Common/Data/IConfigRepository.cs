@@ -27,11 +27,13 @@ public interface IConfigRepository
     void SaveConfig<T>(string configType, T value);
 
 
-    /// <summary>
-    /// Used by Admin to create a new config
-    /// </summary>
-    /// <param name="config"></param>
-    void AddConfig(Config config);
+    void SaveMissingConfig<T>(string configType, T defaultObject);
+
+	/// <summary>
+	/// Used by Admin to create a new config
+	/// </summary>
+	/// <param name="config"></param>
+	void AddConfig(Config config);
 
     /// <summary>
     /// Should be used only in admin and tests
