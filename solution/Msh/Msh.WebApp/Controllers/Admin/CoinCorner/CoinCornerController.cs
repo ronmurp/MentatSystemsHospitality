@@ -6,22 +6,13 @@ namespace Msh.WebApp.Controllers.Admin.CoinCorner;
 
 
 [Route("admin/payments/coincorner")]
-public class CoinCornerController : Controller
+public class CoinCornerController(
+	ILogger<HomeController> logger,
+	ICoinCornerCacheService coinCornerCacheService,
+	ICoinCornerRepoService coinCornerRepoService)
+	: Controller
 {
-    private readonly ILogger<HomeController> _logger;
-    private readonly ICoinCornerCacheService _coinCornerCacheService;
-    private readonly ICoinCornerRepoService _coinCornerRepoService;
-
-    public CoinCornerController(ILogger<HomeController> logger, 
-	    ICoinCornerCacheService coinCornerCacheService,
-	    ICoinCornerRepoService coinCornerRepoService)
-    {
-	    _logger = logger;
-	    _coinCornerCacheService = coinCornerCacheService;
-	    _coinCornerRepoService = coinCornerRepoService;
-    }
-
-    [Route("")]
+	[Route("")]
     public async Task<IActionResult> Index()
     {
 	    await Task.Delay(0);
@@ -36,13 +27,13 @@ public class CoinCornerController : Controller
 		{
 			await Task.Delay(0);
 
-			var config = _coinCornerRepoService.GetConfig();
+			var config = coinCornerRepoService.GetConfig();
 
 			return View("~/Views/Admin/CoinCorner/Config.cshtml", config);
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"{ex.Message}");
+			logger.LogError($"{ex.Message}");
 			return View("~/Views/Admin/CoinCorner/Config.cshtml", new CoinCornerConfig());
 		}
 	}
@@ -57,18 +48,18 @@ public class CoinCornerController : Controller
 
 		    if (command == "Save")
 		    {
-			    _coinCornerRepoService.SaveConfig(config);
+			    coinCornerRepoService.SaveConfig(config);
 			}
 			else if (command == "Publish")
 			{
-				_coinCornerCacheService.ReloadConfig();
+				coinCornerCacheService.ReloadConfig();
 			}
 
 		    return RedirectToAction("Config");
 	    }
 	    catch (Exception ex)
 	    {
-			_logger.LogError($"{ex.Message}");
+			logger.LogError($"{ex.Message}");
 		}
 
 		return View("~/Views/Admin/CoinCorner/Config.cshtml", config);
@@ -83,13 +74,13 @@ public class CoinCornerController : Controller
 	    {
 		    await Task.Delay(0);
 
-		    var global = _coinCornerRepoService.GetGlobal();
+		    var global = coinCornerRepoService.GetGlobal();
 
 		    return View("~/Views/Admin/CoinCorner/Global.cshtml", global);
 	    }
 	    catch (Exception ex)
 	    {
-		    _logger.LogError($"{ex.Message}");
+		    logger.LogError($"{ex.Message}");
 		    return View("~/Views/Admin/CoinCorner/Global.cshtml", new CoinCornerGlobal());
 	    }
     }
@@ -104,18 +95,18 @@ public class CoinCornerController : Controller
 
 		    if (command == "Save")
 		    {
-			    _coinCornerRepoService.SaveGlobal(global);
+			    coinCornerRepoService.SaveGlobal(global);
 		    }
 		    else if (command == "Publish")
 		    {
-			    _coinCornerCacheService.ReloadGlobal();
+			    coinCornerCacheService.ReloadGlobal();
 		    }
 
 		    return RedirectToAction("Global");
 	    }
 	    catch (Exception ex)
 	    {
-		    _logger.LogError($"{ex.Message}");
+		    logger.LogError($"{ex.Message}");
 	    }
 
 	    return View("~/Views/Admin/CoinCorner/Global.cshtml", global);
