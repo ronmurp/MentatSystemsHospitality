@@ -1,0 +1,62 @@
+﻿@using Msh.HotelCache.Models.Hotels
+@model List<Hotel>;
+@{
+	var title = "Hotel List";
+	ViewData["Title"] = title;
+
+	await Html.RenderPartialAsync("Admin/Menus/_AdminMenuHotels", "HotelList");
+}
+
+<div class="text-center">
+	<h1 class="display-4">@title</h1>
+</div>
+
+<div class="row">
+	<div class="col-12">
+		<table>
+			<tr>
+				<th>Hotel Code</th>
+				<th>Chain Code</th>
+				<th>Name</th>
+				<th>   </th>
+			</tr>
+			
+			@foreach (var hotel in @Model)
+			{
+				<tr>
+					<td>@hotel.HotelCode</td>
+					<td>@hotel.ChainCode</td>
+					<td>@hotel.Name</td>
+					<td style="width:80px;">
+						
+						<div class="cell-outer">
+							<div class="cell-inner">
+								<a href="javascript:window.mshMethods.editHotel('@hotel.HotelCode')" >
+									<i class="fa-solid fa-pen-to-square"></i>
+								</a>
+							</div>
+							<div class="cell-inner">
+								<a href="javascript:window.mshMethods.deleteHotel('@hotel.HotelCode')" >
+									<i class="fa-solid fa-times"></i>
+								</a>
+							</div>
+						</div>
+					</td>
+				</tr>
+			}
+			
+		</table>
+
+	</div>
+</div>
+<div class="row">
+	<div class="col-12">
+		<button id="add-hotel" class="btn btn-primary" onclick="window.location = 'HotelAdd'; return false;">Add Hotel</button>
+	</div>
+</div>
+
+@section Scripts{
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-hotels.js"></script>
+}
+

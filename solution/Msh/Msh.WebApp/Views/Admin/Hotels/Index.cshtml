@@ -1,0 +1,10 @@
+﻿@{
+	var title = "Admin Hotels";
+	ViewData["Title"] = title;
+	await Html.RenderPartialAsync("Admin/Menus/_AdminMenuHotels", "HotelsIndex");
+}
+
+<div class="text-center">
+	<h3 class="display-4">@title</h3>
+</div>
+

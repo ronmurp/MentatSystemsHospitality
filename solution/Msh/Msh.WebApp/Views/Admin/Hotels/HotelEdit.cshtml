@@ -1,0 +1,238 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.Common.Models.Configuration
+@using Msh.Pay.CoinCorner.Models;
+@using Msh.WebApp.TagHelpers
+
+@model Msh.HotelCache.Models.Hotels.Hotel;
+@{
+	var title = "Hotels";
+    ViewData["Title"] = title;
+
+	await Html.RenderPartialAsync("Admin/Menus/_AdminMenuHotels", "Hotels");
+}
+
+<div class="text-center">
+	<h1 class="display-4">@title</h1>
+	<p></p>
+</div>
+
+<div class="row">
+	<div class="col-6">
+
+		<form asp-action="HotelSave">
+
+			<div class="form-group mb-3">
+				<label asp-for="HotelCode" class="control-label">Hotel Code <info-icon name="info-hotel-code"/></label>
+				<input asp-for="HotelCode" class="form-control" />
+				<span asp-validation-for="HotelCode" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="ChainCode" class="control-label">Chain Code <info-icon name="info-chain-code"/></label>
+				<input asp-for="ChainCode" class="form-control" />
+				<span asp-validation-for="ChainCode" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="Name" class="control-label">Name <info-icon name="info-name" /></label>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+
+			
+			<div class="form-group mb-3">
+				<label asp-for="Description" class="control-label">Description <info-icon name="info-description" /></label>
+				<input asp-for="Description" class="form-control" />
+				<span asp-validation-for="Description" class="text-danger"></span>
+			</div>
+			
+
+
+			
+
+			<div class="form-group mb-3">
+				<label asp-for="Subtitle" class="control-label">Subtitle <info-icon name="info-subtitle" /></label>
+				<input asp-for="Subtitle" class="form-control" />
+				<span asp-validation-for="Subtitle" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="ConfirmCopy" class="control-label">Confirm Copy <info-icon name="info-confirm-copy" /></label>
+				<input asp-for="ConfirmCopy" class="form-control" />
+				<span asp-validation-for="ConfirmCopy" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="ImageFile" class="control-label">Image File <info-icon name="info-image-file" /></label>
+				<input asp-for="ImageFile" class="form-control" />
+				<span asp-validation-for="ImageFile" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="SearchImageFile" class="control-label">Search Image File <info-icon name="info-search-image-file" /></label>
+				<input asp-for="SearchImageFile" class="form-control" />
+				<span asp-validation-for="SearchImageFile" class="text-danger"></span>
+			</div>
+			
+			<div class="form-check form-switch mb-3">
+				<input asp-for="NoDogs" type="checkbox" class="form-check-input" />
+				<label asp-for="NoDogs" class="form-check-label">
+					No Dogs <info-icon name="info-no-dogs" />
+				</label>
+			</div>
+
+			
+			
+			<div class="form-group mb-3">
+				<label asp-for="CrsNumber" class="control-label">CRS Number <info-icon name="info-crs-number" /></label>
+				<input asp-for="CrsNumber" class="form-control" />
+				<span asp-validation-for="CrsNumber" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="CrsNumberInt" class="control-label">CRS Number International<info-icon name="info-crs-number-int" /></label>
+				<input asp-for="CrsNumberInt" class="form-control" />
+				<span asp-validation-for="CrsNumberInt" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="DisabledText" class="control-label">Disabled Text<info-icon name="info-disabled-text" /></label>
+				<input asp-for="DisabledText" class="form-control" />
+				<span asp-validation-for="DisabledText" class="text-danger"></span>
+			</div>
+
+			<div class="input-group">
+				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary" >Save</button>
+				<input type="button" value="Cancel" class="btn btn-outline-secondary"/>
+
+				<button type="submit" name="Command" value="Publish" id="publish-button" class="btn btn-outline-success">Publish <info-icon name="info-publish" /></button>
+		 
+				</div>
+		</form>
+
+	</div>
+</div>
+
+<div id="page-info" style="display:none;">
+
+	<div data-info-for="info-user-id">
+		<span>User ID</span>
+		<div>
+			<p>One of the unique fields that is used to send to Coin Corner as part of the data that identifies the ELH account.</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-public-key">
+		<span>Public Key</span>
+		<div>
+			<p>One of the unique fields that is used to send to Coin Corner as part of the data that identifies the ELH account.</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-secret-source">
+		<span>Secret Source</span>
+		<div>
+			<p>
+				The Coin Corner API requires a secret key be sent with each API call.
+				The secret should not be stored in the application source code. 
+			</p>
+			<p>Where is the secret stored?</p>
+			<ul>
+				<li>Config - Directly in the config</li>
+				<li>Env - In an environment variable (as in name)</li>
+				<li>Azure - In Azure</li>
+			</ul>
+		</div>
+	</div>
+	
+	<div data-info-for="info-secret-target">
+		<span>Environment Variable Target</span>
+		<div>
+			<p>If the secret is stored in an Environment Variable, this determines the target.</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-secret-name">
+		<span>Environment Variable Name</span>
+		<div>
+			<p>
+				This is the name of the Environment Variable, used if the secret is stored in an Environment Variable.
+				If stored in Azure, this will identify the location.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-secret">
+		<span>The Secret</span>
+		<div>
+			<p>
+				The Coin Corner API requires a secret key be sent with each API call.
+				The secret should not be stored in the application source code.
+				This should be empty if the secret is stored elsewhere - as determined by the other Secret configuration values.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-checkout-url">
+		<span>Checkout URL</span>
+		<div>
+			<p></p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-success-url">
+		<span>Success Redirect URL</span>
+		<div>
+			<p></p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-fail-url">
+		<span>Fail Redirect URL</span>
+		<div>
+			<p></p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-notify-url">
+		<span>Notify URL</span>
+		<div>
+			<p>
+				When the status of a transaction occurs in Coin Corner, this address will be used to 
+				notify our booking system that a state change has occurred. The booking system should then perform a status
+				check to get the actual status.
+			</p>
+			<p>
+				Refer to the <a href="https://checkout.coincorner.com/Help/WebHook" target="_blank">WebHook</a> information from Coin Corner.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-logfile">
+		<span>Logfile Path</span>
+		<div>
+			<p>
+				If logging of API calls is enabled (Log Enabled), this is the path to the file system where these logs are stored.
+				You will need to understand the way logs are stored to determine this value.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-log-enabled">
+		<span>Log Enabled</span>
+		<div>
+			<p>Set this to enable the logging of Coin Corner API records (as json files)</p>
+		</div>
+	</div>
+	
+	@{
+		await Html.RenderPartialAsync("Admin/_AdminPublish", "Coin Corner Config");
+	}
+	
+</div>
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/pay/msh-admin-coincorner.js"></script>
+}

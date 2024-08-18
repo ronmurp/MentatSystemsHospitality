@@ -6,7 +6,6 @@
 
     if (!window.mshMethods)
         window.mshMethods = {};
-
     window.mshPageApp.methodsService = (function () {
         function extendMethods(newIconMethods) {
             if (!window.mshMethods)

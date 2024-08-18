@@ -76,3 +76,78 @@ body {
     }
 }
 
+
+
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+    table tr th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        /*white-space: pre;*/
+    }
+
+    table tr td {
+        border: 1px solid #ddd;
+        padding: 8px;
+       /* white-space: pre;*/
+      
+    }
+
+    table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    table tr:hover {
+        background-color: #ddd;
+    }
+
+    table tr th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #4CAF50;
+        color: white;
+    }
+
+.cell-outer {
+    display: flex;
+    justify-content:space-around;
+    width: 100%;
+}
+.cell-inner {
+    /*border: 1px solid green;*/
+    width: 30px;
+    display: flex;
+    justify-content: center;
+}
+    .cell-inner a {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        text-decoration: none;
+        color: #337ab7;
+    }
+
+    div.cell-icons {
+        display: table;
+        width: 100%;
+        min-width: 50px;
+        table-layout: fixed; /* For cells of equal size */
+    }
+
+    div.cell-icons span {
+        display: table-cell;
+        text-align: center;
+    }
+
+        div.cell-icons span a {
+            text-decoration: none;
+            width: 50px;
+            display: block;
+            color: #337ab7;
+        }
