@@ -3,17 +3,23 @@
 
 @model List<AdminMenuItem>
 
-
 <div class="row">
 	<div class="col-12">
-		<ul class="navbar-nav flex-row justify-content-start">
+		<div style="display:flex;justify-content:flex-start;width:100%;">
 			@foreach (var item in @Model)
 			{
-				<li class="nav-item">|</li>
-				<li class="nav-item">
-					<a class="nav-link text-dark @item.Active" asp-area="" asp-controller="@item.Controller" asp-action="@item.Action">@item.Text</a>
-				</li>
+				<div style="padding:0 4px 0 4px;border-right:1px solid black;">
+					@if (@item.Active == "active")
+					{
+						@item.Text
+					}
+					else
+					{
+						<a style="color: #337ab7;" class="nav-link " asp-area="" asp-controller="@item.Controller" asp-action="@item.Action">@item.Text</a>	
+					}
+				</div>
 			}
-		</ul>
+		</div>
+		
 	</div>
 </div>
