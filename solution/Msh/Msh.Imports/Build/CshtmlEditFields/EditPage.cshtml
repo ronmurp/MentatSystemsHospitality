@@ -1,0 +1,28 @@
+﻿@model {Model};
+
+<div class="row">
+	<div class="col-6">
+
+		<form asp-action="HotelSave">
+
+			{InputFields}
+
+			<div class="input-group">
+				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
+				<input type="button" value="Cancel" class="btn btn-outline-secondary" onclick="{EditMethod}" />
+				<button type="submit" name="Command" value="Publish" id="publish-button" class="btn btn-outline-success">Publish <info-icon name="info-publish" /></button>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+<div id="page-info" style="display:none;">
+
+	{InfoFields}
+
+	@{
+		await Html.RenderPartialAsync("Admin/_AdminPublish", "{PublishName}");
+	}
+
+</div>
