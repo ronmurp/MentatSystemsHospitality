@@ -1,6 +1,4 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-@using Msh.Common.Models.Configuration
-@using Msh.Pay.CoinCorner.Models;
 @using Msh.WebApp.TagHelpers
 
 @model Msh.HotelCache.Models.Hotels.Hotel;
@@ -16,102 +14,9 @@
 	<p></p>
 </div>
 
-<div class="row">
-	<div class="col-6">
-
-		<form asp-action="HotelSave">
-
-			<div class="form-group mb-3">
-				<label asp-for="HotelCode" class="control-label">Hotel Code <info-icon name="info-hotel-code"/></label>
-				<input asp-for="HotelCode" class="form-control" />
-				<span asp-validation-for="HotelCode" class="text-danger"></span>
-			</div>
-
-			<div class="form-group mb-3">
-				<label asp-for="ChainCode" class="control-label">Chain Code <info-icon name="info-chain-code"/></label>
-				<input asp-for="ChainCode" class="form-control" />
-				<span asp-validation-for="ChainCode" class="text-danger"></span>
-			</div>
-			
-			<div class="form-group mb-3">
-				<label asp-for="Name" class="control-label">Name <info-icon name="info-name" /></label>
-				<input asp-for="Name" class="form-control" />
-				<span asp-validation-for="Name" class="text-danger"></span>
-			</div>
-
-			
-			<div class="form-group mb-3">
-				<label asp-for="Description" class="control-label">Description <info-icon name="info-description" /></label>
-				<input asp-for="Description" class="form-control" />
-				<span asp-validation-for="Description" class="text-danger"></span>
-			</div>
-			
-
-
-			
-
-			<div class="form-group mb-3">
-				<label asp-for="Subtitle" class="control-label">Subtitle <info-icon name="info-subtitle" /></label>
-				<input asp-for="Subtitle" class="form-control" />
-				<span asp-validation-for="Subtitle" class="text-danger"></span>
-			</div>
-
-			<div class="form-group mb-3">
-				<label asp-for="ConfirmCopy" class="control-label">Confirm Copy <info-icon name="info-confirm-copy" /></label>
-				<input asp-for="ConfirmCopy" class="form-control" />
-				<span asp-validation-for="ConfirmCopy" class="text-danger"></span>
-			</div>
-
-			<div class="form-group mb-3">
-				<label asp-for="ImageFile" class="control-label">Image File <info-icon name="info-image-file" /></label>
-				<input asp-for="ImageFile" class="form-control" />
-				<span asp-validation-for="ImageFile" class="text-danger"></span>
-			</div>
-
-			<div class="form-group mb-3">
-				<label asp-for="SearchImageFile" class="control-label">Search Image File <info-icon name="info-search-image-file" /></label>
-				<input asp-for="SearchImageFile" class="form-control" />
-				<span asp-validation-for="SearchImageFile" class="text-danger"></span>
-			</div>
-			
-			<div class="form-check form-switch mb-3">
-				<input asp-for="NoDogs" type="checkbox" class="form-check-input" />
-				<label asp-for="NoDogs" class="form-check-label">
-					No Dogs <info-icon name="info-no-dogs" />
-				</label>
-			</div>
-
-			
-			
-			<div class="form-group mb-3">
-				<label asp-for="CrsNumber" class="control-label">CRS Number <info-icon name="info-crs-number" /></label>
-				<input asp-for="CrsNumber" class="form-control" />
-				<span asp-validation-for="CrsNumber" class="text-danger"></span>
-			</div>
-			
-			<div class="form-group mb-3">
-				<label asp-for="CrsNumberInt" class="control-label">CRS Number International<info-icon name="info-crs-number-int" /></label>
-				<input asp-for="CrsNumberInt" class="form-control" />
-				<span asp-validation-for="CrsNumberInt" class="text-danger"></span>
-			</div>
-			
-			<div class="form-group mb-3">
-				<label asp-for="DisabledText" class="control-label">Disabled Text<info-icon name="info-disabled-text" /></label>
-				<input asp-for="DisabledText" class="form-control" />
-				<span asp-validation-for="DisabledText" class="text-danger"></span>
-			</div>
-
-			<div class="input-group">
-				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary" >Save</button>
-				<input type="button" value="Cancel" class="btn btn-outline-secondary"/>
-
-				<button type="submit" name="Command" value="Publish" id="publish-button" class="btn btn-outline-success">Publish <info-icon name="info-publish" /></button>
-		 
-				</div>
-		</form>
-
-	</div>
-</div>
+@{
+	await Html.RenderPartialAsync("Admin/Hotels/_HotelEdit", @Model);
+}
 
 <div id="page-info" style="display:none;">
 
@@ -234,5 +139,5 @@
 @section Scripts {
 	<script src="~/js/mshapp/msh-apiservice.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
-	<script src="~/js/admin/pay/msh-admin-coincorner.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-hotels.js"></script>
 }

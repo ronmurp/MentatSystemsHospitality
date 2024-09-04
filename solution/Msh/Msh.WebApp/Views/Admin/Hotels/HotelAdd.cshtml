@@ -1,0 +1,25 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.WebApp.TagHelpers
+
+@model Msh.HotelCache.Models.Hotels.Hotel;
+@{
+	var title = "Hotels";
+    ViewData["Title"] = title;
+
+	await Html.RenderPartialAsync("Admin/Menus/_AdminMenuHotels", "Hotels");
+}
+
+<div class="text-center">
+	<h1 class="display-4">@title</h1>
+	<p></p>
+</div>
+
+@{
+	await Html.RenderPartialAsync("Admin/Hotels/_HotelEdit", @Model);
+}
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/pay/msh-admin-coincorner.js"></script>
+}

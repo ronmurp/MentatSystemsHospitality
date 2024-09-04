@@ -52,10 +52,7 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 			{
 				await Task.Delay(0);
 
-				var hotels = hotelsRepoService.GetHotels();
-				var hotel = new Hotel();
-				hotels.Add(hotel);
-				return RedirectToAction("HotelEdit", hotel);
+				return View("~/Views/Admin/Hotels/HotelAdd.cshtml");
 			}
 			catch (Exception ex)
 			{
@@ -88,8 +85,15 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 			try
 			{
 				await Task.Delay(0);
+				
 
 				var hotels = hotelsRepoService.GetHotels();
+				if (action == "add")
+				{
+					var hotel = new Hotel();
+					hotels.Add(hotel);
+					return RedirectToAction("HotelEdit", hotel);
+				}
 				if (action == "delete")
 				{
 					var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
@@ -121,6 +125,11 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 			try
 			{
 				await Task.Delay(0);
+
+				if (!ModelState.IsValid)
+				{
+					return RedirectToAction("HotelEdit", hotel);
+				}
 
 				var hotelList = hotelsRepoService.GetHotels();
 				var found = false;

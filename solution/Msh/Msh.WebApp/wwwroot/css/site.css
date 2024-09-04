@@ -151,3 +151,6 @@ table {
             display: block;
             color: #337ab7;
         }
+.right-align {
+    text-align: right;
+}
