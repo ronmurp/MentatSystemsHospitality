@@ -26,6 +26,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 builder.Services.AddControllersWithViews();
 
+// Make this conditional - with a pragma, or with a configuration option - needs reload of system
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+
 // Register our services
 builder.LoadServices();
 
