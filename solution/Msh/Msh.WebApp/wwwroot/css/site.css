@@ -154,3 +154,14 @@ table {
 .right-align {
     text-align: right;
 }
+
+.error-block {
+    display:none;
+}
+.error-block-show {
+    display: block;
+}
+
+.error-block-show .error-message {
+    color: red;
+}
