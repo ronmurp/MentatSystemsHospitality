@@ -17,7 +17,11 @@
 @{
 	await Html.RenderPartialAsync("Admin/Hotels/_HotelEdit", @Model);
 }
-
+<div class="row">
+	<div class="col-12">
+		<button id="get-hotel" class="btn btn-primary" onclick="window.mshMethods.getFormData()">Get Hotel</button>
+	</div>
+</div>
 <div id="page-info" style="display:none;">
 
 	<div data-info-for="info-user-id">

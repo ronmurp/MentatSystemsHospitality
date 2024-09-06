@@ -1,0 +1,129 @@
+﻿@* Info blocks for _HotelEdit.cshtml *@
+
+<div id="page-info" style="display:none;">
+
+
+	<div data-info-for="info-chain-code">
+		<span>Chain Code</span>
+		<div>
+			<p>
+				This is a code required by Opera.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-hotel-code">
+		<span>Hotel Code</span>
+		<div>
+			<p>
+				The hotel code is used to identify a hotel in Opera, and in this web booking system.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-name">
+		<span>Name</span>
+		<div>
+			<p>
+				The name of the hotel, as it will appear on pages here, and in emails to the user.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-description">
+		<span>Description</span>
+		<div>
+			<p>
+				This is a description for the hotel, and will contain HTML.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-subtitle">
+		<span>Subtitle</span>
+		<div>
+			<p>
+				A short subtitle for the hotel.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-confirm-copy">
+		<span>Confirm Copy</span>
+		<div>
+			<p>
+				This is additional confirmation copy specific to the hotel, added to the confirmation page and to emails.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-image-file">
+		<span>Image File</span>
+		<div>
+			<p>
+				The image file used to display the hotel.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-search-image-file">
+		<span>Search Image File</span>
+		<div>
+			<p>
+				The image used on the search page.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-crs-number">
+		<span>CRS Number</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-crs-number-int">
+		<span>CRS Number Int</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-disabled-text">
+		<span>Disabled Text</span>
+		<div>
+			<p>
+				The text to display if the hotel is disabled. Plain single line text.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-no-dogs">
+		<span>No Dogs</span>
+		<div>
+			<p>
+				Set this true to disallow dogs in the whole of the hotel.
+			</p>
+			<p>
+				If dogs are allowed, they may be disallowed in specific room types.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-no-dogs-text">
+		<span>No Dogs Text</span>
+		<div>
+			<p>
+				The text to display when the users are informed that dogs are not allowed.
+			</p>
+			<p>
+				This No Dogs feature could be used for pets in general.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-admin-notes">
+		<span>Admin Notes</span>
+		<div>
+			<p>
+				Add notes for admin users. This isn't seen by customers booking using the site.
+			</p>
+		</div>
+	</div>
+
+	@{
+		await Html.RenderPartialAsync("Admin/_AdminPublish", "Hotel Edit");
+	}
+
+</div>

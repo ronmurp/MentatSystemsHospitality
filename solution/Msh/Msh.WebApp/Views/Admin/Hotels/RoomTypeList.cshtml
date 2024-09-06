@@ -1,0 +1,81 @@
+﻿@model Msh.WebApp.Models.Admin.ViewModels.RoomTypeListVm;
+@{
+	var title = "Room Type List";
+	ViewData["Title"] = title;
+
+	await Html.RenderPartialAsync("Admin/Menus/_AdminMenuHotels", "RoomTypeList");
+}
+
+<div class="text-center">
+	<h1 class="display-4">@title</h1>
+</div>
+
+@{
+	await Html.RenderPartialAsync("Admin/Hotels/_HotelSelect", @Model);
+}
+
+<div class="row">
+	<div class="col-12">
+		<table>
+			<tr>
+				<th>Room Type Code</th>
+				<th>Group Code</th>
+				<th>Name</th>
+				<th>   </th>
+			</tr>
+			
+			@foreach (var rt in @Model.RoomTypes)
+			{
+				<tr>
+					<td>@rt.Code</td>
+					<td>@rt.GroupCode</td>
+					<td>@rt.Name</td>
+					<td style="width:80px;">
+						
+						<div class="cell-outer">
+							<div class="cell-inner">
+								<a href="javascript:window.mshMethods.editRoomType('@rt.Code')" >
+									<i class="fa-solid fa-pen-to-square"></i>
+								</a>
+							</div>
+							<div class="cell-inner">
+								<a href="javascript:window.mshMethods.deleteRoom(@rt.Code')" >
+									<i class="fa-solid fa-times"></i>
+								</a>
+							</div>
+						</div>
+					</td>
+				</tr>
+			}
+			
+		</table>
+
+	</div>
+</div>
+<div class="row">
+	<div class="col-12">
+		<button id="add-hotel" class="btn btn-primary" onclick="window.mshMethods.addRoomType()">Add Room Type</button>
+	</div>
+</div>
+
+<div id="page-info" style="display:none;">
+
+<div data-info-for="info-hotel-code">
+	<span>Hotel</span>
+	<div>
+		<p>Select a hotel to view Room Types for that hotel</p>
+	</div>
+</div>
+</div>
+
+@{
+	await Html.RenderPartialAsync("Admin/_AdminErrorBlock", @Model.ErrorMessage);
+}
+
+@section Scripts{
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-roomtype.js"></script>
+}
+
+
+

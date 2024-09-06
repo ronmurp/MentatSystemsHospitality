@@ -52,8 +52,13 @@
 <div class="row">
 	<div class="col-12">
 		<button id="add-hotel" class="btn btn-primary" onclick="window.mshMethods.addHotel()">Add Hotel</button>
+		
 	</div>
 </div>
+
+@{
+	await Html.RenderPartialAsync("Admin/_AdminErrorBlock", "");
+}
 
 @section Scripts{
 	<script src="~/js/mshapp/mshapp.js"></script>

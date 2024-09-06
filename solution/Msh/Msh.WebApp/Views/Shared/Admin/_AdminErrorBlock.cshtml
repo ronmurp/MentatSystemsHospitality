@@ -1,0 +1,13 @@
+﻿@model string
+
+@{
+	var errorBlockCss = string.IsNullOrEmpty(@Model)
+		? "error-block"
+		: "error-block-show";
+}
+
+<div class="@errorBlockCss" id="error-block">
+	<div class="col-12">
+		<p id="error-message">@Model</p>
+	</div>
+</div>
