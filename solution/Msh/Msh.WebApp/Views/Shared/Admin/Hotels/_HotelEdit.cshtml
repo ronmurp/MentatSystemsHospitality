@@ -91,12 +91,20 @@
 				<textarea asp-for="AdminNotes" class="form-control " ></textarea>
 				<span asp-validation-for="AdminNotes" class="text-danger"></span>
 			</div>
-
-			<div class="input-group">
-				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
-				<input type="button" value="Cancel" class="btn btn-outline-secondary" onclick="window.mshMethods.cancelHotelEdit()" />
-				<button type="submit" name="Command" value="Publish" id="publish-button" class="btn btn-outline-success">Publish <info-icon name="info-publish" /></button>
+			
+			<div style="display:flex;justify-content:start;">
+				<div class="input-group">
+					<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
+					<input type="button" value="Cancel" class="btn btn-outline-secondary" onclick="window.mshMethods.cancelHotelEdit()" />
+				</div>
+				<div style="display:flex;justify-content:start;">
+					<button type="submit" name="Command" value="Publish" id="publish-button" class="btn btn-outline-success">Publish</button>
+					
+					&nbsp;<info-icon name="info-publish" />
+				</div>
+				
 			</div>
+			
 		</form>
 
 	</div>

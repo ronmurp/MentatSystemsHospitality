@@ -244,7 +244,8 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 		{
 			var vm = new RoomTypeListVm
 			{
-				HotelCode = string.IsNullOrEmpty(hotelCode) ? string.Empty : hotelCode
+				HotelCode = string.IsNullOrEmpty(hotelCode) ? string.Empty : hotelCode,
+				HotelName = string.Empty
 			};
 
 			try
@@ -257,6 +258,7 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 					: vm.Hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
 
 				vm.HotelCode = hotel != null ? hotel.HotelCode : string.Empty;
+				vm.HotelName = hotel != null ? hotel.Name : string.Empty;
 
 				var roomTypes = hotelsRepoService.GetRoomTypes(vm.HotelCode);
 

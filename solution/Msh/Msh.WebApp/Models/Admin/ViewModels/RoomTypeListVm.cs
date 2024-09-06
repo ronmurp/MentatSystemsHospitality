@@ -14,5 +14,5 @@ public class HotelListVm
 public class RoomTypeListVm : HotelListVm
 {
 	public List<RoomType> RoomTypes { get; set; } = [];
-
+	public string HotelName { get; set; } = string.Empty;
 }

@@ -1,4 +1,4 @@
-﻿using Msh.Admin.Models;
+﻿using Msh.Admin.Models.ViewModels;
 
 namespace Msh.Admin.Services;
 

@@ -1,4 +1,4 @@
-﻿namespace Msh.Admin.Models;
+﻿namespace Msh.Admin.Models.ViewModels;
 
 public class AdminBaseVm
 {

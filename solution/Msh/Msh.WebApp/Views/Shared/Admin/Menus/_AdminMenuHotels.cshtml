@@ -1,16 +1,19 @@
-﻿@using Msh.Admin.Models
+﻿@using Msh.Admin.Models.ViewModels
 @using Msh.Admin.Services
 
 @inject IAdminVmService AdminVmService
 @model string
 
 @{
-	// Model is the name of the menu item. Set the corresponding menu item Active property
-	var list = AdminVmService.SetActiveItem(@Model, [
+	var adminArray = new List<AdminMenuItem>
+	{
 		new AdminMenuItem { Name = "HotelsIndex", Controller = "Hotels", Action = "Index", Text = "Hotels Home" },
 		new AdminMenuItem { Name = "HotelList", Controller = "Hotels", Action = "HotelList", Text = "Hotel List" },
 		new AdminMenuItem { Name = "RoomTypeList", Controller = "Hotels", Action = "RoomTypeList", Text = "Room Type List" }
-	]);
+	};
+	
+	// Model is the name of the menu item. Set the corresponding menu item Active property
+	var list = AdminVmService.SetActiveItem(@Model, adminArray);
 	// 
 	await Html.RenderPartialAsync("Admin/Menus/_AdminMenus", list);
 }

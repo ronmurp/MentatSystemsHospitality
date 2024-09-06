@@ -1,4 +1,4 @@
-﻿@using Msh.Admin.Models
+﻿@using Msh.Admin.Models.ViewModels
 @using Msh.Admin.Services
 
 @inject IAdminVmService AdminVmService
@@ -6,11 +6,12 @@
 
 @{
 	// Model is the name of the menu item. Set the corresponding menu item Active property
-	var list = AdminVmService.SetActiveItem(@Model, [
+	var list = AdminVmService.SetActiveItem(@Model, new List<AdminMenuItem>
+	{
 		new AdminMenuItem { Name = "CcIndex", Controller = "CoinCorner", Action = "Index", Text = "Coin Corner Home" },
 		new AdminMenuItem { Name = "CcConfig", Controller = "CoinCorner", Action = "Config", Text = "CC Config" },
 		new AdminMenuItem { Name = "CcConfig", Controller = "CoinCorner", Action = "Global", Text = "CC Global" }
-	]);
+	});
 	// 
 	await Html.RenderPartialAsync("Admin/Menus/_AdminMenus", list);
 }
