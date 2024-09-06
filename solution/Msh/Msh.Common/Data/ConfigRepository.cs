@@ -10,7 +10,7 @@ namespace Msh.Common.Data;
 public class ConfigRepository(ConfigDbContext configDbContext) : IConfigRepository
 {
     /// <summary>
-    /// Get a config record by ConfigType key
+    /// Get a config record by ConfigType
     /// </summary>
     /// <param name="configType"></param>
     /// <returns>Null if not found</returns>
@@ -34,6 +34,15 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
         return obj;
     }
 
+	/// <summary>
+	/// Get a config record by ConfigType and key
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="configType"></param>
+	/// <param name="key">An extra key, where config is broken down by key - e.g. room types for each hotel</param>
+	/// <returns></returns>
+	public T GetConfigContent<T>(string configType, string key) => GetConfigContent<T>($"{configType}-{key}");
+
     /// <summary>
     /// Save the current type = must exist. NullConfigException = thrown if not.
     /// </summary>
@@ -51,6 +60,11 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
         }
         config.Content = json;
         SaveConfig(config);
+    }
+
+    public void SaveConfig<T>(string configType, string key, T value)
+    {
+	    SaveConfig<T>($"{configType}-{key}", value);
     }
 
     /// <summary>
@@ -77,6 +91,11 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
             AddConfig(config);
 	    }
 	}
+
+    public void SaveMissingConfig<T>(string configType, string key, T defaultObject)
+    {
+	    SaveMissingConfig<T>($"{configType}-{key}", defaultObject);
+    }
 
 
     /// <summary>

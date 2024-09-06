@@ -16,18 +16,24 @@ public interface IConfigRepository
 
     T GetConfigContent<T>(string configType);
 
-    /// <summary>
-    /// Used by Admin to save the configuration, including Notes
-    /// </summary>
-    void SaveConfig(Config config);
+    T GetConfigContent<T>(string configType, string key);
+
+	/// <summary>
+	/// Used by Admin to save the configuration, including Notes
+	/// </summary>
+	void SaveConfig(Config config);
 
     /// <summary>
     /// Save the current type = must exist. NullConfigException = thrown if not.
     /// </summary>
     void SaveConfig<T>(string configType, T value);
 
+    void SaveConfig<T>(string configType, string key, T value);
 
-    void SaveMissingConfig<T>(string configType, T defaultObject);
+
+	void SaveMissingConfig<T>(string configType, T defaultObject);
+
+	void SaveMissingConfig<T>(string configType, string key, T defaultObject);
 
 	/// <summary>
 	/// Used by Admin to create a new config
