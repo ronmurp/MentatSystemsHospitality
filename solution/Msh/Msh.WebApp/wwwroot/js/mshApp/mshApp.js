@@ -805,7 +805,13 @@
             queryString: queryString,
 
             scrollTop: scrollTop,
-            copyText: copyText
+            copyText: copyText,
+
+            getFormData: function() {
+                const form = document.querySelector('form');
+                const data = Object.fromEntries(new FormData(form).entries());
+                return data;
+            }
         }
     }());
 
