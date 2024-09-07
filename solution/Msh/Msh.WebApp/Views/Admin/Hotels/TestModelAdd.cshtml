@@ -1,0 +1,40 @@
+﻿@using Msh.WebApp.Models.Admin
+@model Msh.HotelCache.Models.Hotels.TestModel;
+
+@{
+	var success = new SuccessAlert
+	{
+		ModelName = "Test Model",
+		ReturnPath = "/admin/hotels/testmodellist",
+		ReturnPathName = "Test Model List"
+	};
+}
+
+<div class="row">
+	<div class="col-6">
+		<h3>Add Test Model</h3>
+		@{
+			await Html.RenderPartialAsync("Admin/_AdminSaveSuccess", success);
+		}
+		
+		<form asp-action="TestModelAdd" id="main-form">
+
+			<div class="form-group mb-3">
+				<label asp-for="Code" class="control-label">Code <info-icon name="info-code"/></label>
+				<input asp-for="Code" class="form-control"/>
+				<span asp-validation-for="Code" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="Name" class="control-label">Name <info-icon name="info-name"/></label>
+				<input asp-for="Name" class="form-control"/>
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+
+			<div class="input-group">
+				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
+			</div>
+
+		</form>
+	</div>
+</div>

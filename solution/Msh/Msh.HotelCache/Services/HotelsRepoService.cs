@@ -14,6 +14,10 @@ public interface IHotelsRepoService
 	List<RoomType> GetRoomTypes(string hotelCode);
 
 	void SaveRoomTypes(List<RoomType> roomTypes, string hotelCode);
+
+	List<TestModel> GetTestModels();
+
+	void SaveTestModels(List<TestModel> testModels);
 }
 
 /// <summary>
@@ -35,5 +39,13 @@ public class HotelsRepoService(IConfigRepository configRepository) : IHotelsRepo
 	public void SaveRoomTypes(List<RoomType> roomTypes, string hotelCode)
 	{
 		configRepository.SaveConfig(ConstHotel.Cache.RoomTypes, hotelCode,roomTypes);
+	}
+
+	public List<TestModel> GetTestModels() => 
+		configRepository.GetConfigContent<List<TestModel>>(ConstHotel.Cache.TestModel) ?? [];
+
+	public void SaveTestModels(List<TestModel> testModels)
+	{
+		configRepository.SaveConfig(ConstHotel.Cache.TestModel, testModels);
 	}
 }

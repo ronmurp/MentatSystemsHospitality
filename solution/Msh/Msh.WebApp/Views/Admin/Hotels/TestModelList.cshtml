@@ -1,0 +1,7 @@
+﻿@{
+	var title = "Test Models";
+	ViewData["Title"] = title;
+
+	await Html.RenderPartialAsync("Admin/Menus/_AdminMenuHotels", "TestModelList");
+}
+<h3>@title</h3>
