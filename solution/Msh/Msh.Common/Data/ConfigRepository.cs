@@ -22,13 +22,13 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
         var config = GetConfig(configType);
         if (config == null)
         {
-            throw new NullConfigException($"Missing Config Type {configType}");
+	        return default!;
         }
 
         var obj = JsonSerializer.Deserialize<T>(config.Content);
         if (obj == null)
         {
-            throw new NullConfigException($"Missing Config Type Content {configType}");
+	        return default!;
         }
 
         return obj;
@@ -54,12 +54,18 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
     {
         var json = JsonSerializer.Serialize(value);
         var config = GetConfig(configType);
+
         if (config == null)
         {
-            throw new NullConfigException($"Save: Config type not found: {configType}");
+	        config = new Config { ConfigType = configType, Content = json };
+            AddConfig(config);
         }
-        config.Content = json;
-        SaveConfig(config);
+        else
+        {
+	        config.Content = json;
+	        SaveConfig(config);
+		}
+        
     }
 
     public void SaveConfig<T>(string configType, string key, T value)
