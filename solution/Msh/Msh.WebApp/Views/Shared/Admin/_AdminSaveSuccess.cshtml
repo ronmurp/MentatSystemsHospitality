@@ -1,0 +1,10 @@
+﻿@model Msh.WebApp.Models.Admin.SuccessAlert
+
+@if (ViewBag.IsSuccess)
+{
+	<div class="alert alert-success alert-dismissible fade show" role="alert">
+		<strong>Success!</strong> You have saved the @Model.ModelName.<br/>
+		<a href="@Model.ReturnPath">Return to @Model.ReturnPathName</a>
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
