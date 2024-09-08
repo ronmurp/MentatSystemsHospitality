@@ -18,7 +18,18 @@
 				<th>Hotel Code</th>
 				<th>Chain Code</th>
 				<th>Name</th>
-				<th>   </th>
+				<th>   
+					<div class="cell-outer">
+						<div class="cell-inner">
+							<a href="javascript:window.mshMethods.addHotel()">
+								<i class="fa-solid fa-plus"></i>
+							</a>
+						</div>
+						<div class="cell-inner">
+							<info-icon name="info-list-icons" />
+						</div>
+					</div>
+				</th>
 			</tr>
 			
 			@foreach (var hotel in @Model)
@@ -49,16 +60,17 @@
 
 	</div>
 </div>
-<div class="row py-3">
-	<div class="col-12">
-		<button id="add-hotel" class="btn btn-primary" onclick="window.mshMethods.addHotel()">Add Hotel</button>
-		
-	</div>
-</div>
+
 
 @{
 	await Html.RenderPartialAsync("Admin/_AdminErrorBlock", "");
 }
+
+<div id="page-info" style="display:none;">
+	@{
+		await Html.RenderPartialAsync("Admin/_ListIconsInfo", "Hotel List");
+	}
+</div>
 
 @section Scripts{
 	<script src="~/js/mshapp/mshapp.js"></script>

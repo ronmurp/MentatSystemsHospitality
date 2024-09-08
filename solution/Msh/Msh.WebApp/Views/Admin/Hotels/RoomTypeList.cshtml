@@ -21,7 +21,18 @@
 				<th>Room Type Code</th>
 				<th>Group Code</th>
 				<th>Name</th>
-				<th>   </th>
+				<th>   
+					<div class="cell-outer">
+						<div class="cell-inner">
+							<a href="javascript:window.mshMethods.addRoomType()">
+								<i class="fa-solid fa-plus"></i>
+							</a>
+						</div>
+						<div class="cell-inner">
+							<info-icon name="info-list-icons" />
+						</div>
+					</div>
+				</th>
 			</tr>
 			
 			@foreach (var rt in @Model.RoomTypes)
@@ -58,7 +69,14 @@
 	</div>
 </div>
 
+@{
+	await Html.RenderPartialAsync("Admin/_AdminErrorBlock", @Model.ErrorMessage);
+}
+
 <div id="page-info" style="display:none;">
+	@{
+		await Html.RenderPartialAsync("Admin/_ListIconsInfo", "Test Models");
+	}
 	<div data-info-for="info-hotel-code">
 		<span>Hotel</span>
 		<div>
@@ -66,10 +84,6 @@
 		</div>
 	</div>
 </div>
-
-@{
-	await Html.RenderPartialAsync("Admin/_AdminErrorBlock", @Model.ErrorMessage);
-}
 
 @section Scripts{
 	<script src="~/js/mshapp/mshapp.js"></script>
