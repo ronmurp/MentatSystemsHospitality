@@ -1,4 +1,5 @@
-﻿@using Msh.WebApp.Models.Admin
+﻿@using Msh.HotelCache.Models
+@using Msh.WebApp.Models.Admin
 @model Msh.HotelCache.Models.Hotels.TestModel;
 
 @{
@@ -18,17 +19,45 @@
 		}
 		
 		<form asp-action="TestModelAdd" id="main-form">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 			<div class="form-group mb-3">
-				<label asp-for="Code" class="control-label">Code <info-icon name="info-code"/></label>
+				<label asp-for="Code" class="control-label"></label>&nbsp;<info-icon name="info-code"/>
 				<input asp-for="Code" class="form-control"/>
 				<span asp-validation-for="Code" class="text-danger"></span>
 			</div>
 
 			<div class="form-group mb-3">
-				<label asp-for="Name" class="control-label">Name <info-icon name="info-name"/></label>
+				<label asp-for="Name" class="control-label"></label>&nbsp;<info-icon name="info-name"/>
 				<input asp-for="Name" class="form-control"/>
 				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="Email" class="control-label"></label>&nbsp;<info-icon name="info-email"/>
+				<input asp-for="Email" class="form-control"/>
+				<span asp-validation-for="Email" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="Password" class="control-label"></label>&nbsp;<info-icon name="info-password" />
+				<input asp-for="Password" class="form-control" />
+				<span asp-validation-for="Password" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="Language" class="control-label"></label>&nbsp;<info-icon name="info-language" />
+				<select asp-for="Language" class="form-control" asp-items="ViewBag.Languages">
+					<option value="">Please select a language</option>
+					
+				</select>
+				<span asp-validation-for="Language" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="Notes" class="control-label"></label>&nbsp;<info-icon name="info-notes" />
+				<textarea asp-for="Notes" class="form-control" ></textarea>
+				<span asp-validation-for="Notes" class="text-danger"></span>
 			</div>
 
 			<div class="input-group">
@@ -38,3 +67,51 @@
 		</form>
 	</div>
 </div>
+
+<div id="page-info" style="display:none;">
+	<div data-info-for="info-code">
+		<span>Model Code</span>
+		<div>
+			<p>
+				A unique code that describes the model. @ConstHotel.Vem.CodeLength35
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-name">
+		<span>Model Name</span>
+		<div>
+			<p>
+				A name for the item. @ConstHotel.Vem.NameLength350
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-email">
+		<span>Model Email</span>
+		<div>
+			<p>
+				A valid email.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-email">
+		<span>Model Password</span>
+		<div>
+			<p>
+				A valid password.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-notes">
+		<span>Model Notes</span>
+		<div>
+			<p>
+				Enter some notes (optional)
+			</p>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-testmodel.js"></script>
+}

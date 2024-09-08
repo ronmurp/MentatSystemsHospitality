@@ -13,7 +13,8 @@ public class Hotel
     /// Intended to be used for OWS, but isn't. See OwsConfig.ChainCode.
     /// </summary>
     [Required]
-    [Description("Chain Code"), Info("chain-code")] 
+    [Length(3, 5, ErrorMessage = ConstHotel.Vem.CodeLength35)]
+	[Description("Chain Code"), Info("chain-code")] 
     public string ChainCode { get; set; } = string.Empty;
 
   
@@ -25,13 +26,16 @@ public class Hotel
     /// Example: LWH is often seen as LWB.
     /// </remarks>
     [Required]
+    [Length(3, 5, ErrorMessage = ConstHotel.Vem.CodeLength35)]
 	[Description("Hotel Code"), Info("hotel-code")] 
     public string HotelCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The name of the hotel
     /// </summary>
-    [Required][Description("Name"), Info("name")] 
+    [Required]
+    [Length(3, 50, ErrorMessage = ConstHotel.Vem.NameLength350)]
+    [Description("Name"), Info("name")] 
     public string Name { get; set; } = string.Empty;
 
 	/// <summary>
@@ -72,9 +76,12 @@ public class Hotel
 	/// Numbers for guests to call for help
 	/// </summary>
 	[Required]
+	[Phone]
 	[Description("CRS Number"), Info("crs-number")] 
 	public string CrsNumber { get; set; } = string.Empty;
+
 	[Required]
+	[Phone]
 	[Description("CRS Number Int"), Info("crs-number-int")] 
 	public string CrsNumberInt { get; set; } = string.Empty;
 
