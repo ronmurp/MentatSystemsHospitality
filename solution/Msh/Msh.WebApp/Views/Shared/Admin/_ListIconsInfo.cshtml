@@ -1,0 +1,19 @@
+﻿@model string;
+@* 
+
+Pass the model as the string name of the list for which this information applies 
+In other respects this is an info popup for the table's icons
+
+*@
+<div data-info-for="info-list-icons">
+	<span>List Icons for @Model</span>
+	<div>
+		<p>The icons in the table perform the following actions</p>
+		<ul>
+			<li><i class="fa-solid fa-plus"></i> - Add a new record.</li>
+			<li><i class="fa-solid fa-pen-to-square"></i> - Edit the record in the row.</li>
+			<li><i class="fa-solid fa-times"></i> - Delete the record in the row.</li>
+		</ul>
+		
+	</div>
+</div>
