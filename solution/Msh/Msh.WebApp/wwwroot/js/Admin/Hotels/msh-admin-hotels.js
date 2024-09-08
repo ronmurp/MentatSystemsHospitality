@@ -12,20 +12,16 @@
     meth.extendMethods({
 
         addHotel: function () {
-            var path = `${window.location.origin}/admin/hotels/HotelEditByCode?hotelCode=&action=add`;
-            window.location.assign(path);
+            util.redirectTo('admin/hotels/HotelEditByCode?hotelCode=&action=add');
         },
         editHotel: function (hotelCode) {
-            var path = `${window.location.origin}/admin/hotels/HotelEditByCode?hotelCode=${hotelCode}&action=edit`;
-            window.location.assign(path);
+            util.redirectTo(`admin/hotels/HotelEditByCode?hotelCode=${hotelCode}&action=edit`);
         },
         deleteHotel: function (hotelCode) {
-            var path = `${window.location.origin}/admin/hotels/HotelEditByCode?hotelCode=${hotelCode}&action=delete`;
-            window.location.assign(path);
+            util.redirectTo(`admin/hotels/HotelEditByCode?hotelCode=${hotelCode}&action=delete`);
         },
         cancelHotelEdit: function () {
-            var path = `${window.location.origin}/admin/hotels/hotellist`;
-            window.location.assign(path);
+            util.redirectTo('admin/hotels/hotellist');
         },
         getFormData: function () {
             $('#main-form').validate();

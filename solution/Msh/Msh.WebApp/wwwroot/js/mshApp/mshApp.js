@@ -811,6 +811,11 @@
                 const form = document.querySelector('form');
                 const data = Object.fromEntries(new FormData(form).entries());
                 return data;
+            },
+
+            redirectTo: function (newPath) {
+                var path = `${window.location.origin}/${newPath}`;
+                window.location.assign(path);
             }
         }
     }());
