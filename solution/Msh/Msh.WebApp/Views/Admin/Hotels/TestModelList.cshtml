@@ -1,7 +1,77 @@
-﻿@{
+﻿@model List<Msh.HotelCache.Models.Hotels.TestModel>
+@{
 	var title = "Test Models";
 	ViewData["Title"] = title;
 
 	await Html.RenderPartialAsync("Admin/Menus/_AdminMenuHotels", "TestModelList");
 }
-<h3>@title</h3>
+<div class="text-center">
+	<h1 class="display-4">@title</h1>
+	<p>A list of test models used to develop list and edit pages.</p>
+</div>
+
+<div class="row">
+	<div class="col-12">
+		<table>
+			<tr>
+				<th>Code</th>
+				<th>Name</th>
+				<th>   
+					<div class="cell-outer">
+						<div class="cell-inner">
+							<a href="javascript:window.mshMethods.addTestModel()">
+								<i class="fa-solid fa-plus"></i>
+							</a>
+						</div>
+						<div class="cell-inner">
+							<info-icon name="info-list-icons" />
+						</div>
+					</div>
+				</th>
+			</tr>
+
+			@foreach (var tm in @Model)
+			{
+				<tr>
+					<td>@tm.Code</td>
+					<td>@tm.Name</td>
+					<td style="width:80px;">
+
+						<div class="cell-outer">
+							<div class="cell-inner">
+								<a href="javascript:window.mshMethods.editTestModel('@tm.Code')">
+									<i class="fa-solid fa-pen-to-square"></i>
+								</a>
+							</div>
+							<div class="cell-inner">
+								<a href="javascript:window.mshMethods.deleteTestModel('@tm.Code')">
+									<i class="fa-solid fa-times"></i>
+								</a>
+							</div>
+						</div>
+					</td>
+				</tr>
+			}
+
+		</table>
+
+	</div>
+</div>
+
+
+@{
+	await Html.RenderPartialAsync("Admin/_AdminErrorBlock", "");
+}
+<div id="page-info" style="display:none;">
+	@{
+		await Html.RenderPartialAsync("Admin/_ListIconsInfo", "Test Models");
+	}
+</div>
+
+@section Scripts {
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-testmodel.js"></script>
+}
+
+
+
