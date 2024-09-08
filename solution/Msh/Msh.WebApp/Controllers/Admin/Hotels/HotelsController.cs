@@ -31,7 +31,7 @@ public partial class HotelsController(ILogger<HomeController> logger,
 		{
 			await Task.Delay(0);
 
-			var hotels = hotelsRepoService.GetHotelsAsync();
+			var hotels = await hotelsRepoService.GetHotelsAsync();
 
 			return View("~/Views/Admin/Hotels/HotelList.cshtml", hotels);
 		}
