@@ -7,17 +7,17 @@ namespace Msh.HotelCache.Services;
 
 public interface IHotelsRepoService
 {
-	List<Hotel> GetHotels();
+	Task<List<Hotel>> GetHotelsAsync();
 
-	void SaveHotels(List<Hotel> hotels);
+	Task SaveHotelsAsync(List<Hotel> hotels);
 
-	List<RoomType> GetRoomTypes(string hotelCode);
+	Task<List<RoomType>> GetRoomTypesAsync(string hotelCode);
 
-	void SaveRoomTypes(List<RoomType> roomTypes, string hotelCode);
+	Task SaveRoomTypesAsync(List<RoomType> roomTypes, string hotelCode);
 
-	List<TestModel> GetTestModels();
+	Task<List<TestModel>> GetTestModelsAsync();
 
-	void SaveTestModels(List<TestModel> testModels);
+	Task SaveTestModelsAsync(List<TestModel> testModels);
 }
 
 /// <summary>
@@ -25,27 +25,27 @@ public interface IHotelsRepoService
 /// </summary>
 public class HotelsRepoService(IConfigRepository configRepository) : IHotelsRepoService
 {
-	public List<Hotel> GetHotels() =>
-		configRepository.GetConfigContent<List<Hotel>>(ConstHotel.Cache.Hotel);
+	public async Task<List<Hotel>> GetHotelsAsync() =>
+		await configRepository.GetConfigContentAsync<List<Hotel>>(ConstHotel.Cache.Hotel);
 
-	public void SaveHotels(List<Hotel> hotels)
+	public async Task SaveHotelsAsync(List<Hotel> hotels)
 	{
-		configRepository.SaveConfig(ConstHotel.Cache.Hotel, hotels);
+		await configRepository.SaveConfigAsync(ConstHotel.Cache.Hotel, hotels);
 	}
 
-	public List<RoomType> GetRoomTypes(string hotelCode) => 
-		configRepository.GetConfigContent<List<RoomType>>(ConstHotel.Cache.RoomTypes, hotelCode);
+	public async Task<List<RoomType>> GetRoomTypesAsync(string hotelCode) => 
+		await configRepository.GetConfigContentAsync<List<RoomType>>(ConstHotel.Cache.RoomTypes, hotelCode);
 
-	public void SaveRoomTypes(List<RoomType> roomTypes, string hotelCode)
+	public async Task SaveRoomTypesAsync(List<RoomType> roomTypes, string hotelCode)
 	{
-		configRepository.SaveConfig(ConstHotel.Cache.RoomTypes, hotelCode,roomTypes);
+		await configRepository.SaveConfigAsync(ConstHotel.Cache.RoomTypes, hotelCode,roomTypes);
 	}
 
-	public List<TestModel> GetTestModels() => 
-		configRepository.GetConfigContent<List<TestModel>>(ConstHotel.Cache.TestModel) ?? [];
+	public async Task<List<TestModel>> GetTestModelsAsync() => 
+		await configRepository.GetConfigContentAsync<List<TestModel>>(ConstHotel.Cache.TestModel) ?? [];
 
-	public void SaveTestModels(List<TestModel> testModels)
+	public async Task SaveTestModelsAsync(List<TestModel> testModels)
 	{
-		configRepository.SaveConfig(ConstHotel.Cache.TestModel, testModels);
+		await configRepository.SaveConfigAsync(ConstHotel.Cache.TestModel, testModels);
 	}
 }

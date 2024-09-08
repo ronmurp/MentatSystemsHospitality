@@ -31,7 +31,7 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 			{
 				await Task.Delay(0);
 
-				var hotels = hotelsRepoService.GetHotels();
+				var hotels = hotelsRepoService.GetHotelsAsync();
 
 				return View("~/Views/Admin/Hotels/HotelList.cshtml", hotels);
 			}
@@ -90,7 +90,7 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 			{
 				await Task.Delay(0);
 
-				var hotels = hotelsRepoService.GetHotels();
+				var hotels = await hotelsRepoService.GetHotelsAsync();
 				var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
 				return View("~/Views/Admin/Hotels/HotelEdit.cshtml", hotel);
 			}
@@ -110,7 +110,7 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 				await Task.Delay(0);
 				
 
-				var hotels = hotelsRepoService.GetHotels();
+				var hotels = await hotelsRepoService.GetHotelsAsync();
 				if (action == "add")
 				{
 					var hotel = new Hotel();
@@ -121,7 +121,7 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 				{
 					var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
 					hotels.Remove(hotel);
-					hotelsRepoService.SaveHotels(hotels);
+					await hotelsRepoService.SaveHotelsAsync(hotels);
 					return RedirectToAction("HotelList");
 				}
 				else
@@ -154,7 +154,7 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 					return RedirectToAction("HotelEdit", hotel);
 				}
 
-				var hotelList = hotelsRepoService.GetHotels();
+				var hotelList = await hotelsRepoService.GetHotelsAsync();
 				var found = false;
 				for (var i = 0; i < hotelList.Count; i++)
 				{
@@ -173,7 +173,7 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 
 				if (found)
 				{
-					hotelsRepoService.SaveHotels(hotelList);
+					await hotelsRepoService.SaveHotelsAsync(hotelList);
 				}
 
 
@@ -206,7 +206,7 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 
 				}
 
-				var hotelList = hotelsRepoService.GetHotels();
+				var hotelList = await hotelsRepoService.GetHotelsAsync();
 				var found = false;
 				for (var i = 0; i < hotelList.Count; i++)
 				{
@@ -225,7 +225,7 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 
 				if (found)
 				{
-					hotelsRepoService.SaveHotels(hotelList);
+					await hotelsRepoService.SaveHotelsAsync(hotelList);
 				}
 
 
@@ -252,7 +252,7 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 			{
 				await Task.Delay(0);
 
-				vm.Hotels = hotelsRepoService.GetHotels();
+				vm.Hotels = await hotelsRepoService.GetHotelsAsync();
 				var hotel = string.IsNullOrEmpty(hotelCode)
 					? vm.Hotels.FirstOrDefault()
 					: vm.Hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
@@ -260,7 +260,7 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 				vm.HotelCode = hotel != null ? hotel.HotelCode : string.Empty;
 				vm.HotelName = hotel != null ? hotel.Name : string.Empty;
 
-				var roomTypes = hotelsRepoService.GetRoomTypes(vm.HotelCode);
+				var roomTypes = await hotelsRepoService.GetRoomTypesAsync(vm.HotelCode);
 
 				vm.RoomTypes = roomTypes;
 
@@ -270,7 +270,7 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 			{
 				if (!string.IsNullOrEmpty(vm.HotelCode))
 				{
-					configRepository.SaveMissingConfig(ConstHotel.Cache.RoomTypes, vm.HotelCode, new List<RoomType>());
+					await configRepository.SaveMissingConfigAsync(ConstHotel.Cache.RoomTypes, vm.HotelCode, new List<RoomType>());
 				}
 
 				vm.ErrorMessage = $"No room types for hotel {vm.HotelCode}";
@@ -293,7 +293,7 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 			{
 				await Task.Delay(0);
 
-				var hotels = hotelsRepoService.GetTestModels();
+				var hotels = await hotelsRepoService.GetTestModelsAsync();
 
 				return View("~/Views/Admin/Hotels/TestModelList.cshtml", hotels);
 			}
@@ -320,7 +320,7 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 
 			//if (!string.IsNullOrEmpty(code))
 			//{
-			//	var testModels = hotelsRepoService.GetTestModels();
+			//	var testModels = hotelsRepoService.GetTestModelsAsync();
 			//	var tm = testModels.FirstOrDefault(x => x.Code == code);
 			//	if (tm != null)
 			//	{
@@ -335,14 +335,12 @@ namespace Msh.WebApp.Controllers.Admin.Hotels
 		[Route("TestModelAdd")]
 		public async Task<IActionResult> TestModelAdd(TestModel testModel)
 		{
-			await Task.Delay(0);
-
-			var testModels = hotelsRepoService.GetTestModels();
+			var testModels = await hotelsRepoService.GetTestModelsAsync();
 
 			if (testModels.All(tm => tm.Code != testModel.Code))
 			{
 				testModels.Add(testModel);
-				hotelsRepoService.SaveTestModels(testModels);
+				await hotelsRepoService.SaveTestModelsAsync(testModels);
 				return RedirectToAction(nameof(TestModelAdd), new { IsSuccess = true });
 			}
 
