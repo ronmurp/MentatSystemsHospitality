@@ -94,7 +94,7 @@ public partial class HotelsController
 
 
 	[HttpGet]
-	[Route("TestModelEdit")]
+	[Route("TestModelEdit/{code}")]
 	public async Task<IActionResult> TestModelEdit(string code, bool isSuccess = false)
 	{
 		await Task.Delay(0);
