@@ -1,9 +1,10 @@
-﻿@{
+﻿@using Msh.Admin.Models.Const
+@{
 	var title = "Scripts Test";
 	ViewData["Title"] = title;
-
-	await Html.RenderPartialAsync("Admin/Menus/_AdminMenuDev", "DevScriptsTest");
 }
+
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuDev, currentItem = "DevScriptsTest" })
 
 
 <div class="text-center">

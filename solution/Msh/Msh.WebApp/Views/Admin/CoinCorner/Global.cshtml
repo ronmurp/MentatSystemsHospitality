@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.Admin.Models.Const
 @using Msh.Common.Models.Configuration
 @using Msh.Pay.CoinCorner.Models;
 @using Msh.WebApp.TagHelpers
@@ -7,9 +8,10 @@
 @{
 	var title = "Coin Corner Global";
     ViewData["Title"] = title;
-
-	await Html.RenderPartialAsync("Admin/Menus/_AdminMenuCoinCorner", "CcGlobal");
 }
+
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuCoinCorner, currentItem = "CcGlobal" })
+
 
 <div class="text-center">
 	<h1 class="display-4">@title</h1>

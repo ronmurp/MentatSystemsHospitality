@@ -1,10 +1,11 @@
-﻿@model IEnumerable<Msh.HotelCache.Models.Hotels.TestModel>
+﻿@using Msh.Admin.Models.Const
+@model IEnumerable<Msh.HotelCache.Models.Hotels.TestModel>
 @{
 	var title = "Test Models";
 	ViewData["Title"] = title;
 }
 
-@await Html.PartialAsync("Admin/Menus/_AdminMenuHotels", "TestModelList")
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuHotels, currentItem = "TestModelList" })
 
 <div class="text-center">
 	<h1 class="display-4">@title</h1>

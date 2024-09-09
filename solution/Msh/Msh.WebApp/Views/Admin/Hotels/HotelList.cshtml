@@ -1,11 +1,14 @@
-﻿@using Msh.HotelCache.Models.Hotels
+﻿@using Msh.Admin.Models.Const
+@using Msh.HotelCache.Models.Hotels
+@using Msh.WebApp.TagHelpers
 @model List<Hotel>;
 @{
 	var title = "Hotel List";
 	ViewData["Title"] = title;
-
-	await Html.RenderPartialAsync("Admin/Menus/_AdminMenuHotels", "HotelList");
 }
+
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuHotels, currentItem = "HotelList" })
+
 
 <div class="text-center">
 	<h1 class="display-4">@title</h1>

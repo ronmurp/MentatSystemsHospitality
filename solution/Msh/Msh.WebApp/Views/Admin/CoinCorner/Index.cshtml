@@ -1,12 +1,13 @@
-﻿@{
+﻿@using Msh.Admin.Models.Const
+@{
 	var title = "Coin Corner";
 	ViewData["Title"] = title;
-
-	await Html.RenderPartialAsync("Admin/Menus/_AdminMenuCoinCorner", "CcIndex");
 }
+
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuCoinCorner, currentItem = "CcIndex" })
+
 
 <div class="text-center">
 	<h1 class="display-4">@title</h1>
-	
 
 </div>

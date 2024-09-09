@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-
-@model List<Msh.Admin.Models.ViewModels.AdminMenuItem>
+﻿@model IEnumerable<Msh.Admin.Models.ViewModels.AdminMenuItem>
 
 <div class="row">
 	<div class="col-12">
@@ -8,17 +6,19 @@
 			@foreach (var item in @Model)
 			{
 				<div style="padding:0 4px 0 4px;border-right:1px solid black;">
-					@if (@item.Active == "active")
+					@{
+						var isActive = @item.Active == "active";
+					}
+					@if (isActive)
 					{
 						@item.Text
 					}
 					else
 					{
-						<a style="color: #337ab7;" class="nav-link " asp-area="" asp-controller="@item.Controller" asp-action="@item.Action">@item.Text</a>	
+						<a style="color: #337ab7;" class="nav-link " asp-area="" asp-controller="@item.Controller" asp-action="@item.Action">@item.Text</a>
 					}
 				</div>
 			}
 		</div>
-		
 	</div>
 </div>

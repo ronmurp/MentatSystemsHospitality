@@ -1,10 +1,12 @@
-﻿@model Msh.WebApp.Models.Admin.ViewModels.RoomTypeListVm;
+﻿@using Msh.Admin.Models.Const
+@model Msh.WebApp.Models.Admin.ViewModels.RoomTypeListVm;
 @{
 	var title = "Room Type List";
 	ViewData["Title"] = title;
-
-	await Html.RenderPartialAsync("Admin/Menus/_AdminMenuHotels", "RoomTypeList");
 }
+
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuHotels, currentItem = "RoomTypeList" })
+
 
 <div class="text-center">
 	<h1 class="display-4">@title</h1>

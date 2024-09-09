@@ -6,6 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Pages\Shared\Components\AdminMenu\Default.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Pages\Shared\Components\AdminMenu\Default.cshtml" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
 		<PackageReference Include="NUnit" Version="4.1.0" />
