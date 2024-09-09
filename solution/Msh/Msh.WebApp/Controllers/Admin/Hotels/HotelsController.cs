@@ -4,24 +4,27 @@ using Msh.Common.Exceptions;
 using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Hotels;
-using Msh.HotelCache.Models.RoomTypes;
 using Msh.HotelCache.Services;
-using Msh.WebApp.Models.Admin.ViewModels;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
+using Msh.WebApp.Services;
 
 namespace Msh.WebApp.Controllers.Admin.Hotels;
 
+[Authorize]
 [Route("admin/hotels")]
 public partial class HotelsController(ILogger<HomeController> logger, 
 	IHotelsRepoService hotelsRepoService,
-	IConfigRepository configRepository) : Controller
+	IConfigRepository configRepository,
+	IUserService userService) : Controller
 {
 	[Route("")]
 	public async Task<IActionResult> Index()
 	{
 		await Task.Delay(0);
 
-		return View("~/Views/Admin/Hotels/Index.cshtml");
+		var userId = userService.GetUserId() ?? string.Empty;
+
+		return View("~/Views/Admin/Hotels/Index.cshtml", userId);
 	}
 
 	[Route("HotelList")]
