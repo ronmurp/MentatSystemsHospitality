@@ -9,10 +9,8 @@
     var props = [];
 
     meth.extendMethods({
-
         confirmDeleteTestModel: function (code) {
             var url = `TestModelDelete?code=${code}`;
-
             api.postAsync(url, null, function (data) {
 
                 util.redirectTo('admin/hotels/TestModelList')
@@ -26,10 +24,7 @@
                 okButtonClickScript: `onclick="window.mshMethods.confirmDeleteTestModel('${code}')""`,
                 okButtonText: 'OK'
             });
-
-    
         },
-
     });
 
 

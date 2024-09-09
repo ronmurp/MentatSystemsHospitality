@@ -602,20 +602,16 @@
         meth.extendMethods({
             showModal: showModal,
             hideModal: hideModal,
-
             showInfo: showInfo
         });
 
+       
         return {
             showModal: showModal,
             hideModal: hideModal,
-           
-            injectInfo: injectInfo,
             showInfo: showInfo,
-            
+            injectInfo: injectInfo          
         }
-
-
 
     })(jQuery);
 

@@ -33,6 +33,8 @@ public partial class HotelsController
 		}
 	}
 
+
+
 	[HttpGet]
 	[Route("TestModelAdd")]
 	public async Task<IActionResult> TestModelAdd(bool isSuccess = false)
@@ -89,6 +91,74 @@ public partial class HotelsController
 
 		
 	}
+
+
+	[HttpGet]
+	[Route("TestModelEdit")]
+	public async Task<IActionResult> TestModelEdit(string code, bool isSuccess = false)
+	{
+		await Task.Delay(0);
+
+		ViewBag.IsSuccess = isSuccess;
+		ViewBag.Code = string.Empty;
+		ViewBag.Languages = GetLanguages();
+		ViewBag.Hotels = await GetHotels();
+
+		var testModels = await hotelsRepoService.GetTestModelsAsync();
+		var testModel = testModels.FirstOrDefault(m => m.Code == code);
+		if (testModel != null)
+		{
+			return View("~/Views/Admin/Hotels/TestModelEdit.cshtml", testModel);
+		}
+
+		return RedirectToAction(nameof(TestModelList));
+	}
+
+
+	[HttpPost]
+	[Route("TestModelEdit")]
+	public async Task<IActionResult> TestModelEdit(TestModel testModel)
+	{
+		ViewBag.Languages = GetLanguages();
+		ViewBag.Hotels = await GetHotels();
+
+		if (ModelState.IsValid)
+		{
+			var testModels = await hotelsRepoService.GetTestModelsAsync();
+			var index = testModels.FindIndex(m => m.Code == testModel.Code);
+			if (index >= 0)
+			{
+				//testModel.Hotels = testModel.Hotels.Where(m => !string.IsNullOrEmpty(m)).ToList();
+				testModel.Notes = string.IsNullOrEmpty(testModel.Notes) ? string.Empty : testModel.Notes;
+
+				testModels[index] = testModel;
+				await hotelsRepoService.SaveTestModelsAsync(testModels);
+				return RedirectToAction(nameof(TestModelEdit), new { IsSuccess = true, Code = testModel.Code });
+			}
+			else
+			{
+				ViewBag.IsSuccess = false;
+				ViewBag.Code = string.Empty;
+
+				ModelState.AddModelError("", "That Code does not exist");
+
+				return View("~/Views/Admin/Hotels/TestModelEdit.cshtml");
+			}
+		}
+		else
+		{
+			ViewBag.IsSuccess = false;
+			ViewBag.Code = string.Empty;
+
+			ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
+
+			return View("~/Views/Admin/Hotels/TestModelEdit.cshtml");
+		}
+
+	}
+
+
+
 
 	[HttpPost]
 	[Route("TestModelDelete")]
