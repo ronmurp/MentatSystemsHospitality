@@ -3,13 +3,15 @@ using Msh.Common.Models.ViewModels;
 using Msh.Common.Services;
 using Msh.HotelCache.Models.Hotels;
 using Msh.HotelCache.Models.RoomTypes;
+using Msh.HotelCache.Services;
 
 namespace Msh.WebApp.Controllers.Admin.Hotels;
 
 [ApiController]
 [Route("api/hotelapi")]
-public class HotelApiController : Controller
+public class HotelApiController(IHotelsRepoService hotelsRepoService) : Controller
 {
+
 	[HttpGet]
 	[Route("hotelSave")]
 	public async Task<IActionResult> HotelSave()
@@ -56,7 +58,38 @@ public class HotelApiController : Controller
 		}
 	}
 
-		
+	[HttpPost]
+	[Route("testModelDelete")]
+	public async Task<IActionResult> TestModelDelete([FromBody] object obj, [FromQuery]string code)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			var testModels = await hotelsRepoService.GetTestModelsAsync();
+			if (testModels.Any(m => m.Code == code))
+			{
+				var tm = testModels.First(m => m.Code == code);
+				testModels.Remove(tm);
+				await hotelsRepoService.SaveTestModelsAsync(testModels);
+			}
+
+			return Ok(new ObjectVm
+			{
+				
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
+
+
 	[HttpGet]
 	[Route("hotelConfig")]
 	public async Task<IActionResult> HotelConfig()

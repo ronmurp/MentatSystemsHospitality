@@ -89,6 +89,21 @@
             }
         };
 
+        const delAsync = async (url, model, success, fail) => {
+            try {
+                const response = await axios.del(url, model);
+                if (success) success(response.data);
+            } catch (error) {
+                if (fail) fail(error);
+                if (error) console.log(error);
+                else console.log('unexpected error ' + url);
+            }
+        };
+
+        const postDel = function(url, model, success, fail){
+            postAsync(url, model, success, fail)
+        }
+
         return {
             get: get,
             post: post,
@@ -96,7 +111,11 @@
 
             getAsync: getAsync,
             putAsync: putAsync,
-            postAsync: postAsync
+            postAsync: postAsync,
+
+            delAsync: delAsync,
+
+            postDel: postDel
         }
     })(jQuery);
 

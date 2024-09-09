@@ -4,56 +4,33 @@
     var meth = app.methodsService;
     var util = app.utilityService;
     var api = app.apiService;
+    var modal = app.modalService;
 
-  
     var props = [];
 
     meth.extendMethods({
 
-        addTestModel: function () {
-            util.redirectTo('admin/hotels/TestModelAdd');
-        },
-        editTestModel: function (hotelCode) {
-            util.redirectTo(`admin/hotels/TestModelEdit?hotelCode=${hotelCode}`);
-        },
-        deleteTestModel: function (hotelCode) {
-            if (confirm) {
-                util.redirectTo(`admin/hotels/TestModelDelete?hotelCode=${hotelCode}`);
-            }
-        },
-        cancelTestModel: function () {
-            util.redirectTo('admin/hotels/testmodellist')
-        },
-        getFormData: function () {
-            $('#main-form').validate();
-            var data = util.getFormData();
-            var obj = {};
-            props.forEach((v) => {
-                var value = $(`#${v.name}`).val();
-                switch (v.dataType) {
-                    case "System.Boolean":
-                        value = value === 'true' ? true : false;
-                        break;
-                }
-                obj[v.name] = value;
+        confirmDeleteTestModel: function (code) {
+            var url = `TestModelDelete?code=${code}`;
+
+            api.postAsync(url, null, function (data) {
+
+                util.redirectTo('admin/hotels/TestModelList')
             });
-            var url = `${hotelApi}hotelsave`;
-            
-            api.postAsync(url, data, function (d) {
-                var x = d;
+        },
+
+        deleteTestModel: function (code) {
+
+            modal.showModal('delTestModel', "Confirm Delete", `Confirm delete of ${code}`, {
+                footerOk: true,
+                okButtonClickScript: `onclick="window.mshMethods.confirmDeleteTestModel('${code}')""`,
+                okButtonText: 'OK'
             });
-        }
+
+    
+        },
 
     });
 
-    function loadConfig() {
-        api.getAsync(`${hotelApi}hotelConfig`, (data) => {
-            if (data.success) {
-                props = data.data;
-            }
-        });
-    }
-
-    loadConfig();
 
 }(jQuery));

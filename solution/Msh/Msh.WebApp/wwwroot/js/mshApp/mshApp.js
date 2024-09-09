@@ -549,7 +549,7 @@
             html += `			<div>`;
             html += `				<button class="btn btn-secondary" onclick="window.mshMethods.hideModal('${id}')">${o.closeButtonText}</button>`;
             if (o.footerOk) {
-                html += `				<button class="btn btn-secondary" ${o.okButtonClickScript}>${o.okButtonText}</button>`;
+                html += `				<button class="btn btn-primary" ${o.okButtonClickScript}>${o.okButtonText}</button>`;
             }
             html += `			</div>`;
             html += `		</div>`;

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Msh.Common.Exceptions;
+using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models.Hotels;
 using Msh.HotelCache.Models;
 
@@ -41,6 +42,7 @@ public partial class HotelsController
 		ViewBag.IsSuccess = isSuccess;
 		ViewBag.Code = string.Empty;
 		ViewBag.Languages = GetLanguages();
+		ViewBag.Hotels = await GetHotels();
 
 		return View("~/Views/Admin/Hotels/TestModelAdd.cshtml");
 	}
@@ -50,6 +52,7 @@ public partial class HotelsController
 	public async Task<IActionResult> TestModelAdd(TestModel testModel)
 	{
 		ViewBag.Languages = GetLanguages();
+		ViewBag.Hotels = await GetHotels();
 
 		if (ModelState.IsValid)
 		{
@@ -57,24 +60,91 @@ public partial class HotelsController
 
 			if (testModels.All(tm => tm.Code != testModel.Code))
 			{
+				//testModel.Hotels = testModel.Hotels.Where(m => !string.IsNullOrEmpty(m)).ToList();
+				testModel.Notes = string.IsNullOrEmpty(testModel.Notes) ? string.Empty : testModel.Notes;
+
 				testModels.Add(testModel);
 				await hotelsRepoService.SaveTestModelsAsync(testModels);
 				return RedirectToAction(nameof(TestModelAdd), new { IsSuccess = true, Code = testModel.Code });
 			}
+			else
+			{
+				ViewBag.IsSuccess = false;
+				ViewBag.Code = string.Empty;
+
+				ModelState.AddModelError("", "That Code already exists");
+
+				return View("~/Views/Admin/Hotels/TestModelAdd.cshtml");
+			}
+		}
+		else
+		{
+			ViewBag.IsSuccess = false;
+			ViewBag.Code = string.Empty;
+
+			ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
+
+			return View("~/Views/Admin/Hotels/TestModelAdd.cshtml");
 		}
 
-		ViewBag.IsSuccess = false;
-		ViewBag.Code = string.Empty;
 		
-		ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
-
-		return View("~/Views/Admin/Hotels/TestModelAdd.cshtml");
 	}
 
-	private List<SelectListItem> GetLanguages() =>
-	[
-		new SelectListItem { Text = "English", Selected = true },
-		new SelectListItem { Text = "French", Disabled = true },
-		new SelectListItem { Text = "German" }
-	];
+	[HttpPost]
+	[Route("TestModelDelete")]
+	public async Task<IActionResult> TestModelDelete([FromQuery] string code)
+	{
+		try
+		{
+			var testModels = await hotelsRepoService.GetTestModelsAsync();
+			if (testModels.Any(m => m.Code == code))
+			{
+				var tm = testModels.First(m => m.Code == code);
+				testModels.Remove(tm);
+				await hotelsRepoService.SaveTestModelsAsync(testModels);
+
+				return Ok(new ObjectVm());
+			}
+			else
+			{
+				return RedirectToAction(nameof(TestModelList));
+			}
+
+			
+		}
+		catch (Exception ex)
+		{
+			return RedirectToAction(nameof(TestModelList));
+		}
+
+		
+		//return View("~/Views/Admin/Hotels/TestModelList.cshtml");
+	}
+
+	private List<SelectListItem> GetLanguages()
+	{
+		var gEurope = new SelectListGroup { Name = "Europe" };
+		var gAsia = new SelectListGroup { Name = "Asia" };
+		return [
+			new SelectListItem { Text = "English", Selected = true, Group = gEurope},
+			new SelectListItem { Text = "French", Disabled = true, Group = gEurope },
+			new SelectListItem { Text = "German", Group = gEurope },
+			new SelectListItem { Text = "Chinese", Group = gAsia },
+			new SelectListItem { Text = "Japanese", Group = gAsia }
+		];
+	}
+
+	private async Task<List<SelectListItem>> GetHotels()
+	{
+		var hotels = await hotelsRepoService.GetHotelsAsync();
+
+		var list = new List<SelectListItem>();
+
+		foreach (var h in hotels)
+		{
+			list.Add(new SelectListItem { Value = h.HotelCode, Text = h.Name });
+		}
+
+		return list;
+	}
 }
