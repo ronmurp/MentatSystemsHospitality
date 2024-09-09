@@ -1,13 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.Admin.Models.Const
 @using Msh.WebApp.TagHelpers
 
 @model Msh.HotelCache.Models.RoomTypes.RoomType;
 @{
 	var title = "Room Type";
     ViewData["Title"] = title;
-
-	await Html.RenderPartialAsync("Admin/Menus/_AdminMenuHotels", "Hotels");
 }
+
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuHotels, currentItem = "Hotels" })
+
 
 <div class="text-center">
 	<h1 class="display-4">@title</h1>
