@@ -12,9 +12,7 @@
 	<h1 class="display-4">@title</h1>
 </div>
 
-@{
-	await Html.RenderPartialAsync("Admin/Hotels/_HotelSelect", @Model);
-}
+@await Component.InvokeAsync("AdminHotelSelect", @Model.HotelCode)
 
 <div class="row">
 	<div class="col-12">

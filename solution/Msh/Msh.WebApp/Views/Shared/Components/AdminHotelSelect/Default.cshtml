@@ -9,13 +9,13 @@
 				{
 					if (h.HotelCode == @Model.HotelCode)
 					{
-						<option value="@h.HotelCode" selected >@h.Name</option>
+						<option value="@h.HotelCode" selected>@h.Name</option>
 					}
 					else
 					{
-						<option value="@h.HotelCode" >@h.Name</option>
+						<option value="@h.HotelCode">@h.Name</option>
 					}
-					
+
 				}
 			</select>
 			<input type="hidden" id="hotelCode" value="@Model.HotelCode" />
