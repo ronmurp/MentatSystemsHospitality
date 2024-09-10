@@ -27,7 +27,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.Configure<IdentityOptions>(options =>
 {
 	// options.Password.RequiredLength = 15;
-	// options.SignIn.RequireConfirmedEmail = true;
+	options.SignIn.RequireConfirmedEmail = true;
 });
 
 builder.Services.AddControllersWithViews();

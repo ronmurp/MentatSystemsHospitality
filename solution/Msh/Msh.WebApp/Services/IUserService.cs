@@ -1,4 +1,6 @@
-﻿namespace Msh.WebApp.Services;
+﻿using Msh.Admin.Models.ViewModels;
+
+namespace Msh.WebApp.Services;
 
 /// <summary>
 /// A convenient user service that gets various identity values,
@@ -10,5 +12,5 @@ public interface IUserService
 
 	bool IsAuthenticated();
 
-	object GetUsers();
+	List<UserVm> GetUsers();
 }

@@ -23,7 +23,7 @@ namespace Msh.WebApp.Controllers.Admin.Admin
 
 			var users = userService.GetUsers();
 
-			return View("~/Views/Admin/Administrator/UserList.cshtml");
+			return View("~/Views/Admin/Administrator/UserList.cshtml", users);
 		}
 	}
 }
