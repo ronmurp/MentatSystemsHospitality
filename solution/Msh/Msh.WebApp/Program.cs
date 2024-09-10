@@ -24,6 +24,12 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.Configure<IdentityOptions>(options =>
+{
+	// options.Password.RequiredLength = 15;
+	// options.SignIn.RequireConfirmedEmail = true;
+});
+
 builder.Services.AddControllersWithViews();
 
 // Make this conditional - with a pragma, or with a configuration option - needs reload of system

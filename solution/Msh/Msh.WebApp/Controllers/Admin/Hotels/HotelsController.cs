@@ -22,6 +22,8 @@ public partial class HotelsController(ILogger<HomeController> logger,
 	{
 		await Task.Delay(0);
 
+		var users = userService.GetUsers();
+
 		var userId = userService.GetUserId() ?? string.Empty;
 
 		return View("~/Views/Admin/Hotels/Index.cshtml", userId);

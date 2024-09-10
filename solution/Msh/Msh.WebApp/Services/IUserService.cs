@@ -9,4 +9,6 @@ public interface IUserService
 	string? GetUserId();
 
 	bool IsAuthenticated();
+
+	object GetUsers();
 }

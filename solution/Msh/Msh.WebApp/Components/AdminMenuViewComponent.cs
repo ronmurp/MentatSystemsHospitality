@@ -30,6 +30,10 @@ namespace Msh.WebApp.Components
 
 			switch (menuName)
 			{
+				case AdminConst.MenuAdmin:
+					list = AdminMenu();
+					break;
+
 				case AdminConst.MenuHotels:
 					list = AdminMenuHotels();
 					break;
@@ -42,6 +46,10 @@ namespace Msh.WebApp.Components
 					list = AdminMenuCoinCorner();
 					break;
 
+				case AdminConst.MenuAdministrator:
+					list = AdminMenuAdministrator();
+					break;
+
 				default:
 					return [];
 			}
@@ -49,23 +57,61 @@ namespace Msh.WebApp.Components
 			return list;
 		}
 
+		private AdminMenuItem AdminRootItem(string name)
+		{
+			switch (name)
+			{
+				case AdminConst.MenuAdmin:
+					return new AdminMenuItem { Name = "AdminIndex", Controller = "Admin", Action = "Index", Text = "Admin Home" };
+				case AdminConst.MenuDev:
+					return new AdminMenuItem { Name = "DevIndex", Controller = "Dev", Action = "Index", Text = "Dev Home" };
+				case AdminConst.MenuCoinCorner:
+					return new AdminMenuItem { Name = "CcIndex", Controller = "CoinCorner", Action = "Index", Text = "Coin Corner Home" };
+				case AdminConst.MenuAdministrator:
+					return new AdminMenuItem { Name = "Administrator", Controller = "Administrator", Action = "Index", Text = "Administrator" };
+				case AdminConst.MenuHotels:
+					return new AdminMenuItem { Name = "HotelsIndex", Controller = "Hotels", Action = "Index", Text = "Hotels Home" };
+				default:
+					return new AdminMenuItem { Name = "AdminIndex", Controller = "Admin", Action = "Index", Text = "Admin Home" };
+			}
+		}
+
+		private List<AdminMenuItem> AdminMenu() =>
+		[
+			AdminRootItem(AdminConst.MenuAdmin),
+			AdminRootItem(AdminConst.MenuHotels),
+			AdminRootItem(AdminConst.MenuDev),
+			AdminRootItem(AdminConst.MenuCoinCorner),
+			AdminRootItem(AdminConst.MenuAdministrator)
+		];
+
 		private List<AdminMenuItem> AdminMenuHotels() =>
 		[
-			new AdminMenuItem { Name = "HotelsIndex", Controller = "Hotels", Action = "Index", Text = "Hotels Home" },
+			AdminRootItem(AdminConst.MenuAdmin),
+			AdminRootItem(AdminConst.MenuHotels),
 			new AdminMenuItem { Name = "HotelList", Controller = "Hotels", Action = "HotelList", Text = "Hotels" },
 			new AdminMenuItem { Name = "RoomTypeList", Controller = "Hotels", Action = "RoomTypeList", Text = "Room Types" },
 			new AdminMenuItem { Name = "TestModelList", Controller = "Hotels", Action = "TestModelList", Text = "Test Models" }
 		];
 		private List<AdminMenuItem> AdminMenuDev() =>
 		[
-			new AdminMenuItem { Name = "DevIndex", Controller = "Dev", Action = "Index", Text = "Dev Home" },
+			AdminRootItem(AdminConst.MenuAdmin),
+			AdminRootItem(AdminConst.MenuDev),
 			new AdminMenuItem { Name = "DevScriptsTest", Controller = "Dev", Action = "ScriptsTest", Text = "Scripts Tests" }
 		];
 		private List<AdminMenuItem> AdminMenuCoinCorner() =>
 		[
-			new AdminMenuItem { Name = "CcIndex", Controller = "CoinCorner", Action = "Index", Text = "Coin Corner Home" },
+			AdminRootItem(AdminConst.MenuAdmin),
+			AdminRootItem(AdminConst.MenuCoinCorner),
 			new AdminMenuItem { Name = "CcConfig", Controller = "CoinCorner", Action = "Config", Text = "CC Config" },
 			new AdminMenuItem { Name = "CcConfig", Controller = "CoinCorner", Action = "Global", Text = "CC Global" }
+		];
+
+		private List<AdminMenuItem> AdminMenuAdministrator() =>
+		[
+			AdminRootItem(AdminConst.MenuAdmin),
+			AdminRootItem(AdminConst.MenuAdministrator),
+			new AdminMenuItem { Name = "UserList", Controller = "Administrator", Action = "UserList", Text = "User List" }
 		];
 	}
 }

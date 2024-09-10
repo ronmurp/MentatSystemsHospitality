@@ -1,0 +1,5 @@
+﻿@using Msh.Admin.Models.Const
+
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuAdministrator, currentItem = "UserList" })
+
+<h3>User List</h3>
