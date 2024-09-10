@@ -34,6 +34,10 @@ namespace Msh.WebApp.Components
 					list = AdminMenu();
 					break;
 
+				case AdminConst.MenuUsers:
+					list = AdminMenuUsers();
+					break;
+
 				case AdminConst.MenuHotels:
 					list = AdminMenuHotels();
 					break;
@@ -62,7 +66,9 @@ namespace Msh.WebApp.Components
 			switch (name)
 			{
 				case AdminConst.MenuAdmin:
-					return new AdminMenuItem { Name = "AdminIndex", Controller = "Admin", Action = "Index", Text = "Admin Home" };
+					return new AdminMenuItem { Name = "AdminIndex", Controller = "Home", Action = "Index", Text = "Admin Home" };
+				case AdminConst.MenuUsers:
+					return new AdminMenuItem { Name = "UsersIndex", Controller = "Users", Action = "Index", Text = "Users Home" };
 				case AdminConst.MenuDev:
 					return new AdminMenuItem { Name = "DevIndex", Controller = "Dev", Action = "Index", Text = "Dev Home" };
 				case AdminConst.MenuCoinCorner:
@@ -79,6 +85,7 @@ namespace Msh.WebApp.Components
 		private List<AdminMenuItem> AdminMenu() =>
 		[
 			AdminRootItem(AdminConst.MenuAdmin),
+			AdminRootItem(AdminConst.MenuUsers),
 			AdminRootItem(AdminConst.MenuHotels),
 			AdminRootItem(AdminConst.MenuDev),
 			AdminRootItem(AdminConst.MenuCoinCorner),
@@ -112,6 +119,12 @@ namespace Msh.WebApp.Components
 			AdminRootItem(AdminConst.MenuAdmin),
 			AdminRootItem(AdminConst.MenuAdministrator),
 			new AdminMenuItem { Name = "UserList", Controller = "Administrator", Action = "UserList", Text = "User List" }
+		];
+		private List<AdminMenuItem> AdminMenuUsers() =>
+		[
+			AdminRootItem(AdminConst.MenuAdmin),
+			AdminRootItem(AdminConst.MenuUsers),
+			new AdminMenuItem { Name = "UserList", Controller = "Users", Action = "UserList", Text = "User List" }
 		];
 	}
 }

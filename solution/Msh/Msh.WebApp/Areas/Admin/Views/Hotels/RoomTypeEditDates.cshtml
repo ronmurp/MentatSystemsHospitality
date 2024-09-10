@@ -1,0 +1,92 @@
+﻿@using Msh.Admin.Models.Const
+@using Msh.WebApp.Models.Admin
+
+@model Msh.HotelCache.Models.RoomTypes.RoomType
+@{
+	var dates = Model.Dates;
+
+	var success = new SuccessAlert
+	{
+		ModelName = "Test Model",
+		ReturnPath = "/admin/hotels/roomtypelist?hotelCode=" + ViewBag.HotelCode,
+		ReturnPathName = "Room Type List"
+	};
+	var title = string.Format("Room Type Dates For {0} - {1}", ViewBag.Hotelcode, Model.Code);
+    ViewData["Title"] = title;
+    var index = 0;
+}
+
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuHotels, currentItem = "Hotels" })
+
+
+<div class="text-center">
+	<h1 class="display-4">@title</h1>
+	<p></p>
+</div>
+<div class="row">
+	<div class="col-12" id="table">
+	
+	</div>
+</div>
+
+@* 
+<div class="row">
+	<div class="col-12">
+		<table>
+			<tr>
+				<th></th>
+				<th>From Date</th>
+				<th>To Date</th>
+				<th>
+					<div class="cell-outer">
+						<div class="cell-inner">
+							<a href="javascript:window.mshMethods.addRoomTypeDate()">
+								<i class="fa-solid fa-plus"></i>
+							</a>
+						</div>
+						<div class="cell-inner">
+							<info-icon name="info-list-icons"/>
+						</div>
+					</div>
+				</th>
+			</tr>
+
+			@foreach (var rt in @dates)
+			{
+				index++;
+
+				<tr>
+					<td>@index</td>
+					<td><input type="date" value="@rt.FromDate"/></td>
+					<td><input type="date" value="@rt.ToDate"/></td>
+
+					<td style="width:80px;">
+
+						<div class="cell-outer">
+							@* <div class="cell-inner">
+						<a asp-controller="Hotels" asp-action="RoomTypeEdit" asp-route-code="@rt.Code" asp-route-hotelCode="@Model.HotelCode">
+						<i class="fa-solid fa-pen-to-square"></i>
+						</a>
+						</div>
+						<div class="cell-inner">
+						<a href="javascript:window.mshMethods.deleteRoom('@rt.Code', '@Model.HotelCode')">
+						<i class="fa-solid fa-times"></i>
+						</a>
+						</div> *@
+						</div>
+					</td>
+				</tr>
+			}
+
+		</table>
+
+	</div>
+</div> *@
+
+
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/Admin/Hotels/msh-admin-roomtype.js"></script>
+}

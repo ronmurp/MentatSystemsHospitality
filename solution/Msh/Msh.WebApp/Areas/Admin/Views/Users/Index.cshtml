@@ -1,0 +1,13 @@
+﻿@using Msh.Admin.Models.Const
+
+@{
+	var title = "User List";
+	ViewData["Title"] = title;
+}
+
+@await Component.InvokeAsync("AdminMenu", new
+{
+	menuName = AdminConst.MenuUsers, currentItem = "UsersIndex"
+})
+
+<h3>Users Index</h3>

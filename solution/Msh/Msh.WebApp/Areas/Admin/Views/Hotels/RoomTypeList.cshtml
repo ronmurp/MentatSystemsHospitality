@@ -1,0 +1,94 @@
+﻿@using Msh.Admin.Models.Const
+@model Msh.WebApp.Models.Admin.ViewModels.RoomTypeListVm;
+@{
+	var title = "Room Type List";
+	ViewData["Title"] = title;
+}
+
+@await Component.InvokeAsync("AdminMenu", new
+{
+	menuName = AdminConst.MenuHotels, currentItem = "RoomTypeList"
+})
+
+<div class="text-center">
+	<h1 class="display-4">@title</h1>
+</div>
+
+@await Component.InvokeAsync("AdminHotelSelect", @Model.HotelCode)
+
+<div class="row">
+	<div class="col-12">
+		<table>
+			<tr>
+				<th>Room Type Code</th>
+				<th>Group Code</th>
+				<th>Name</th>
+				<th>   
+					<div class="cell-outer">
+						<div class="cell-inner">
+							<a asp-controller="Hotels" asp-action="RoomTypeAdd" asp-route-hotelCode="@Model.HotelCode">
+								<i class="fa-solid fa-plus"></i>
+							</a>
+						</div>
+						<div class="cell-inner">
+							<info-icon name="info-list-icons" />
+						</div>
+					</div>
+				</th>
+			</tr>
+			
+			@foreach (var rt in @Model.RoomTypes)
+			{
+				<tr>
+					<td>@rt.Code</td>
+					<td>@rt.GroupCode</td>
+					<td>@rt.Name</td>
+					<td style="width:80px;">
+						
+						<div class="cell-outer">
+							<div class="cell-inner">
+								<a asp-controller="Hotels" asp-action="RoomTypeEdit" asp-route-code="@rt.Code" asp-route-hotelCode="@Model.HotelCode">
+									<i class="fa-solid fa-pen-to-square"></i>
+								</a>
+							</div>
+							<div class="cell-inner">
+								<a href="javascript:window.mshMethods.deleteRoom('@rt.Code', '@Model.HotelCode')" >
+									<i class="fa-solid fa-times"></i>
+								</a>
+							</div>
+							<div class="cell-inner">
+								<a asp-controller="Hotels" asp-action="RoomTypeEditDates" asp-route-code="@rt.Code" asp-route-hotelCode="@Model.HotelCode">
+									<i class="fa-solid fa-pen-to-square"></i>
+								</a>
+							</div>
+						</div>
+					</td>
+				</tr>
+			}
+			
+		</table>
+
+	</div>
+</div>
+
+@await Html.PartialAsync("Admin/_AdminErrorBlock", @Model.ErrorMessage)
+
+<div id="page-info" style="display:none;">
+	
+	@await Html.PartialAsync("Hotels/_ListIconsInfo", "Test Models")
+
+	<div data-info-for="info-hotel-code">
+		<span>Hotel</span>
+		<div>
+			<p>Select a hotel to view Room Types for that hotel</p>
+		</div>
+	</div>
+</div>
+
+@section Scripts{
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-roomtype.js"></script>
+}
+
+
+

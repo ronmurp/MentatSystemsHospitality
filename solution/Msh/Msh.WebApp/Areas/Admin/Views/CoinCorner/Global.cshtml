@@ -1,0 +1,300 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.Admin.Models.Const
+@using Msh.Pay.CoinCorner.Models;
+@using Msh.WebApp.TagHelpers
+
+@model CoinCornerGlobal;
+@{
+	var title = "Coin Corner Global";
+    ViewData["Title"] = title;
+}
+
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuCoinCorner, currentItem = "CcGlobal" })
+
+
+<div class="text-center">
+	<h1 class="display-4">@title</h1>
+	<p></p>
+</div>
+
+<div class="row">
+	<div class="col-6">
+
+		<form asp-action="Global">
+			
+			<div class="form-check form-switch mb-3">
+				<input asp-for="EnableLightning" type="checkbox" class="form-check-input" />
+				<label asp-for="EnableLightning" class="form-check-label">
+					Enable Lightning <info-icon name="info-enable-lightning" />
+				</label>
+			</div>
+			
+			<div class="form-check form-switch mb-3">
+				<input asp-for="EnableOnChain" type="checkbox" class="form-check-input" />
+				<label asp-for="EnableOnChain" class="form-check-label">
+					Enable On Chain <info-icon name="info-enable-on-chain" />
+				</label>
+			</div>
+			
+			<div class="form-check form-switch mb-3">
+				<input asp-for="EnableBedrooms" type="checkbox" class="form-check-input" />
+				<label asp-for="EnableBedrooms" class="form-check-label">
+					Enable Bedrooms <info-icon name="info-enable-bedrooms" />
+				</label>
+			</div>
+			
+			<div class="form-check form-switch mb-3">
+				<input asp-for="EnableActivities" type="checkbox" class="form-check-input" />
+				<label asp-for="EnableActivities" class="form-check-label">
+					Enable Activities <info-icon name="info-enable-activities" />
+				</label>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="Retries" class="control-label">Retries <info-icon name="info-retries"/></label>
+				<input asp-for="Retries" class="form-control"/>
+				<span asp-validation-for="Retries" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="RetryInterval" class="control-label">Retry Interval <info-icon name="info-retry-interval" /></label>
+				<input asp-for="RetryInterval" class="form-control" />
+				<span asp-validation-for="RetryInterval" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="SettleCurrency" class="control-label">Settle Currency <info-icon name="info-settle-currency" /></label>
+				<input asp-for="SettleCurrency" class="form-control" />
+				<span asp-validation-for="SettleCurrency" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="InvoiceCurrency" class="control-label">Invoice Currency <info-icon name="info-invoice-currency" /></label>
+				<input asp-for="InvoiceCurrency" class="form-control" />
+				<span asp-validation-for="InvoiceCurrency" class="text-danger"></span>
+			</div>
+
+			
+			<div class="form-group mb-3">
+				<label asp-for="LightningLimit" class="control-label">Lightning Limit <info-icon name="info-lightning-limit" /></label>
+				<input asp-for="LightningLimit" class="form-control" />
+				<span asp-validation-for="LightningLimit" class="text-danger"></span>
+			</div>
+			
+			
+			
+			<div class="form-group mb-3">
+				<label asp-for="LightningLimitMessage" class="control-label">Lightning Limit Message <info-icon name="info-lightning-limit-message" /></label>
+				<input asp-for="LightningLimitMessage" class="form-control" />
+				<span asp-validation-for="LightningLimitMessage" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="NotAvailableMessage" class="control-label">Not Available Message <info-icon name="info-not-available-message" /></label>
+				<input asp-for="NotAvailableMessage" class="form-control" />
+				<span asp-validation-for="NotAvailableMessage" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="NotAvailableBookingsMessage" class="control-label">Not Available Bookings Message <info-icon name="info-not-available-message" /></label>
+				<input asp-for="NotAvailableBookingsMessage" class="form-control" />
+				<span asp-validation-for="NotAvailableBookingsMessage" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="NotAvailableActivitiesMessage" class="control-label">Not Available Activities Message <info-icon name="info-not-available-message" /></label>
+				<input asp-for="NotAvailableActivitiesMessage" class="form-control" />
+				<span asp-validation-for="NotAvailableActivitiesMessage" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="OnChainPendingWait" class="control-label">On Chain Pending Wait (Seconds) <info-icon name="info-on-chain-pending-wait" /></label>
+				<input asp-for="OnChainPendingWait" class="form-control" />
+				<span asp-validation-for="OnChainPendingWait" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="OnChainInitialPrompt" class="control-label">On Chain Initial Prompt <info-icon name="info-on-chain-initial-prompt" /></label>
+				<input asp-for="OnChainInitialPrompt" class="form-control" />
+				<span asp-validation-for="OnChainInitialPrompt" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="StopWaitingPrompt" class="control-label">Stop Waiting Prompt <info-icon name="info-stop-waiting-prompt" /></label>
+				<input asp-for="StopWaitingPrompt" class="form-control" />
+				<span asp-validation-for="StopWaitingPrompt" class="text-danger"></span>
+			</div>
+			
+			<div class="form-check form-switch mb-3">
+				<input asp-for="OnePencePayment" type="checkbox" class="form-check-input" />
+				<label asp-for="OnePencePayment" class="form-check-label">
+					One Pence Payment <info-icon name="info-one-pence-payment" />
+				</label>
+			</div>
+
+			<div class="input-group">
+				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
+				<input type="button" value="Cancel" class="btn btn-outline-secondary"/>
+
+				<button type="submit" name="Command" value="Publish" id="publish-button" class="btn btn-outline-success">Publish <info-icon name="info-publish"/></button>
+
+			</div>
+		</form>
+
+	</div>
+</div>
+
+<div id="page-info" style="display:none;">
+
+	<div data-info-for="info-enable-lightning">
+		<span>Enable Lightning</span>
+		<div>
+			<p>
+				Lightning payments are faster than on-chain payments. Set this to enable Lightning payments.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-enable-on-chain">
+		<span>Public Key</span>
+		<div>
+			<p>
+				On-chain payments are traditional bitcoin payments that can take minutes or hours to complete.
+			</p>
+			<p>
+				While waiting for on-chain payments to complete, the app will time-out and accept payment, pending a later complete.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-enable-bedrooms">
+		<span>Enable Bedrooms</span>
+		<div>
+			<p>
+				Enable bitcoin(on-chain)/Lightning payments for bedroom (accommodation) bookings.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-enable-activities">
+		<span>Enable Activities</span>
+		<div>
+			<p>
+				Enable bitcoin(on-chain)/Lightning payments for activities (spa, water sports) bookings.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-retries">
+		<span>Retries</span>
+		<div>
+			<p>
+				In the event of an error when making API requests to Coin Corner, how many times should the application retry before giving up?
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-retry-interval">
+		<span>Retry Interval</span>
+		<div>
+			<p>
+				How long, in seconds, should the application wait between retrying Coin Corner API requests?
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-settle-currency">
+		<span>Settle Currency</span>
+		<div>
+			<p>
+				Enter the currency code for the sttle currency.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-invoice-currrency">
+		<span>Invoice Currency Code</span>
+		<div>
+			<p>
+				Enter the currency code for Invoices.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-lightning-limit">
+		<span>Lightning Limit</span>
+		<div>
+			<p>
+				Enter the maximum amount that should be used for Lightning payments.
+			</p>
+			<p>
+				This is an advisory amount in the application. Coin Corner will perform on-chain payments above a limit they specify. 
+				That's the amount that should be entered here.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-lightning-limit-message">
+		<span>Lightning Limit Message</span>
+		<div>
+			<p>
+				The message displayed to users.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-not-available-message">
+		<span>Not Available Message</span>
+		<div>
+			<p>
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-on-chain-pending-wait">
+		<span>On-Chain Pending Wait</span>
+		<div>
+			<p>
+				On-chain payments can take minutes or hours to complete. How long (in seconds) should the application wait before accepting a pending payment.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-on-chain-initial-prompt">
+		<span>On-Chain Initial Prompt</span>
+		<div>
+			<p>
+				The prompt that is displayed to users while waiting for payment.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-stop-waiting-prompt">
+		<span>On-Chain Stop Waiting Prompt</span>
+		<div>
+			<p>
+				The prompt that is displayed to users when stopping waiting.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-one-pence-payment">
+		<span>One Pence Payment</span>
+		<div>
+			<p>
+				This is valid only on a test system. It allows £0.01 payments, because Coin Corner only has a live system.
+			</p>
+		</div>
+	</div>
+	
+	@{
+		await Html.RenderPartialAsync("Admin/_AdminPublish", "Coin Corner Global");
+	}
+	
+</div>
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/pay/msh-admin-coincorner.js"></script>
+}

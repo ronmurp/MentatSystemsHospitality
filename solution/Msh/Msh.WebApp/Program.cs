@@ -69,6 +69,7 @@ app.MapControllerRoute(
     name: "admin",
     pattern: "admin/{controller=Home}/{action=Index}/{id?}");
 
+
 app.MapRazorPages();
 
 app.Run();

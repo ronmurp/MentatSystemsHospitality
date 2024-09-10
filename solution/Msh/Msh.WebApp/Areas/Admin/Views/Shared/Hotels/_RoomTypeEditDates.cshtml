@@ -1,0 +1,50 @@
+﻿@model List<Msh.HotelCache.Models.Hotels.HotelDateItem>
+
+<div class="row">
+	<div class="col-12">
+		<table>
+			<tr>
+				<th>From Date</th>
+				<th>To Date</th>
+				<th>
+					<div class="cell-outer">
+						<div class="cell-inner">
+							<a href="javascript:window.mshMethods.addRoomTypeDate()">
+								<i class="fa-solid fa-plus"></i>
+							</a>
+						</div>
+						<div class="cell-inner">
+							<info-icon name="info-list-icons" />
+						</div>
+					</div>
+				</th>
+			</tr>
+
+			@foreach (var rt in @Model)
+			{
+				<tr>
+					<td><input value="@rt.FromDate" /></td>
+					<td><input value="@rt.ToDate" /></td>
+					
+					<td style="width:80px;">
+
+						<div class="cell-outer">
+							@* <div class="cell-inner">
+								<a asp-controller="Hotels" asp-action="RoomTypeEdit" asp-route-code="@rt.Code" asp-route-hotelCode="@Model.HotelCode">
+									<i class="fa-solid fa-pen-to-square"></i>
+								</a>
+							</div>
+							<div class="cell-inner">
+								<a href="javascript:window.mshMethods.deleteRoom('@rt.Code', '@Model.HotelCode')">
+									<i class="fa-solid fa-times"></i>
+								</a>
+							</div> *@
+						</div>
+					</td>
+				</tr>
+			}
+
+		</table>
+
+	</div>
+</div>

@@ -1,0 +1,244 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.Admin.Models.Const
+@using Msh.Common.Models.Configuration
+@using Msh.Pay.CoinCorner.Models;
+@using Msh.WebApp.TagHelpers
+
+@model CoinCornerConfig;
+@{
+	var title = "Coin Corner Config";
+    ViewData["Title"] = title;
+}
+
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuCoinCorner, currentItem = "CcConfig" })
+
+
+<div class="text-center">
+	<h1 class="display-4">@title</h1>
+	<p></p>
+</div>
+
+<div class="row">
+	<div class="col-6">
+
+		<form asp-action="Config">
+
+			<div class="form-group mb-3">
+				<label asp-for="UserId" class="control-label">User ID <info-icon name="info-user-id"/></label>
+				<input asp-for="UserId" class="form-control"/>
+				<span asp-validation-for="UserId" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="PublicKey" class="control-label">Public Key <info-icon name="info-public-key"/></label>
+				<input asp-for="PublicKey" class="form-control"/>
+				<span asp-validation-for="PublicKey" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="Secret.Secret" class="control-label">Secret <info-icon name="info-secret" /></label>
+				<input asp-for="Secret.Secret" class="form-control" />
+				<span asp-validation-for="Secret.Secret" class="text-danger"></span>
+			</div>
+			<div class="form-group mb-3">
+				<label asp-for="Secret.SecretSource" class="control-label">Secret Source <info-icon name="info-secret-source" /></label>
+				<select asp-for="Secret.SecretSource" class="form-control">
+					@foreach (var source in Enum.GetValues(typeof(ConfigSecretSource)))
+					{
+						<option value="@source">@source</option>
+					}
+				</select>
+				<span asp-validation-for="Secret.SecretSource" class="text-danger"></span>
+			</div>
+			<div class="form-group mb-3">
+				<label asp-for="Secret.Name" class="control-label">Secret Name <info-icon name="info-secret-name" /></label>
+				<input asp-for="Secret.Name" class="form-control"/>
+				<span asp-validation-for="Secret.Name" class="text-danger"></span>
+			</div>
+			<div class="form-group mb-3">
+				<label asp-for="Secret.Target" class="control-label">Secret Target <info-icon name="info-secret-target" /></label>
+				<select asp-for="Secret.Target" class="form-control">
+					@foreach (var target in Enum.GetValues(typeof(EnvironmentVariableTarget)))
+					{
+						<option value="@target">@target</option>
+					}
+				</select>
+				<span asp-validation-for="Secret.Target" class="text-danger"></span>
+			</div>
+
+
+
+			
+
+			<div class="form-group mb-3">
+				<label asp-for="CheckoutUrl" class="control-label">Checkout URL <info-icon name="info-checkout-url" /></label>
+				<input asp-for="CheckoutUrl" class="form-control"/>
+				<span asp-validation-for="CheckoutUrl" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="SuccessRedirectUrl" class="control-label">Success Redirect URL <info-icon name="info-success-url" /></label>
+				<input asp-for="SuccessRedirectUrl" class="form-control"/>
+				<span asp-validation-for="SuccessRedirectUrl" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="FailRedirectUrl" class="control-label">Failed Redirect URL <info-icon name="info-fail-url" /></label>
+				<input asp-for="FailRedirectUrl" class="form-control"/>
+				<span asp-validation-for="FailRedirectUrl" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="NotificationUrl" class="control-label">Notification Redirect URL <info-icon name="info-notify-url" /></label>
+				<input asp-for="NotificationUrl" class="form-control"/>
+				<span asp-validation-for="NotificationUrl" class="text-danger"></span>
+			</div>
+			
+			<div class="form-check form-switch mb-3">
+				<input asp-for="LogEnable" type="checkbox" class="form-check-input" />
+				<label asp-for="LogEnable" class="form-check-label">
+					Log Enabled <info-icon name="info-log-enabled" />
+				</label>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="LogFilePath" class="control-label">Logfile Path <info-icon name="info-logfile" /></label>
+				<input asp-for="LogFilePath" class="form-control"/>
+				<span asp-validation-for="LogFilePath" class="text-danger"></span>
+			</div>
+
+			<div class="input-group">
+				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary" >Save</button>
+				<input type="button" value="Cancel" class="btn btn-outline-secondary"/>
+
+				<button type="submit" name="Command" value="Publish" id="publish-button" class="btn btn-outline-success">Publish <info-icon name="info-publish" /></button>
+		 
+				</div>
+		</form>
+
+	</div>
+</div>
+
+<div id="page-info" style="display:none;">
+
+	<div data-info-for="info-user-id">
+		<span>User ID</span>
+		<div>
+			<p>One of the unique fields that is used to send to Coin Corner as part of the data that identifies the ELH account.</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-public-key">
+		<span>Public Key</span>
+		<div>
+			<p>One of the unique fields that is used to send to Coin Corner as part of the data that identifies the ELH account.</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-secret-source">
+		<span>Secret Source</span>
+		<div>
+			<p>
+				The Coin Corner API requires a secret key be sent with each API call.
+				The secret should not be stored in the application source code. 
+			</p>
+			<p>Where is the secret stored?</p>
+			<ul>
+				<li>Config - Directly in the config</li>
+				<li>Env - In an environment variable (as in name)</li>
+				<li>Azure - In Azure</li>
+			</ul>
+		</div>
+	</div>
+	
+	<div data-info-for="info-secret-target">
+		<span>Environment Variable Target</span>
+		<div>
+			<p>If the secret is stored in an Environment Variable, this determines the target.</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-secret-name">
+		<span>Environment Variable Name</span>
+		<div>
+			<p>
+				This is the name of the Environment Variable, used if the secret is stored in an Environment Variable.
+				If stored in Azure, this will identify the location.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-secret">
+		<span>The Secret</span>
+		<div>
+			<p>
+				The Coin Corner API requires a secret key be sent with each API call.
+				The secret should not be stored in the application source code.
+				This should be empty if the secret is stored elsewhere - as determined by the other Secret configuration values.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-checkout-url">
+		<span>Checkout URL</span>
+		<div>
+			<p></p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-success-url">
+		<span>Success Redirect URL</span>
+		<div>
+			<p></p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-fail-url">
+		<span>Fail Redirect URL</span>
+		<div>
+			<p></p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-notify-url">
+		<span>Notify URL</span>
+		<div>
+			<p>
+				When the status of a transaction occurs in Coin Corner, this address will be used to 
+				notify our booking system that a state change has occurred. The booking system should then perform a status
+				check to get the actual status.
+			</p>
+			<p>
+				Refer to the <a href="https://checkout.coincorner.com/Help/WebHook" target="_blank">WebHook</a> information from Coin Corner.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-logfile">
+		<span>Logfile Path</span>
+		<div>
+			<p>
+				If logging of API calls is enabled (Log Enabled), this is the path to the file system where these logs are stored.
+				You will need to understand the way logs are stored to determine this value.
+			</p>
+		</div>
+	</div>
+	
+	<div data-info-for="info-log-enabled">
+		<span>Log Enabled</span>
+		<div>
+			<p>Set this to enable the logging of Coin Corner API records (as json files)</p>
+		</div>
+	</div>
+	
+	@{
+		await Html.RenderPartialAsync("Admin/_AdminPublish", "Coin Corner Config");
+	}
+	
+</div>
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/pay/msh-admin-coincorner.js"></script>
+}

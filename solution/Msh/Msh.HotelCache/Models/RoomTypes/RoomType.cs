@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Msh.Common.Attributes;
+using Msh.HotelCache.Models.Hotels;
 
 namespace Msh.HotelCache.Models.RoomTypes;
 
@@ -35,7 +36,7 @@ public class RoomType
 	/// </summary>
 
 	[Description("Group Code"), Info("group-code")]
-	public string GroupCode { get; set; } = string.Empty;
+	public string? GroupCode { get; set; } = string.Empty;
 
 	/// <summary>
 	/// Number of people in the room. May be adults, adults+children, adults+children+infants
@@ -43,33 +44,33 @@ public class RoomType
 	/// </summary>
 
 	[Description("Occupation"), Info("occupation")]
-	public int Occupancy { get; set; }
+	public int Occupancy { get; set; } = 2;
 
 	/// <summary>
 	/// A short text name for the room type
 	/// </summary>
 
 	[Description("Name"), Info("name")]
-	public string Name { get; set; } = string.Empty;
+	public string? Name { get; set; } = string.Empty;
 
 	/// <summary>
 	/// A short single line text description
 	/// </summary>
 
 	[Description("Description"), Info("description")]
-	public string Description { get; set; } = string.Empty;
+	public string? Description { get; set; } = string.Empty;
 
 	/// <summary>
 	/// HTML description for the room
 	/// </summary>
 	[Description("HTML Description"), Info("html-description"), Category("Html")]
-	public string HtmlDescription { get; set; } = string.Empty;
+	public string? HtmlDescription { get; set; } = string.Empty;
 
 	/// <summary>
 	/// Image file name. Image files are expected to be found in a location determined elsewhere
 	/// </summary>
 	[Description("Image File"), Info("image-file")]
-	public string ImageFile { get; set; } = string.Empty;
+	public string? ImageFile { get; set; } = string.Empty;
 
 	/// <summary>
 	/// Number of rooms of this type
@@ -82,7 +83,7 @@ public class RoomType
 	/// </summary>
 
 	[Description("Room Category"), Info("room-category")]
-	public string RoomCategory { get; set; } = string.Empty;
+	public string? RoomCategory { get; set; } = string.Empty;
 
 
 	/// <summary>
@@ -106,14 +107,14 @@ public class RoomType
 	/// </summary>
 
 	[Description("Option Type Code"), Info("option-type-code")]
-	public string OptionTypeCode { get; set; } = string.Empty;
+	public string? OptionTypeCode { get; set; } = string.Empty;
 
 	/// <summary>
 	/// When options are restricted ; 'Double only'
 	/// </summary>
 
 	[Description("Otion Warning"), Info("option-warning")]
-	public string OptionTypeWarning { get; set; } = string.Empty;
+	public string? OptionTypeWarning { get; set; } = string.Empty;
 
 
 	/// <summary>
@@ -121,31 +122,31 @@ public class RoomType
 	/// Being HTML it can be changed to suit different gallery scripts
 	/// </summary>
 	[Description("Image Gallery"), Info("image-gallery")]
-	public string ImageGallery { get; set; } = string.Empty;
+	public string? ImageGallery { get; set; } = string.Empty;
 
 
 
 	[Description("GroupName"), Info("group-name")]
-	public string GroupName { get; set; } = string.Empty;
+	public string? GroupName { get; set; } = string.Empty;
 
 
 	[Description("Group Description"), Info("group-description")]
-	public string GroupDescription { get; set; } = string.Empty;
+	public string? GroupDescription { get; set; } = string.Empty;
 
 	/// <summary>
 	/// HTML description for the room group, where room types
 	/// </summary>
 	[Description("Group HTML Description"), Info("group-html-description")]
-	public string GroupLongDescription { get; set; } = string.Empty;
+	public string? GroupLongDescription { get; set; } = string.Empty;
 
 
 
     [Description("Group Image"), Info("group-image")]
-	public string GroupImageFile { get; set; } = string.Empty;
+	public string? GroupImageFile { get; set; } = string.Empty;
 
 
     [Description("Group Image Gallery"), Info("group-image-gallery"), Category("Html")]
-	public string GroupImageGallery { get; set; } = string.Empty;
+	public string? GroupImageGallery { get; set; } = string.Empty;
 
 
 	[Description("Group Twin Option"), Info("group-twin-description")]
@@ -158,5 +159,7 @@ public class RoomType
 
 
 	[Description("No Dogs Text"), Info("no-dogs-text")]
-	public string NoDogsText { get; set; } = string.Empty;
+	public string? NoDogsText { get; set; } = string.Empty;
+
+	public List<HotelDateItem> Dates { get; set; } = [];
 }
