@@ -8,4 +8,7 @@ public class UserService(IHttpContextAccessor httpContextAccessor) : IUserServic
 		.HttpContext?.User?
 		.FindFirstValue(ClaimTypes.Email);
 
+	public bool IsAuthenticated() => httpContextAccessor?
+		.HttpContext?.User?
+		.Identity?.IsAuthenticated ?? false;
 }
