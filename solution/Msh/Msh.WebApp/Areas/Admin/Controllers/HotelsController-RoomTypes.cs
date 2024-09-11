@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Msh.Common.Exceptions;
 using Msh.HotelCache.Models;
-using Msh.HotelCache.Models.Hotels;
 using Msh.HotelCache.Models.RoomTypes;
 using Msh.WebApp.Models.Admin.ViewModels;
 
@@ -175,80 +174,5 @@ public partial class HotelsController
 			return View();
 		}
 	}
-
-
-	[HttpGet]
-	[Route("RoomTypeEditDates")]
-	public async Task<IActionResult> RoomTypeEditDates(string code, string hotelCode, bool isSuccess = false)
-	{
-		await Task.Delay(0);
-
-		ViewBag.IsSuccess = isSuccess;
-		ViewBag.Code = string.Empty;
-		ViewBag.Languages = GetLanguages();
-		ViewBag.Hotels = await GetHotels();
-		ViewBag.HotelCode = hotelCode;
-
-		var roomTypes = await hotelsRepoService.GetRoomTypesAsync(hotelCode);
-		var roomType = roomTypes.FirstOrDefault(m => m.Code == code);
-		if (roomType != null)
-		{
-			if (roomType.Dates.Count == 0)
-			{
-				roomType.Dates.Add(new HotelDateItem
-				{
-					FromDate = new DateTime(2024, 10, 1),
-					ToDate = new DateTime(2024, 10, 15)
-				});
-			}
-			return View(roomType);
-		}
-
-		return RedirectToAction(nameof(RoomTypeList));
-	}
-
-
-	[HttpPost]
-	[Route("RoomTypeEditDates")]
-	public async Task<IActionResult> RoomTypeEditDates([FromForm] RoomType roomType, string hotelCode)
-	{
-		ViewBag.Languages = GetLanguages();
-		ViewBag.Hotels = await GetHotels();
-
-		if (ModelState.IsValid)
-		{
-			var roomTypes = await hotelsRepoService.GetRoomTypesAsync(hotelCode);
-			var index = roomTypes.FindIndex(m => m.Code == roomType.Code);
-			if (index >= 0)
-			{
-				//testModel.Hotels = testModel.Hotels.Where(m => !string.IsNullOrEmpty(m)).ToList();
-				// roomType.Notes = string.IsNullOrEmpty(roomType.Notes) ? string.Empty : roomType.Notes;
-
-				roomTypes[index] = roomType;
-				await hotelsRepoService.SaveRoomTypesAsync(roomTypes, hotelCode);
-				return RedirectToAction(nameof(RoomTypeEdit), new { IsSuccess = true, HotelCode = hotelCode, Code = roomType.Code });
-			}
-			else
-			{
-				ViewBag.IsSuccess = false;
-				ViewBag.Code = string.Empty;
-
-				ModelState.AddModelError("", "That Code does not exist");
-
-				return View();
-			}
-		}
-		else
-		{
-			ViewBag.IsSuccess = false;
-			ViewBag.Code = string.Empty;
-
-			ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
-
-			return View();
-		}
-	}
-
-
 
 }

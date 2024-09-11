@@ -131,10 +131,6 @@
 				<input asp-for="NoDogsText" class="form-control " />
 				<span asp-validation-for="NoDogsText" class="text-danger"></span>
 			</div>
-			
-			<div class="form-group mb-3">
-				@await Html.PartialAsync("Hotels/_RoomTypeEditDates", @Model.Dates)
-			</div>
 
 			<div class="input-group">
 				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Msh.Common.Attributes;
+using Msh.Common.Models.Dates;
 using Msh.HotelCache.Models.Hotels;
 
 namespace Msh.HotelCache.Models.RoomTypes;
@@ -161,5 +162,4 @@ public class RoomType
 	[Description("No Dogs Text"), Info("no-dogs-text")]
 	public string? NoDogsText { get; set; } = string.Empty;
 
-	public List<HotelDateItem> Dates { get; set; } = [];
 }
