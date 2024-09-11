@@ -29,7 +29,7 @@ public partial class HotelsController
 			vm.HotelCode = hotel != null ? hotel.HotelCode : string.Empty;
 			vm.HotelName = hotel != null ? hotel.Name : string.Empty;
 
-			var roomTypes = await hotelsRepoService.GetRoomTypesAsync(vm.HotelCode);
+			var roomTypes = (await hotelsRepoService.GetRoomTypesAsync(vm.HotelCode)) ?? [];
 
 			vm.RoomTypes = roomTypes;
 

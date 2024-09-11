@@ -1,5 +1,5 @@
 ﻿@using Msh.WebApp.Models.Admin
-@model Msh.HotelCache.Models.Hotels.Hotel;
+@model Msh.HotelCache.Models.Hotels.HotelBase;
 @{
 	var success = ViewBag.Success as SuccessAlert;
 	var formAction = success?.FormAction ?? "HotelAdd";
@@ -100,12 +100,12 @@
 			
 			<div style="display:flex;justify-content:start;">
 				<div class="input-group">
-					<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
+					<button type="submit" name="Command" class="btn btn-outline-primary">Save</button>
 					<input type="button" value="Cancel" class="btn btn-outline-secondary" onclick="window.mshMethods.cancelHotelEdit()" />
 				</div>
 				<div style="display:flex;justify-content:start;">
-					<button type="submit" name="Command" value="Publish" id="publish-button" class="btn btn-outline-success">Publish</button>
-					
+					@* <button type="submit" name="Command" value="Publish" id="publish-button" class="btn btn-outline-success">Publish</button>
+					 *@
 					&nbsp;<info-icon name="info-publish" />
 				</div>
 				

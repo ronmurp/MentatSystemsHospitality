@@ -1,0 +1,49 @@
+﻿@using Msh.Admin.Models.Const
+@{
+	var title = "Hotel Dates List";
+	ViewData["Title"] = title;
+	var hotelCode = ViewBag.HotelCode as string;
+}
+
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuHotels, currentItem = "HotelList" })
+
+<input type="hidden" id="edit-type" value="hotel-dates"/>
+<input type="hidden" id="hotel-code" value="@hotelCode" />
+
+<div class="text-center">
+	<h3 class="">@title for @hotelCode</h3>
+	<p>For more information click <info-icon name="info-hotel-dates" /></p>
+</div>
+
+<div class="row">
+	<div class="col-12" id="table-target">
+	
+	</div>
+</div>
+<div class="row my-3">
+	<div class="col-12">
+		<button id="save-dates" class="btn btn-primary" onclick="mshMethods.saveHotelDates()" >Save</button>
+		<a asp-contoller="Hotels" asp-action="HotelList" class="btn btn-secondary">Return to list</a>
+	</div>
+</div>
+
+<div id="page-info" style="display:none;">
+	<div data-info-for="info-hotel-dates">
+		<span>Hotel Dates</span>
+		<div>
+			<p>
+				Add dates when the hotel is unavailable (Stay From - Stay To). Set the Enabled flag to enable the dates to be used.
+			</p>
+			<p>
+				Add dates when the user cannot make bookings for the hotel (Book From - Book To). Set the Enabled flag to enable the dates to be used.
+			</p>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-hotels.js"></script>
+}
+

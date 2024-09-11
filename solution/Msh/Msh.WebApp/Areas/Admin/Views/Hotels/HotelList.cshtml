@@ -1,7 +1,7 @@
 ﻿@using Msh.Admin.Models.Const
 @using Msh.HotelCache.Models.Hotels
 @using Msh.WebApp.TagHelpers
-@model List<Hotel>;
+@model IEnumerable<Hotel>;
 @{
 	var title = "Hotel List";
 	ViewData["Title"] = title;
@@ -21,6 +21,7 @@
 				<th>Hotel Code</th>
 				<th>Chain Code</th>
 				<th>Name</th>
+				<th>Dates</th>
 				<th>   
 					<div class="cell-outer">
 						<div class="cell-inner">
@@ -42,14 +43,27 @@
 					<td>@hotel.ChainCode</td>
 					<td>@hotel.Name</td>
 					<td style="width:80px;">
+						<div class="cell-outer">
+							<div class="cell-inner">
+								@hotel.HotelDateList.Count
+							</div>
+							<div class="cell-inner">
+								<a asp-controller="Hotels" asp-action="HotelEditDates" asp-route-hotelCode="@hotel.HotelCode">
+									<i class="fa-solid fa-calendar"></i>
+								</a>
+							</div>
+						</div>
+					</td>
+					<td style="width:80px;">
 						
 						<div class="cell-outer">
 							<div class="cell-inner">
-								<a href="javascript:window.mshMethods.editHotel('@hotel.HotelCode')" >
+								<a asp-controller="Hotels" asp-action="HotelEdit" asp-route-hotelCode="@hotel.HotelCode">
 									<i class="fa-solid fa-pen-to-square"></i>
 								</a>
 							</div>
 							<div class="cell-inner">
+								
 								<a href="javascript:window.mshMethods.deleteHotel('@hotel.HotelCode')" >
 									<i class="fa-solid fa-times"></i>
 								</a>

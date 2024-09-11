@@ -1,7 +1,18 @@
-﻿@model Msh.HotelCache.Models.Hotels.Hotel;
+﻿@using Msh.WebApp.Models.Admin
+@model Msh.HotelCache.Models.Hotels.HotelBase;
 @{
-	var title = "Hotels";
-    ViewData["Title"] = title;
+	var title = "Edit Hotel";
+	ViewData["Title"] = title;
+	ViewBag.Success = new SuccessAlert
+	{
+		ModelName = "Hotel",
+		ReturnPath = "/admin/hotels/hotellist",
+		ReturnPathName = "Hotels List",
+		KeyPropertyLabel = "Hotel Code",
+		KeyPropertyName = "HotelCode",
+		KeyPropertyValue = Model.HotelCode,
+		FormAction = "HotelEdit"
+	};
 }
 
 <div class="text-center">

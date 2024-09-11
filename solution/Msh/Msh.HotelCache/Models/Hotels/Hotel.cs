@@ -5,10 +5,19 @@ using Msh.Common.Models.Dates;
 
 namespace Msh.HotelCache.Models.Hotels;
 
+
+public class Hotel : HotelBase
+{
+	/// <summary>
+	/// List of disabled dates
+	/// </summary>
+	public List<HotelDateItem> HotelDateList { get; set; } = [];
+}
+
 /// <summary>
 /// Data representing a single hotel
 /// </summary>
-public class Hotel
+public class HotelBase
 {
     /// <summary>
     /// Intended to be used for OWS, but isn't. See OwsConfig.ChainCode.
@@ -86,7 +95,6 @@ public class Hotel
 	[Description("CRS Number Int"), Info("crs-number-int")] 
 	public string CrsNumberInt { get; set; } = string.Empty;
 
-    public List<HotelDateItem> HotelDateList { get; set; } = [];
 
 	[Required][Description("Disabled Text"), Info("disabled-text")] 
 	public string DisabledText { get; set; } = string.Empty;

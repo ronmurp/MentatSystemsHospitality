@@ -17,5 +17,7 @@ public class HotelDateItem
 	public DateOnly BookFrom { get; set; } = DateOnly.MinValue;
 	public DateOnly BookTo { get; set; } = DateOnly.MinValue;
 
-	public bool Enabled { get; set; }
+	public bool StayEnabled { get; set; }
+
+	public bool BookEnabled { get; set; }
 }

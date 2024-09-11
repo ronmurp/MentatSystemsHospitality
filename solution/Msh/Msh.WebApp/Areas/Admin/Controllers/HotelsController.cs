@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Mapster;
+using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Msh.Common.Data;
 using Msh.Common.Exceptions;
@@ -78,7 +80,7 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 
 	[HttpPost]
 	[Route("HotelAdd")]
-	public async Task<IActionResult> HotelAdd([FromForm] Hotel hotel)
+	public async Task<IActionResult> HotelAdd([FromForm] HotelBase hotel)
 	{
 		try
 		{
@@ -111,7 +113,10 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 			}
 
 			// Success ... show success and clear form ready to add another
-			hotelList.Add(hotel);
+
+			var newHotel = hotel.Adapt<Hotel>();
+
+			hotelList.Add(newHotel);
 			await hotelsRepoService.SaveHotelsAsync(hotelList);
 			return RedirectToAction(nameof(HotelAdd), new { IsSuccess = true, HotelCode = hotel.HotelCode });
 
@@ -126,25 +131,8 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 	}
 
 
-	[Route("HotelEdit")]
-	public async Task<IActionResult> HotelEdit(Hotel hotel)
-	{
-		try
-		{
-			await Task.Delay(0);
-
-			return View( hotel);
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"{ex.Message}");
-		}
-
-		return RedirectToAction("HotelList");
-	}
-
 	[Route("HotelEdit/{hotelCode}")]
-	public async Task<IActionResult> HotelEdit(string hotelCode)
+	public async Task<IActionResult> HotelEdit(string hotelCode, bool isSuccess = false)
 	{
 		try
 		{
@@ -152,92 +140,7 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 
 			var hotels = await hotelsRepoService.GetHotelsAsync();
 			var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
-			return View( hotel);
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"{ex.Message}");
-		}
-
-		return RedirectToAction("HotelList");
-	}
-
-	[Route("HotelEditByCode")]
-	public async Task<IActionResult> HotelEditByCode([FromQuery]string hotelCode, [FromQuery]string action)
-	{
-		try
-		{
-			await Task.Delay(0);
-				
-
-			var hotels = await hotelsRepoService.GetHotelsAsync();
-			if (action == "add")
-			{
-				var hotel = new Hotel();
-				hotels.Add(hotel);
-				return RedirectToAction("HotelEdit", hotel);
-			}
-			if (action == "delete")
-			{
-				var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
-				hotels.Remove(hotel);
-				await hotelsRepoService.SaveHotelsAsync(hotels);
-				return RedirectToAction("HotelList");
-			}
-			else
-			{
-				var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
-
-				return Redirect($"HotelEdit/{hotelCode}");
-			}
-				
-
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"{ex.Message}");
-		}
-
-		return RedirectToAction("HotelList");
-	}
-
-	[HttpPost]
-	[Route("HotelSave")]
-	public async Task<IActionResult> HotelSave(Hotel hotel)
-	{
-		try
-		{
-			await Task.Delay(0);
-
-			if (!ModelState.IsValid)
-			{
-				return RedirectToAction("HotelEdit", hotel);
-			}
-
-			var hotelList = await hotelsRepoService.GetHotelsAsync();
-			var found = false;
-			for (var i = 0; i < hotelList.Count; i++)
-			{
-				if (hotelList[i].HotelCode == hotel.HotelCode)
-				{
-					hotelList[i] = hotel;
-					found = true;
-				}
-			}
-
-			if (!found)
-			{
-				hotelList.Add(hotel);
-				found = true;
-			}
-
-			if (found)
-			{
-				await hotelsRepoService.SaveHotelsAsync(hotelList);
-			}
-
-
-			return RedirectToAction("HotelList");
+			return View(hotel);
 		}
 		catch (Exception ex)
 		{
@@ -249,8 +152,8 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 
 
 	[HttpPost]
-	[Route("HotelSave2")]
-	public async Task<IActionResult> HotelSave2(Hotel hotel)
+	[Route("HotelEdit/{hotelCode}")]
+	public async Task<IActionResult> HotelEdit([FromForm]HotelBase hotel, string hotelCode = "")
 	{
 		try
 		{
@@ -258,38 +161,43 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 
 			if (!ModelState.IsValid)
 			{
-				return Ok(new ObjectVm
-				{
-					Success = false
+				// Invalid data, so return to form, with model values
+				ViewBag.IsSuccess = false;
+				ViewBag.Code = string.Empty;
 
-				});
+				ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
+
+				return View(hotel);
 
 			}
 
 			var hotelList = await hotelsRepoService.GetHotelsAsync();
-			var found = false;
-			for (var i = 0; i < hotelList.Count; i++)
+			var index = hotelList.FindIndex(x => x.HotelCode == hotel.HotelCode);
+
+			if (index < 0)
 			{
-				if (hotelList[i].HotelCode == hotel.HotelCode)
-				{
-					hotelList[i] = hotel;
-					found = true;
-				}
+				// This hotel code already exists
+				ViewBag.IsSuccess = false;
+				ViewBag.Code = string.Empty;
+
+				ModelState.AddModelError("", "That Hotel Code does not exists");
+
+				return View(hotel);
 			}
 
-			if (!found)
-			{
-				hotelList.Add(hotel);
-				found = true;
-			}
+			// Success ... show success and clear form ready to add another
 
-			if (found)
-			{
-				await hotelsRepoService.SaveHotelsAsync(hotelList);
-			}
+			var updatedHotel = hotel.Adapt<Hotel>();
+			// Must keep date list (this form does not edit the list)
+			updatedHotel.HotelDateList = hotelList[index].HotelDateList;
+			hotelList[index] = updatedHotel;
+
+			await hotelsRepoService.SaveHotelsAsync(hotelList);
+
+			return RedirectToAction(nameof(HotelEdit), new { IsSuccess = true, HotelCode = hotel.HotelCode });
 
 
-			return RedirectToAction("HotelList");
+
 		}
 		catch (Exception ex)
 		{
@@ -299,6 +207,33 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 		return RedirectToAction("HotelList");
 	}
 
-	
+
+
+
+	[Route("HotelEditDates/{hotelCode}")]
+	public async Task<IActionResult> HotelEditDates(string hotelCode, bool isSuccess = false)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			//var hotels = await hotelsRepoService.GetHotelsAsync();
+			//var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
+			//if (hotel == null)
+			//{
+			//	return RedirectToAction("HotelList");
+			//}
+			ViewBag.HotelCode = hotelCode;
+
+			return View();
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"{ex.Message}");
+		}
+
+		return RedirectToAction("HotelList");
+	}
+
 
 }

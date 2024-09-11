@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Msh.Common.Models.Dates;
 using Msh.Common.Models.ViewModels;
 using Msh.Common.Services;
 using Msh.HotelCache.Models.Hotels;
 using Msh.HotelCache.Models.RoomTypes;
 using Msh.HotelCache.Services;
+using Msh.WebApp.Areas.Admin.Data;
 
 namespace Msh.WebApp.API;
 
@@ -13,12 +15,46 @@ public class HotelApiController(IHotelsRepoService hotelsRepoService) : Controll
 {
 
 	[HttpGet]
-	[Route("hotelSave")]
-	public async Task<IActionResult> HotelSave()
+	[Route("HotelDates")]
+	public async Task<IActionResult> HotelDates(string hotelCode)
+	{
+		var hotels = await hotelsRepoService.GetHotelsAsync();
+		var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
+		if (hotel == null)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = true,
+				UserErrorMessage = $"Dates not found for hotel code {hotelCode}"
+			});
+		}
+
+		return Ok(new ObjectVm
+		{
+			Data = new
+			{
+				Dates = hotel.HotelDateList,
+				MinDate = DateOnly.FromDateTime(DateTime.Now)
+			}
+		});
+	}
+
+	[HttpPost]
+	[Route("HotelDates")]
+	public async Task<IActionResult> HotelDates([FromBody] HotelDatesVm data)
 	{
 		try
 		{
 			await Task.Delay(0);
+
+			var hotels = await hotelsRepoService.GetHotelsAsync();
+			var index = hotels.FindIndex(h => h.HotelCode == data.HotelCode);
+
+			if (index >= 0)
+			{
+				hotels[index].HotelDateList = data.Dates;
+				await hotelsRepoService.SaveHotelsAsync(hotels);
+			}
 
 			return Ok(new ObjectVm
 			{
@@ -36,16 +72,24 @@ public class HotelApiController(IHotelsRepoService hotelsRepoService) : Controll
 	}
 
 	[HttpPost]
-	[Route("hotelSave")]
-	public async Task<IActionResult> HotelSave(Hotel hotel)
+	[Route("HotelDelete")]
+	public async Task<IActionResult> HotelDelete(string hotelCode)
 	{
 		try
 		{
 			await Task.Delay(0);
 
+			var hotels = await hotelsRepoService.GetHotelsAsync();
+			var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
+			if (hotel != null)
+			{
+				hotels.Remove(hotel);
+				await hotelsRepoService.SaveHotelsAsync(hotels);
+			}
+
 			return Ok(new ObjectVm
 			{
-				Data = hotel
+				
 			});
 		}
 		catch (Exception ex)
