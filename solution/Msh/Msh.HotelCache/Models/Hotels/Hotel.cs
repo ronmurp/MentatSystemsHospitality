@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Msh.Common.Attributes;
+using Msh.Common.Models.Dates;
 
 namespace Msh.HotelCache.Models.Hotels;
 
@@ -85,7 +86,7 @@ public class Hotel
 	[Description("CRS Number Int"), Info("crs-number-int")] 
 	public string CrsNumberInt { get; set; } = string.Empty;
 
-    public List<HotelDateItem> HotelDateList { get; set; } = new List<HotelDateItem>();
+    public List<HotelDateItem> HotelDateList { get; set; } = [];
 
 	[Required][Description("Disabled Text"), Info("disabled-text")] 
 	public string DisabledText { get; set; } = string.Empty;

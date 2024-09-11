@@ -1,0 +1,17 @@
+﻿@model Msh.WebApp.Models.Admin.SuccessAlert
+@{
+	var name = Model.KeyPropertyName;
+}
+
+@if (@Model.FormAction == "HotelEdit")
+{
+	<label class="form-control">@Model.FormAction</label>
+	<input type="hidden" id="@Model.KeyPropertyName" name="@Model.KeyPropertyName" value="@Model.KeyPropertyValue" />
+}
+else
+{
+	<input class="form-control" value="" type="text" id="@name" name="@name">
+	<span class="text-danger field-validation-valid" data-valmsg-for="@name" data-valmsg-replace="true"></span>
+	@* <input asp-for="@name" class="form-control" value="" />
+	<span asp-validation-for="@name" class="text-danger"></span> *@
+}

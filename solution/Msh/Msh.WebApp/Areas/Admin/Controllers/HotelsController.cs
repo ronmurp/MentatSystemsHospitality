@@ -55,14 +55,18 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 		}
 	}
 
+
 	[Route("HotelAdd")]
-	public async Task<IActionResult> HotelAdd()
+	public async Task<IActionResult> HotelAdd(bool isSuccess = false)
 	{
 		try
 		{
 			await Task.Delay(0);
 
-			return View();
+			ViewBag.IsSuccess = isSuccess;
+			ViewBag.Code = string.Empty;
+
+			return View(new Hotel());
 		}
 		catch (Exception ex)
 		{
@@ -71,6 +75,56 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 
 		return RedirectToAction("HotelList");
 	}
+
+	[HttpPost]
+	[Route("HotelAdd")]
+	public async Task<IActionResult> HotelAdd([FromForm] Hotel hotel)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			if (!ModelState.IsValid)
+			{
+				// Invalid data, so return to form, with model values
+				ViewBag.IsSuccess = false;
+				ViewBag.Code = string.Empty;
+
+				ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
+
+				return View(hotel);
+
+			}
+
+			var hotelList = await hotelsRepoService.GetHotelsAsync();
+			var h = hotelList.FirstOrDefault(x => x.HotelCode == hotel.HotelCode);
+
+			if (h != null)
+			{
+				// This hotel code already exists
+				ViewBag.IsSuccess = false;
+				ViewBag.Code = string.Empty;
+
+				ModelState.AddModelError("", "That Code already exists");
+
+				return View(hotel);
+			}
+
+			// Success ... show success and clear form ready to add another
+			hotelList.Add(hotel);
+			await hotelsRepoService.SaveHotelsAsync(hotelList);
+			return RedirectToAction(nameof(HotelAdd), new { IsSuccess = true, HotelCode = hotel.HotelCode });
+
+
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"{ex.Message}");
+		}
+
+		return RedirectToAction("HotelList");
+	}
+
 
 	[Route("HotelEdit")]
 	public async Task<IActionResult> HotelEdit(Hotel hotel)

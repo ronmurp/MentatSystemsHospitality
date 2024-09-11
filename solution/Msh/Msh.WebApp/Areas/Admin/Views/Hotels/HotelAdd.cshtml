@@ -1,7 +1,19 @@
-﻿@model Msh.HotelCache.Models.Hotels.Hotel;
+﻿@using Msh.WebApp.Models.Admin
+@model Msh.HotelCache.Models.Hotels.Hotel;
 @{
-	var title = "Hotels";
+	var title = "Add Hotel";
     ViewData["Title"] = title;
+    ViewBag.Success = new SuccessAlert
+    {
+	    ModelName = "Hotel",
+	    ReturnPath = "/admin/hotels/hotellist",
+	    ReturnPathName = "Hotels List",
+		KeyPropertyLabel = "Hotel Code",
+		KeyPropertyName = "HotelCode",
+		KeyPropertyValue = Model.HotelCode,
+		FormAction = "HotelAdd"
+    };
+    
 }
 
 <div class="text-center">
@@ -9,7 +21,7 @@
 	<p></p>
 </div>
 
-@await Html.PartialAsync("Hotels/_HotelEdit", @Model);
+@await Html.PartialAsync("Hotels/_HotelEdit", @Model)
 
 @section Scripts {
 	<script src="~/js/mshapp/msh-apiservice.js"></script>

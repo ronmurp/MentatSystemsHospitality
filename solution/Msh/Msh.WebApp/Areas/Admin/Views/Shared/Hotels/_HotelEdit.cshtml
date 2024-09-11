@@ -1,14 +1,20 @@
-﻿@model Msh.HotelCache.Models.Hotels.Hotel;
+﻿@using Msh.WebApp.Models.Admin
+@model Msh.HotelCache.Models.Hotels.Hotel;
+@{
+	var success = ViewBag.Success as SuccessAlert;
+	var formAction = success?.FormAction ?? "HotelAdd";
+}
+
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
 
 <div class="row">
 	<div class="col-6">
 
-		<form asp-action="HotelSave" id="main-form">
+		<form asp-action="@formAction" id="main-form">
 
 			<div class="form-group mb-3">
 				<label asp-for="HotelCode" class="control-label">Hotel Code <info-icon name="info-hotel-code" /></label>
-				<input asp-for="HotelCode" class="form-control" />
-				<span asp-validation-for="HotelCode" class="text-danger"></span>
+				@await Html.PartialAsync("Hotels/_EditCode", success)
 			</div>
 
 			<div class="form-group mb-3">
@@ -110,6 +116,4 @@
 	</div>
 </div>
 
-@{
-	//await Html.RenderPartialAsync("Admin/Hotels/_HotelEditInfo", "Hotel Edit");
-}
+@await Html.PartialAsync("Hotels/_HotelEditInfo", "Hotel Edit")
