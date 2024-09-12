@@ -115,8 +115,8 @@ public partial class HotelsController
 
 
 	[HttpPost]
-	[Route("TestModelEdit")]
-	public async Task<IActionResult> TestModelEdit(TestModel testModel)
+	[Route("TestModelEdit/{hotelCode}")]
+	public async Task<IActionResult> TestModelEdit(TestModel testModel, string hotelCode = "")
 	{
 		ViewBag.Languages = GetLanguages();
 		ViewBag.Hotels = await GetHotels();

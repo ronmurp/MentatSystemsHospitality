@@ -1,7 +1,20 @@
-﻿@model Msh.HotelCache.Models.Hotels.TestModel;
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.WebApp.Models.Admin
+@using Msh.WebApp.TagHelpers
+@model Msh.HotelCache.Models.Hotels.TestModel;
 @{
-	var formAction = ViewBag.FormAction;
+	var success = ViewBag.Success as SuccessAlert;
+	var formAction = success?.FormAction ?? "TestModelAdd";
+	var title = ViewData["Title"];
 }
+
+<div class="text-center">
+	<h1 class="display-6">@title</h1>
+	<p></p>
+</div>
+
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
+
 <div class="row">
 	<div class="col-6">
 
@@ -10,18 +23,8 @@
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 			<div class="form-group mb-3">
-				<label asp-for="Code" class="control-label"></label>&nbsp;<info-icon name="info-code"/>
-				@if (formAction == "TestModelEdit")
-				{
-					<label class="form-control">@Model.Code</label>
-					<input type="hidden" id="Code" name="Code" value="@Model.Code"/>
-				}
-				else
-				{
-					<input asp-for="Code" class="form-control" />
-				}
-				
-				<span asp-validation-for="Code" class="text-danger"></span>
+				<label asp-for="Code" class="control-label"></label>&nbsp; <info-icon name="info-code" />
+				@await Html.PartialAsync("Hotels/_EditCode", success)
 			</div>
 
 			<div class="form-group mb-3">
@@ -70,12 +73,16 @@
 				<textarea asp-for="Notes" class="form-control"></textarea>
 				<span asp-validation-for="Notes" class="text-danger"></span>
 			</div>
-
+			
 			<div class="input-group">
 				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
+				<a asp-controller="Hotels" asp-action="TestModelList" asp-route-code="@Model.Code" class="btn btn-outline-secondary">Return to list</a>
 			</div>
+
 
 		</form>
 
 	</div>
 </div>
+
+@await Html.PartialAsync("Hotels/_TestModelEditInfo", "Test Model Edit")

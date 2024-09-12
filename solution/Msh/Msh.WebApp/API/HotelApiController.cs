@@ -6,6 +6,7 @@ using Msh.HotelCache.Models.Hotels;
 using Msh.HotelCache.Models.RoomTypes;
 using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Data;
+using Msh.WebApp.Areas.Admin.Models;
 
 namespace Msh.WebApp.API;
 
@@ -73,14 +74,12 @@ public class HotelApiController(IHotelsRepoService hotelsRepoService) : Controll
 
 	[HttpPost]
 	[Route("HotelDelete")]
-	public async Task<IActionResult> HotelDelete(string hotelCode)
+	public async Task<IActionResult> HotelDelete(ApiInput input)
 	{
 		try
 		{
-			await Task.Delay(0);
-
 			var hotels = await hotelsRepoService.GetHotelsAsync();
-			var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
+			var hotel = hotels.FirstOrDefault(h => h.HotelCode == input.HotelCode);
 			if (hotel != null)
 			{
 				hotels.Remove(hotel);
@@ -171,4 +170,5 @@ public class HotelApiController(IHotelsRepoService hotelsRepoService) : Controll
 		}
 	}
 
+	
 }

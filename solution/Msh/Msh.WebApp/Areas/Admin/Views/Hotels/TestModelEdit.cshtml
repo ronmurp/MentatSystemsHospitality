@@ -2,26 +2,21 @@
 @model Msh.HotelCache.Models.Hotels.TestModel;
 
 @{
-	var success = new SuccessAlert
-			{
-				ModelName = "Test Model",
-				ReturnPath = "/admin/hotels/testmodellist",
-				ReturnPathName = "Test Model List"
-			};
-	ViewBag.formAction = "TestModelEdit";
+	ViewData["Title"] = "Edit Test Model";
+
+	ViewBag.Success = new SuccessAlert
+	{
+		ModelName = "TestModel",
+		ReturnPath = "/admin/hotels/TestModelList",
+		ReturnPathName = "Test Model List",
+		KeyPropertyLabel = "Test Model",
+		KeyPropertyName = "Code",
+		KeyPropertyValue = Model.Code,
+		FormAction = "TestModelEdit"
+	};
 }
 
-<div class="row">
-	<div class="col-6">
-		<h3>Edit Test Model</h3>
-		
-		@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
-		@await Html.PartialAsync("Hotels/_TestModelEdit", @Model)
-
-	</div>
-</div>
-
-@await Html.PartialAsync("Hotels/_TestModelEditInfo", "Test Model Edit")
+@await Html.PartialAsync("Hotels/_TestModelEdit", @Model)
 
 @section Scripts {
 

@@ -1,28 +1,23 @@
-﻿@using Msh.Admin.Models.Const
-@using Msh.WebApp.Models.Admin
+﻿@using Msh.WebApp.Models.Admin
 
 @model Msh.HotelCache.Models.RoomTypes.RoomType;
 @{
-	var success = new SuccessAlert
+	ViewData["Title"] = "Edit Room Type";
+   
+	var hotelCode = ViewBag.HotelCode;
+
+	ViewBag.Success = new SuccessAlert
 	{
-		ModelName = "Test Model",
-		ReturnPath = "/admin/hotels/roomtypelist?hotelCode=" + ViewBag.HotelCode,
-		ReturnPathName = "Room Type List"
+		ModelName = "RoomType",
+		ReturnPath = "/admin/hotels/RoomTypeList?hotelCode=" + hotelCode,
+		ReturnPathName = "Room Type List",
+		KeyPropertyLabel = "Room Type Code",
+		KeyPropertyName = "Code",
+		KeyPropertyValue = Model.Code,
+		FormAction = "RoomTypeEdit"
 	};
-	var title = "Room Type";
-    ViewData["Title"] = title;
-    ViewBag.formAction = "RoomTypeEdit";
 }
 
-@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuHotels, currentItem = "Hotels" })
-
-
-<div class="text-center">
-	<h1 class="display-4">@title</h1>
-	<p></p>
-</div>
-
-@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
 @await Html.PartialAsync("Hotels/_RoomTypeEdit", @Model)
 
 @section Scripts {

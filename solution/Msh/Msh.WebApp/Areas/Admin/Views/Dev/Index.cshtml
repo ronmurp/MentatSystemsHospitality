@@ -1,13 +1,14 @@
 ﻿@using Msh.Admin.Models.Const
 @{
-	ViewData["Title"] = "Admin Dev Page";
+	var title = "Developer Page";
+	ViewData["Title"] = title;
 }
 
 @await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuDev, currentItem = "DevIndex" })
 
 
 <div class="text-center">
-	<h1 class="display-4">Dev</h1>
+	<h1 class="display-6">@title</h1>
 	<a href="https://localhost:7150/admin/hotels">Hotels</a><br/>
 	<a href="https://localhost:7150/admin/payments/coincorner">Coin Corner</a><br />
 	<a href="https://localhost:7150/admin/dev">Dev</a><br />

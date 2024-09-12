@@ -3,7 +3,14 @@
 @{
 	var success = ViewBag.Success as SuccessAlert;
 	var formAction = success?.FormAction ?? "HotelAdd";
+	var title = ViewData["Title"];
 }
+
+
+<div class="text-center">
+	<h1 class="display-6">@title</h1>
+	<p></p>
+</div>
 
 @await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
 
@@ -101,7 +108,7 @@
 			<div style="display:flex;justify-content:start;">
 				<div class="input-group">
 					<button type="submit" name="Command" class="btn btn-outline-primary">Save</button>
-					<input type="button" value="Cancel" class="btn btn-outline-secondary" onclick="window.mshMethods.cancelHotelEdit()" />
+					<a asp-controller="Hotels" asp-action="HotelList" class="btn btn-outline-secondary">Return to list</a>
 				</div>
 				<div style="display:flex;justify-content:start;">
 					@* <button type="submit" name="Command" value="Publish" id="publish-button" class="btn btn-outline-success">Publish</button>

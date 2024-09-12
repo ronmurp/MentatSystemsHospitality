@@ -1,8 +1,7 @@
 ﻿@using Msh.WebApp.Models.Admin
 @model Msh.HotelCache.Models.Hotels.HotelBase;
 @{
-	var title = "Add Hotel";
-    ViewData["Title"] = title;
+	ViewData["Title"] = "Add Hotel";
     ViewBag.Success = new SuccessAlert
     {
 	    ModelName = "Hotel",
@@ -15,11 +14,6 @@
     };
     
 }
-
-<div class="text-center">
-	<h1 class="display-4">@title</h1>
-	<p></p>
-</div>
 
 @await Html.PartialAsync("Hotels/_HotelEdit", @Model)
 

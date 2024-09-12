@@ -6,6 +6,7 @@
     var api = app.apiService;
     var mom = app.momentDateService;
     var htmlS = app.htmlService;
+    var modal = app.modalService;
 
     var hotelApi = '/api/hotelapi/';
 
@@ -52,7 +53,10 @@
                 `<input type="checkbox" id="BookEnabled-${i}" data-msh-index="${i}" name="BookEnabled" ${bookChecked} />`,
                 `<input type="date" id="BookFrom-${i}" data-msh-index="${i}" name="BookFrom" value="${v.bookFrom}" />`,
                 `<input type="date" id="BookTo-${i}" data-msh-index="${i}" name="BookTo" value="${v.bookTo}" />`,
-                `<a href="javascript:window.mshMethods.deleteHotelDates(${i})"><i class="fa-solid fa-times"></i></a>`
+                htmlS.cellIcons([
+                    `<a href="javascript:window.mshMethods.deleteHotelDates(${i})"><i class="fa-solid fa-times"></i></a>`
+                ]),
+               
             ];
             bodyArray.push(rowArray);
        
@@ -142,7 +146,10 @@
 
         confirmDeleteHotel: function (hotelCode) {
             var url = `/api/hotelapi/HotelDelete`;
-            api.postAsync(url, hotelCode, function (data) {
+            var d = {
+                hotelCode: hotelCode
+            }
+            api.postAsync(url, d, function (data) {
 
                 util.redirectTo('admin/hotels/HotelList')
             });

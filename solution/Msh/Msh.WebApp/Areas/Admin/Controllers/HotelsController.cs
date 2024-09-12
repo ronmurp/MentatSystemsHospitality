@@ -138,6 +138,10 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 		{
 			await Task.Delay(0);
 
+			ViewBag.IsSuccess = isSuccess;
+			ViewBag.Code = string.Empty;
+			ViewBag.HotelCode = hotelCode;
+
 			var hotels = await hotelsRepoService.GetHotelsAsync();
 			var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
 			return View(hotel);

@@ -1,8 +1,7 @@
 ﻿@using Msh.WebApp.Models.Admin
 @model Msh.HotelCache.Models.Hotels.HotelBase;
 @{
-	var title = "Edit Hotel";
-	ViewData["Title"] = title;
+	ViewData["Title"] = "Edit Hotel";
 	ViewBag.Success = new SuccessAlert
 	{
 		ModelName = "Hotel",
@@ -15,19 +14,9 @@
 	};
 }
 
-<div class="text-center">
-	<h1 class="display-4">@title</h1>
-	<p></p>
-</div>
-
 @{
 	await Html.RenderPartialAsync("Hotels/_HotelEdit", @Model);
 }
-<div class="row py-5">
-	<div class="col-12">
-		<button id="get-hotel" class="btn btn-primary" onclick="window.mshMethods.getFormData()">Get Hotel</button>
-	</div>
-</div>
 
 @section Scripts {
 	<script src="~/js/mshapp/msh-apiservice.js"></script>
