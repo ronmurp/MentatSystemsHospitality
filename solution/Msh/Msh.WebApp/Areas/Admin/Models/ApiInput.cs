@@ -5,5 +5,6 @@
 /// </summary>
 public class ApiInput
 {
+	public string Code { get; set; } = string.Empty;
 	public string HotelCode { get; set; } = string.Empty;
 }

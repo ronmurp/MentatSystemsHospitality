@@ -102,6 +102,66 @@ public class HotelApiController(IHotelsRepoService hotelsRepoService) : Controll
 	}
 
 	[HttpPost]
+	[Route("RoomTypeDelete")]
+	public async Task<IActionResult> RoomTypeDelete(ApiInput input)
+	{
+		try
+		{
+			var roomTypes = await hotelsRepoService.GetRoomTypesAsync(input.HotelCode);
+			var roomType = roomTypes.FirstOrDefault(h => h.Code == input.Code);
+			if (roomType != null)
+			{
+				roomTypes.Remove(roomType);
+				await hotelsRepoService.SaveRoomTypesAsync(roomTypes, input.HotelCode);
+			}
+
+			return Ok(new ObjectVm
+			{
+
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
+
+	[HttpPost]
+	[Route("ExtraDelete")]
+	public async Task<IActionResult> ExtraDelete(ApiInput input)
+	{
+		try
+		{
+			var extras = await hotelsRepoService.GetExtrasAsync(input.HotelCode);
+			var extra = extras.FirstOrDefault(h => h.Code == input.Code);
+			if (extra != null)
+			{
+				extras.Remove(extra);
+				await hotelsRepoService.SaveExtrasAsync(extras, input.HotelCode);
+			}
+
+			return Ok(new ObjectVm
+			{
+
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
+
+
+
+	[HttpPost]
 	[Route("testModelDelete")]
 	public async Task<IActionResult> TestModelDelete([FromBody] object obj, [FromQuery]string code)
 	{
