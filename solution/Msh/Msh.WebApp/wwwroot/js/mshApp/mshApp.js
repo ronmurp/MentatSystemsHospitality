@@ -257,6 +257,36 @@
 
         }
 
+        function tableHeadHtml(a) {
+            var html = '<tr>';
+            a.forEach((v) => {
+                html += `<th>${v}</th>`;
+            });
+            html += '</tr>';
+
+            return html;
+        }
+        function tableRowHtml(a) {
+            var html = '<tr>';
+            a.forEach((v) => {
+                html += `<td>${v}</td>`;
+            });
+            html += '</tr>';
+
+            return html;
+        }
+
+        function table(headerArray, bodyArray) {
+            var html = '<table>';
+            html += tableHeadHtml(headerArray);
+            bodyArray.forEach((v) => {
+                html += tableRowHtml(v);
+            });
+
+            html += '</table>';
+            return html;
+        }
+
         return {
 
             icons: icons,
@@ -298,7 +328,11 @@
             },
 
             buildSelect: buildSelect,
-            setSelectOptions: setSelectOptions
+            setSelectOptions: setSelectOptions,
+
+            tableHeadHtml: tableHeadHtml,
+            tableRowHtml: tableRowHtml,
+            table: table
         }
 
     })();
