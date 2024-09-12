@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Msh.Common.Exceptions;
 using Msh.HotelCache.Models;
+using Msh.HotelCache.Models.Extras;
 using Msh.HotelCache.Models.RoomTypes;
 using Msh.WebApp.Models.Admin.ViewModels;
 
@@ -8,10 +9,10 @@ namespace Msh.WebApp.Areas.Admin.Controllers;
 
 public partial class HotelsController
 {
-	[Route("RoomTypeList")]
-	public async Task<IActionResult> RoomTypeList([FromQuery] string hotelCode = "")
+	[Route("ExtrasList")]
+	public async Task<IActionResult> ExtrasList([FromQuery] string hotelCode = "")
 	{
-		var vm = new RoomTypeListVm
+		var vm = new ExtrasListVm
 		{
 			HotelCode = string.IsNullOrEmpty(hotelCode) ? string.Empty : hotelCode,
 			HotelName = string.Empty
@@ -29,9 +30,9 @@ public partial class HotelsController
 			vm.HotelCode = hotel != null ? hotel.HotelCode : string.Empty;
 			vm.HotelName = hotel != null ? hotel.Name : string.Empty;
 
-			var roomTypes = (await hotelsRepoService.GetRoomTypesAsync(vm.HotelCode)) ?? [];
+			var roomTypes = (await hotelsRepoService.GetExtrasAsync(vm.HotelCode)) ?? [];
 
-			vm.RoomTypes = roomTypes;
+			vm.Extras = roomTypes;
 
 			return View(vm);
 		}
@@ -39,10 +40,10 @@ public partial class HotelsController
 		{
 			if (!string.IsNullOrEmpty(vm.HotelCode))
 			{
-				await configRepository.SaveMissingConfigAsync(ConstHotel.Cache.RoomTypes, vm.HotelCode, new List<RoomType>());
+				await configRepository.SaveMissingConfigAsync(ConstHotel.Cache.Extras, vm.HotelCode, new List<RoomType>());
 			}
 
-			vm.ErrorMessage = $"No room types for hotel {vm.HotelCode}";
+			vm.ErrorMessage = $"No extras for hotel {vm.HotelCode}";
 
 			return View(vm);
 		}
@@ -55,8 +56,8 @@ public partial class HotelsController
 	}
 
 	[HttpGet]
-	[Route("RoomTypeAdd")]
-	public async Task<IActionResult> RoomTypeAdd(string hotelCode, bool isSuccess = false)
+	[Route("ExtraAdd")]
+	public async Task<IActionResult> ExtraAdd(string hotelCode, bool isSuccess = false)
 	{
 		await Task.Delay(0);
 
@@ -66,29 +67,30 @@ public partial class HotelsController
 		ViewBag.Hotels = await GetHotels();
 		ViewBag.HotelCode = hotelCode;
 
-		return View(new RoomType());
+		return View(new Extra());
 	}
 
 
 	[HttpPost]
-	[Route("RoomTypeAdd")]
-	public async Task<IActionResult> RoomTypeAdd([FromForm]RoomType roomType, string hotelCode)
+	[Route("ExtraAdd")]
+	public async Task<IActionResult> ExtraAdd([FromForm]Extra extra, string hotelCode)
 	{
 		ViewBag.Languages = GetLanguages();
 		ViewBag.Hotels = await GetHotels();
+		ViewBag.HotelCode = hotelCode;
 
 		if (ModelState.IsValid)
 		{
-			var roomTypes = await hotelsRepoService.GetRoomTypesAsync(hotelCode);
+			var extras = await hotelsRepoService.GetExtrasAsync(hotelCode);
 
-			if (roomTypes.All(tm => tm.Code != roomType.Code))
+			if (extras.All(tm => tm.Code != extra.Code))
 			{
 				//testModel.Hotels = testModel.Hotels.Where(m => !string.IsNullOrEmpty(m)).ToList();
 				//roomType.Notes = string.IsNullOrEmpty(roomType.Notes) ? string.Empty : roomType.Notes;
 
-				roomTypes.Add(roomType);
-				await hotelsRepoService.SaveRoomTypesAsync(roomTypes, hotelCode);
-				return RedirectToAction(nameof(RoomTypeAdd), new { IsSuccess = true, HotelCode = hotelCode, Code = roomType.Code });
+				extras.Add(extra);
+				await hotelsRepoService.SaveExtrasAsync(extras, hotelCode);
+				return RedirectToAction(nameof(ExtraAdd), new { IsSuccess = true, HotelCode = hotelCode, Code = extra.Code });
 			}
 			else
 			{
@@ -97,7 +99,7 @@ public partial class HotelsController
 
 				ModelState.AddModelError("", "That Code already exists");
 
-				return View(roomType);
+				return View(extra);
 			}
 		}
 		else
@@ -107,13 +109,13 @@ public partial class HotelsController
 
 			ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
 
-			return View(roomType);
+			return View(extra);
 		}
 	}
 
 	[HttpGet]
-	[Route("RoomTypeEdit")]
-	public async Task<IActionResult> RoomTypeEdit(string code, string hotelCode, bool isSuccess = false)
+	[Route("ExtraEdit")]
+	public async Task<IActionResult> ExtraEdit(string code, string hotelCode, bool isSuccess = false)
 	{
 		await Task.Delay(0);
 
@@ -123,36 +125,36 @@ public partial class HotelsController
 		ViewBag.Hotels = await GetHotels();
 		ViewBag.HotelCode = hotelCode;
 
-		var roomTypes = await hotelsRepoService.GetRoomTypesAsync(hotelCode);
-		var roomType = roomTypes.FirstOrDefault(m => m.Code == code);
-		if (roomType != null)
+		var extras = await hotelsRepoService.GetExtrasAsync(hotelCode);
+		var extra = extras.FirstOrDefault(m => m.Code == code);
+		if (extra != null)
 		{
-			return View(roomType);
+			return View(extra);
 		}
 
-		return RedirectToAction(nameof(RoomTypeList));
+		return RedirectToAction(nameof(ExtrasList));
 	}
 
 
 	[HttpPost]
-	[Route("RoomTypeEdit")]
-	public async Task<IActionResult> RoomTypeEdit([FromForm] RoomType roomType, string hotelCode)
+	[Route("ExtraEdit")]
+	public async Task<IActionResult> ExtraEdit([FromForm] Extra extra, string hotelCode)
 	{
 		ViewBag.Languages = GetLanguages();
 		ViewBag.Hotels = await GetHotels();
 
 		if (ModelState.IsValid)
 		{
-			var roomTypes = await hotelsRepoService.GetRoomTypesAsync(hotelCode);
-			var index = roomTypes.FindIndex(m => m.Code == roomType.Code);
+			var extras = await hotelsRepoService.GetExtrasAsync(hotelCode);
+			var index = extras.FindIndex(m => m.Code == extra.Code);
 			if (index >= 0)
 			{
 				//testModel.Hotels = testModel.Hotels.Where(m => !string.IsNullOrEmpty(m)).ToList();
-				// roomType.Notes = string.IsNullOrEmpty(roomType.Notes) ? string.Empty : roomType.Notes;
+				// extra.Notes = string.IsNullOrEmpty(extra.Notes) ? string.Empty : extra.Notes;
 
-				roomTypes[index] = roomType;
-				await hotelsRepoService.SaveRoomTypesAsync(roomTypes, hotelCode);
-				return RedirectToAction(nameof(RoomTypeEdit), new { IsSuccess = true, HotelCode = hotelCode, Code = roomType.Code });
+				extras[index] = extra;
+				await hotelsRepoService.SaveExtrasAsync(extras, hotelCode);
+				return RedirectToAction(nameof(ExtraEdit), new { IsSuccess = true, HotelCode = hotelCode, Code = extra.Code });
 			}
 			else
 			{

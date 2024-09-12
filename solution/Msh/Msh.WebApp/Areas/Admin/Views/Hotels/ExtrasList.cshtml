@@ -1,0 +1,89 @@
+﻿@using Msh.Admin.Models.Const
+@model Msh.WebApp.Models.Admin.ViewModels.ExtrasListVm;
+@{
+	var title = "Extras List";
+	ViewData["Title"] = title;
+}
+
+@await Component.InvokeAsync("AdminMenu", new
+{
+	menuName = AdminConst.MenuHotels, currentItem = "ExtrasList"
+})
+
+<div class="text-center">
+	<h1 class="display-6">@title</h1>
+</div>
+
+@await Component.InvokeAsync("AdminHotelSelect", @Model.HotelCode)
+
+<div class="row">
+	<div class="col-12">
+		<table>
+			<tr>
+				<th>Extra Code</th>
+				<th>Description</th>
+				<th>Dates</th>
+				<th>   
+					<div class="cell-outer">
+						<div class="cell-inner">
+							<a asp-controller="Hotels" asp-action="ExtraAdd" asp-route-hotelCode="@Model.HotelCode">
+								<i class="fa-solid fa-plus"></i>
+							</a>
+						</div>
+						<div class="cell-inner">
+							<info-icon name="info-list-icons" />
+						</div>
+					</div>
+				</th>
+			</tr>
+			
+			@foreach (var rt in @Model.Extras)
+			{
+				<tr>
+					<td>@rt.Code</td>
+					<td>@rt.Description</td>
+					<td></td>
+					<td style="width:80px;">
+						
+						<div class="cell-outer">
+							<div class="cell-inner">
+								<a asp-controller="Hotels" asp-action="ExtraEdit" asp-route-code="@rt.Code" asp-route-hotelCode="@Model.HotelCode">
+									<i class="fa-solid fa-pen-to-square"></i>
+								</a>
+							</div>
+							<div class="cell-inner">
+								<a href="javascript:window.mshMethods.deleteExtra('@rt.Code', '@Model.HotelCode')" >
+									<i class="fa-solid fa-times"></i>
+								</a>
+							</div>
+						</div>
+					</td>
+				</tr>
+			}
+			
+		</table>
+
+	</div>
+</div>
+
+@await Html.PartialAsync("Admin/_AdminErrorBlock", @Model.ErrorMessage)
+
+<div id="page-info" style="display:none;">
+	
+	@await Html.PartialAsync("Hotels/_ListIconsInfo", "Extras")
+
+	<div data-info-for="info-hotel-code">
+		<span>Hotel</span>
+		<div>
+			<p>Select a hotel to view Extras for that hotel</p>
+		</div>
+	</div>
+</div>
+
+@section Scripts{
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-extras.js"></script>
+}
+
+
+

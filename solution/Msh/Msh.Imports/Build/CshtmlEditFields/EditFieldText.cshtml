@@ -1,5 +1,7 @@
 ﻿<div class="form-group mb-3">
-	<label asp-for="{Property}" class="control-label">{PropertyDescription} <info-icon name="info-{PropertyInfo}" /></label>
+	<label asp-for="{Property}" class="control-label"></label>&nbsp;
+	<info-icon name="info-{PropertyInfo}" />
 	<input asp-for="{Property}" class="form-control {CssClass}" />
 	<span asp-validation-for="{Property}" class="text-danger"></span>
 </div>
+

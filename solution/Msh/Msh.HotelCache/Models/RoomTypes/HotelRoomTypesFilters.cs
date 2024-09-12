@@ -2,9 +2,9 @@
 
 public class HotelRoomTypesFilters
 {
-    public const int DefaultMaxAdults = 3;
-    public const int DefaultMaxChildren = 3;
-    public const int DefaultMaxInfants = 3;
+    private const int DefaultMaxAdults = 3;
+    private const int DefaultMaxChildren = 3;
+    private const int DefaultMaxInfants = 3;
 
     public string HotelCode { get; set; } = string.Empty;
     public bool Enabled { get; set; }
@@ -14,10 +14,10 @@ public class HotelRoomTypesFilters
 
     public List<RoomTypeFilters> RoomTypesFiltersList { get; set; } = [];
 
-    public RoomTypeFilters? GetRoomTypeFilters(string roomTypeCode, string key) =>
-        RoomTypesFiltersList.FirstOrDefault(rt =>
-            rt.RoomTypeCode.Equals(roomTypeCode) && rt.RoomTypeFiltersList.Exists(f => f.Key.Equals(key)));
+    //public RoomTypeFilters? GetRoomTypeFilters(string roomTypeCode, string key) =>
+    //    RoomTypesFiltersList.FirstOrDefault(rt =>
+    //        rt.RoomTypeCode.Equals(roomTypeCode) && rt.RoomTypeFiltersList.Exists(f => f.Key.Equals(key)));
 
-    public bool IsBlocked(string roomTypeCode, string key) =>
-        GetRoomTypeFilters(roomTypeCode, key)?.IsBlocked(key) ?? false;
+    //public bool IsBlocked(string roomTypeCode, string key) =>
+    //    GetRoomTypeFilters(roomTypeCode, key)?.IsBlocked(key) ?? false;
 }

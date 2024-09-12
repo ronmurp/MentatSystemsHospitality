@@ -1,0 +1,27 @@
+﻿@using Msh.WebApp.Models.Admin
+
+@model Msh.HotelCache.Models.Extras.Extra;
+@{
+	ViewData["Title"] = "Edit Extra";
+
+	var hotelCode = ViewBag.HotelCode;
+
+	ViewBag.Success = new SuccessAlert
+	{
+		ModelName = "Extra",
+		ReturnPath = "/admin/hotels/ExtrasList?hotelCode=" + hotelCode,
+		ReturnPathName = "Extras List",
+		KeyPropertyLabel = "Extra Code",
+		KeyPropertyName = "Code",
+		KeyPropertyValue = Model.Code,
+		FormAction = "ExtraEdit"
+	};
+}
+
+@await Html.PartialAsync("Hotels/_ExtraEdit", @Model)
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-extras.js"></script>
+}

@@ -10,8 +10,9 @@ public static class ConstHotel
         public const string RoomTypes = "RoomTypes";
         public const string RatePlans = "RatePlans";
         public const string RoomTypeFilters = "RoomTypeFilters";
+        public const string Extras = "Extras";
 
-        public const string DiscountConfig = "DiscountConfig";
+		public const string DiscountConfig = "DiscountConfig";
         public const string DiscountGroups = "DiscountGroups";
         public const string DiscountCodes = "DiscountCodes";
     }

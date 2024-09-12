@@ -15,121 +15,136 @@
 @await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
 
 <div class="row">
-	<div class="col-6">
+	<div class="col-md-6">
 
 		<form asp-action="@formAction" asp-route-hotelCode="@hotelCode">
 			
 			<div class="form-group mb-3">
-				<label asp-for="Code" class="control-label">Hotel Code <info-icon name="info-room-type-code" /></label>
+				<label asp-for="Code" class="control-label"></label>&nbsp;
+				<info-icon name="info-room-type-code" />
 				@await Html.PartialAsync("Hotels/_EditCode", success)
 			</div>
 
+			
 			<div class="form-group mb-3">
-				<label asp-for="GroupCode" class="control-label">Group Code <info-icon name="info-group-code" /></label>
+				<label asp-for="GroupCode" class="control-label"></label>&nbsp;
+				<info-icon name="info-group-code" />
 				<input asp-for="GroupCode" class="form-control " />
 				<span asp-validation-for="GroupCode" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="Occupancy" class="control-label">Occupation <info-icon name="info-occupation" /></label>
-				<input asp-for="Occupancy" class="form-control" type="number" />
+				<label asp-for="Occupancy" class="control-label"></label>&nbsp;
+				<info-icon name="info-occupation" />
+				<input asp-for="Occupancy" class="form-control " />
 				<span asp-validation-for="Occupancy" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="Name" class="control-label">Name <info-icon name="info-name" /></label>
+				<label asp-for="Name" class="control-label"></label>&nbsp;
+				<info-icon name="info-name" />
 				<input asp-for="Name" class="form-control " />
 				<span asp-validation-for="Name" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="Description" class="control-label">Description <info-icon name="info-description" /></label>
+				<label asp-for="Description" class="control-label"></label>&nbsp;
+				<info-icon name="info-description" />
 				<input asp-for="Description" class="form-control " />
 				<span asp-validation-for="Description" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="HtmlDescription" class="control-label">HTML Description <info-icon name="info-html-description" /></label>
-				<input asp-for="HtmlDescription" class="form-control " />
+				<label asp-for="HtmlDescription" class="control-label"></label>&nbsp;
+				<info-icon name="info-html-description" />
+				<textarea asp-for="HtmlDescription" class="form-control " ></textarea>
 				<span asp-validation-for="HtmlDescription" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="ImageFile" class="control-label">Image File <info-icon name="info-image-file" /></label>
+				<label asp-for="ImageFile" class="control-label"></label>&nbsp;
+				<info-icon name="info-image-file" />
 				<input asp-for="ImageFile" class="form-control " />
 				<span asp-validation-for="ImageFile" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="RoomCount" class="control-label">Room Count <info-icon name="info-room-count" /></label>
-				<input asp-for="RoomCount" class="form-control" type="number" />
+				<label asp-for="RoomCount" class="control-label"></label>&nbsp;
+				<info-icon name="info-room-count" />
+				<input asp-for="RoomCount" class="form-control " />
 				<span asp-validation-for="RoomCount" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="RoomCategory" class="control-label">Room Category <info-icon name="info-room-category" /></label>
+				<label asp-for="RoomCategory" class="control-label"></label>&nbsp;
+				<info-icon name="info-room-category" />
 				<input asp-for="RoomCategory" class="form-control " />
 				<span asp-validation-for="RoomCategory" class="text-danger"></span>
 			</div>
 			<div class="form-check form-switch mb-3">
 				<input asp-for="RoomBlocked" type="checkbox" class="form-check-input " />
-				<label asp-for="RoomBlocked" class="form-check-label">
-					Room Blocked <info-icon name="info-room-blocked" />
-				</label>
+				<label asp-for="RoomBlocked" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-room-blocked" />
 			</div>
 			<div class="form-check form-switch mb-3">
 				<input asp-for="TwinOption" type="checkbox" class="form-check-input " />
-				<label asp-for="TwinOption" class="form-check-label">
-					Twin Option <info-icon name="info-twin-option" />
-				</label>
+				<label asp-for="TwinOption" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-twin-option" />
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="OptionTypeCode" class="control-label">Option Type Code <info-icon name="info-option-type-code" /></label>
+				<label asp-for="OptionTypeCode" class="control-label"></label>&nbsp;
+				<info-icon name="info-option-type-code" />
 				<input asp-for="OptionTypeCode" class="form-control " />
 				<span asp-validation-for="OptionTypeCode" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="OptionTypeWarning" class="control-label">Otion Warning <info-icon name="info-option-warning" /></label>
+				<label asp-for="OptionTypeWarning" class="control-label"></label>&nbsp;
+				<info-icon name="info-option-warning" />
 				<input asp-for="OptionTypeWarning" class="form-control " />
 				<span asp-validation-for="OptionTypeWarning" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="ImageGallery" class="control-label">Image Gallery <info-icon name="info-image-gallery" /></label>
+				<label asp-for="ImageGallery" class="control-label"></label>&nbsp;
+				<info-icon name="info-image-gallery" />
 				<input asp-for="ImageGallery" class="form-control " />
 				<span asp-validation-for="ImageGallery" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="GroupName" class="control-label">GroupName <info-icon name="info-group-name" /></label>
+				<label asp-for="GroupName" class="control-label"></label>&nbsp;
+				<info-icon name="info-group-name" />
 				<input asp-for="GroupName" class="form-control " />
 				<span asp-validation-for="GroupName" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="GroupDescription" class="control-label">Group Description <info-icon name="info-group-description" /></label>
+				<label asp-for="GroupDescription" class="control-label"></label>&nbsp;
+				<info-icon name="info-group-description" />
 				<input asp-for="GroupDescription" class="form-control " />
 				<span asp-validation-for="GroupDescription" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="GroupLongDescription" class="control-label">Group HTML Description <info-icon name="info-group-html-description" /></label>
+				<label asp-for="GroupLongDescription" class="control-label"></label>&nbsp;
+				<info-icon name="info-group-html-description" />
 				<input asp-for="GroupLongDescription" class="form-control " />
 				<span asp-validation-for="GroupLongDescription" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="GroupImageFile" class="control-label">Group Image <info-icon name="info-group-image" /></label>
+				<label asp-for="GroupImageFile" class="control-label"></label>&nbsp;
+				<info-icon name="info-group-image" />
 				<input asp-for="GroupImageFile" class="form-control " />
 				<span asp-validation-for="GroupImageFile" class="text-danger"></span>
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="GroupImageGallery" class="control-label">Group Image Gallery <info-icon name="info-group-image-gallery" /></label>
-				<input asp-for="GroupImageGallery" class="form-control " />
+				<label asp-for="GroupImageGallery" class="control-label"></label>&nbsp;
+				<info-icon name="info-group-image-gallery" />
+				<textarea asp-for="GroupImageGallery" class="form-control " ></textarea>
 				<span asp-validation-for="GroupImageGallery" class="text-danger"></span>
 			</div>
 			<div class="form-check form-switch mb-3">
 				<input asp-for="GroupTwinOption" type="checkbox" class="form-check-input " />
-				<label asp-for="GroupTwinOption" class="form-check-label">
-					Group Twin Option <info-icon name="info-group-twin-description" />
-				</label>
+				<label asp-for="GroupTwinOption" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-group-twin-description" />
 			</div>
 			<div class="form-check form-switch mb-3">
 				<input asp-for="NoDogs" type="checkbox" class="form-check-input " />
-				<label asp-for="NoDogs" class="form-check-label">
-					No Dogs <info-icon name="info-no-dogs" />
-				</label>
+				<label asp-for="NoDogs" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-no-dogs" />
 			</div>
 			<div class="form-group mb-3">
-				<label asp-for="NoDogsText" class="control-label">No Dogs Text <info-icon name="info-no-dogs-text" /></label>
+				<label asp-for="NoDogsText" class="control-label"></label>&nbsp;
+				<info-icon name="info-no-dogs-text" />
 				<input asp-for="NoDogsText" class="form-control " />
 				<span asp-validation-for="NoDogsText" class="text-danger"></span>
 			</div>
@@ -143,189 +158,5 @@
 	</div>
 </div>
 
-<div id="page-info" style="display:none;">
 
-	<div data-info-for="room-type-code">
-		<span>Room Type Code</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="group-code">
-		<span>Group Code</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="occupation">
-		<span>Occupation</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="name">
-		<span>Name</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="description">
-		<span>Description</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="html-description">
-		<span>HTML Description</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="image-file">
-		<span>Image File</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="room-count">
-		<span>Room Count</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="room-category">
-		<span>Room Category</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="room-blocked">
-		<span>Room Blocked</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="twin-option">
-		<span>Twin Option</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="option-type-code">
-		<span>Option Type Code</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="option-warning">
-		<span>Otion Warning</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="image-gallery">
-		<span>Image Gallery</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="group-name">
-		<span>GroupName</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="group-description">
-		<span>Group Description</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="group-html-description">
-		<span>Group HTML Description</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="group-image">
-		<span>Group Image</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="group-image-gallery">
-		<span>Group Image Gallery</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="group-twin-description">
-		<span>Group Twin Option</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="no-dogs">
-		<span>No Dogs</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-	<div data-info-for="no-dogs-text">
-		<span>No Dogs Text</span>
-		<div>
-			<p>
-
-			</p>
-		</div>
-	</div>
-
-
-	@{
-		await Html.RenderPartialAsync("Admin/_AdminPublish", "Room Type List");
-	}
-
-</div>
-
+@await Html.PartialAsync("Hotels/_RoomTypeEditInfo", "Room Type Edit")
