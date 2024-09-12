@@ -42,7 +42,18 @@
 				<tr>
 					<td>@rt.Code</td>
 					<td>@rt.Description</td>
-					<td></td>
+					<td style="width:80px;">
+						<div class="cell-outer">
+							<div class="cell-inner">
+								@rt.ItemDates.Count
+							</div>
+							<div class="cell-inner">
+								<a asp-controller="Hotels" asp-action="ExtraEditDates" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
+									<i class="fa-solid fa-calendar"></i>
+								</a>
+							</div>
+						</div>
+					</td>
 					<td style="width:80px;">
 						
 						<div class="cell-outer">

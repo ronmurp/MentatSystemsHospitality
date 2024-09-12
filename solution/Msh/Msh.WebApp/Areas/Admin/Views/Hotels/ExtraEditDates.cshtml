@@ -1,0 +1,59 @@
+﻿@using Msh.Admin.Models.Const
+@{
+	var title = "Extra Dates List";
+	ViewData["Title"] = title;
+	var itemCode = ViewBag.Code as string;
+	var hotelCode = ViewBag.HotelCode as string;
+}
+
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuHotels, currentItem = "ExtrasList" })
+
+<input type="hidden" id="edit-type" value="extra-dates"/>
+<input type="hidden" id="item-code" value="@itemCode" />
+<input type="hidden" id="hotel-code" value="@hotelCode" />
+
+<div class="text-center">
+	<h1 class="display-6">@title for @itemCode @hotelCode</h1>
+	<p>For more information click <info-icon name="info-extra-dates" /></p>
+</div>
+
+<div class="row">
+	<div class="col-12" id="table-target">
+	
+	</div>
+</div>
+
+<div class="mt-3" style="display:flex;justify-content:start;">
+	<div class="input-group">
+		<button id="save-dates" class="btn btn-outline-primary" class="mr-3">Save</button>
+		<a asp-contoller="Hotels" asp-action="ExtrasList" asp-route-hotelCode="@hotelCode" asp-route-code="@itemCode" class="btn btn-outline-secondary">Return to list</a>
+	</div>
+		
+</div>
+
+<div id="page-info" style="display:none;">
+	<div data-info-for="info-hotel-dates">
+		<span>Hotel Dates</span>
+		<div>
+			<p>
+				Add dates when the hotel is unavailable (Stay From - Stay To). 
+				Set the Enabled flag to enable the dates to be used, i.e., to disable the hotel for those dates.
+			</p>
+			<p>
+				Add dates when the user cannot make bookings for the hotel (Book From - Book To). 
+				Set the Enabled flag to enable the dates to be used, i.e., 
+				to prevent users making bookings for the hotel on those dates.
+			</p>
+			<p>
+				The date ranges are inclusive.
+			</p>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-ApiService.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-extras.js"></script>
+}
+

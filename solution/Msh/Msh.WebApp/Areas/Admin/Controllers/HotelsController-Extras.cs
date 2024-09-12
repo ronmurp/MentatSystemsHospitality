@@ -177,4 +177,32 @@ public partial class HotelsController
 		}
 	}
 
+
+
+	[Route("ExtraEditDates")]
+	public async Task<IActionResult> ExtraEditDates(string hotelCode, string code, bool isSuccess = false)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			//var hotels = await hotelsRepoService.GetHotelsAsync();
+			//var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
+			//if (hotel == null)
+			//{
+			//	return RedirectToAction("HotelList");
+			//}
+			ViewBag.Code = code;
+			ViewBag.HotelCode = hotelCode;
+
+			return View();
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"{ex.Message}");
+		}
+
+		return RedirectToAction("HotelList");
+	}
+
 }

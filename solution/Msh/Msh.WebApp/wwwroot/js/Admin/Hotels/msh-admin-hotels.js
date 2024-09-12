@@ -183,7 +183,6 @@
             updateInputs();
         }
        
-
     });
 
     $('#save-dates').on('click', () => {

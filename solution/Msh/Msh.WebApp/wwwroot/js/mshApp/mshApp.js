@@ -282,6 +282,7 @@
                 html += `<div class="cell-inner">${v}</div>`
             })
             html += '</div>'
+            return html;
         }
 
         function table(headerArray, bodyArray) {
