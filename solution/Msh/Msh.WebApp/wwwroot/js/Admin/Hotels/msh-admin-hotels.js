@@ -5,6 +5,7 @@
     var util = app.utilityService;
     var api = app.apiService;
     var mom = app.momentDateService;
+    var htmlS = app.htmlService;
 
     var hotelApi = '/api/hotelapi/';
 
@@ -31,37 +32,98 @@
     var hotelDates = [];
 
     function getTableHtml(hotelDates) {
-        
-        var html = '<table>';
-        html += '<tr>';
 
-        html += `<th>S.Enabled</th>`;
-        html += `<th>Stay From</th>`;
-        html += `<th>Stay To</th>`;
-        html += `<th>B.Enabled</th>`;
-        html += `<th>Book From</th>`;
-        html += `<th>Book To</th>`;
-        html += `<th><a href="javascript:window.mshMethods.addHotelDates()"><i class="fa-solid fa-plus"></i></a></th>`;
+        var headArray = [
+            'S.Enabled', 'Stay From', 'Stay To', 'B.Enabled', 'Book From', 'Book To',
+            `<a href="javascript:window.mshMethods.addHotelDates()"><i class="fa-solid fa-plus"></i></a>`
+        ];
 
-        html += '</tr>';
+        var bodyArray = [];
         var i = 0;
         hotelDates.forEach((v) => {
+            
             var stayChecked = v.stayEnabled ? `checked` : ``;
             var bookChecked = v.bookEnabled ? `checked` : ``;
-            html += '<tr>';
-            html += `<td><input type="checkbox" id="StayEnabled-${i}" ${stayChecked} /></td>`;
-            html += `<td><input type="date" id="StayFrom-${i}" value="${v.stayFrom}" /></td>`;
-            html += `<td><input type="date" id="StayTo-${i}" value="${v.stayTo}" /></td>`;
-            html += `<td><input type="checkbox" id="BookEnabled-${i}" ${bookChecked} /></td>`;
-            html += `<td><input type="date" id="BookFrom-${i}" value="${v.bookFrom}" /></td>`;
-            html += `<td><input type="date" id="BookTo-${i}" value="${v.bookTo}" /></td>`;
-            html += `<td><a href="javascript:window.mshMethods.deleteHotelDates(${i})"><i class="fa-solid fa-times"></i></a></td>`
-            html += '</tr>';
+
+            var rowArray = [
+                `<input type="checkbox" id="StayEnabled-${i}" data-msh-index="${i}" name="StayEnabled" ${stayChecked} />`,
+                `<input type="date" id="StayFrom-${i}" data-msh-index="${i}" name="StayFrom" value="${v.stayFrom}" />`,
+                `<input type="date" id="StayTo-${i}" data-msh-index="${i}" name="StayTo" value="${v.stayTo}" />`,
+                `<input type="checkbox" id="BookEnabled-${i}" data-msh-index="${i}" name="BookEnabled" ${bookChecked} />`,
+                `<input type="date" id="BookFrom-${i}" data-msh-index="${i}" name="BookFrom" value="${v.bookFrom}" />`,
+                `<input type="date" id="BookTo-${i}" data-msh-index="${i}" name="BookTo" value="${v.bookTo}" />`,
+                `<a href="javascript:window.mshMethods.deleteHotelDates(${i})"><i class="fa-solid fa-times"></i></a>`
+            ];
+            bodyArray.push(rowArray);
+       
             i++;
         });
-        html += '</table>';
+
+        var html = htmlS.table(headArray, bodyArray);
+
         return html;
 
+    }
+
+    function changeClass(name, me) {
+        var index = $(me).attr('data-msh-index')
+        if ($(`#${name}Enabled-${index}`).is(':checked')) {
+            var selector = `#StayFrom-${index}`;
+            $(`#${name}From-${index}`).removeClass('dim-input');
+            $(`#${name}To-${index}`).removeClass('dim-input');
+        }
+        else {
+            $(`#${name}From-${index}`).addClass('dim-input');
+            $(`#${name}To-${index}`).addClass('dim-input');
+        }
+
+    }
+
+    function updateDates(name, me, isFrom) {
+        var index = $(me).attr('data-msh-index');
+        var dateFrom = mom.date($(`#${name}From-${index}`).val());
+        var dateTo = mom.date($(`#${name}To-${index}`).val());
+        if (dateTo < dateFrom) {
+            if (isFrom) {
+                var d2 = dateFrom.clone().add(1, 'days');
+                $(`#${name}To-${index}`).val(d2.format(mom.YMD));
+            } else {
+                var d2 = dateTo.clone().add(-1, 'days');
+                $(`#${name}From-${index}`).val(d2.format(mom.YMD));
+            }   
+        }
+    }
+
+    function updateInputs() {
+        setTimeout(function () {
+            for (var i = 0; i < hotelDates.length; i++) {
+                var stay = $(`#StayEnabled-${i}`);
+                var book = $(`#BookEnabled-${i}`);
+                changeClass('Stay', stay);
+                changeClass('Book', book);
+
+            }
+            $('[name="StayEnabled"]').on('change', function () {
+                changeClass('Stay', this)
+            });
+            $('[name="BookEnabled"]').on('change', function () {
+                changeClass('Book', this)
+            });
+
+            $('[name="StayFrom"]').on('change', function() {
+                updateDates('Stay', this, true);
+            });
+            $('[name="StayTo"]').on('change', function () {
+                updateDates('Stay', this, false);
+            });
+
+            $('[name="BookFrom"]').on('change', function () {
+                updateDates('Book', this, true);
+            });
+            $('[name="BookTo"]').on('change', function () {
+                updateDates('Book', this, false);
+            });
+        }, 200);
     }
     function loadDates(hotelCode) {
         var url = `/api/hotelapi/HotelDates?hotelCode=${hotelCode}`;
@@ -71,6 +133,7 @@
                 presetDates(data.data.minDate)
                 var html = getTableHtml(hotelDates);
                 $('#table-target').html(html);
+                updateInputs();
             }
         });
     }
@@ -102,6 +165,7 @@
             hotelDates.push(hotelDate);
             var html = getTableHtml(hotelDates);
             $('#table-target').html(html);
+            updateInputs();
         },
         deleteHotelDates: function (index) {
             
@@ -109,6 +173,7 @@
 
             var html = getTableHtml(hotelDates);
             $('#table-target').html(html);
+            updateInputs();
         }
        
 

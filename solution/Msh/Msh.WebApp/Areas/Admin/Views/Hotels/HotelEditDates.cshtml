@@ -22,7 +22,7 @@
 </div>
 <div class="row my-3">
 	<div class="col-12">
-		<button id="save-dates" class="btn btn-primary" onclick="mshMethods.saveHotelDates()" >Save</button>
+		<button id="save-dates" class="btn btn-primary" class="mr-3">Save</button>
 		<a asp-contoller="Hotels" asp-action="HotelList" class="btn btn-secondary">Return to list</a>
 	</div>
 </div>
@@ -32,10 +32,16 @@
 		<span>Hotel Dates</span>
 		<div>
 			<p>
-				Add dates when the hotel is unavailable (Stay From - Stay To). Set the Enabled flag to enable the dates to be used.
+				Add dates when the hotel is unavailable (Stay From - Stay To). 
+				Set the Enabled flag to enable the dates to be used, i.e., to disable the hotel for those dates.
 			</p>
 			<p>
-				Add dates when the user cannot make bookings for the hotel (Book From - Book To). Set the Enabled flag to enable the dates to be used.
+				Add dates when the user cannot make bookings for the hotel (Book From - Book To). 
+				Set the Enabled flag to enable the dates to be used, i.e., 
+				to prevent users making bookings for the hotel on those dates.
+			</p>
+			<p>
+				The date ranges are inclusive.
 			</p>
 		</div>
 	</div>

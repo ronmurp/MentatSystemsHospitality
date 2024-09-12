@@ -165,3 +165,8 @@ table {
 .error-block-show .error-message {
     color: red;
 }
+
+
+.dim-input {
+    background-color: lightgray;
+}
