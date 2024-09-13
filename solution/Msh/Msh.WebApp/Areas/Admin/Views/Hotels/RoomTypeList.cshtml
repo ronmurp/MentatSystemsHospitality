@@ -3,6 +3,7 @@
 @{
 	var title = "Room Type List";
 	ViewData["Title"] = title;
+	ViewBag.InfoIcons = "Room Types";
 }
 
 @await Component.InvokeAsync("AdminMenu", new
@@ -70,12 +71,12 @@
 
 <div id="page-info" style="display:none;">
 	
-	@await Html.PartialAsync("Hotels/_ListIconsInfo", "Test Models")
+	@await Html.PartialAsync("Hotels/_ListIconsInfo", ViewBag.InfoIcons as string)
 
 	<div data-info-for="info-hotel-code">
-		<span>Hotel</span>
+		<span>@ViewBag.InfoIcons Hotel</span>
 		<div>
-			<p>Select a hotel to view Room Types for that hotel</p>
+			<p>Select a hotel to view @ViewBag.InfoIcons for that hotel</p>
 		</div>
 	</div>
 </div>

@@ -1,14 +1,14 @@
 ﻿@using Msh.Admin.Models.Const
-@model Msh.WebApp.Models.Admin.ViewModels.ExtrasListVm;
+@model Msh.WebApp.Models.Admin.ViewModels.RatePlanListVm;
 @{
-	var title = "Extras List";
+	var title = "Rate Plan List";
 	ViewData["Title"] = title;
-	ViewBag.InfoIcons = "Extras";
+	ViewBag.InfoIcons = "Rate Plans";
 }
 
 @await Component.InvokeAsync("AdminMenu", new
 {
-	menuName = AdminConst.MenuHotels, currentItem = "ExtrasList"
+	menuName = AdminConst.MenuHotels, currentItem = "RatePlanList"
 })
 
 <div class="text-center">
@@ -21,13 +21,13 @@
 	<div class="col-12">
 		<table>
 			<tr>
-				<th>Extra Code</th>
+				<th>Rate Plan Code</th>
+				<th>Group Code</th>
 				<th>Description</th>
-				<th>Dates</th>
 				<th>   
 					<div class="cell-outer">
 						<div class="cell-inner">
-							<a asp-controller="Hotels" asp-action="ExtraAdd" asp-route-hotelCode="@Model.HotelCode">
+							<a asp-controller="Hotels" asp-action="RatePlanAdd" asp-route-hotelCode="@Model.HotelCode">
 								<i class="fa-solid fa-plus"></i>
 							</a>
 						</div>
@@ -38,33 +38,22 @@
 				</th>
 			</tr>
 			
-			@foreach (var rt in @Model.Extras)
+			@foreach (var rt in @Model.RatePlans)
 			{
 				<tr>
-					<td>@rt.Code</td>
+					<td>@rt.RatePlanCode</td>
+					<td>@rt.Group</td>
 					<td>@rt.Description</td>
-					<td style="width:80px;">
-						<div class="cell-outer">
-							<div class="cell-inner">
-								@rt.ItemDates.Count
-							</div>
-							<div class="cell-inner">
-								<a asp-controller="Hotels" asp-action="ExtraEditDates" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
-									<i class="fa-solid fa-calendar"></i>
-								</a>
-							</div>
-						</div>
-					</td>
 					<td style="width:80px;">
 						
 						<div class="cell-outer">
 							<div class="cell-inner">
-								<a asp-controller="Hotels" asp-action="ExtraEdit" asp-route-code="@rt.Code" asp-route-hotelCode="@Model.HotelCode">
+								<a asp-controller="Hotels" asp-action="RatePlanEdit" asp-route-code="@rt.RatePlanCode" asp-route-hotelCode="@Model.HotelCode">
 									<i class="fa-solid fa-pen-to-square"></i>
 								</a>
 							</div>
 							<div class="cell-inner">
-								<a href="javascript:window.mshMethods.deleteExtra('@rt.Code', '@Model.HotelCode')" >
+								<a href="javascript:window.mshMethods.deleteRatePlan('@rt.RatePlanCode', '@Model.HotelCode')" >
 									<i class="fa-solid fa-times"></i>
 								</a>
 							</div>
@@ -85,7 +74,7 @@
 	@await Html.PartialAsync("Hotels/_ListIconsInfo", ViewBag.InfoIcons as string)
 
 	<div data-info-for="info-hotel-code">
-		<span>@ViewBag.InfoIcons Hotel</span>
+		<span>@ViewBag.InfoIcons </span>
 		<div>
 			<p>Select a hotel to view @ViewBag.InfoIcons for that hotel</p>
 		</div>
@@ -95,7 +84,7 @@
 @section Scripts{
 	<script src="~/js/mshapp/mshapp.js"></script>
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
-	<script src="~/js/admin/hotels/msh-admin-extras.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-rateplans.js"></script>
 }
 
 

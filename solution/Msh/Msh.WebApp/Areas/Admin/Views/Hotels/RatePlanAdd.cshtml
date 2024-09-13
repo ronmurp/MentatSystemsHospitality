@@ -1,0 +1,28 @@
+﻿@using Msh.WebApp.Models.Admin
+
+@model Msh.HotelCache.Models.RatePlans.RoomRatePlan
+@{
+	ViewData["Title"] = "Add Rate Plan";
+
+	var hotelCode = ViewBag.HotelCode;
+
+    ViewBag.Success = new SuccessAlert
+    {
+	    ModelName = "RoomRatePlan",
+	    ReturnPath = "/admin/hotels/RatePlanList?hotelCode=" + hotelCode,
+	    ReturnPathName = "Rate Plan List",
+	    KeyPropertyLabel = "Rate Plan Code",
+	    KeyPropertyName = "RatePlanCode",
+	    KeyPropertyValue = Model.RatePlanCode,
+	    FormAction = "RatePlanAdd"
+    };
+}
+
+@await Html.PartialAsync("Hotels/_RatePlanEdit", @Model)
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/mshapp/msh-itemdatesservice.js"></script>
+	<script src="~/js/Admin/Hotels/msh-admin-rateplans.js"></script>
+}

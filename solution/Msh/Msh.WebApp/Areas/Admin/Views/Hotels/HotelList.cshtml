@@ -5,6 +5,7 @@
 @{
 	var title = "Hotel List";
 	ViewData["Title"] = title;
+	ViewBag.InfoIcons = "Hotels";
 }
 
 @await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuHotels, currentItem = "HotelList" })
@@ -98,7 +99,7 @@
 
 <div id="page-info" style="display:none;">
 	@{
-		await Html.RenderPartialAsync("Hotels/_ListIconsInfo", "Hotel List");
+		await Html.RenderPartialAsync("Hotels/_ListIconsInfo", ViewBag.InfoIcons as string);
 	}
 </div>
 

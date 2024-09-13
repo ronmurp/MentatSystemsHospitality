@@ -1,0 +1,279 @@
+﻿@using Msh.WebApp.Models.Admin
+@model Msh.HotelCache.Models.RatePlans.RoomRatePlan
+@{
+	var success = ViewBag.Success as SuccessAlert;
+	var formAction = success?.FormAction ?? "RatePlanAdd";
+	var hotelCode = ViewBag.HotelCode;
+	var title = ViewData["Title"];
+}
+
+<div class="text-center">
+	<h1 class="display-6">@title</h1>
+	<p></p>
+</div>
+
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
+
+<div class="row">
+	<div class="col-md-6">
+
+		<form asp-action="@formAction" asp-route-hotelCode="@hotelCode">
+			
+			<div class="form-group mb-3">
+				<label asp-for="RatePlanCode" class="control-label"></label>&nbsp;
+				<info-icon name="info-room-type-code" />
+				@await Html.PartialAsync("Hotels/_EditCode", success)
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="ConfirmationText" class="control-label"></label>&nbsp;
+				<info-icon name="info-confirmation-text" />
+				<input asp-for="ConfirmationText" class="form-control " />
+				<span asp-validation-for="ConfirmationText" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="DefaultDescription" class="control-label"></label>&nbsp;
+				<info-icon name="info-default-desc" />
+				<input asp-for="DefaultDescription" class="form-control " />
+				<span asp-validation-for="DefaultDescription" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="Group" class="control-label"></label>&nbsp;
+				<info-icon name="info-group" />
+				<input asp-for="Group" class="form-control " />
+				<span asp-validation-for="Group" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="Title" class="control-label"></label>&nbsp;
+				<info-icon name="info-title" />
+				<input asp-for="Title" class="form-control " />
+				<span asp-validation-for="Title" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="SubTitle" class="control-label"></label>&nbsp;
+				<info-icon name="info-sub-title" />
+				<input asp-for="SubTitle" class="form-control " />
+				<span asp-validation-for="SubTitle" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="Description" class="control-label"></label>&nbsp;
+				<info-icon name="info-description" />
+				<input asp-for="Description" class="form-control " />
+				<span asp-validation-for="Description" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="ShortDescription" class="control-label"></label>&nbsp;
+				<info-icon name="info-short-description" />
+				<input asp-for="ShortDescription" class="form-control " />
+				<span asp-validation-for="ShortDescription" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="UnavailableOffer" class="control-label"></label>&nbsp;
+				<info-icon name="info-unavailable-offer" />
+				<input asp-for="UnavailableOffer" class="form-control " />
+				<span asp-validation-for="UnavailableOffer" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="MarketSegment" class="control-label"></label>&nbsp;
+				<info-icon name="info-market-segment" />
+				<input asp-for="MarketSegment" class="form-control " />
+				<span asp-validation-for="MarketSegment" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="SourceCode" class="control-label"></label>&nbsp;
+				<info-icon name="info-source-code" />
+				<input asp-for="SourceCode" class="form-control " />
+				<span asp-validation-for="SourceCode" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="IsBaseRate" type="checkbox" class="form-check-input " />
+				<label asp-for="IsBaseRate" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-is-base-rate" />
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="IsOffer" type="checkbox" class="form-check-input " />
+				<label asp-for="IsOffer" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-is-offer" />
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="IsPromo" type="checkbox" class="form-check-input " />
+				<label asp-for="IsPromo" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-is-promotion" />
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="IsDbb" type="checkbox" class="form-check-input " />
+				<label asp-for="IsDbb" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-is-dbb" />
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="DbbText" class="control-label"></label>&nbsp;
+				<info-icon name="info-dbb-text" />
+				<input asp-for="DbbText" class="form-control " />
+				<span asp-validation-for="DbbText" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="FullPrePay" type="checkbox" class="form-check-input " />
+				<label asp-for="FullPrePay" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-full-pre-pay" />
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="DepositDays" class="control-label"></label>&nbsp;
+				<info-icon name="info-deposit-days" />
+				<input asp-for="DepositDays" class="form-control " />
+				<span asp-validation-for="DepositDays" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="DepositAmount" class="control-label"></label>&nbsp;
+				<info-icon name="info-deposit-amount" />
+				<input asp-for="DepositAmount" class="form-control " />
+				<span asp-validation-for="DepositAmount" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="DepositBalanceMessage" class="control-label"></label>&nbsp;
+				<info-icon name="info-deposit-balance-message" />
+				<input asp-for="DepositBalanceMessage" class="form-control " />
+				<span asp-validation-for="DepositBalanceMessage" class="text-danger"></span>
+			</div>
+			
+		<div class="form-group mb-3">
+			<label asp-for="StayFrom" class="control-label"></label>&nbsp;
+			<info-icon name="info-stay-from" />
+			<input asp-for="StayFrom" class="form-control " />
+			<span asp-validation-for="StayFrom" class="text-danger"></span>
+		</div>
+
+
+		<div class="form-group mb-3">
+			<label asp-for="StayTo" class="control-label"></label>&nbsp;
+			<info-icon name="info-stay-to" />
+			<input asp-for="StayTo" class="form-control " />
+			<span asp-validation-for="StayTo" class="text-danger"></span>
+		</div>
+
+		<div class="form-check form-switch mb-3">
+			<input asp-for="HasBookDates" type="checkbox" class="form-check-input " />
+			<label asp-for="HasBookDates" class="form-check-label"></label>&nbsp;
+			<info-icon name="info-has-book-dates" />
+		</div>
+		
+		<div class="form-group mb-3">
+			<label asp-for="BookFrom" class="control-label"></label>&nbsp;
+			<info-icon name="info-book-from" />
+			<input asp-for="BookFrom" class="form-control " />
+			<span asp-validation-for="BookFrom" class="text-danger"></span>
+		</div>
+
+
+		<div class="form-group mb-3">
+			<label asp-for="BookTo" class="control-label"></label>&nbsp;
+			<info-icon name="info-book-to" />
+			<input asp-for="BookTo" class="form-control " />
+			<span asp-validation-for="BookTo" class="text-danger"></span>
+		</div>
+
+
+		<div class="form-group mb-3">
+				<label asp-for="GroupSortOrder" class="control-label"></label>&nbsp;
+				<info-icon name="info-group-sort-order" />
+				<input asp-for="GroupSortOrder" class="form-control " />
+				<span asp-validation-for="GroupSortOrder" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="MinNights" class="control-label"></label>&nbsp;
+				<info-icon name="info-min-nights" />
+				<input asp-for="MinNights" class="form-control " />
+				<span asp-validation-for="MinNights" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="MaxNights" class="control-label"></label>&nbsp;
+				<info-icon name="info-max-nights" />
+				<input asp-for="MaxNights" class="form-control " />
+				<span asp-validation-for="MaxNights" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="DisableDiscount" type="checkbox" class="form-check-input " />
+				<label asp-for="DisableDiscount" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-disable-discount" />
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="FitEnabled" type="checkbox" class="form-check-input " />
+				<label asp-for="FitEnabled" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-fit-enabled" />
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="BaseRate" class="control-label"></label>&nbsp;
+				<info-icon name="info-base-rate" />
+				<input asp-for="BaseRate" class="form-control " />
+				<span asp-validation-for="BaseRate" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="Notes" class="control-label"></label>&nbsp;
+				<info-icon name="info-notes" />
+				<input asp-for="Notes" class="form-control " />
+				<span asp-validation-for="Notes" class="text-danger"></span>
+			</div>
+
+
+
+
+			
+
+			<div class="input-group">
+				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
+				<a asp-controller="Hotels" asp-action="RatePlanList" asp-route-hotelCode="@hotelCode" class="btn btn-outline-secondary">Return to list</a>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+
+@await Html.PartialAsync("Hotels/_RatePlanEditInfo", "Rate Plan Edit")
