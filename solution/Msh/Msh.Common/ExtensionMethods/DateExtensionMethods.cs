@@ -33,10 +33,13 @@ public static class DateExtensionMethods
     /// </summary>
     public static bool IsMax(this DateTime dt) => dt.Equals(DateTime.MaxValue);
 
-    /// <summary>
-    /// Is the submitted date the MinValue or the MaxValue
-    /// </summary>
-    public static bool IsMinMax(this DateTime dt) => IsMin(dt) || IsMax(dt);
+	
+  
+
+	/// <summary>
+	/// Is the submitted date the MinValue or the MaxValue
+	/// </summary>
+	public static bool IsMinMax(this DateTime dt) => IsMin(dt) || IsMax(dt);
 
     /// <summary>
     /// Number of minutes 
@@ -125,41 +128,4 @@ public static class DateExtensionMethods
     // 10th   9th   12th => 12 - 13
     //
 
-    public static bool HasBookDates(this HotelDateItem hotelDateItem) =>
-	    hotelDateItem.BookEnabled && hotelDateItem.BookFrom != DateOnly.MinValue && hotelDateItem.BookTo != DateOnly.MinValue;
-
-	/// <summary>
-	/// The hotel is disabled
-	/// </summary>
-	/// <param name="hotelDateItem"></param>
-	/// <param name="arrive"></param>
-	/// <param name="depart"></param>
-	/// <returns>Returns true if disabled</returns>
-	/// <remarks>
-	/// 
-	/// |------|                |----| OK
-	///         |- IsDisabled -|
-	///       |----| |---|  |-----| disable
-	///       |-------------------| disable
-	/// </remarks>
-	public static bool IsDisabled(this HotelDateItem hotelDateItem, DateOnly arrive, DateOnly depart) =>
-		hotelDateItem.StayEnabled && !(depart <= hotelDateItem.StayFrom || arrive > hotelDateItem.StayTo);
-
-    /// <summary>
-    /// True if the date is within the date range
-    /// </summary>
-    /// <param name="hotelDateItem"></param>
-    /// <param name="date"></param>
-    /// <returns></returns>
-	public static bool IsDisabled(this HotelDateItem hotelDateItem, DateOnly date) =>
-		hotelDateItem.StayEnabled && date >= hotelDateItem.StayFrom && date <= hotelDateItem.StayTo;
-
-    /// <summary>
-    /// Cannot book the hotel if the 
-    /// </summary>
-    /// <param name="hotelDateItem"></param>
-    /// <param name="now"></param>
-    /// <returns></returns>
-    public static bool CannotBook(this HotelDateItem hotelDateItem, DateOnly now) =>
-	    hotelDateItem.BookEnabled && now >= hotelDateItem.StayFrom && now <= hotelDateItem.StayTo;
 }

@@ -2,7 +2,8 @@
 
 public class ItemDate
 {
-    public DateOnly FromDate { get; set; }
+	public ItemDateType DateType { get; set; } = ItemDateType.Prohibit;
+	public DateOnly FromDate { get; set; }
     public DateOnly ToDate { get; set; }
     public bool Enabled { get; set; } = true;
     public string Notes { get; set; } = string.Empty;

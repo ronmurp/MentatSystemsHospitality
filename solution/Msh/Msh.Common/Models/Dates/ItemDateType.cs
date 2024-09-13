@@ -7,5 +7,5 @@
 /// </summary>
 public enum ItemDateType
 {
-    Allow, Prohibit
+    Prohibit, Allow
 }
