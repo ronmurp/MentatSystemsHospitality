@@ -53,8 +53,13 @@
 								</a>
 							</div>
 							<div class="cell-inner">
-								<a href="javascript:window.mshMethods.deleteRatePlan('@rt.RatePlanCode', '@Model.HotelCode')" >
+								<a href="javascript:window.mshMethods.deleteItem('@rt.RatePlanCode', '@Model.HotelCode')" >
 									<i class="fa-solid fa-times"></i>
+								</a>
+							</div>
+							<div class="cell-inner">
+								<a href="javascript:window.mshMethods.copyItem('@rt.RatePlanCode', '@Model.HotelCode')">
+									<i class="fa-solid fa-copy"></i>
 								</a>
 							</div>
 						</div>
@@ -82,8 +87,9 @@
 </div>
 
 @section Scripts{
-	<script src="~/js/mshapp/mshapp.js"></script>
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/mshapp/msh-itemdatesservice.js"></script>
 	<script src="~/js/admin/hotels/msh-admin-rateplans.js"></script>
 }
 

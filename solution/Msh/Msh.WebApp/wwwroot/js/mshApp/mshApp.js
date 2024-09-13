@@ -660,8 +660,6 @@
 
     })(jQuery);
 
-
-
     window.mshPageApp.utilityService = (function () {
 
         var app = window.mshPageApp;
@@ -2316,6 +2314,95 @@
         }
 
     })();
+
+    window.mshPageApp.hotelActionService = (function () {
+
+        var app = window.mshPageApp;
+        var mom = app.momentDateService;
+        var modal = app.modalService;
+        var meth = app.methodsService;
+        var html = app.htmlService;
+        var util = app.utilityService;
+        var api = app.apiService;
+
+        var options = {
+            deleteApi: '/api/hotelapi/ExtraDelete',
+            copyApi: '/api/hotelapi/ExtraCopy',
+            listPath: 'admin/hotels/ExtrasList'
+        };
+
+        function confirmDeleteItem(code, hotelCode) {
+            var url = options.deleteApi;
+            var d = {
+                code: code,
+                hotelCode: hotelCode
+            }
+            api.postAsync(url, d, function (data) {
+                util.redirectTo(`${options.listPath}?hotelCode=${hotelCode}`)
+            });
+        }
+
+        function deleteItem(code, hotelCode) {
+
+            modal.showModal('delModalId', "Confirm Delete", `Confirm delete of ${code}/${hotelCode}`, {
+                footerOk: true,
+                okButtonClickScript: `onclick="window.mshMethods.confirmDeleteItem('${code}', '${hotelCode}')""`,
+                okButtonText: 'OK'
+            });
+        }
+
+        function confirmCopyItem(code, hotelCode) {
+            var newHotelCode = $('#copyHotel').val();
+            var newCode = $('#copyCode').val();
+            var url = options.copyApi;
+            var d = {
+                code: code,
+                hotelCode: hotelCode,
+                newCode: newCode,
+                newHotelCode: newHotelCode
+            }
+            api.postAsync(url, d, function (data) {
+                if (!data.success) {
+                    $('#confirm-error')
+                        .html(data.userErrorMessage)
+                        .removeClass('d-none');
+                    return;
+                }
+                util.redirectTo(`${options.listPath}?hotelCode=${hotelCode}`)
+            });
+        }
+
+        function copyItem(code, hotelCode) {
+            var html = '<div>';
+            html += '<p>Change the hotel code, or the item code, or bot, to copy the record.</p>';
+            html += `<div class="form-group mb-3"><input id="copyHotel" value="${hotelCode}" /></div>`;
+            html += `<div class="form-group mb-3"><input id="copyCode" value="${code}" /></div>`
+            html += `<div id="confirm-error" class="form-group mb-3 d-none text-danger">xxx</div>`
+            html += '</div>';
+            modal.showModal('copyModalId', "Copy", html, {
+                footerOk: true,
+                okButtonClickScript: `onclick="window.mshMethods.confirmCopyItem('${code}', '${hotelCode}')""`,
+                okButtonText: 'OK'
+            });
+        }
+
+
+        meth.extendMethods({
+            confirmDeleteItem: confirmDeleteItem,
+            deleteItem: deleteItem,
+            confirmCopyItem: confirmCopyItem,
+            copyItem: copyItem
+        });
+
+        function init(inputOptions) {
+            options = $.extend({}, options, inputOptions);
+        }
+       
+        return {
+            init: init
+        };
+
+    }());
 
 
 }(jQuery));

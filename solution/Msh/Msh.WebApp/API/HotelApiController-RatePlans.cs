@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Mapster;
+using Microsoft.AspNetCore.Mvc;
+using Msh.Common.ExtensionMethods;
 using Msh.Common.Models.ViewModels;
-using Msh.Common.Services;
-using Msh.HotelCache.Models.Hotels;
-using Msh.HotelCache.Models.RoomTypes;
-using Msh.WebApp.Areas.Admin.Data;
 using Msh.WebApp.Areas.Admin.Models;
 
 namespace Msh.WebApp.API;
@@ -11,7 +9,48 @@ namespace Msh.WebApp.API;
 
 public partial class HotelApiController
 {
+	
+	[HttpPost]
+	[Route("RatePlanCopy")]
+	public async Task<IActionResult> RatePlanCopy(ApiInput input)
+	{
+		try
+		{
+			if (SameCodes(input))
+			{
+				return GetFail("At least one code must change");
+			}
 
+			var ratePlans = await hotelsRepoService.GetRatePlansAsync(input.HotelCode);
+			var ratePlan = ratePlans.FirstOrDefault(h => h.RatePlanCode == input.Code);
+			if (ratePlan != null)
+			{
+				var newRatePlan = ratePlan.Adapt(ratePlan);
+				newRatePlan.RatePlanCode = input.NewCode;
+
+				var result = await CheckHotel(input);
+				if (!result.success)
+				{
+					return GetFail("The hotel does not exist.");
+				}
+
+				var newRatePlans = await hotelsRepoService.GetRatePlansAsync(input.NewHotelCode);
+				if (newRatePlans.Any(c => c.RatePlanCode.EqualsAnyCase(input.NewCode)))
+				{
+					return GetFail("The code already exists.");
+				}
+
+				newRatePlans.Add(newRatePlan);
+				await hotelsRepoService.SaveRatePlansAsync(newRatePlans, input.NewHotelCode);
+			}
+
+			return Ok(new ObjectVm());
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
 
 	[HttpPost]
 	[Route("RatePlanDelete")]
@@ -27,18 +66,12 @@ public partial class HotelApiController
 				await hotelsRepoService.SaveRatePlansAsync(ratePlans, input.HotelCode);
 			}
 
-			return Ok(new ObjectVm
-			{
-
-			});
+			return Ok(new ObjectVm());
+			
 		}
 		catch (Exception ex)
 		{
-			return Ok(new ObjectVm
-			{
-				Success = false,
-				UserErrorMessage = ex.Message
-			});
+			return GetFail(ex.Message);
 		}
 	}
 	

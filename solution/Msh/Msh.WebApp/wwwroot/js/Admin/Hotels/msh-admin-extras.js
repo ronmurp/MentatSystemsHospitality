@@ -19,28 +19,6 @@
         return hotelCode;
     }
 
-    meth.extendMethods({
-        confirmDeleteExtra: function (code, hotelCode) {
-            var url = `/api/hotelapi/ExtraDelete`;
-            var d = {
-                code: code,
-                hotelCode: hotelCode
-            }
-            api.postAsync(url, d, function (data) {
-
-                util.redirectTo('admin/hotels/ExtrasList')
-            });
-        },
-        deleteExtra: function (code, hotelCode) {
-
-            modal.showModal('delExtra', "Confirm Delete", `Confirm delete of ${code} ${hotelCode}`, {
-                footerOk: true,
-                okButtonClickScript: `onclick="window.mshMethods.confirmDeleteExtra('${code}', '${hotelCode}')""`,
-                okButtonText: 'OK'
-            });
-        }
-    });
-
     $(ids.selectHotel).on('change', () => {
         var hotelCode = getHotelCode();
         util.redirectTo(`admin/hotels/ExtrasList?hotelCode=${hotelCode}`);
@@ -50,5 +28,10 @@
         app.itemDatesService.init({ datesApiAction: 'ExtraDates' });
     }
    
+    app.hotelActionService.init({
+        deleteApi: '/api/hotelapi/ExtraDelete',
+        copyApi: '/api/hotelapi/ExtraCopy',
+        listPath: 'admin/hotels/ExtrasList'
+    });
 
 }(jQuery));

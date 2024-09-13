@@ -17,35 +17,16 @@
         return hotelCode;
     }
 
-    meth.extendMethods({
-        confirmDeleteRoomType: function (code, hotelCode) {
-            var url = `/api/hotelapi/RoomTypeDelete`;
-            var d = {
-                code: code,
-                hotelCode: hotelCode
-            }
-            api.postAsync(url, d, function (data) {
-
-                util.redirectTo('admin/hotels/RoomTypeList')
-            });
-        },
-
-        deleteRoomType: function (code, hotelCode) {
-
-            modal.showModal('delRoomType', "Confirm Delete", `Confirm delete of ${hotelCode}`, {
-                footerOk: true,
-                okButtonClickScript: `onclick="window.mshMethods.confirmDeleteRoomType('${code}', '${hotelCode}')""`,
-                okButtonText: 'OK'
-            });
-        },
-
-    });
-
     $(ids.selectHotel).on('change', () => {
         var hotelCode = getHotelCode();
         util.redirectTo(`admin/hotels/RoomTypeList?hotelCode=${hotelCode}`);
     });
 
+    app.hotelActionService.init({
+        deleteApi: '/api/hotelapi/RoomTypeDelete',
+        copyApi: '/api/hotelapi/RoomTypeCopy',
+        listPath: 'admin/hotels/RoomTypesList'
+    });
 
 
 }(jQuery));

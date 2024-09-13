@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Mapster;
+using Microsoft.AspNetCore.Mvc;
+using Msh.Common.ExtensionMethods;
 using Msh.Common.Models.ViewModels;
+using Msh.HotelCache.Models.Extras;
 using Msh.HotelCache.Models.Hotels;
 using Msh.WebApp.Areas.Admin.Data;
 using Msh.WebApp.Areas.Admin.Models;
@@ -35,6 +38,50 @@ public partial class HotelApiController
 				Success = false,
 				UserErrorMessage = ex.Message
 			});
+		}
+	}
+
+
+	[HttpPost]
+	[Route("ExtraCopy")]
+	public async Task<IActionResult> ExtraCopy(ApiInput input)
+	{
+		try
+		{
+			if (SameCodes(input))
+			{
+				return GetFail("At least one code must change");
+			}
+
+			var extras = await hotelsRepoService.GetExtrasAsync(input.HotelCode);
+			var extra = extras.FirstOrDefault(h => h.Code == input.Code);
+			if (extra != null)
+			{
+				var newExtra = extra.Adapt(extra);
+				newExtra.Code = input.NewCode;
+
+				var result = await CheckHotel(input);
+				if (!result.success)
+				{
+					return GetFail("The hotel does not exist.");
+				}
+
+				var newExtras = await hotelsRepoService.GetExtrasAsync(input.NewHotelCode);
+				if (newExtras.Any(c => c.Code.EqualsAnyCase(input.NewCode)))
+				{
+					return GetFail("The code already exists.");
+				}
+
+				newExtras.Add(newExtra);
+				await hotelsRepoService.SaveExtrasAsync(newExtras, input.NewHotelCode);
+			}
+
+			return Ok(new ObjectVm());
+			
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
 		}
 	}
 
