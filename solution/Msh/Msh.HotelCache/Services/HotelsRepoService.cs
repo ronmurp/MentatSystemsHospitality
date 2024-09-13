@@ -2,6 +2,7 @@
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Extras;
 using Msh.HotelCache.Models.Hotels;
+using Msh.HotelCache.Models.RatePlans;
 using Msh.HotelCache.Models.RoomTypes;
 
 namespace Msh.HotelCache.Services;
@@ -15,6 +16,10 @@ public interface IHotelsRepoService
 	Task<List<RoomType>> GetRoomTypesAsync(string hotelCode);
 
 	Task SaveRoomTypesAsync(List<RoomType> roomTypes, string hotelCode);
+
+	Task<List<RoomRatePlan>> GetRatePlansAsync(string hotelCode);
+
+	Task SaveRatePlansAsync(List<RoomRatePlan> ratePlans, string hotelCode);
 
 	Task<List<Extra>> GetExtrasAsync(string hotelCode);
 
@@ -44,6 +49,15 @@ public class HotelsRepoService(IConfigRepository configRepository) : IHotelsRepo
 	public async Task SaveRoomTypesAsync(List<RoomType> roomTypes, string hotelCode)
 	{
 		await configRepository.SaveConfigAsync(ConstHotel.Cache.RoomTypes, hotelCode,roomTypes);
+	}
+
+	public async Task<List<RoomRatePlan>> GetRatePlansAsync(string hotelCode) =>
+		await configRepository.GetConfigContentAsync<List<RoomRatePlan>>(ConstHotel.Cache.RatePlans, hotelCode) ?? [];
+
+
+	public async Task SaveRatePlansAsync(List<RoomRatePlan> ratePlans, string hotelCode)
+	{
+		await configRepository.SaveConfigAsync(ConstHotel.Cache.RatePlans, hotelCode, ratePlans);
 	}
 
 	public async Task<List<Extra>> GetExtrasAsync(string hotelCode) =>
