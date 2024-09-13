@@ -14,7 +14,6 @@ public class EditPageBuildService : AttributeService
 	public StringBuilder BuildEditPage(Type classType, string publishName)
 	{
 		
-
 		var editPageOutput = new StringBuilder();
 
 		var editPageFilename = Path.Combine(_templatesPath, "EditPage.cshtml");
@@ -55,6 +54,10 @@ public class EditPageBuildService : AttributeService
 			{
 				case "System.String" when category == "Html":
 					file = "EditFieldTextArea.cshtml";
+					break;
+
+				case "System.DateOnly":
+					file = "EditFieldDate.cshtml";
 					break;
 
 				case "System.String" when category == "TextArea":

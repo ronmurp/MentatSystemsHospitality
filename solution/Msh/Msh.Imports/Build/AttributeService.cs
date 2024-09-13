@@ -16,6 +16,12 @@ public class AttributeService
 			var y = (System.ComponentModel.DescriptionAttribute)attr;
 			return y.Description;
 		}
+		attr = GetAttribute(attributes, "DisplayAttribute");
+		if (attr != null)
+		{
+			var y = (System.ComponentModel.DataAnnotations.DisplayAttribute)attr;
+			return y.Name;
+		}
 		return string.Empty;
 	}
 
