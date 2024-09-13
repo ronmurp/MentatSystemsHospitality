@@ -179,6 +179,54 @@
             });
         });
 
+        function changeClassPair(nameEnable, nameFrom, nameTo) {
+            if ($(`#${nameEnable}`).is(':checked')) {
+                $(`#${nameFrom}`).removeClass('dim-input');
+                $(`#${nameTo}`).removeClass('dim-input');
+            }
+            else {
+                $(`#${nameFrom}`).addClass('dim-input');
+                $(`#${nameTo}`).addClass('dim-input');
+            }
+        }
+
+        function updateDatePair(nameFrom, nameTo, isFrom) {
+
+            var dateFrom = mom.date($(`#${nameFrom}`).val());
+            var dateTo = mom.date($(`#${nameTo}`).val());
+            if (dateTo < dateFrom) {
+                if (isFrom) {
+                    var d2 = dateFrom.clone().add(1, 'days');
+                    $(`#${nameTo}`).val(d2.format(mom.YMD));
+                } else {
+                    var d2 = dateTo.clone().add(-1, 'days');
+                    $(`#${nameFrom}`).val(d2.format(mom.YMD));
+                }
+            }
+        }
+
+        function initDatePair(nameFrom, nameTo, nameEnabled) {
+
+            if (nameEnabled) {
+                $(`[name="${nameEnabled}"]`).off('change');
+                $(`[name="${nameEnabled}"]`).on('change', function () {
+                    changeClassPair(nameEnabled, nameFrom, nameTo);
+                });
+                changeClassPair(nameEnabled, nameFrom, nameTo);
+            }
+
+            $(`[name="${nameFrom}"]`).off('change');
+            $(`[name="${nameFrom}"]`).on('change', function () {
+                updateDatePair(nameFrom, nameTo, true);
+            });
+
+            $(`[name="${nameTo}"]`).on('change');
+            $(`[name="${nameTo}"]`).on('change', function () {
+                updateDatePair(nameFrom, nameTo, false);
+            });
+        }
+
+
         function init(inputOptions) {
             options = $.extend({}, options, inputOptions);
 
@@ -197,7 +245,8 @@
         });       
 
         return {
-            init: init           
+            init: init,
+            initDatePair: initDatePair
         }
 
     })(jQuery);
