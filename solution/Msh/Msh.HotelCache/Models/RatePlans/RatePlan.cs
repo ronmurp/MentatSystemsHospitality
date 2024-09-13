@@ -60,16 +60,14 @@ public class RoomRatePlan : BaseTexts
     /// </remarks>
     public string DepositBalanceMessage { get; set; } = string.Empty;
 
+    public DateOnly StayFrom { get; set; } 
+    public DateOnly StayTo { get; set; }
 
-    [JsonIgnore]
-    public DateTime StayFrom => this.OfferDates.StayFrom;
+    public bool HasBookDates { get; set; }
+	public DateOnly BookFrom { get; set; }
+	public DateOnly BookTo { get; set; }
 
-    [JsonIgnore]
-    public DateTime StayTo => this.OfferDates.StayTo;
-
-    public OfferDate OfferDates { get; set; } = new OfferDate();
-
-    public int GroupSortOrder { get; set; } = 0;
+	public int GroupSortOrder { get; set; } = 0;
 
 
     public int MinNights { get; set; }

@@ -40,12 +40,14 @@ public class DiscountCode
     /// <summary>
     /// The date ranges for which the discount applies (and potentially booking dates)
     /// </summary>
-    public List<OfferDate> OfferDates { get; set; } = [];
+    public List<ItemDate> OfferDates { get; set; } = [];
 
-    /// <summary>
-    /// The list of hotels to which the discount applies
-    /// </summary>
-    public List<string> Hotels { get; set; } = [];
+    public List<ItemDate> BookDates { get; set; } = [];
+
+	/// <summary>
+	/// The list of hotels to which the discount applies
+	/// </summary>
+	public List<string> Hotels { get; set; } = [];
 
     public bool Enabled { get; set; } = false;
 

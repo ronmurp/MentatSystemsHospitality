@@ -9,9 +9,14 @@ namespace Msh.HotelCache.Models.Hotels;
 public class Hotel : HotelBase
 {
 	/// <summary>
-	/// List of disabled dates
+	/// List of disabled stay dates - Inhibits when users can stay
 	/// </summary>
-	public List<HotelDateItem> HotelDateList { get; set; } = [];
+	public List<ItemDate> StayDates { get; set; } = [];
+
+	/// <summary>
+	/// List of disabled book dates - Inhibits when users can make the booking
+	/// </summary>
+	public List<ItemDate> BookDates { get; set; } = [];
 }
 
 /// <summary>
