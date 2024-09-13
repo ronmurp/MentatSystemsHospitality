@@ -16,8 +16,8 @@ public class HotelApiController(IHotelsRepoService hotelsRepoService) : Controll
 {
 
 	[HttpGet]
-	[Route("HotelDates")]
-	public async Task<IActionResult> HotelDates(string hotelCode)
+	[Route("HotelStayDates")]
+	public async Task<IActionResult> HotelStayDates(string hotelCode)
 	{
 		var hotels = await hotelsRepoService.GetHotelsAsync();
 		var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
@@ -34,15 +34,15 @@ public class HotelApiController(IHotelsRepoService hotelsRepoService) : Controll
 		{
 			Data = new
 			{
-				Dates = hotel.HotelDateList,
+				Dates = hotel.StayDates,
 				MinDate = DateOnly.FromDateTime(DateTime.Now)
 			}
 		});
 	}
 
 	[HttpPost]
-	[Route("HotelDates")]
-	public async Task<IActionResult> HotelDates([FromBody] HotelDatesVm data)
+	[Route("HotelStayDates")]
+	public async Task<IActionResult> HotelStayDates([FromBody] HotelDatesVm data)
 	{
 		try
 		{
@@ -53,7 +53,7 @@ public class HotelApiController(IHotelsRepoService hotelsRepoService) : Controll
 
 			if (index >= 0)
 			{
-				hotels[index].HotelDateList = data.Dates;
+				hotels[index].StayDates = data.Dates;
 				await hotelsRepoService.SaveHotelsAsync(hotels);
 			}
 
@@ -71,6 +71,67 @@ public class HotelApiController(IHotelsRepoService hotelsRepoService) : Controll
 			});
 		}
 	}
+
+
+	[HttpGet]
+	[Route("HotelBookDates")]
+	public async Task<IActionResult> HotelBookDates(string hotelCode)
+	{
+		var hotels = await hotelsRepoService.GetHotelsAsync();
+		var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
+		if (hotel == null)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = true,
+				UserErrorMessage = $"Dates not found for hotel code {hotelCode}"
+			});
+		}
+
+		return Ok(new ObjectVm
+		{
+			Data = new
+			{
+				Dates = hotel.BookDates,
+				MinDate = DateOnly.FromDateTime(DateTime.Now)
+			}
+		});
+	}
+
+
+	[HttpPost]
+	[Route("HotelBookDates")]
+	public async Task<IActionResult> HotelBookDates([FromBody] HotelDatesVm data)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			var hotels = await hotelsRepoService.GetHotelsAsync();
+			var index = hotels.FindIndex(h => h.HotelCode == data.HotelCode);
+
+			if (index >= 0)
+			{
+				hotels[index].BookDates = data.Dates;
+				await hotelsRepoService.SaveHotelsAsync(hotels);
+			}
+
+			return Ok(new ObjectVm
+			{
+				Data = new Hotel()
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
+
+
 
 	[HttpPost]
 	[Route("HotelDelete")]

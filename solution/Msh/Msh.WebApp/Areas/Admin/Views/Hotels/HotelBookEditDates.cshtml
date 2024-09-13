@@ -1,13 +1,14 @@
 ﻿@using Msh.Admin.Models.Const
 @{
-	var title = "Hotel Dates List";
+	var title = "Hotel Book Dates List";
 	ViewData["Title"] = title;
 	var hotelCode = ViewBag.HotelCode as string;
 }
 
 @await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuHotels, currentItem = "HotelList" })
 
-<input type="hidden" id="edit-type" value="hotel-dates"/>
+<input type="hidden" id="edit-type" value="item-dates"/>
+<input type="hidden" id="item-code" value="" />
 <input type="hidden" id="hotel-code" value="@hotelCode" />
 
 <div class="text-center">
@@ -26,15 +27,7 @@
 		<button id="save-dates" class="btn btn-outline-primary" class="mr-3">Save</button>
 		<a asp-contoller="Hotels" asp-action="HotelList" class="btn btn-outline-secondary">Return to list</a>
 	</div>
-		
 </div>
-
-@* <div class="row my-3">
-	<div class="col-12">
-		<button id="save-dates" class="btn btn-primary" class="mr-3">Save</button>
-		<a asp-contoller="Hotels" asp-action="HotelList" class="btn btn-secondary">Return to list</a>
-	</div>
-</div> *@
 
 <div id="page-info" style="display:none;">
 	<div data-info-for="info-hotel-dates">
@@ -59,7 +52,8 @@
 @section Scripts {
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
-	
+	<script src="~/js/mshapp/msh-itemdatesservice.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-hotels-bookdates.js"></script>
 	<script src="~/js/admin/hotels/msh-admin-hotels.js"></script>
 }
 

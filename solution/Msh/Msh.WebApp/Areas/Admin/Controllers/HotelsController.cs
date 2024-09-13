@@ -193,7 +193,7 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 
 			var updatedHotel = hotel.Adapt<Hotel>();
 			// Must keep date list (this form does not edit the list)
-			updatedHotel.HotelDateList = hotelList[index].HotelDateList;
+			updatedHotel.StayDates = hotelList[index].StayDates;
 			hotelList[index] = updatedHotel;
 
 			await hotelsRepoService.SaveHotelsAsync(hotelList);
@@ -214,19 +214,32 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 
 
 
-	[Route("HotelEditDates/{hotelCode}")]
-	public async Task<IActionResult> HotelEditDates(string hotelCode, bool isSuccess = false)
+	[Route("HotelStayEditDates/{hotelCode}")]
+	public async Task<IActionResult> HotelStayEditDates(string hotelCode, bool isSuccess = false)
 	{
 		try
 		{
 			await Task.Delay(0);
 
-			//var hotels = await hotelsRepoService.GetHotelsAsync();
-			//var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
-			//if (hotel == null)
-			//{
-			//	return RedirectToAction("HotelList");
-			//}
+			ViewBag.HotelCode = hotelCode;
+
+			return View();
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"{ex.Message}");
+		}
+
+		return RedirectToAction("HotelList");
+	}
+
+	[Route("HotelBookEditDates/{hotelCode}")]
+	public async Task<IActionResult> HotelBookEditDates(string hotelCode, bool isSuccess = false)
+	{
+		try
+		{
+			await Task.Delay(0);
+
 			ViewBag.HotelCode = hotelCode;
 
 			return View();

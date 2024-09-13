@@ -21,7 +21,8 @@
 				<th>Hotel Code</th>
 				<th>Chain Code</th>
 				<th>Name</th>
-				<th>Dates</th>
+				<th>Stay Dates</th>
+				<th>Book Dates</th>
 				<th>   
 					<div class="cell-outer">
 						<div class="cell-inner">
@@ -45,10 +46,22 @@
 					<td style="width:80px;">
 						<div class="cell-outer">
 							<div class="cell-inner">
-								@hotel.HotelDateList.Count
+								@hotel.StayDates.Count
 							</div>
 							<div class="cell-inner">
-								<a asp-controller="Hotels" asp-action="HotelEditDates" asp-route-hotelCode="@hotel.HotelCode">
+								<a asp-controller="Hotels" asp-action="HotelStayEditDates" asp-route-hotelCode="@hotel.HotelCode">
+									<i class="fa-solid fa-calendar"></i>
+								</a>
+							</div>
+						</div>
+					</td>
+					<td style="width:80px;">
+						<div class="cell-outer">
+							<div class="cell-inner">
+								@hotel.BookDates.Count
+							</div>
+							<div class="cell-inner">
+								<a asp-controller="Hotels" asp-action="HotelBookEditDates" asp-route-hotelCode="@hotel.HotelCode">
 									<i class="fa-solid fa-calendar"></i>
 								</a>
 							</div>
