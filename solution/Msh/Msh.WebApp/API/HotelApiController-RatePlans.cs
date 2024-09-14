@@ -28,7 +28,7 @@ public partial class HotelApiController
 				var newRatePlan = ratePlan.Adapt(ratePlan);
 				newRatePlan.RatePlanCode = input.NewCode;
 
-				var result = await CheckHotel(input);
+				var result = await CheckHotel(input.NewHotelCode);
 				if (!result.success)
 				{
 					return GetFail("The hotel does not exist.");

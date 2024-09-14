@@ -247,14 +247,14 @@ public partial class HotelApiController(IHotelsRepoService hotelsRepoService) : 
 		return Ok(new ObjectVm { Success = false, UserErrorMessage = message });
 	}
 
-	private async Task<(IActionResult? fail, bool success)> CheckHotel(ApiInput input)
+	private async Task<(IActionResult fail, bool success)> CheckHotel(string hotelCode)
 	{
 		var hotels = await hotelsRepoService.GetHotelsAsync();
-		if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.NewHotelCode)))
+		if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
 		{
-			return (GetFail("The hotel does not exist."), false);
+			return (GetFail($"The hotel does not exist: {hotelCode}"), false);
 		}
 
-		return (null, true);
+		return (Ok(new ObjectVm()), true);
 	}
 }

@@ -24,7 +24,7 @@ public partial class HotelApiController
 				var newRoomType = roomType.Adapt(roomType);
 				newRoomType.Code = input.NewCode;
 
-				var result = await CheckHotel(input);
+				var result = await CheckHotel(input.NewHotelCode);
 				if (!result.success)
 				{
 					return GetFail("The hotel does not exist.");

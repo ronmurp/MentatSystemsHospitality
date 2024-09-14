@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using System.Runtime.InteropServices.JavaScript;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Msh.Common.ExtensionMethods;
 using Msh.Common.Models.ViewModels;
@@ -60,10 +61,10 @@ public partial class HotelApiController
 				var newExtra = extra.Adapt(extra);
 				newExtra.Code = input.NewCode;
 
-				var result = await CheckHotel(input);
+				var result = await CheckHotel(input.NewHotelCode);
 				if (!result.success)
 				{
-					return GetFail("The hotel does not exist.");
+					return result.fail;
 				}
 
 				var newExtras = await hotelsRepoService.GetExtrasAsync(input.NewHotelCode);
@@ -84,6 +85,95 @@ public partial class HotelApiController
 			return GetFail(ex.Message);
 		}
 	}
+
+	[HttpPost]
+	[Route("ExtraCopyBulk")]
+	public async Task<IActionResult> ExtraCopyBulk(ApiInput input)
+	{
+		try
+		{
+			if (SameCodes(input))
+			{
+				return GetFail("At least one code must change");
+			}
+
+			var hotels = await hotelsRepoService.GetHotelsAsync();
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
+			{
+				return GetFail($"Invalid source hotel code {input.HotelCode}");
+			}
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.NewHotelCode)))
+			{
+				return GetFail($"Invalid destination hotel code {input.NewHotelCode}");
+			}
+
+			var missingList = new List<string>();
+			var newList = new List<Extra>();
+
+			var srcExtras = await hotelsRepoService.GetExtrasAsync(input.HotelCode);
+			var dstExtras = await hotelsRepoService.GetExtrasAsync(input.NewHotelCode);
+
+			foreach (var code in input.CodeList)
+			{
+				var extra = srcExtras.FirstOrDefault(h => h.Code == code);
+				if (extra != null)
+				{
+					if (dstExtras.Any(e => e.Code == extra.Code))
+					{
+						// Already exists
+						missingList.Add(extra.Code);
+						continue;
+					}
+					newList.Add(extra);
+				}
+			}
+
+			dstExtras.AddRange(newList);
+
+			await hotelsRepoService.SaveExtrasAsync(dstExtras, input.NewHotelCode);
+
+			if (missingList.Count > 0)
+			{
+				var list = string.Join(",", missingList);
+				return GetFail($"The following codes already exist in the destination hotel: {list}");
+
+			}
+
+			return Ok(new ObjectVm());
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
+	[HttpPost]
+	[Route("ExtrasSort")]
+	public async Task<IActionResult> ExtrasSort(ApiInput input)
+	{
+		try
+		{
+			var hotelCode = input.HotelCode;
+			var hotels = await hotelsRepoService.GetHotelsAsync();
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
+			{
+				return GetFail($"Invalid hotel code {hotelCode}");
+			}
+			
+			var srcExtras = await hotelsRepoService.GetExtrasAsync(hotelCode);
+
+			await hotelsRepoService.SaveExtrasAsync(srcExtras.OrderBy(e => e.Code).ToList(), hotelCode);
+
+			return Ok(new ObjectVm());
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
 
 
 	[HttpGet]
