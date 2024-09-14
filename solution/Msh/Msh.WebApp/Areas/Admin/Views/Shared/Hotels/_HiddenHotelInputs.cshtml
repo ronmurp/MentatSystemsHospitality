@@ -1,0 +1,7 @@
+﻿@model Msh.WebApp.Models.Admin.ViewModels.HotelListVm
+
+<input type="hidden" id="hotel-code-id" value="@Model.HotelCode" />
+@foreach (var h in @Model.Hotels)
+{
+	<input type="hidden" name="hotel-codes" id="hotel-@h.HotelCode" value="@h.Name" data-msh-option="@h.HotelCode" />
+}
