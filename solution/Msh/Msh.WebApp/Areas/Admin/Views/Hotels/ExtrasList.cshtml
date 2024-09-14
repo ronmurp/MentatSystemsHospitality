@@ -1,4 +1,4 @@
-﻿@using Msh.Admin.Models.Const
+@using Msh.Admin.Models.Const
 @model Msh.WebApp.Models.Admin.ViewModels.ExtrasListVm;
 @{
 	var title = "Extras List";
@@ -11,8 +11,14 @@
 	menuName = AdminConst.MenuHotels, currentItem = "ExtrasList"
 })
 
+<input type="hidden" id="hotel-code-id" value="@Model.HotelCode"/>
+@foreach (var h in @Model.Hotels)
+{
+	<input type="hidden" name="hotel-codes" id="hotel-@h.HotelCode" value="@h.Name" data-msh-option="@h.HotelCode" />
+}
 <div class="text-center">
 	<h1 class="display-6">@title</h1>
+	<p>Hotel Extras. Click for more information: <info-icon name="info-extras" /> </p>
 </div>
 
 @await Component.InvokeAsync("AdminHotelSelect", @Model.HotelCode)
@@ -36,14 +42,22 @@
 						</div>
 					</div>
 				</th>
+				<th>
+					<div class="cell-outer">
+						<div class="cell-inner">
+							<input type="checkbox" name="bulk-check" id="blk" data-msh-code="0"/>
+						</div>
+					</div>
+				</th>
 			</tr>
 			
 			@foreach (var rt in @Model.Extras)
 			{
 				<tr>
 					<td>@rt.Code</td>
+					<td class="text-end">@rt.Price.ToString("C2")</td>
 					<td>@rt.Description</td>
-					<td style="width:80px;">
+					<td style="width:80px;" >
 						<div class="cell-outer">
 							<div class="cell-inner">
 								@rt.ItemDates.Count
@@ -73,6 +87,15 @@
 									<i class="fa-solid fa-copy"></i>
 								</a>
 							</div>
+							
+						</div>
+					</td>
+					<td style ="width:30px;">
+						<div class="cell-outer">
+							<div class="cell-inner">
+								<input type="checkbox" name="bulk-check" id="blk-@rt.Code" data-msh-code="@rt.Code"/>
+
+							</div>
 						</div>
 					</td>
 				</tr>
@@ -82,12 +105,30 @@
 
 	</div>
 </div>
+<div class="row d-none" id="bulk-buttons">
+	<div class="col-12 d-flex flex-row-reverse">
+		<div class="form-group">
+			<button id="bulk-copy" class="btn btn-outline-primary mt-2" onclick="window.mshMethods.copyBulk('@Model.HotelCode')">Bulk Copy</button>
+			<button id="bulk-delete" class="btn btn-outline-primary mt-2" onclick="window.mshMethods.deleteBulk('@Model.HotelCode')">Bulk Delete</button>
+		</div>
+	</div>
+</div>
 
 @await Html.PartialAsync("Admin/_AdminErrorBlock", @Model.ErrorMessage)
 
 <div id="page-info" style="display:none;">
 	
 	@await Html.PartialAsync("Hotels/_ListIconsInfo", ViewBag.InfoIcons as string)
+	
+	<div data-info-for="info-extras">
+		<span>Extras List</span>
+		<div>
+			<p>The list shows the Extras (representing Opera Packages) for the selected hotel.</p>
+			<p>The icons in the table are used to perform actions on the table.</p>
+			<p>Use the bulk action checkboxes to bulk copy or bulk delete rows - 
+				the bulk action buttons are exposed if any checkbox is set.</p>
+		</div>
+	</div>
 
 	<div data-info-for="info-hotel-code">
 		<span>@ViewBag.InfoIcons Hotel</span>

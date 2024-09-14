@@ -10,4 +10,6 @@ public class ApiInput
 
 	public string NewCode { get; set; } = string.Empty;
 	public string NewHotelCode { get; set; } = string.Empty;
+
+	public List<string> CodeList { get; set; } = [];
 }

@@ -2384,8 +2384,7 @@
                 okButtonClickScript: `onclick="window.mshMethods.confirmCopyItem('${code}', '${hotelCode}')""`,
                 okButtonText: 'OK'
             });
-        }
-
+        } 
 
         meth.extendMethods({
             confirmDeleteItem: confirmDeleteItem,
@@ -2397,12 +2396,145 @@
         function init(inputOptions) {
             options = $.extend({}, options, inputOptions);
         }
-       
+
         return {
             init: init
         };
 
     }());
 
+
+    window.mshPageApp.hotelActionBulkService = (function () {
+
+        var app = window.mshPageApp;
+        var mom = app.momentDateService;
+        var modal = app.modalService;
+        var meth = app.methodsService;
+        var html = app.htmlService;
+        var util = app.utilityService;
+        var api = app.apiService;
+
+        var options = {
+            deleteBulkApi: '/api/hotelapi/ExtraDeleteBulk',
+            copyBulkApi: '/api/hotelapi/ExtraCopyBulk',
+            sortListApi: '/api/hotelapi/ExtrasSort',
+            listPath: 'admin/hotels/ExtrasList'           
+        };
+
+        function getHotelSelect(hotelCode) {
+            var html = '<select class="form-control" id="copy-bulk-hotel">';
+            $('[name="hotel-codes"]').each(function (v) {
+                var hName = $(this).val();
+                var hCode = $(this).attr('data-msh-option');
+                if (hCode === hotelCode)
+                    return;
+                html += `<option value="${hCode}">${hName}</option>`;
+            });
+            html += '<select>';
+            return html;
+        }
+
+        function confirmCopyBulk(hotelCode) {
+            var newHotelCode = $('#copy-bulk-hotel').val();
+            var codeList = [];
+            var selected = $('input[name="bulk-check"]:checked');
+            for (var i = 0; i < selected.length; i++) {
+                
+                var code = $(selected[i]).attr('data-msh-code')
+                if (code !== '0')
+                    codeList.push(code);
+            }
+          
+            
+            var url = options.copyBulkApi;
+            var d = {
+                code: '',
+                hotelCode: hotelCode,
+                newCode: '',
+                newHotelCode: newHotelCode,
+                codeList: codeList
+            }
+            api.postAsync(url, d, function (data) {
+                if (!data.success) {
+                    $('#confirm-error')
+                        .html(data.userErrorMessage)
+                        .removeClass('d-none');
+                    return;
+                }
+                util.redirectTo(`${options.listPath}?hotelCode=${hotelCode}`)
+            });
+        }
+        function copyBulk(hotelCode) {
+
+            var hotelSelect = getHotelSelect(hotelCode);
+
+            var html = '<div>';
+            html += '<p>Select the destination hotel.</p>';
+            html += `<div class="form-group mb-3">${hotelSelect}</div>`;
+            html += `<div id="confirm-error" class="form-group mb-3 d-none text-danger"></div>`
+
+            modal.showModal('copyModalId', "Bulk Copy", html, {
+                footerOk: true,
+                okButtonClickScript: `onclick="window.mshMethods.confirmCopyBulk('${hotelCode}')""`,
+                okButtonText: 'OK'
+            });
+        }
+
+        function confirmDeleteBulk() {
+
+        }
+        function deleteBulk() {
+
+        }
+
+
+        $('[name="bulk-check"]').on('change', function () {
+            var checked = $(this).is(':checked');
+            var id = $(this).attr('id');
+            if (id == 'blk') {
+                $('[name="bulk-check"]').prop('checked', checked);
+            }
+            else {
+                $('#blk').prop('checked', false)
+            }
+            var anyChecked = $('input[name="bulk-check"]:checked').length > 0;
+            if (anyChecked) {
+                $('#bulk-buttons').removeClass('d-none');
+            }
+            else {
+                $('#bulk-buttons').addClass('d-none');
+            }
+        });
+
+        function sortList(hotelCode) {
+            var url = options.sortListApi;
+            api.postAsync(url, { hotelCode: hotelCode }, function (data) {
+                if (!data.success) {
+                    //$('#confirm-error')
+                    //    .html(data.userErrorMessage)
+                    //    .removeClass('d-none');
+                    return;
+                }
+                util.redirectTo(`${options.listPath}?hotelCode=${hotelCode}`)
+            });
+        }
+
+        meth.extendMethods({
+            confirmDeleteBulk: confirmDeleteBulk,
+            deleteBulk: deleteBulk,
+            confirmCopyBulk: confirmCopyBulk,
+            copyBulk: copyBulk,
+            sortList: sortList
+        });
+
+        function init(inputOptions) {
+            options = $.extend({}, options, inputOptions);
+        }
+
+        return {
+            init: init
+        }
+
+    }());
 
 }(jQuery));

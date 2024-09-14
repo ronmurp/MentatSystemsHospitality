@@ -34,4 +34,13 @@
         listPath: 'admin/hotels/ExtrasList'
     });
 
+    app.hotelActionBulkService.init({
+        deleteBulkApi: '/api/hotelapi/ExtraDeleteBulk',
+        copyBulkApi: '/api/hotelapi/ExtraCopyBulk',
+        sortListApi: '/api/hotelapi/ExtrasSort',
+        listPath: 'admin/hotels/ExtrasList'
+    });
+
+
+
 }(jQuery));
