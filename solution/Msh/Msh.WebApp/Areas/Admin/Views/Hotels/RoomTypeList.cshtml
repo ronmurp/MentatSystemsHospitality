@@ -1,4 +1,5 @@
 ﻿@using Msh.Admin.Models.Const
+@using Msh.WebApp.Models.Admin.ViewModels
 @model Msh.WebApp.Models.Admin.ViewModels.RoomTypeListVm;
 @{
 	var title = "Room Type List";
@@ -11,8 +12,11 @@
 	menuName = AdminConst.MenuHotels, currentItem = "RoomTypeList"
 })
 
+@await Html.PartialAsync("Hotels/_HiddenHotelInputs", @Model as HotelListVm)
+
 <div class="text-center">
 	<h1 class="display-6">@title</h1>
+	<p>Hotel Room Types. Click for more information: <info-icon name="info-room-types" /> </p>
 </div>
 
 @await Component.InvokeAsync("AdminHotelSelect", @Model.HotelCode)
@@ -21,7 +25,18 @@
 	<div class="col-12">
 		<table>
 			<tr>
-				<th>Room Type Code</th>
+				<th>
+					<div class="cell-outer">
+						<div class="cell-inner">
+							<p>Code</p>
+						</div>
+						<div class="cell-inner">
+							<a href="javascript:window.mshMethods.sortList('@Model.HotelCode')">
+								<i class="fa-solid fa-sort"></i>
+							</a>
+						</div>
+					</div>
+				</th>
 				<th>Group Code</th>
 				<th>Name</th>
 				<th>   
@@ -36,6 +51,13 @@
 						</div>
 					</div>
 				</th>
+				<th>
+					<div class="cell-outer">
+						<div class="cell-inner">
+							<input type="checkbox" name="bulk-check" id="blk" data-msh-code="0" />
+						</div>
+					</div>
+				</th>
 			</tr>
 			
 			@foreach (var rt in @Model.RoomTypes)
@@ -45,7 +67,6 @@
 					<td>@rt.GroupCode</td>
 					<td>@rt.Name</td>
 					<td style="width:80px;">
-						
 						<div class="cell-outer">
 							<div class="cell-inner">
 								<a asp-controller="Hotels" asp-action="RoomTypeEdit" asp-route-code="@rt.Code" asp-route-hotelCode="@Model.HotelCode">
@@ -64,6 +85,13 @@
 							</div>
 						</div>
 					</td>
+					<td style="width:30px;">
+						<div class="cell-outer">
+							<div class="cell-inner">
+								<input type="checkbox" name="bulk-check" id="blk-@rt.Code" data-msh-code="@rt.Code" />
+							</div>
+						</div>
+					</td>
 				</tr>
 			}
 			
@@ -72,16 +100,18 @@
 	</div>
 </div>
 
+@await Html.PartialAsync("Hotels/_BulkCopyDelButtons", @Model.HotelCode)
+
 @await Html.PartialAsync("Admin/_AdminErrorBlock", @Model.ErrorMessage)
 
 <div id="page-info" style="display:none;">
 	
 	@await Html.PartialAsync("Hotels/_ListIconsInfo", ViewBag.InfoIcons as string)
 
-	<div data-info-for="info-hotel-code">
-		<span>@ViewBag.InfoIcons Hotel</span>
+	<div data-info-for="info-room-types">
+		<span>Room Types</span>
 		<div>
-			<p>Select a hotel to view @ViewBag.InfoIcons for that hotel</p>
+			
 		</div>
 	</div>
 </div>
