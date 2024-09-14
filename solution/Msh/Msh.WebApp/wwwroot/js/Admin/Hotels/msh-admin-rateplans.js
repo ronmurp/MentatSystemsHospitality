@@ -54,4 +54,11 @@
         listPath: 'admin/hotels/RatePlanList'
     });
 
+    app.hotelActionBulkService.init({
+        deleteBulkApi: '/api/hotelapi/RatePlanDeleteBulk',
+        copyBulkApi: '/api/hotelapi/RatePlanCopyBulk',
+        sortListApi: '/api/hotelapi/RatePlansSort',
+        listPath: 'admin/hotels/RatePlansList'
+    });
+
 }(jQuery));

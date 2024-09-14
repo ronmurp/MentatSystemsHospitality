@@ -28,5 +28,12 @@
         listPath: 'admin/hotels/RoomTypesList'
     });
 
+    app.hotelActionBulkService.init({
+        deleteBulkApi: '/api/hotelapi/RoomTypeDeleteBulk',
+        copyBulkApi: '/api/hotelapi/RoomTypeCopyBulk',
+        sortListApi: '/api/hotelapi/RoomTypesSort',
+        listPath: 'admin/hotels/RoomTypesList'
+    });
+
 
 }(jQuery));
