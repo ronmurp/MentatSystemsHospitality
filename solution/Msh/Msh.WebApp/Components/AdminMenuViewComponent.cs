@@ -100,6 +100,7 @@ namespace Msh.WebApp.Components
 			new AdminMenuItem { Name = "RoomTypeList", Controller = "Hotels", Action = "RoomTypeList", Text = "Room Types" },
 			new AdminMenuItem { Name = "RatePlanList", Controller = "Hotels", Action = "RatePlanList", Text = "Rate Plans" },
 			new AdminMenuItem { Name = "ExtrasList", Controller = "Hotels", Action = "ExtrasList", Text = "Extras" },
+			new AdminMenuItem { Name = "SpecialsList", Controller = "Hotels", Action = "SpecialsList", Text = "Specials" },
 			new AdminMenuItem { Name = "TestModelList", Controller = "Hotels", Action = "TestModelList", Text = "Test Models" }
 		];
 		private List<AdminMenuItem> AdminMenuDev() =>
