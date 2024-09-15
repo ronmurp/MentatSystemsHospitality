@@ -32,7 +32,7 @@
         deleteBulkApi: '/api/hotelapi/RoomTypeDeleteBulk',
         copyBulkApi: '/api/hotelapi/RoomTypeCopyBulk',
         sortListApi: '/api/hotelapi/RoomTypesSort',
-        listPath: 'admin/hotels/RoomTypesList'
+        listPath: 'admin/hotels/RoomTypeList'
     });
 
 

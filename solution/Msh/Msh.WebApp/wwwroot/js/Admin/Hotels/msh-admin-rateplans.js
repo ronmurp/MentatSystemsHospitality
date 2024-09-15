@@ -58,7 +58,7 @@
         deleteBulkApi: '/api/hotelapi/RatePlanDeleteBulk',
         copyBulkApi: '/api/hotelapi/RatePlanCopyBulk',
         sortListApi: '/api/hotelapi/RatePlansSort',
-        listPath: 'admin/hotels/RatePlansList'
+        listPath: 'admin/hotels/RatePlanList'
     });
 
 }(jQuery));
