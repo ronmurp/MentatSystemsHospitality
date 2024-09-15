@@ -186,3 +186,10 @@ table {
 .btn-outline-secondary {
     background-color: white;
 }
+
+.icon-red {
+    color:red;
+}
+.icon-green{
+    color:green;
+}
