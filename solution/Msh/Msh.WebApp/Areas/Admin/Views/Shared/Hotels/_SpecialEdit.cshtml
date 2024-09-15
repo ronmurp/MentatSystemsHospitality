@@ -1,0 +1,116 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.HotelCache.Models.Specials
+@using Msh.WebApp.Models.Admin
+@using Msh.WebApp.TagHelpers
+@model Msh.HotelCache.Models.Specials.Special
+@{
+	var success = ViewBag.Success as SuccessAlert;
+	var formAction = success?.FormAction ?? "SpecialAdd";
+	var hotelCode = ViewBag.HotelCode;
+	var title = ViewData["Title"];
+}
+
+<div class="text-center">
+	<h1 class="display-6">@title</h1>
+	<p></p>
+</div>
+
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
+
+<div class="row">
+	<div class="col-6">
+
+		<form asp-action="@formAction" asp-route-hotelCode="@hotelCode" id="main-form">
+
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			<div class="form-group mb-3">
+				<label asp-for="Code" class="control-label"></label>&nbsp;
+				<info-icon name="info-code" />
+				@await Html.PartialAsync("Hotels/_EditCode", success)
+			</div>
+
+			
+			<div class="form-group mb-3">
+				<label asp-for="ItemType" class="control-label"></label>&nbsp;
+				<info-icon name="info-item-type" />
+				<select asp-for="ItemType" class="form-control" asp-items="Html.GetEnumSelectList<SpecialItemType>()"></select>
+				<span asp-validation-for="ItemType" class="text-danger"></span>
+			</div>
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="Enabled" type="checkbox" class="form-check-input " />
+				<label asp-for="Enabled" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-enabled" />
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="Text" class="control-label"></label>&nbsp;
+				<info-icon name="info-text" />
+				<input asp-for="Text" class="form-control " />
+				<span asp-validation-for="Text" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="SelectedText" class="control-label"></label>&nbsp;
+				<info-icon name="info-selected-text" />
+				<input asp-for="SelectedText" class="form-control " />
+				<span asp-validation-for="SelectedText" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="ShortText" class="control-label"></label>&nbsp;
+				<info-icon name="info-short-text" />
+				<input asp-for="ShortText" class="form-control " />
+				<span asp-validation-for="ShortText" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="IsValued" type="checkbox" class="form-check-input " />
+				<label asp-for="IsValued" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-is-valued" />
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="SingleLine" type="checkbox" class="form-check-input " />
+				<label asp-for="SingleLine" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-single-line" />
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="WarningText" class="control-label"></label>&nbsp;
+				<info-icon name="info-warning-text" />
+				<input asp-for="WarningText" class="form-control " />
+				<span asp-validation-for="WarningText" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="Notes" class="control-label"></label>&nbsp;
+				<info-icon name="info-notes" />
+				<textarea asp-for="Notes" class="form-control "></textarea>
+				<span asp-validation-for="Notes" class="text-danger"></span>
+			</div>
+
+
+			
+			
+			
+			<div class="input-group sticky-bottom">
+				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
+				<a asp-controller="Hotels" asp-action="SpecialsList" asp-route-hotelCode="@hotelCode" class="btn btn-outline-secondary">Return to list</a>
+			</div>
+
+		</form>
+
+	</div>
+</div>
+
+
+@await Html.PartialAsync("Hotels/_SpecialEditInfo", "Special Edit")

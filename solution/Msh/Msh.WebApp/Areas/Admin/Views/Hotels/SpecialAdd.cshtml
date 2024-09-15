@@ -1,0 +1,29 @@
+﻿@using Msh.WebApp.Models.Admin
+
+@model Msh.HotelCache.Models.Specials.Special;
+@{
+	
+
+	var hotelCode = ViewBag.HotelCode;
+
+	ViewBag.Success = new SuccessAlert
+	{
+		ModelName = "Special",
+		ReturnPath = "/admin/hotels/SpecialsList?hotelCode=" + hotelCode,
+		ReturnPathName = "Specials List",
+		KeyPropertyLabel = "Special Code",
+		KeyPropertyName = "Code",
+		KeyPropertyValue = Model.Code,
+		FormAction = "SpecialAdd"
+	};
+
+	ViewData["Title"] = "Special Extra";
+}
+
+@await Html.PartialAsync("Hotels/_SpecialEdit", @Model)
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/Admin/Hotels/msh-admin-specials.js"></script>
+}
