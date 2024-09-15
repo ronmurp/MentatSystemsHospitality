@@ -170,3 +170,19 @@ table {
 .dim-input {
     background-color: lightgray;
 }
+
+.sticky-bottom {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    
+    width: 100%;
+    opacity: 1;
+}
+
+.btn-outline-primary {
+    background-color: white;
+}
+.btn-outline-secondary {
+    background-color: white;
+}
