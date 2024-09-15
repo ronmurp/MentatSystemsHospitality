@@ -590,11 +590,11 @@
             html += `		<div class="modal-base-container flex-column justify-content-between">`;
             html += `			<div class="modal-base-title"><h3>${title}</h3></div>`;
             html += `			<div class="modal-base-body" ${o.bodyStyle}>${body}</div>`;
-            html += `			<div>`;
+            html += `			<div class="input-group">`;
             if (o.footerOk) {
-                html += `				<button class="btn btn-primary mr-3" ${o.okButtonClickScript}>${o.okButtonText}</button>`;
+                html += `				<button class="btn btn-outline-primary mr-3" ${o.okButtonClickScript}>${o.okButtonText}</button>`;
             }
-            html += `				<button class="btn btn-secondary" onclick="window.mshMethods.hideModal('${id}')">${o.closeButtonText}</button>`;
+            html += `				<button class="btn btn-outline-secondary" onclick="window.mshMethods.hideModal('${id}')">${o.closeButtonText}</button>`;
             
             html += `			</div>`;
             html += `		</div>`;
