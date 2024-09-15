@@ -6,6 +6,7 @@ using Msh.HotelCache.Models.Extras;
 using Msh.HotelCache.Models.Hotels;
 using Msh.WebApp.Areas.Admin.Data;
 using Msh.WebApp.Areas.Admin.Models;
+using NuGet.DependencyResolver;
 
 namespace Msh.WebApp.API;
 
@@ -137,6 +138,42 @@ public partial class HotelApiController
 				return GetFail($"The following codes already exist in the destination hotel: {list}");
 
 			}
+
+			return Ok(new ObjectVm());
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
+	[HttpPost]
+	[Route("ExtraDeleteBulk")]
+	public async Task<IActionResult> ExtraDeleteBulk(ApiInput input)
+	{
+		try
+		{
+			var hotels = await hotelsRepoService.GetHotelsAsync();
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
+			{
+				return GetFail($"Invalid source hotel code {input.HotelCode}");
+			}
+
+			var items = await hotelsRepoService.GetExtrasAsync(input.HotelCode);
+
+			for (var i = items.Count - 1; i >= 0; i--)
+			{
+				var item = items[i];
+				if (input.CodeList.Any(c => c.EqualsAnyCase(item.Code)))
+				{
+					items.RemoveAt(i);
+				}
+			}
+
+			await hotelsRepoService.SaveExtrasAsync(items, input.HotelCode);
+
+			
 
 			return Ok(new ObjectVm());
 

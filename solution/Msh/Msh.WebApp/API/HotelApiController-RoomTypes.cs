@@ -143,6 +143,43 @@ public partial class HotelApiController
 	}
 
 	[HttpPost]
+	[Route("RoomTypeDeleteBulk")]
+	public async Task<IActionResult> RoomTypeDeleteBulk(ApiInput input)
+	{
+		try
+		{
+			var hotels = await hotelsRepoService.GetHotelsAsync();
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
+			{
+				return GetFail($"Invalid source hotel code {input.HotelCode}");
+			}
+
+			var items = await hotelsRepoService.GetRoomTypesAsync(input.HotelCode);
+
+			for (var i = items.Count - 1; i >= 0; i--)
+			{
+				var item = items[i];
+				if (input.CodeList.Any(c => c.EqualsAnyCase(item.Code)))
+				{
+					items.RemoveAt(i);
+				}
+			}
+
+			await hotelsRepoService.SaveRoomTypesAsync(items, input.HotelCode);
+
+
+
+			return Ok(new ObjectVm());
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
+
+	[HttpPost]
 	[Route("RoomTypesSort")]
 	public async Task<IActionResult> RoomTypesSort(ApiInput input)
 	{
