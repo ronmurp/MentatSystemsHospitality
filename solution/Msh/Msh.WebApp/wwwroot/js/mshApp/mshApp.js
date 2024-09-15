@@ -2480,11 +2480,48 @@
             });
         }
 
-        function confirmDeleteBulk() {
+        function confirmDeleteBulk(hotelCode) {
+            var codeList = [];
+            var selected = $('input[name="bulk-check"]:checked');
+            for (var i = 0; i < selected.length; i++) {
 
+                var code = $(selected[i]).attr('data-msh-code')
+                if (code !== '0')
+                    codeList.push(code);
+            }
+
+
+            var url = options.deleteBulkApi;
+            var d = {
+                code: '',
+                hotelCode: hotelCode,
+                newCode: '',
+                newHotelCode: '',
+                codeList: codeList
+            }
+            api.postAsync(url, d, function (data) {
+                if (!data.success) {
+                    $('#confirm-error')
+                        .html(data.userErrorMessage)
+                        .removeClass('d-none');
+                    return;
+                }
+                util.redirectTo(`${options.listPath}?hotelCode=${hotelCode}`)
+            });
         }
-        function deleteBulk() {
+        function deleteBulk(hotelCode) {
+           
 
+            var html = '<div>';
+            html += `<div  class="form-group mb-3">Bulk delete for hotel ${hotelCode}</div>`;
+           
+            html += `<div id="confirm-error" class="form-group mb-3 d-none text-danger"></div>`
+
+            modal.showModal('deleteModalId', "Bulk Delete", html, {
+                footerOk: true,
+                okButtonClickScript: `onclick="window.mshMethods.confirmDeleteBulk('${hotelCode}')""`,
+                okButtonText: 'OK'
+            });
         }
 
 
