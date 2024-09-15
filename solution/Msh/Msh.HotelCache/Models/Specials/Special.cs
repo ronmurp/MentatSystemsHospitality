@@ -12,7 +12,7 @@ public class Special
 	public string Code { get; set; } = string.Empty;
 
 	[Display(Name = "Text"), Info("text")]
-	public string Text { get; set; } = string.Empty;
+	public string? Text { get; set; } = string.Empty;
 
 	[Display(Name = "Enabled"), Info("enabled")]
 	public bool Enabled { get; set; }

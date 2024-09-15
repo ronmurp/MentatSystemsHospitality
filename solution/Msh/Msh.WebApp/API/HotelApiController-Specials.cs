@@ -1,0 +1,272 @@
+﻿using Mapster;
+using Microsoft.AspNetCore.Mvc;
+using Msh.Common.ExtensionMethods;
+using Msh.Common.Models.ViewModels;
+using Msh.HotelCache.Models.Hotels;
+using Msh.HotelCache.Models.Specials;
+using Msh.WebApp.Areas.Admin.Data;
+using Msh.WebApp.Areas.Admin.Models;
+
+namespace Msh.WebApp.API;
+
+public partial class HotelApiController
+{
+
+	[HttpPost]
+	[Route("SpecialDelete")]
+	public async Task<IActionResult> SpecialDelete(ApiInput input)
+	{
+		try
+		{
+			var items = await hotelsRepoService.GetSpecialsAsync(input.HotelCode);
+			var item = items.FirstOrDefault(h => h.Code == input.Code);
+			if (item != null)
+			{
+				items.Remove(item);
+				await hotelsRepoService.SaveSpecialsAsync(items, input.HotelCode);
+			}
+
+			return Ok(new ObjectVm
+			{
+
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
+
+
+	[HttpPost]
+	[Route("SpecialCopy")]
+	public async Task<IActionResult> SpecialCopy(ApiInput input)
+	{
+		try
+		{
+			if (SameCodes(input))
+			{
+				return GetFail("At least one code must change");
+			}
+
+			var items = await hotelsRepoService.GetSpecialsAsync(input.HotelCode);
+			var item = items.FirstOrDefault(h => h.Code == input.Code);
+			if (item != null)
+			{
+				var newItem = item.Adapt(item);
+				newItem.Code = input.NewCode;
+
+				var result = await CheckHotel(input.NewHotelCode);
+				if (!result.success)
+				{
+					return result.fail;
+				}
+
+				var newItems = await hotelsRepoService.GetSpecialsAsync(input.NewHotelCode);
+				if (newItems.Any(c => c.Code.EqualsAnyCase(input.NewCode)))
+				{
+					return GetFail("The code already exists.");
+				}
+
+				newItems.Add(newItem);
+				await hotelsRepoService.SaveSpecialsAsync(newItems, input.NewHotelCode);
+			}
+
+			return Ok(new ObjectVm());
+			
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
+	[HttpPost]
+	[Route("SpecialCopyBulk")]
+	public async Task<IActionResult> SpecialCopyBulk(ApiInput input)
+	{
+		try
+		{
+			if (SameCodes(input))
+			{
+				return GetFail("At least one code must change");
+			}
+
+			var hotels = await hotelsRepoService.GetHotelsAsync();
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
+			{
+				return GetFail($"Invalid source hotel code {input.HotelCode}");
+			}
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.NewHotelCode)))
+			{
+				return GetFail($"Invalid destination hotel code {input.NewHotelCode}");
+			}
+
+			var missingList = new List<string>();
+			var newList = new List<Special>();
+
+			var srcItems = await hotelsRepoService.GetSpecialsAsync(input.HotelCode);
+			var dstItems = await hotelsRepoService.GetSpecialsAsync(input.NewHotelCode);
+
+			foreach (var code in input.CodeList)
+			{
+				var item = srcItems.FirstOrDefault(h => h.Code == code);
+				if (item != null)
+				{
+					if (dstItems.Any(e => e.Code == item.Code))
+					{
+						// Already exists
+						missingList.Add(item.Code);
+						continue;
+					}
+					newList.Add(item);
+				}
+			}
+
+			dstItems.AddRange(newList);
+
+			await hotelsRepoService.SaveSpecialsAsync(dstItems, input.NewHotelCode);
+
+			if (missingList.Count > 0)
+			{
+				var list = string.Join(",", missingList);
+				return GetFail($"The following codes already exist in the destination hotel: {list}");
+
+			}
+
+			return Ok(new ObjectVm());
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
+	[HttpPost]
+	[Route("SpecialDeleteBulk")]
+	public async Task<IActionResult> SpecialDeleteBulk(ApiInput input)
+	{
+		try
+		{
+			var hotels = await hotelsRepoService.GetHotelsAsync();
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
+			{
+				return GetFail($"Invalid source hotel code {input.HotelCode}");
+			}
+
+			var items = await hotelsRepoService.GetSpecialsAsync(input.HotelCode);
+
+			for (var i = items.Count - 1; i >= 0; i--)
+			{
+				var item = items[i];
+				if (input.CodeList.Any(c => c.EqualsAnyCase(item.Code)))
+				{
+					items.RemoveAt(i);
+				}
+			}
+
+			await hotelsRepoService.SaveSpecialsAsync(items, input.HotelCode);
+
+			
+
+			return Ok(new ObjectVm());
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
+	[HttpPost]
+	[Route("SpecialsSort")]
+	public async Task<IActionResult> SpecialsSort(ApiInput input)
+	{
+		try
+		{
+			var hotelCode = input.HotelCode;
+			var hotels = await hotelsRepoService.GetHotelsAsync();
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
+			{
+				return GetFail($"Invalid hotel code {hotelCode}");
+			}
+			
+			var srcItems = await hotelsRepoService.GetSpecialsAsync(hotelCode);
+
+			await hotelsRepoService.SaveSpecialsAsync(srcItems.OrderBy(e => e.Code).ToList(), hotelCode);
+
+			return Ok(new ObjectVm());
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
+
+
+	[HttpGet]
+	[Route("SpecialDates")]
+	public async Task<IActionResult> SpecialDates(string code, string hotelCode)
+	{
+		var items = await hotelsRepoService.GetSpecialsAsync(hotelCode);
+		var item = items.FirstOrDefault(h => h.Code == code);
+		if (item == null)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = true,
+				UserErrorMessage = $"Dates not found for hotel {hotelCode} and special {code}"
+			});
+		}
+
+		return Ok(new ObjectVm
+		{
+			Data = new
+			{
+				Dates = item.ItemDates,
+				MinDate = DateOnly.FromDateTime(DateTime.Now)
+			}
+		});
+	}
+
+	[HttpPost]
+	[Route("SpecialDates")]
+	public async Task<IActionResult> SpecialDates([FromBody] ItemDatesVm data)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			var items = await hotelsRepoService.GetSpecialsAsync(data.HotelCode);
+			var index = items.FindIndex(h => h.Code == data.Code);
+
+			if (index >= 0)
+			{
+				items[index].ItemDates = data.Dates;
+				await hotelsRepoService.SaveSpecialsAsync(items, data.HotelCode);
+			}
+
+			return Ok(new ObjectVm
+			{
+				Data = new Hotel()
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
+
+
+}

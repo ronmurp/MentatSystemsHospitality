@@ -16,7 +16,7 @@
 
 <div class="text-center">
 	<h1 class="display-6">@title</h1>
-	<p>Hotel Specials. Click for more information: <info-icon name="info-extras" /> </p>
+	<p>Hotel Specials. Click for more information: <info-icon name="info-specials" /> </p>
 </div>
 
 @await Component.InvokeAsync("AdminHotelSelect", @Model.HotelCode)
@@ -134,10 +134,10 @@
 	
 	@await Html.PartialAsync("Hotels/_ListIconsInfo", ViewBag.InfoIcons as string)
 	
-	<div data-info-for="info-extras">
-		<span>Extras List</span>
+	<div data-info-for="info-specials">
+		<span>Specials List</span>
 		<div>
-			<p>The list shows the Extras (representing Opera Packages) for the selected hotel.</p>
+			<p>The list shows the Specials for the selected hotel.</p>
 			<p>The icons in the table are used to perform actions on the table.</p>
 			<p>Use the bulk action checkboxes to bulk copy or bulk delete rows - 
 				the bulk action buttons are exposed if any checkbox is set.</p>
@@ -155,7 +155,7 @@
 @section Scripts{
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
-	<script src="~/js/admin/hotels/msh-admin-extras.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-specials.js"></script>
 }
 
 

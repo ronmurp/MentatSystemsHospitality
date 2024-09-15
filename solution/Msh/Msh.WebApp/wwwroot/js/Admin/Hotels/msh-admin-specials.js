@@ -25,7 +25,7 @@
     });
 
     if (app.itemDatesService) {
-        app.itemDatesService.init({ datesApiAction: 'SpecialsDates' });
+        app.itemDatesService.init({ datesApiAction: 'SpecialDates' });
     }
    
     app.hotelActionService.init({
