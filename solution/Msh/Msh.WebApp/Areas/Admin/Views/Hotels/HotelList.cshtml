@@ -1,7 +1,6 @@
 ﻿@using Msh.Admin.Models.Const
 @using Msh.HotelCache.Models.Hotels
-@using Msh.WebApp.TagHelpers
-@model IEnumerable<Hotel>;
+@model List<Hotel>;
 @{
 	var title = "Hotel List";
 	ViewData["Title"] = title;
@@ -16,86 +15,16 @@
 </div>
 
 <div class="row">
-	<div class="col-12">
-		<table>
-			<tr>
-				<th>Hotel Code</th>
-				<th>Chain Code</th>
-				<th>Name</th>
-				<th>Stay Dates</th>
-				<th>Book Dates</th>
-				<th>   
-					<div class="cell-outer">
-						<div class="cell-inner">
-							<a asp-controller="Hotels" asp-action="HotelAdd" >
-								<i class="fa-solid fa-plus"></i>
-							</a>
-						</div>
-						<div class="cell-inner">
-							<info-icon name="info-list-icons" />
-						</div>
-					</div>
-				</th>
-			</tr>
-			
-			@foreach (var hotel in @Model)
-			{
-				<tr>
-					<td>@hotel.HotelCode</td>
-					<td>@hotel.ChainCode</td>
-					<td>@hotel.Name</td>
-					<td style="width:80px;">
-						<div class="cell-outer">
-							<div class="cell-inner">
-								@hotel.StayDates.Count
-							</div>
-							<div class="cell-inner">
-								<a asp-controller="Hotels" asp-action="HotelStayEditDates" asp-route-hotelCode="@hotel.HotelCode">
-									<i class="fa-solid fa-calendar"></i>
-								</a>
-							</div>
-						</div>
-					</td>
-					<td style="width:80px;">
-						<div class="cell-outer">
-							<div class="cell-inner">
-								@hotel.BookDates.Count
-							</div>
-							<div class="cell-inner">
-								<a asp-controller="Hotels" asp-action="HotelBookEditDates" asp-route-hotelCode="@hotel.HotelCode">
-									<i class="fa-solid fa-calendar"></i>
-								</a>
-							</div>
-						</div>
-					</td>
-					<td style="width:80px;">
-						
-						<div class="cell-outer">
-							<div class="cell-inner">
-								<a asp-controller="Hotels" asp-action="HotelEdit" asp-route-hotelCode="@hotel.HotelCode">
-									<i class="fa-solid fa-pen-to-square"></i>
-								</a>
-							</div>
-							<div class="cell-inner">
-								
-								<a href="javascript:window.mshMethods.deleteHotel('@hotel.HotelCode')" >
-									<i class="fa-solid fa-times"></i>
-								</a>
-							</div>
-						</div>
-					</td>
-				</tr>
-			}
-			
-		</table>
+	<div class="col-12" id="table-target">
+
+		@await Html.PartialAsync("Hotels/_HotelsTable", Model)
 
 	</div>
 </div>
+@await Html.PartialAsync("Hotels/_BulkCopyDelButtons", "")
 
 
-@{
-	await Html.RenderPartialAsync("Admin/_AdminErrorBlock", "");
-}
+@await Html.PartialAsync("Admin/_AdminErrorBlock", "")
 
 <div id="page-info" style="display:none;">
 
@@ -121,8 +50,8 @@
 </div>
 
 @section Scripts{
-	<script src="~/js/mshapp/mshapp.js"></script>
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
 	<script src="~/js/admin/hotels/msh-admin-hotels.js"></script>
 }
 

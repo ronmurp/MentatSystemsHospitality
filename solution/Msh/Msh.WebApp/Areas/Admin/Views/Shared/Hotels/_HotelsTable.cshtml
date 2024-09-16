@@ -1,0 +1,90 @@
+﻿@using Msh.WebApp.Models.Admin.ViewModels
+@model List<Msh.HotelCache.Models.Hotels.Hotel>
+
+@{
+	var rowIndex = 0;
+	var count = Model.Count;
+}
+
+<table>
+	<tr>
+		<th>Hotel Code</th>
+		<th>Chain Code</th>
+		<th>Name</th>
+		<th>Stay Dates</th>
+		<th>Book Dates</th>
+		<th>Move</th>
+		<th>
+			<div class="cell-outer">
+				<div class="cell-inner">
+					<a asp-controller="Hotels" asp-action="HotelAdd">
+						<i class="fa-solid fa-plus"></i>
+					</a>
+				</div>
+			</div>
+		</th>
+		<th>
+			<div class="cell-outer">
+				<div class="cell-inner">
+					Copy
+				</div>
+			</div>
+		</th>
+		<th>
+			<div class="cell-outer">
+				<div class="cell-inner">
+					<input type="checkbox" name="bulk-check" id="blk" data-msh-code="0"/>
+				</div>
+			</div>
+		</th>
+	</tr>
+
+	@foreach (var hotel in @Model)
+	{
+		<tr>
+			<td>@hotel.HotelCode</td>
+			<td>@hotel.ChainCode</td>
+			<td>@hotel.Name</td>
+			<td style="width:80px;">
+				<div class="cell-outer">
+					<div class="cell-inner">
+						@hotel.StayDates.Count
+					</div>
+					<div class="cell-inner">
+						<a asp-controller="Hotels" asp-action="HotelStayEditDates" asp-route-hotelCode="@hotel.HotelCode">
+							<i class="fa-solid fa-calendar"></i>
+						</a>
+					</div>
+				</div>
+			</td>
+			<td style="width:80px;">
+				<div class="cell-outer">
+					<div class="cell-inner">
+						@hotel.BookDates.Count
+					</div>
+					<div class="cell-inner">
+						<a asp-controller="Hotels" asp-action="HotelBookEditDates" asp-route-hotelCode="@hotel.HotelCode">
+							<i class="fa-solid fa-calendar"></i>
+						</a>
+					</div>
+				</div>
+			</td>
+
+
+			@{
+				var vm = new TableCommonCellsVm
+				{
+					HotelCode = hotel.HotelCode,
+					Code = hotel.HotelCode,
+					Index = rowIndex,
+					Count = count,
+					EditAction = "HotelEdit"
+				};
+
+			}
+			@await Html.PartialAsync("Hotels/_TableCommonCells", vm)
+		</tr>
+		rowIndex++;
+	}
+
+</table>

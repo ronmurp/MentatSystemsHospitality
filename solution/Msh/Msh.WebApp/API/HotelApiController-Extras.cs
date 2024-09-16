@@ -6,7 +6,6 @@ using Msh.HotelCache.Models.Extras;
 using Msh.HotelCache.Models.Hotels;
 using Msh.WebApp.Areas.Admin.Data;
 using Msh.WebApp.Areas.Admin.Models;
-using NuGet.DependencyResolver;
 
 namespace Msh.WebApp.API;
 

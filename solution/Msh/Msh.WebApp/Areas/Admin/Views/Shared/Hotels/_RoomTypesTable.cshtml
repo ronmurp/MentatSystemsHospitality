@@ -1,0 +1,80 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.WebApp.Models.Admin.ViewModels
+@model Msh.WebApp.Models.Admin.ViewModels.RoomTypeListVm
+@{
+	var rowIndex = 0;
+	var count = Model.RoomTypes.Count;
+}
+
+
+
+<table>
+	<tr>
+	<th>
+		<div class="cell-outer">
+			<div class="cell-inner">
+				<p>Code</p>
+			</div>
+			<div class="cell-inner">
+				<a href="javascript:window.mshMethods.sortList('@Model.HotelCode')">
+					<i class="fa-solid fa-sort"></i>
+				</a>
+			</div>
+		</div>
+	</th>
+	<th>Group Code</th>
+	<th>Name</th>
+	<th>   
+		<div class="cell-outer">
+			Move
+		</div>
+	</th>
+	
+	<th>
+		<div class="cell-outer">
+			<div class="cell-inner">
+				<a asp-controller="Hotels" asp-action="RoomTypeAdd" asp-route-hotelCode="@Model.HotelCode">
+					<i class="fa-solid fa-plus"></i>
+				</a>
+			</div>
+		</div>
+	</th>
+		<th>
+			<div class="cell-outer">
+				<div class="cell-inner">
+					Copy
+				</div>
+			</div>
+		</th>
+	<th>
+		<div class="cell-outer">
+			<div class="cell-inner">
+				<input type="checkbox" name="bulk-check" id="blk" data-msh-code="0" />
+			</div>
+		</div>
+	</th>
+
+	@foreach (var rt in @Model.RoomTypes)
+	{
+		<tr>
+			<td>@rt.Code</td>
+			<td>@rt.GroupCode</td>
+			<td>@rt.Name</td>
+			
+				@{
+					var vm = new TableCommonCellsVm
+					{
+						HotelCode = Model.HotelCode,
+						Code = rt.Code,
+						Index = rowIndex,
+						Count = count,
+						EditAction = "RoomTypeEdit"
+					};
+
+				}
+				@await Html.PartialAsync("Hotels/_TableCommonCells", vm)
+		</tr>
+		rowIndex++;
+	}
+
+</table>

@@ -2,7 +2,10 @@
 <div class="row d-none" id="bulk-buttons">
 	<div class="col-12 d-flex flex-row-reverse">
 		<div class="form-group">
-			<button id="bulk-copy" class="btn btn-outline-primary mt-2" onclick="window.mshMethods.copyBulk('@Model')">Bulk Copy</button>
+			@if (!string.IsNullOrEmpty(Model))
+			{
+				<button id="bulk-copy" class="btn btn-outline-primary mt-2" onclick="window.mshMethods.copyBulk('@Model')">Bulk Copy</button>
+			}
 			<button id="bulk-delete" class="btn btn-outline-primary mt-2" onclick="window.mshMethods.deleteBulk('@Model')">Bulk Delete</button>
 		</div>
 	</div>

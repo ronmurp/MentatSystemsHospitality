@@ -2335,6 +2335,7 @@
             copyApi: '/api/hotelapi/ExtraCopy',
             moveApi: '/api/hotelapi/ExtraMove',
             listPath: 'admin/hotels/ExtrasList',
+            codeOnly: false
 
         };
 
@@ -2359,7 +2360,8 @@
         }
 
         function confirmCopyItem(code, hotelCode) {
-            var newHotelCode = $('#copy-hotel').val();
+           
+            var newHotelCode = options.codeOnly ? '' : $('#copy-hotel').val();
             var newCode = $('#copyCode').val();
             var url = options.copyApi;
             var d = {
@@ -2396,10 +2398,13 @@
         }
 
         function copyItem(code, hotelCode) {
-            var hotelSelect = getHotelSelect(hotelCode);
+            
             var html = '<div>';
             html += '<p>Change the hotel code, or the item code, or both, to copy the record.</p>';
-            html += `<div class="form-group mb-3">${hotelSelect}</div>`;
+            if (!options.codeOnly) {
+                var hotelSelect = getHotelSelect(hotelCode);
+                html += `<div class="form-group mb-3">${hotelSelect}</div>`;
+            }
             html += `<div class="form-group mb-3"><input id="copyCode" class="form-control" value="${code}" /></div>`
             html += `<div id="confirm-error" class="form-group mb-3 d-none text-danger">xxx</div>`
             html += '</div>';
@@ -2475,7 +2480,8 @@
             deleteBulkApi: '/api/hotelapi/ExtraDeleteBulk',
             copyBulkApi: '/api/hotelapi/ExtraCopyBulk',
             sortListApi: '/api/hotelapi/ExtrasSort',
-            listPath: 'admin/hotels/ExtrasList'           
+            listPath: 'admin/hotels/ExtrasList',
+            includeBulkCopy: true
         };
 
         function getHotelSelect(hotelCode) {
@@ -2521,6 +2527,7 @@
                 util.redirectTo(`${options.listPath}?hotelCode=${hotelCode}`)
             });
         }
+
         function copyBulk(hotelCode) {
 
             var hotelSelect = getHotelSelect(hotelCode);
@@ -2566,6 +2573,7 @@
                 util.redirectTo(`${options.listPath}?hotelCode=${hotelCode}`)
             });
         }
+
         function deleteBulk(hotelCode) {
            
 
@@ -2600,6 +2608,7 @@
                 }
             });
         }
+
 
         resetBulkListeners();
 

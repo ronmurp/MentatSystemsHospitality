@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Mapster;
+using Microsoft.AspNetCore.Mvc;
 using Msh.Common.ExtensionMethods;
 using Msh.Common.Models.ViewModels;
 using Msh.Common.Services;
@@ -162,7 +163,67 @@ public partial class HotelApiController(IHotelsRepoService hotelsRepoService) : 
 		}
 	}
 
-	
+	[HttpPost]
+	[Route("HotelCopy")]
+	public async Task<IActionResult> HotelCopy(ApiInput input)
+	{
+		try
+		{
+			var srcItems = await hotelsRepoService.GetHotelsAsync();
+			var srcItem = srcItems.FirstOrDefault(h => h.HotelCode == input.Code);
+			if (srcItem != null)
+			{
+				var newItem = srcItem.Adapt(srcItem);
+				newItem.HotelCode = input.NewCode;
+
+				var newItems = await hotelsRepoService.GetHotelsAsync();
+				if (newItems.Any(c => c.HotelCode.EqualsAnyCase(input.NewCode)))
+				{
+					return GetFail("The code already exists.");
+				}
+
+				newItems.Add(newItem);
+				await hotelsRepoService.SaveHotelsAsync(newItems);
+			}
+
+			return Ok(new ObjectVm());
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
+	[HttpPost]
+	[Route("HotelDeleteBulk")]
+	public async Task<IActionResult> HotelDeleteBulk(ApiInput input)
+	{
+		try
+		{
+			var items = await hotelsRepoService.GetHotelsAsync();
+
+			for (var i = items.Count - 1; i >= 0; i--)
+			{
+				var item = items[i];
+				if (input.CodeList.Any(c => c.EqualsAnyCase(item.HotelCode)))
+				{
+					items.RemoveAt(i);
+				}
+			}
+
+			await hotelsRepoService.SaveHotelsAsync(items);
+
+			return Ok(new ObjectVm());
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
+
 
 	[HttpPost]
 	[Route("testModelDelete")]

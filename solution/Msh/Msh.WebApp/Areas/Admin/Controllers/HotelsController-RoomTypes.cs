@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Msh.Common.Exceptions;
+using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.RoomTypes;
+using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
 
 namespace Msh.WebApp.Areas.Admin.Controllers;
@@ -175,4 +177,44 @@ public partial class HotelsController
 		}
 	}
 
+
+	[HttpPost]
+	[Route("RoomTypeMove")]
+	public async Task<IActionResult> RoomTypeMove([FromBody] ApiInput input)
+	{
+		try
+		{
+
+			var hotelCode = input.HotelCode;
+			var hotels = await hotelsRepoService.GetHotelsAsync();
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
+			{
+				return GetFail($"Invalid hotel code {hotelCode}");
+			}
+
+			var srcItems = await hotelsRepoService.GetRoomTypesAsync(hotelCode);
+
+			var currentIndex = srcItems.FindIndex(item => item.Code.EqualsAnyCase(input.Code));
+			var swapIndex = input.Direction == 0 ? currentIndex - 1 : currentIndex + 1;
+			var currentItem = srcItems[currentIndex];
+			var swapItem = srcItems[swapIndex];
+			srcItems[swapIndex] = currentItem;
+			srcItems[currentIndex] = swapItem;
+			await hotelsRepoService.SaveRoomTypesAsync(srcItems, hotelCode);
+
+			var table = new RoomTypeListVm()
+			{
+				Hotels = hotels,
+				HotelCode = hotelCode,
+				RoomTypes = srcItems
+			};
+
+			return PartialView("Hotels/_RoomTypesTable", table);
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
 }

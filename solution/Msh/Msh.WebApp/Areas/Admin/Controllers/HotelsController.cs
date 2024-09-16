@@ -4,10 +4,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Msh.Common.Data;
 using Msh.Common.Exceptions;
+using Msh.Common.ExtensionMethods;
 using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Hotels;
 using Msh.HotelCache.Services;
+using Msh.WebApp.Areas.Admin.Models;
+using Msh.WebApp.Models.Admin.ViewModels;
 using Msh.WebApp.Services;
 
 namespace Msh.WebApp.Areas.Admin.Controllers;
@@ -252,5 +255,29 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 		return RedirectToAction("HotelList");
 	}
 
+	[HttpPost]
+	[Route("HotelMove")]
+	public async Task<IActionResult> HotelMove([FromBody] ApiInput input)
+	{
+		try
+		{
 
+			var srcItems = await hotelsRepoService.GetHotelsAsync();
+
+			var currentIndex = srcItems.FindIndex(item => item.HotelCode.EqualsAnyCase(input.Code));
+			var swapIndex = input.Direction == 0 ? currentIndex - 1 : currentIndex + 1;
+			var currentItem = srcItems[currentIndex];
+			var swapItem = srcItems[swapIndex];
+			srcItems[swapIndex] = currentItem;
+			srcItems[currentIndex] = swapItem;
+			await hotelsRepoService.SaveHotelsAsync(srcItems);
+
+			return PartialView("Hotels/_HotelsTable", srcItems);
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
 }

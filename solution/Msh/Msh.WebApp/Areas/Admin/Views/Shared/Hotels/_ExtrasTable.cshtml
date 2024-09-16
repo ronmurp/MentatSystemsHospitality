@@ -1,6 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Msh.WebApp.Models.Admin.ViewModels
-@using Msh.WebApp.TagHelpers
 @model Msh.WebApp.Models.Admin.ViewModels.ExtrasListVm
 @{
 	var rowIndex = 0;
@@ -30,9 +29,6 @@
 					<a asp-controller="Hotels" asp-action="ExtraAdd" asp-route-hotelCode="@Model.HotelCode">
 						<i class="fa-solid fa-plus"></i>
 					</a>
-				</div>
-				<div class="cell-inner">
-					<info-icon name="info-list-icons" />
 				</div>
 			</div>
 		</th>

@@ -1,5 +1,7 @@
 ﻿(function ($) {
+
     "use strict";
+
     var app = mshPageApp;
     var meth = app.methodsService;
     var util = app.utilityService;
@@ -11,34 +13,25 @@
     var hotelApi = '/api/hotelapi/';
 
     var currentHotelCode = '';
-
-
     
     meth.extendMethods({
 
-        confirmDeleteHotel: function (hotelCode) {
-            var url = `/api/hotelapi/HotelDelete`;
-            var d = {
-                hotelCode: hotelCode
-            }
-            api.postAsync(url, d, function (data) {
+    });
 
-                util.redirectTo('admin/hotels/HotelList')
-            });
-        },
+    app.hotelActionService.init({
+        deleteApi: '/api/hotelapi/HotelDelete',
+        copyApi: '/api/hotelapi/HotelCopy',
+        moveApi: '/admin/hotels/HotelMove',
+        listPath: 'admin/hotels/HotelList',
+        codeOnly: true
+    });
 
-        deleteHotel: function (hotelCode) {
-
-            modal.showModal('delHotel', "Confirm Delete", `Confirm delete of ${hotelCode}`, {
-                footerOk: true,
-                okButtonClickScript: `onclick="window.mshMethods.confirmDeleteHotel('${hotelCode}')""`,
-                okButtonText: 'OK'
-            });
-        },
-        cancelHotelEdit: function () {
-            util.redirectTo('admin/hotels/hotellist');
-        },
-
+    app.hotelActionBulkService.init({
+        deleteBulkApi: '/api/hotelapi/HotelDeleteBulk',
+        copyBulkApi: '/api/hotelapi/HotelCopyBulk',
+        sortListApi: '/api/hotelapi/HotelsSort',
+        listPath: 'admin/hotels/HotelList',
+        includeBulkCopy: false
     });
 
 }(jQuery));
