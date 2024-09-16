@@ -2404,6 +2404,7 @@
             api.postAsync(url, d, function (data) {
                 if (typeof data === "string") {
                     $('#table-target').html(data);
+                    window.mshPageApp.hotelActionBulkService.resetBulkListeners();
                 } else if (data.userErrorMessage) {
                     modal.showError(data.userErrorMessage);
                 }
@@ -2563,24 +2564,27 @@
             });
         }
 
+        function resetBulkListeners() {
+            $('[name="bulk-check"]').on('change', function () {
+                var checked = $(this).is(':checked');
+                var id = $(this).attr('id');
+                if (id == 'blk') {
+                    $('[name="bulk-check"]').prop('checked', checked);
+                }
+                else {
+                    $('#blk').prop('checked', false)
+                }
+                var anyChecked = $('input[name="bulk-check"]:checked').length > 0;
+                if (anyChecked) {
+                    $('#bulk-buttons').removeClass('d-none');
+                }
+                else {
+                    $('#bulk-buttons').addClass('d-none');
+                }
+            });
+        }
 
-        $('[name="bulk-check"]').on('change', function () {
-            var checked = $(this).is(':checked');
-            var id = $(this).attr('id');
-            if (id == 'blk') {
-                $('[name="bulk-check"]').prop('checked', checked);
-            }
-            else {
-                $('#blk').prop('checked', false)
-            }
-            var anyChecked = $('input[name="bulk-check"]:checked').length > 0;
-            if (anyChecked) {
-                $('#bulk-buttons').removeClass('d-none');
-            }
-            else {
-                $('#bulk-buttons').addClass('d-none');
-            }
-        });
+        resetBulkListeners();
 
         function sortList(hotelCode) {
             var url = options.sortListApi;
@@ -2600,7 +2604,8 @@
             deleteBulk: deleteBulk,
             confirmCopyBulk: confirmCopyBulk,
             copyBulk: copyBulk,
-            sortList: sortList
+            sortList: sortList,
+            resetBulkListeners: resetBulkListeners
         });
 
         function init(inputOptions) {
@@ -2608,7 +2613,8 @@
         }
 
         return {
-            init: init
+            init: init,
+            resetBulkListeners: resetBulkListeners
         }
 
     }());
