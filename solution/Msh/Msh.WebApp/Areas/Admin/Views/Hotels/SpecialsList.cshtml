@@ -5,6 +5,7 @@
 	var title = "Specials List";
 	ViewData["Title"] = title;
 	ViewBag.InfoIcons = "Specials";
+	
 }
 
 @await Component.InvokeAsync("AdminMenu", new
@@ -22,120 +23,8 @@
 @await Component.InvokeAsync("AdminHotelSelect", @Model.HotelCode)
 
 <div class="row">
-	<div class="col-12">
-		<table>
-			<tr>
-				<th>
-					<div class="cell-outer">
-						<div class="cell-inner">
-							<p>Code</p>
-						</div>
-						<div class="cell-inner">
-							<a href="javascript:window.mshMethods.sortList('@Model.HotelCode')">
-								<i class="fa-solid fa-sort"></i>
-							</a>
-						</div>
-					</div>
-				</th>
-				<th style="width:60px;">Type</th>
-				<th class="text-center" style="width:50px;">Enabled</th>
-				<th>Text</th>
-				<th>Options</th>
-				<th>Dates</th>
-				<th>   
-					<div class="cell-outer">
-						<div class="cell-inner">
-							<a asp-controller="Hotels" asp-action="SpecialAdd" asp-route-hotelCode="@Model.HotelCode">
-								<i class="fa-solid fa-plus"></i>
-							</a>
-						</div>
-						<div class="cell-inner">
-							<info-icon name="info-list-icons" />
-						</div>
-					</div>
-				</th>
-				<th>
-					<div class="cell-outer">
-						<div class="cell-inner">
-							<input type="checkbox" name="bulk-check" id="blk" data-msh-code="0"/>
-						</div>
-					</div>
-				</th>
-			</tr>
-			
-			@foreach (var rt in @Model.Specials)
-			{
-				var itemType = string.Format("{0}", rt.ItemType);
-				<tr>
-					<td>@rt.Code</td>
-					<td>@itemType</td>
-					<td class="text-center" style="width:50px;">
-						@if (rt.Enabled)
-						{
-							<span class="icon-green"><i class="fa fa-check"></i></span>
-						}
-						else
-						{
-							<span class="icon-red"><i class="fa fa-times"></i></span>
-						}
-					</td>
-					<td>@rt.Text</td>
-					<td style="width:80px;">
-						<div class="cell-outer">
-							<div class="cell-inner">
-								@rt.Options.Count
-							</div>
-							<div class="cell-inner">
-								<a asp-controller="Hotels" asp-action="SpecialEditOptions" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
-									<i class="fa-solid fa-list"></i>
-								</a>
-							</div>
-						</div>
-					</td>
-					<td style="width:80px;" >
-						<div class="cell-outer">
-							<div class="cell-inner">
-								@rt.ItemDates.Count
-							</div>
-							<div class="cell-inner">
-								<a asp-controller="Hotels" asp-action="SpecialEditDates" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
-									<i class="fa-solid fa-calendar"></i>
-								</a>
-							</div>
-						</div>
-					</td>
-					<td style="width:90px;">
-						<div class="cell-outer">
-							<div class="cell-inner">
-								<a asp-controller="Hotels" asp-action="SpecialEdit" asp-route-code="@rt.Code" asp-route-hotelCode="@Model.HotelCode">
-									<i class="fa-solid fa-pen-to-square"></i>
-								</a>
-							</div>
-							<div class="cell-inner">
-								<a href="javascript:window.mshMethods.deleteItem('@rt.Code', '@Model.HotelCode')" >
-									<i class="fa-solid fa-times"></i>
-								</a>
-							</div>
-							<div class="cell-inner">
-								<a href="javascript:window.mshMethods.copyItem('@rt.Code', '@Model.HotelCode')">
-									<i class="fa-solid fa-copy"></i>
-								</a>
-							</div>
-							
-						</div>
-					</td>
-					<td style ="width:30px;">
-						<div class="cell-outer">
-							<div class="cell-inner">
-								<input type="checkbox" name="bulk-check" id="blk-@rt.Code" data-msh-code="@rt.Code"/>
-							</div>
-						</div>
-					</td>
-				</tr>
-			}
-			
-		</table>
-
+	<div class="col-12" id="table-target">
+		@await Html.PartialAsync("Hotels/_SpecialsTable", @Model)
 	</div>
 </div>
 
