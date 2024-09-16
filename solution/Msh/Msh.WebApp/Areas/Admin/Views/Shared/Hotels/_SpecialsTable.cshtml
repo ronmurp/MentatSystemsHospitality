@@ -1,7 +1,8 @@
-﻿@model Msh.WebApp.Models.Admin.ViewModels.SpecialsListVm
+﻿@using Msh.WebApp.Models.Admin.ViewModels
+@model Msh.WebApp.Models.Admin.ViewModels.SpecialsListVm
 
 @{
-	var i = 0;
+	var rowIndex = 0;
 	var count = Model.Specials.Count;
 }
 <table>
@@ -23,7 +24,7 @@
 		<th>Text</th>
 		<th>Options</th>
 		<th>Dates</th>
-		<th class="text-center" style="width:40px;">Sort</th>
+		<th class="text-center" style="width:40px;">Move</th>
 		<th>
 			<div class="cell-outer">
 				<div class="cell-inner">
@@ -31,8 +32,12 @@
 						<i class="fa-solid fa-plus"></i>
 					</a>
 				</div>
+			</div>
+		</th>
+		<th>
+			<div class="cell-outer">
 				<div class="cell-inner">
-					<info-icon name="info-list-icons" />
+					Copy
 				</div>
 			</div>
 		</th>
@@ -48,19 +53,10 @@
 	@foreach (var rt in @Model.Specials)
 	{
 		var itemType = string.Format("{0}", rt.ItemType);
-		<tr id="row-@i">
+		<tr>
 			<td>@rt.Code</td>
 			<td>@itemType</td>
-			<td class="text-center" style="width:50px;">
-				@if (rt.Enabled)
-				{
-					<span class="icon-green"><i class="fa fa-check"></i></span>
-				}
-				else
-				{
-					<span class="icon-red"><i class="fa fa-times"></i></span>
-				}
-			</td>
+			@await Html.PartialAsync("Hotels/_TableCheckMarkCell", rt.Enabled)
 			<td>@rt.Text</td>
 			<td style="width:80px;">
 				<div class="cell-outer">
@@ -86,61 +82,22 @@
 					</div>
 				</div>
 			</td>
-			<td style="width:40px;">
-				<div class="cell-outer">
-					<div class="cell-inner">
+			
+			@{
+				var vm = new TableCommonCellsVm
+				{
+					HotelCode = Model.HotelCode,
+					Code = rt.Code,
+					Index = rowIndex,
+					Count = count,
+					EditAction = "SpecialEdit"
+				};
+				
+			}
+			@await Html.PartialAsync("Hotels/_TableCommonCells", vm)
 
-
-						<div class="cell-outer-column">
-							@if (i > 0)
-							{
-								<div class="cell-inner">
-									<a href="javascript:window.mshMethods.moveItemUp('@rt.Code', '@Model.HotelCode', @i, @count)">
-										<i class="fa-solid fa-arrow-up"></i>
-									</a>
-								</div>
-							}
-							@if (i < count - 1)
-							{
-								<div class="cell-inner">
-									<a href="javascript:window.mshMethods.moveItemDown('@rt.Code', '@Model.HotelCode', @i, @count)">
-										<i class="fa-solid fa-arrow-down"></i>
-									</a>
-								</div>
-							}
-						</div>
-					</div>
-				</div>
-			</td>
-			<td style="width:90px;">
-				<div class="cell-outer">
-					<div class="cell-inner">
-						<a asp-controller="Hotels" asp-action="SpecialEdit" asp-route-code="@rt.Code" asp-route-hotelCode="@Model.HotelCode">
-							<i class="fa-solid fa-pen-to-square"></i>
-						</a>
-					</div>
-					<div class="cell-inner">
-						<a href="javascript:window.mshMethods.deleteItem('@rt.Code', '@Model.HotelCode')">
-							<i class="fa-solid fa-times"></i>
-						</a>
-					</div>
-					<div class="cell-inner">
-						<a href="javascript:window.mshMethods.copyItem('@rt.Code', '@Model.HotelCode')">
-							<i class="fa-solid fa-copy"></i>
-						</a>
-					</div>
-
-				</div>
-			</td>
-			<td style="width:30px;">
-				<div class="cell-outer">
-					<div class="cell-inner">
-						<input type="checkbox" name="bulk-check" id="blk-@rt.Code" data-msh-code="@rt.Code" />
-					</div>
-				</div>
-			</td>
 		</tr>
-		i++;
+		rowIndex++;
 	}
 
 
