@@ -31,6 +31,7 @@
     app.hotelActionService.init({
         deleteApi: '/api/hotelapi/ExtraDelete',
         copyApi: '/api/hotelapi/ExtraCopy',
+        moveApi: '/admin/hotels/ExtraMove',
         listPath: 'admin/hotels/ExtrasList'
     });
 

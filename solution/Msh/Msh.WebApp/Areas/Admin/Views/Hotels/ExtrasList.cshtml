@@ -22,94 +22,9 @@
 @await Component.InvokeAsync("AdminHotelSelect", @Model.HotelCode)
 
 <div class="row">
-	<div class="col-12">
-		<table>
-			<tr>
-				<th>
-					<div class="cell-outer">
-						<div class="cell-inner">
-							<p>Code</p>
-						</div>
-						<div class="cell-inner">
-							<a href="javascript:window.mshMethods.sortList('@Model.HotelCode')">
-								<i class="fa-solid fa-sort"></i>
-							</a>
-						</div>
-					</div>
-				</th>
-				<th class="text-end">Price</th>
-				<th>Description</th>
-				<th>Dates</th>
-				<th>   
-					<div class="cell-outer">
-						<div class="cell-inner">
-							<a asp-controller="Hotels" asp-action="ExtraAdd" asp-route-hotelCode="@Model.HotelCode">
-								<i class="fa-solid fa-plus"></i>
-							</a>
-						</div>
-						<div class="cell-inner">
-							<info-icon name="info-list-icons" />
-						</div>
-					</div>
-				</th>
-				<th>
-					<div class="cell-outer">
-						<div class="cell-inner">
-							<input type="checkbox" name="bulk-check" id="blk" data-msh-code="0"/>
-						</div>
-					</div>
-				</th>
-			</tr>
-			
-			@foreach (var rt in @Model.Extras)
-			{
-				<tr>
-					<td>@rt.Code</td>
-					<td class="text-end">@rt.Price.ToString("C2")</td>
-					<td>@rt.Description</td>
-					<td style="width:80px;" >
-						<div class="cell-outer">
-							<div class="cell-inner">
-								@rt.ItemDates.Count
-							</div>
-							<div class="cell-inner">
-								<a asp-controller="Hotels" asp-action="ExtraEditDates" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
-									<i class="fa-solid fa-calendar"></i>
-								</a>
-							</div>
-						</div>
-					</td>
-					<td style="width:90px;">
-						<div class="cell-outer">
-							<div class="cell-inner">
-								<a asp-controller="Hotels" asp-action="ExtraEdit" asp-route-code="@rt.Code" asp-route-hotelCode="@Model.HotelCode">
-									<i class="fa-solid fa-pen-to-square"></i>
-								</a>
-							</div>
-							<div class="cell-inner">
-								<a href="javascript:window.mshMethods.deleteItem('@rt.Code', '@Model.HotelCode')" >
-									<i class="fa-solid fa-times"></i>
-								</a>
-							</div>
-							<div class="cell-inner">
-								<a href="javascript:window.mshMethods.copyItem('@rt.Code', '@Model.HotelCode')">
-									<i class="fa-solid fa-copy"></i>
-								</a>
-							</div>
-							
-						</div>
-					</td>
-					<td style ="width:30px;">
-						<div class="cell-outer">
-							<div class="cell-inner">
-								<input type="checkbox" name="bulk-check" id="blk-@rt.Code" data-msh-code="@rt.Code"/>
-							</div>
-						</div>
-					</td>
-				</tr>
-			}
-			
-		</table>
+	<div class="col-12" id="table-target">
+
+		@await Html.PartialAsync("Hotels/_ExtrasTable", @Model);
 
 	</div>
 </div>
@@ -120,7 +35,7 @@
 
 <div id="page-info" style="display:none;">
 	
-	@await Html.PartialAsync("Hotels/_ListIconsInfo", ViewBag.InfoIcons as string)
+	
 	
 	<div data-info-for="info-extras">
 		<span>Extras List</span>
@@ -128,8 +43,11 @@
 			<p>The list shows the Extras (representing Opera Packages) for the selected hotel.</p>
 			<p>The icons in the table are used to perform actions on the table.</p>
 			<p>Use the bulk action checkboxes to bulk copy or bulk delete rows - 
-				the bulk action buttons are exposed if any checkbox is set.</p>
+				the bulk action buttons are exposed if any checkbox is set.
+			</p>
+			@await Html.PartialAsync("Hotels/_ListIconsInfo")
 		</div>
+		
 	</div>
 
 	<div data-info-for="info-hotel-code">

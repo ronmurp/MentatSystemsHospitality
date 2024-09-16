@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Msh.Common.Exceptions;
+using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Extras;
 using Msh.HotelCache.Models.RoomTypes;
+using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
 
 namespace Msh.WebApp.Areas.Admin.Controllers;
@@ -203,6 +205,46 @@ public partial class HotelsController
 		}
 
 		return RedirectToAction("HotelList");
+	}
+
+	[HttpPost]
+	[Route("ExtraMove")]
+	public async Task<IActionResult> ExtraMove([FromBody] ApiInput input)
+	{
+		try
+		{
+
+			var hotelCode = input.HotelCode;
+			var hotels = await hotelsRepoService.GetHotelsAsync();
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
+			{
+				return GetFail($"Invalid hotel code {hotelCode}");
+			}
+
+			var srcItems = await hotelsRepoService.GetExtrasAsync(hotelCode);
+
+			var currentIndex = srcItems.FindIndex(item => item.Code.EqualsAnyCase(input.Code));
+			var swapIndex = input.Direction == 0 ? currentIndex - 1 : currentIndex + 1;
+			var currentItem = srcItems[currentIndex];
+			var swapItem = srcItems[swapIndex];
+			srcItems[swapIndex] = currentItem;
+			srcItems[currentIndex] = swapItem;
+			await hotelsRepoService.SaveExtrasAsync(srcItems, hotelCode);
+
+			var table = new ExtrasListVm
+			{
+				Hotels = hotels,
+				HotelCode = hotelCode,
+				Extras = srcItems
+			};
+
+			return PartialView("Hotels/_ExtrasTable", table);
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
 	}
 
 }
