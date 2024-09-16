@@ -98,9 +98,26 @@
 }
 
 <div id="page-info" style="display:none;">
-	@{
-		await Html.RenderPartialAsync("Hotels/_ListIconsInfo", ViewBag.InfoIcons as string);
-	}
+
+	<div data-info-for="info-hotels">
+		<span>Hotels List</span>
+		<div>
+			
+			@await Html.PartialAsync("Hotels/_ListIconsInfo")
+			<p>Additional icons used in some lists:</p>
+			<ul>
+				<li><i class="fa-solid fa-calendar"></i> - Edit the dates list associated with the record.</li>
+			</ul>
+
+		</div>
+	</div>
+
+	<div data-info-for="info-hotel-code">
+		<span>@ViewBag.InfoIcons Hotel</span>
+		<div>
+			<p>Select a hotel to view @ViewBag.InfoIcons for that hotel</p>
+		</div>
+	</div>
 </div>
 
 @section Scripts{

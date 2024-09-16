@@ -4,7 +4,6 @@
 @{
 	var title = "Rate Plan List";
 	ViewData["Title"] = title;
-	ViewBag.InfoIcons = "Rate Plans";
 }
 
 @await Component.InvokeAsync("AdminMenu", new
@@ -105,12 +104,13 @@
 
 <div id="page-info" style="display:none;">
 	
-	@await Html.PartialAsync("Hotels/_ListIconsInfo", ViewBag.InfoIcons as string)
+	
 
 	<div data-info-for="info-rate-plans">
 		<span>Rate Plans</span>
 		<div>
 			<p></p>
+			@await Html.PartialAsync("Hotels/_ListIconsInfo")
 		</div>
 	</div>
 </div>

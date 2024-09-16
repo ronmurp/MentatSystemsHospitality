@@ -4,8 +4,6 @@
 @{
 	var title = "Specials List";
 	ViewData["Title"] = title;
-	ViewBag.InfoIcons = "Specials";
-	
 }
 
 @await Component.InvokeAsync("AdminMenu", new
@@ -34,23 +32,19 @@
 
 <div id="page-info" style="display:none;">
 	
-	@await Html.PartialAsync("Hotels/_ListIconsInfo", ViewBag.InfoIcons as string)
-	
 	<div data-info-for="info-specials">
 		<span>Specials List</span>
 		<div>
 			<p>The list shows the Specials for the selected hotel.</p>
-			<p>The icons in the table are used to perform actions on the table.</p>
-			<p>Use the bulk action checkboxes to bulk copy or bulk delete rows - 
-				the bulk action buttons are exposed if any checkbox is set.</p>
+			
+			@await Html.PartialAsync("Hotels/_ListIconsInfo")
+			<p>Additional icons for this list:</p>
+			<ul>
+				<li><i class="fa-solid fa-list"></i> - Edit the options that a customer might select for this special.</li>
+				<li><i class="fa-solid fa-calendar"></i> - Edit the dates list associated with the record.</li>
+			</ul>
 		</div>
-	</div>
-
-	<div data-info-for="info-hotel-code">
-		<span>@ViewBag.InfoIcons Hotel</span>
-		<div>
-			<p>Select a hotel to view @ViewBag.InfoIcons for that hotel</p>
-		</div>
+		
 	</div>
 </div>
 

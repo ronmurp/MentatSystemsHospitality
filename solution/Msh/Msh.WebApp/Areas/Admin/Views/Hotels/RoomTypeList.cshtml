@@ -106,12 +106,12 @@
 
 <div id="page-info" style="display:none;">
 	
-	@await Html.PartialAsync("Hotels/_ListIconsInfo", ViewBag.InfoIcons as string)
+	
 
 	<div data-info-for="info-room-types">
 		<span>Room Types</span>
 		<div>
-			
+			@await Html.PartialAsync("Hotels/_ListIconsInfo")
 		</div>
 	</div>
 </div>
