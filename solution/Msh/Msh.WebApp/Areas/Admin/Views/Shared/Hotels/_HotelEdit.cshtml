@@ -105,18 +105,11 @@
 				<span asp-validation-for="AdminNotes" class="text-danger"></span>
 			</div>
 			
-			<div style="display:flex;justify-content:start;">
-				<div class="input-group">
-					<button type="submit" name="Command" class="btn btn-outline-primary">Save</button>
-					<a asp-controller="Hotels" asp-action="HotelList" class="btn btn-outline-secondary">Return to list</a>
-				</div>
-				<div style="display:flex;justify-content:start;">
-					@* <button type="submit" name="Command" value="Publish" id="publish-button" class="btn btn-outline-success">Publish</button>
-					 *@
-					&nbsp;<info-icon name="info-publish" />
-				</div>
-				
+			<div class="input-group sticky-bottom">
+				<button type="submit" name="Command" class="btn btn-outline-primary">Save</button>
+				<a asp-controller="Hotels" asp-action="HotelList" class="btn btn-outline-secondary">Return to list</a>
 			</div>
+
 			
 		</form>
 

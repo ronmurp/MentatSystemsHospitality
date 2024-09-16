@@ -9,9 +9,12 @@
 
 @await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuHotels, currentItem = "HotelList" })
 
-
 <div class="text-center">
 	<h1 class="display-6">@title</h1>
+	<p>
+		The hotel records contain hotel codes, names and other data associated with a hotel in Opera.
+		Click for more information: <info-icon name="info-hotels"/>
+	</p>
 </div>
 
 <div class="row">
@@ -21,8 +24,8 @@
 
 	</div>
 </div>
-@await Html.PartialAsync("Hotels/_BulkCopyDelButtons", "")
 
+@await Html.PartialAsync("Hotels/_BulkCopyDelButtons", "")
 
 @await Html.PartialAsync("Admin/_AdminErrorBlock", "")
 
@@ -31,22 +34,17 @@
 	<div data-info-for="info-hotels">
 		<span>Hotels List</span>
 		<div>
-			
+			<p></p>
 			@await Html.PartialAsync("Hotels/_ListIconsInfo")
 			<p>Additional icons used in some lists:</p>
 			<ul>
 				<li><i class="fa-solid fa-calendar"></i> - Edit the dates list associated with the record.</li>
 			</ul>
-
+			<p>Stay Dates, if used, determine date ranges within which the guest cannot stay.</p>
+			<p>Book Dates, if used, determine date ranges within which the guest cannot make bookings for the hotel.</p>
 		</div>
 	</div>
 
-	<div data-info-for="info-hotel-code">
-		<span>@ViewBag.InfoIcons Hotel</span>
-		<div>
-			<p>Select a hotel to view @ViewBag.InfoIcons for that hotel</p>
-		</div>
-	</div>
 </div>
 
 @section Scripts{
