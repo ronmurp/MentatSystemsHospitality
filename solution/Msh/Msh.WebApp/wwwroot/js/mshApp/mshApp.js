@@ -2359,7 +2359,7 @@
         }
 
         function confirmCopyItem(code, hotelCode) {
-            var newHotelCode = $('#copyHotel').val();
+            var newHotelCode = $('#copy-hotel').val();
             var newCode = $('#copyCode').val();
             var url = options.copyApi;
             var d = {
@@ -2380,7 +2380,7 @@
         }
 
         function getHotelSelect(hotelCode) {
-            var html = '<select class="form-control" id="copy-bulk-hotel">';
+            var html = '<select class="form-control" id="copy-hotel">';
             $('[name="hotel-codes"]').each(function (v) {
                 var hName = $(this).val();
                 var hCode = $(this).attr('data-msh-option');
