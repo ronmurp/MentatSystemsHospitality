@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Msh.Common.Exceptions;
+using Msh.Common.ExtensionMethods;
+using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Extras;
 using Msh.HotelCache.Models.RoomTypes;
 using Msh.HotelCache.Models.Specials;
+using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
 
 namespace Msh.WebApp.Areas.Admin.Controllers;
@@ -221,4 +224,47 @@ public partial class HotelsController
 		return RedirectToAction("HotelList");
 	}
 
+	[HttpPost]
+	[Route("SpecialMove")]
+	public async Task<IActionResult> SpecialMove([FromBody]ApiInput input)
+	{
+		try
+		{
+			
+			var hotelCode = input.HotelCode;
+			var hotels = await hotelsRepoService.GetHotelsAsync();
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
+			{
+				return GetFail($"Invalid hotel code {hotelCode}");
+			}
+
+			var srcItems = await hotelsRepoService.GetSpecialsAsync(hotelCode);
+			var currentIndex = srcItems.FindIndex(item => item.Code.EqualsAnyCase(input.Code));
+			var swapIndex = input.Direction == 0 ? currentIndex - 1 : currentIndex + 1;
+			var currentItem = srcItems[currentIndex];
+			var swapItem = srcItems[swapIndex];
+			srcItems[swapIndex] = currentItem;
+			srcItems[currentIndex] = swapItem;
+			await hotelsRepoService.SaveSpecialsAsync(srcItems, hotelCode);
+
+			var table = new SpecialsListVm
+			{
+				Hotels = hotels,
+				HotelCode = hotelCode,
+				Specials = srcItems
+			};
+
+			return PartialView("Hotels/_SpecialsTable", table);
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
+	private IActionResult GetFail(string message)
+	{
+		return Ok(new ObjectVm { Success = false, UserErrorMessage = message });
+	}
 }
