@@ -70,9 +70,16 @@
 }
 
 <div id="page-info" style="display:none;">
-	@{
-		await Html.RenderPartialAsync("Admin/_ListIconsInfo", "User List");
-	}
+
+	<div data-info-for="info-users">
+		<span>Users List</span>
+		<div>
+			@await Html.PartialAsync("Hotels/_ListIconsInfo")
+			
+		</div>
+		
+	</div>
+
 </div>
 
 @section Scripts {
