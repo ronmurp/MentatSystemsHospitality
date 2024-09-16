@@ -642,6 +642,10 @@
 
         }
 
+        function showError(message) {
+            showModal('modalError', "Error", message);
+        }
+
         window.mshShowInfo = showInfo;
 
         meth.extendMethods({
@@ -655,7 +659,8 @@
             showModal: showModal,
             hideModal: hideModal,
             showInfo: showInfo,
-            injectInfo: injectInfo          
+            injectInfo: injectInfo,
+            showError: showError
         }
 
     })(jQuery);
@@ -2328,7 +2333,9 @@
         var options = {
             deleteApi: '/api/hotelapi/ExtraDelete',
             copyApi: '/api/hotelapi/ExtraCopy',
-            listPath: 'admin/hotels/ExtrasList'
+            moveApi: '/api/hotelapi/ExtraMove',
+            listPath: 'admin/hotels/ExtrasList',
+
         };
 
         function confirmDeleteItem(code, hotelCode) {
@@ -2386,11 +2393,43 @@
             });
         } 
 
+
+        function move(code, hotelCode, i, count, direction) {
+            var url = options.moveApi;
+            var d = {
+                code: code,
+                hotelCode: hotelCode,
+                direction: direction
+            }
+            api.postAsync(url, d, function (data) {
+                if (typeof data === "string") {
+                    $('#table-target').html(data);
+                } else if (data.userErrorMessage) {
+                    modal.showError(data.userErrorMessage);
+                }
+
+            });
+        }
+        function moveItemUp(code, hotelCode, i, count) {
+            if (i > 0) {
+                move(code, hotelCode, i, count, 0);
+            }
+
+        }
+        function moveItemDown(code, hotelCode, i, count) {
+            if (i < count - 1) {
+                move(code, hotelCode, i, count, 1);
+            }
+        }
+
         meth.extendMethods({
             confirmDeleteItem: confirmDeleteItem,
             deleteItem: deleteItem,
             confirmCopyItem: confirmCopyItem,
-            copyItem: copyItem
+            copyItem: copyItem,
+
+            moveItemUp: moveItemUp,
+            moveItemDown: moveItemDown,
         });
 
         function init(inputOptions) {

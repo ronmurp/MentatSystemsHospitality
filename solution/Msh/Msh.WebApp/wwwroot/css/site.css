@@ -118,6 +118,12 @@ table {
     justify-content:space-around;
     width: 100%;
 }
+.cell-outer-column {
+    display: flex;
+    flex-direction:column;
+    justify-content: space-around;
+    width: 100%;
+}
 .cell-inner {
     /*border: 1px solid green;*/
     width: 30px;

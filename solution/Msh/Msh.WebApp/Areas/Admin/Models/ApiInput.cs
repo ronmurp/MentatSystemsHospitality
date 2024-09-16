@@ -12,4 +12,6 @@ public class ApiInput
 	public string NewHotelCode { get; set; } = string.Empty;
 
 	public List<string> CodeList { get; set; } = [];
+
+	public int Direction { get; set; }
 }
