@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Msh.Common.Exceptions;
+using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.RatePlans;
 using Msh.HotelCache.Models.RoomTypes;
+using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
 
 namespace Msh.WebApp.Areas.Admin.Controllers;
@@ -179,6 +181,45 @@ public partial class HotelsController
 			ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
 
 			return View();
+		}
+	}
+
+	[HttpPost]
+	[Route("RatePlanMove")]
+	public async Task<IActionResult> RatePlanMove([FromBody] ApiInput input)
+	{
+		try
+		{
+
+			var hotelCode = input.HotelCode;
+			var hotels = await hotelsRepoService.GetHotelsAsync();
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
+			{
+				return GetFail($"Invalid hotel code {hotelCode}");
+			}
+
+			var srcItems = await hotelsRepoService.GetRatePlansAsync(hotelCode);
+			var currentIndex = srcItems.FindIndex(item => item.RatePlanCode.EqualsAnyCase(input.Code));
+			var swapIndex = input.Direction == 0 ? currentIndex - 1 : currentIndex + 1;
+			var currentItem = srcItems[currentIndex];
+			var swapItem = srcItems[swapIndex];
+			srcItems[swapIndex] = currentItem;
+			srcItems[currentIndex] = swapItem;
+			await hotelsRepoService.SaveRatePlansAsync(srcItems, hotelCode);
+
+			var table = new RatePlanListVm
+			{
+				Hotels = hotels,
+				HotelCode = hotelCode,
+				RatePlans = srcItems
+			};
+
+			return PartialView("Hotels/_RatePlansTable", table);
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
 		}
 	}
 

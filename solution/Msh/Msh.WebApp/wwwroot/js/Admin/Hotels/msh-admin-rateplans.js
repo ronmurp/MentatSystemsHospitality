@@ -51,6 +51,7 @@
     app.hotelActionService.init({
         deleteApi: '/api/hotelapi/RatePlanDelete',
         copyApi: '/api/hotelapi/RatePlanCopy',
+        moveApi: '/admin/hotels/RatePlanMove',
         listPath: 'admin/hotels/RatePlanList'
     });
 
