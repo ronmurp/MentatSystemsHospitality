@@ -2379,11 +2379,28 @@
             });
         }
 
+        function getHotelSelect(hotelCode) {
+            var html = '<select class="form-control" id="copy-bulk-hotel">';
+            $('[name="hotel-codes"]').each(function (v) {
+                var hName = $(this).val();
+                var hCode = $(this).attr('data-msh-option');
+                if (hCode === hotelCode) {
+                    html += `<option value="${hCode}" selected>${hName}</option>`;
+                } else {
+                    html += `<option value="${hCode}">${hName}</option>`;
+                }
+                
+            });
+            html += '<select>';
+            return html;
+        }
+
         function copyItem(code, hotelCode) {
+            var hotelSelect = getHotelSelect(hotelCode);
             var html = '<div>';
-            html += '<p>Change the hotel code, or the item code, or bot, to copy the record.</p>';
-            html += `<div class="form-group mb-3"><input id="copyHotel" value="${hotelCode}" /></div>`;
-            html += `<div class="form-group mb-3"><input id="copyCode" value="${code}" /></div>`
+            html += '<p>Change the hotel code, or the item code, or both, to copy the record.</p>';
+            html += `<div class="form-group mb-3">${hotelSelect}</div>`;
+            html += `<div class="form-group mb-3"><input id="copyCode" class="form-control" value="${code}" /></div>`
             html += `<div id="confirm-error" class="form-group mb-3 d-none text-danger">xxx</div>`
             html += '</div>';
             modal.showModal('copyModalId', "Copy", html, {
