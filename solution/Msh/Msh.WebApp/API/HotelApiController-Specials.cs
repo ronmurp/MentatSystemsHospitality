@@ -269,4 +269,61 @@ public partial class HotelApiController
 	}
 
 
+	[HttpGet]
+	[Route("SpecialOptions")]
+	public async Task<IActionResult> SpecialOptions(string code, string hotelCode)
+	{
+		var items = await hotelsRepoService.GetSpecialsAsync(hotelCode);
+		var item = items.FirstOrDefault(h => h.Code == code);
+		if (item == null)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = true,
+				UserErrorMessage = $"Dates not found for hotel {hotelCode} and special {code}"
+			});
+		}
+
+		return Ok(new ObjectVm
+		{
+			Data = new
+			{
+				Options = item.Options
+			}
+		});
+	}
+
+	[HttpPost]
+	[Route("SpecialOptions")]
+	public async Task<IActionResult> SpecialOptions([FromBody] SpecialOptionsVm data)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			var items = await hotelsRepoService.GetSpecialsAsync(data.HotelCode);
+			var index = items.FindIndex(h => h.Code == data.Code);
+
+			if (index >= 0)
+			{
+				items[index].Options = data.Options;
+				await hotelsRepoService.SaveSpecialsAsync(items, data.HotelCode);
+			}
+
+			return Ok(new ObjectVm
+			{
+				Data = new Hotel()
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
+
+
 }

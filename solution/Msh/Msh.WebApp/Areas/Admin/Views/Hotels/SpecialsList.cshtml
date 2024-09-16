@@ -40,6 +40,7 @@
 				<th style="width:60px;">Type</th>
 				<th class="text-center" style="width:50px;">Enabled</th>
 				<th>Text</th>
+				<th>Options</th>
 				<th>Dates</th>
 				<th>   
 					<div class="cell-outer">
@@ -79,6 +80,18 @@
 						}
 					</td>
 					<td>@rt.Text</td>
+					<td style="width:80px;">
+						<div class="cell-outer">
+							<div class="cell-inner">
+								@rt.Options.Count
+							</div>
+							<div class="cell-inner">
+								<a asp-controller="Hotels" asp-action="SpecialEditOptions" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
+									<i class="fa-solid fa-list"></i>
+								</a>
+							</div>
+						</div>
+					</td>
 					<td style="width:80px;" >
 						<div class="cell-outer">
 							<div class="cell-inner">
