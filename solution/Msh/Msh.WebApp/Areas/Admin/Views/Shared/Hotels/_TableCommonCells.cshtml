@@ -1,0 +1,55 @@
+﻿@model Msh.WebApp.Models.Admin.ViewModels.TableCommonCellsVm
+@*
+Add cells for common list actions
+
+*@
+
+<td style="width:40px;">
+	<div class="cell-outer">
+		<div class="cell-inner">
+			<div class="cell-outer-column">
+				@if (Model.Index > 0)
+				{
+					<div class="cell-inner">
+						<a href="javascript:window.mshMethods.moveItemUp('@Model.Code', '@Model.HotelCode', @Model.Index, @Model.Count)">
+							<i class="fa-solid fa-arrow-up"></i>
+						</a>
+					</div>
+				}
+				@if (Model.Index < Model.Count - 1)
+				{
+					<div class="cell-inner">
+						<a href="javascript:window.mshMethods.moveItemDown('@Model.Code', '@Model.HotelCode', @Model.Index, @Model.Count)">
+							<i class="fa-solid fa-arrow-down"></i>
+						</a>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</td>
+<td style="width:90px;">
+	<div class="cell-outer">
+		<div class="cell-inner">
+			<a asp-controller="Hotels" asp-action="@Model.EditAction" asp-route-code="@Model.Code" asp-route-hotelCode="@Model.HotelCode">
+				<i class="fa-solid fa-pen-to-square"></i>
+			</a>
+		</div>
+	</div>
+</td>
+<td>
+	<div class="cell-outer">
+		<div class="cell-inner">
+			<a href="javascript:window.mshMethods.copyItem('@Model.Code', '@Model.HotelCode')">
+				<i class="fa-solid fa-copy"></i>
+			</a>
+		</div>
+	</div>
+</td>
+<td style="width:30px;">
+	<div class="cell-outer">
+		<div class="cell-inner">
+			<input type="checkbox" name="bulk-check" id="blk-@Model.Code" data-msh-code="@Model.Code" />
+		</div>
+	</div>
+</td>
