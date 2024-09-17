@@ -19,6 +19,7 @@
 				</div>
 			</div>
 		</th>
+		<th>Enabled</th>
 		<th class="text-end">Price</th>
 		<th>Description</th>
 		<th>Dates</th>
@@ -48,19 +49,20 @@
 		</th>
 	</tr>
 
-	@foreach (var rt in @Model.Extras)
+	@foreach (var item in @Model.Extras)
 	{
 		<tr>
-			<td>@rt.Code</td>
-			<td class="text-end">@rt.Price.ToString("C2")</td>
-			<td>@rt.Description</td>
+			<td>@item.Code</td>
+			@await Html.PartialAsync("Hotels/_TableCheckMarkCell", item.Enabled)
+			<td class="text-end">@item.Price.ToString("C2")</td>
+			<td>@item.Description</td>
 			<td style="width:80px;">
 				<div class="cell-outer">
 					<div class="cell-inner">
-						@rt.ItemDates.Count
+						@item.ItemDates.Count
 					</div>
 					<div class="cell-inner">
-						<a asp-controller="Hotels" asp-action="ExtraEditDates" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
+						<a asp-controller="Hotels" asp-action="ExtraEditDates" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
 							<i class="fa-solid fa-calendar"></i>
 						</a>
 					</div>
@@ -71,7 +73,7 @@
 				var vm = new TableCommonCellsVm
 				{
 					HotelCode = Model.HotelCode,
-					Code = rt.Code,
+					Code = item.Code,
 					Index = rowIndex,
 					Count = count,
 					EditAction = "ExtraEdit"

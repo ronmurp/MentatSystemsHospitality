@@ -25,7 +25,12 @@
 				@await Html.PartialAsync("Hotels/_EditCode", success)
 			</div>
 
-			
+			<div class="form-check form-switch mb-3">
+				<input asp-for="Enabled" type="checkbox" class="form-check-input " />
+				<label asp-for="Enabled" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-enabled" />
+			</div>
+
 			<div class="form-group mb-3">
 				<label asp-for="GroupCode" class="control-label"></label>&nbsp;
 				<info-icon name="info-group-code" />

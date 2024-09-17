@@ -30,6 +30,10 @@ public class RoomType
 	public string Code { get; set; } = string.Empty;
 
 
+	[Description("Enabled"), Info("enabled")]
+	public bool Enabled { get; set; }
+
+
 	/// <summary>
 	/// A group code, used when rooms are grouped
 	/// </summary>

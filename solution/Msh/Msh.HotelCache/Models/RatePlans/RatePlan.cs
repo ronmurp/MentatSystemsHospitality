@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using Msh.Common.Attributes;
 using Msh.Common.Models;
 
@@ -8,6 +9,11 @@ public class RoomRatePlan
 {
     [Required][Display(Name = "Rate Plan Code"), Info("rate-plan-code")]
     public string RatePlanCode { get; set; } = string.Empty;
+
+
+    [Description("Enabled"), Info("enabled")]
+    public bool Enabled { get; set; }
+
 
 	/// <summary>
 	/// Text to add to confirmation page

@@ -24,26 +24,29 @@ public class Hotel : HotelBase
 /// </summary>
 public class HotelBase
 {
-    /// <summary>
-    /// Intended to be used for OWS, but isn't. See OwsConfig.ChainCode.
-    /// </summary>
-    [Required]
+	/// <summary>
+	/// The code that identifies the hotel.
+	/// </summary>
+	/// <remarks>
+	/// Note that this might not be the same as used elsewhere (outside WBS/OWS/Opera).
+	/// Example: LWH is often seen as LWB.
+	/// </remarks>
+	[Required]
+	[Length(3, 5, ErrorMessage = ConstHotel.Vem.CodeLength35)]
+	[Description("Hotel Code"), Info("hotel-code")]
+	public string HotelCode { get; set; } = string.Empty;
+
+
+	/// <summary>
+	/// Intended to be used for OWS, but isn't. See OwsConfig.ChainCode.
+	/// </summary>
+	[Required]
     [Length(3, 5, ErrorMessage = ConstHotel.Vem.CodeLength35)]
 	[Description("Chain Code"), Info("chain-code")] 
     public string ChainCode { get; set; } = string.Empty;
 
-  
-    /// <summary>
-    /// The code that identifies the hotel.
-    /// </summary>
-    /// <remarks>
-    /// Note that this might not be the same as used elsewhere (outside WBS/OWS/Opera).
-    /// Example: LWH is often seen as LWB.
-    /// </remarks>
-    [Required]
-    [Length(3, 5, ErrorMessage = ConstHotel.Vem.CodeLength35)]
-	[Description("Hotel Code"), Info("hotel-code")] 
-    public string HotelCode { get; set; } = string.Empty;
+	[Description("Enabled"), Info("enabled")]
+	public bool Enabled { get; set; }
 
     /// <summary>
     /// The name of the hotel

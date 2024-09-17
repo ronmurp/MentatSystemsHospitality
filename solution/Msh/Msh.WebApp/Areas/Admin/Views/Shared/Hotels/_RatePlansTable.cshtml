@@ -20,6 +20,7 @@
 				</div>
 			</div>
 		</th>
+		<th>Enabled</th>
 		<th>Group Code</th>
 		<th>Description</th>
 		<th class="text-center" style="width:40px;">Move</th>
@@ -52,6 +53,7 @@
 	{
 		<tr>
 			<td>@rt.RatePlanCode</td>
+			@await Html.PartialAsync("Hotels/_TableCheckMarkCell", rt.Enabled)
 			<td>@rt.Group</td>
 			<td>@rt.Description</td>
 			@{

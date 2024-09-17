@@ -19,13 +19,19 @@
 
 		<form asp-action="@formAction" asp-route-hotelCode="@hotelCode">
 			
-			<div class="form-group mb-3">
-				<label asp-for="RatePlanCode" class="control-label"></label>&nbsp;
-				<info-icon name="info-room-type-code" />
-				@await Html.PartialAsync("Hotels/_EditCode", success)
-			</div>
+		<div class="form-group mb-3">
+			<label asp-for="RatePlanCode" class="control-label"></label>&nbsp;
+			<info-icon name="info-room-type-code" />
+			@await Html.PartialAsync("Hotels/_EditCode", success)
+		</div>
+		
+		<div class="form-check form-switch mb-3">
+			<input asp-for="Enabled" type="checkbox" class="form-check-input " />
+			<label asp-for="Enabled" class="form-check-label"></label>&nbsp;
+			<info-icon name="info-enabled" />
+		</div>
 
-			<div class="form-group mb-3">
+		<div class="form-group mb-3">
 				<label asp-for="ConfirmationText" class="control-label"></label>&nbsp;
 				<info-icon name="info-confirmation-text" />
 				<input asp-for="ConfirmationText" class="form-control " />
