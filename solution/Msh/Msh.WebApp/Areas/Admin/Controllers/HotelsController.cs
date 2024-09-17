@@ -35,6 +35,7 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 		return View("Index", userId);
 	}
 
+
 	[Route("HotelList")]
 	public async Task<IActionResult> HotelList()
 	{
@@ -157,7 +158,6 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 		return RedirectToAction("HotelList");
 	}
 
-
 	[HttpPost]
 	[Route("HotelEdit/{hotelCode}")]
 	public async Task<IActionResult> HotelEdit([FromForm]HotelBase hotel, string hotelCode = "")
@@ -215,8 +215,6 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 	}
 
 
-
-
 	[Route("HotelStayEditDates/{hotelCode}")]
 	public async Task<IActionResult> HotelStayEditDates(string hotelCode, bool isSuccess = false)
 	{
@@ -255,6 +253,7 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 		return RedirectToAction("HotelList");
 	}
 
+
 	[HttpPost]
 	[Route("HotelMove")]
 	public async Task<IActionResult> HotelMove([FromBody] ApiInput input)
@@ -279,5 +278,10 @@ public partial class HotelsController(ILogger<WebApp.Controllers.HomeController>
 		{
 			return GetFail(ex.Message);
 		}
+	}
+
+	private IActionResult GetFail(string message)
+	{
+		return Ok(new ObjectVm { Success = false, UserErrorMessage = message });
 	}
 }

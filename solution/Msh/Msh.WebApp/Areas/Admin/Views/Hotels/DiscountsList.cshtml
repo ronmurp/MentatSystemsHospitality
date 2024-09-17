@@ -1,0 +1,68 @@
+﻿@using Msh.Admin.Models.Const
+@using Msh.WebApp.Models.Admin.ViewModels
+@model Msh.WebApp.Models.Admin.ViewModels.DiscountsListVm;
+@{
+	var title = "Discounts List";
+	ViewData["Title"] = title;
+	ViewBag.InfoIcons = "Extras";
+}
+
+@await Component.InvokeAsync("AdminMenu", new
+{
+	menuName = AdminConst.MenuHotels, currentItem = "DiscountsList"
+})
+
+@await Html.PartialAsync("Hotels/_HiddenHotelInputs", @Model as HotelListVm)
+
+<div class="text-center">
+	<h1 class="display-6">@title</h1>
+	<p>Hotel Discounts. Click for more information: <info-icon name="info-discounts" /> </p>
+</div>
+
+@await Component.InvokeAsync("AdminHotelSelect", @Model.HotelCode)
+
+<div class="row">
+	<div class="col-12" id="table-target">
+
+		@await Html.PartialAsync("Hotels/_DiscountsTable", @Model)
+
+	</div>
+</div>
+
+@await Html.PartialAsync("Hotels/_BulkCopyDelButtons", @Model.HotelCode)
+
+@await Html.PartialAsync("Admin/_AdminErrorBlock", @Model.ErrorMessage)
+
+<div id="page-info" style="display:none;">
+	
+	
+	
+	<div data-info-for="info-extras">
+		<span>Discounts List</span>
+		<div>
+			<p>The list shows the Extras (representing Opera Packages) for the selected hotel.</p>
+			<p>The icons in the table are used to perform actions on the table.</p>
+			<p>Use the bulk action checkboxes to bulk copy or bulk delete rows - 
+				the bulk action buttons are exposed if any checkbox is set.
+			</p>
+			@await Html.PartialAsync("Hotels/_ListIconsInfo")
+		</div>
+		
+	</div>
+
+	<div data-info-for="info-hotel-code">
+		<span>@ViewBag.InfoIcons Hotel</span>
+		<div>
+			<p>Select a hotel to view @ViewBag.InfoIcons for that hotel</p>
+		</div>
+	</div>
+</div>
+
+@section Scripts{
+	<script src="~/js/mshapp/msh-ApiService.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-discounts.js"></script>
+}
+
+
+

@@ -1,0 +1,28 @@
+﻿@using Msh.WebApp.Models.Admin
+
+@model Msh.HotelCache.Models.Discounts.DiscountCode;
+@{
+
+	var hotelCode = ViewBag.HotelCode;
+
+	ViewBag.Success = new SuccessAlert
+	{
+		ModelName = "DiscountCode",
+		ReturnPath = "/admin/hotels/DiscountsList?hotelCode=" + hotelCode,
+		ReturnPathName = "Discounts List",
+		KeyPropertyLabel = "Discount Code",
+		KeyPropertyName = "Code",
+		KeyPropertyValue = Model.Code,
+		FormAction = "DiscountAdd"
+	};
+
+	ViewData["Title"] = "Add Extra";
+}
+
+@await Html.PartialAsync("Hotels/_DiscountEdit", @Model)
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/Admin/Hotels/msh-admin-extras.js"></script>
+}

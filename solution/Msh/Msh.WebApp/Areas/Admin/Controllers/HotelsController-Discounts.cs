@@ -1,20 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Msh.Common.Exceptions;
-using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
+using Msh.HotelCache.Models.Discounts;
 using Msh.HotelCache.Models.Extras;
 using Msh.HotelCache.Models.RoomTypes;
-using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
 
 namespace Msh.WebApp.Areas.Admin.Controllers;
 
 public partial class HotelsController
 {
-	[Route("ExtrasList")]
-	public async Task<IActionResult> ExtrasList([FromQuery] string hotelCode = "")
+	[Route("DiscountsList")]
+	public async Task<IActionResult> DiscountsList([FromQuery] string hotelCode = "")
 	{
-		var vm = new ExtrasListVm
+		var vm = new DiscountsListVm
 		{
 			HotelCode = string.IsNullOrEmpty(hotelCode) ? string.Empty : hotelCode,
 			HotelName = string.Empty
@@ -22,7 +21,6 @@ public partial class HotelsController
 
 		try
 		{
-			await Task.Delay(0);
 
 			vm.Hotels = await hotelsRepoService.GetHotelsAsync();
 			var hotel = string.IsNullOrEmpty(hotelCode)
@@ -32,9 +30,9 @@ public partial class HotelsController
 			vm.HotelCode = hotel != null ? hotel.HotelCode : string.Empty;
 			vm.HotelName = hotel != null ? hotel.Name : string.Empty;
 
-			var roomTypes = (await hotelsRepoService.GetExtrasAsync(vm.HotelCode)) ?? [];
+			var discounts = (await hotelsRepoService.GetDiscountCodesAsync(vm.HotelCode)) ?? [];
 
-			vm.Extras = roomTypes;
+			vm.Discounts = discounts;
 
 			return View(vm);
 		}
@@ -59,8 +57,8 @@ public partial class HotelsController
 
 
 	[HttpGet]
-	[Route("ExtraAdd")]
-	public async Task<IActionResult> ExtraAdd(string hotelCode, bool isSuccess = false)
+	[Route("DiscountAdd")]
+	public async Task<IActionResult> DiscountAdd(string hotelCode, bool isSuccess = false)
 	{
 		await Task.Delay(0);
 
@@ -70,12 +68,12 @@ public partial class HotelsController
 		ViewBag.Hotels = await GetHotels();
 		ViewBag.HotelCode = hotelCode;
 
-		return View(new Extra());
+		return View(new DiscountCode());
 	}
 
 	[HttpPost]
-	[Route("ExtraAdd")]
-	public async Task<IActionResult> ExtraAdd([FromForm]Extra extra, string hotelCode)
+	[Route("DiscountAdd")]
+	public async Task<IActionResult> DiscountAdd([FromForm]DiscountCode extra, string hotelCode)
 	{
 		ViewBag.Languages = GetLanguages();
 		ViewBag.Hotels = await GetHotels();
@@ -83,16 +81,16 @@ public partial class HotelsController
 
 		if (ModelState.IsValid)
 		{
-			var extras = await hotelsRepoService.GetExtrasAsync(hotelCode);
+			var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
 
-			if (extras.All(tm => tm.Code != extra.Code))
+			if (discounts.All(tm => tm.Code != extra.Code))
 			{
 				//testModel.Hotels = testModel.Hotels.Where(m => !string.IsNullOrEmpty(m)).ToList();
 				//roomType.Notes = string.IsNullOrEmpty(roomType.Notes) ? string.Empty : roomType.Notes;
 
-				extras.Add(extra);
-				await hotelsRepoService.SaveExtrasAsync(extras, hotelCode);
-				return RedirectToAction(nameof(ExtraAdd), new { IsSuccess = true, HotelCode = hotelCode, Code = extra.Code });
+				discounts.Add(extra);
+				await hotelsRepoService.SaveDiscountCodesAsync(discounts, hotelCode);
+				return RedirectToAction(nameof(DiscountAdd), new { IsSuccess = true, HotelCode = hotelCode, Code = extra.Code });
 			}
 			else
 			{
@@ -117,8 +115,8 @@ public partial class HotelsController
 
 
 	[HttpGet]
-	[Route("ExtraEdit")]
-	public async Task<IActionResult> ExtraEdit(string code, string hotelCode, bool isSuccess = false)
+	[Route("DiscountEdit")]
+	public async Task<IActionResult> DiscountEdit(string code, string hotelCode, bool isSuccess = false)
 	{
 		await Task.Delay(0);
 
@@ -128,35 +126,35 @@ public partial class HotelsController
 		ViewBag.Hotels = await GetHotels();
 		ViewBag.HotelCode = hotelCode;
 
-		var extras = await hotelsRepoService.GetExtrasAsync(hotelCode);
-		var extra = extras.FirstOrDefault(m => m.Code == code);
-		if (extra != null)
+		var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+		var discount = discounts.FirstOrDefault(m => m.Code == code);
+		if (discount != null)
 		{
-			return View(extra);
+			return View(discount);
 		}
 
-		return RedirectToAction(nameof(ExtrasList));
+		return RedirectToAction(nameof(DiscountsList));
 	}
 
 	[HttpPost]
-	[Route("ExtraEdit")]
-	public async Task<IActionResult> ExtraEdit([FromForm] Extra extra, string hotelCode)
+	[Route("DiscountEdit")]
+	public async Task<IActionResult> DiscountEdit([FromForm] DiscountCode extra, string hotelCode)
 	{
 		ViewBag.Languages = GetLanguages();
 		ViewBag.Hotels = await GetHotels();
 
 		if (ModelState.IsValid)
 		{
-			var extras = await hotelsRepoService.GetExtrasAsync(hotelCode);
-			var index = extras.FindIndex(m => m.Code == extra.Code);
+			var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+			var index = discounts.FindIndex(m => m.Code == extra.Code);
 			if (index >= 0)
 			{
 				//testModel.Hotels = testModel.Hotels.Where(m => !string.IsNullOrEmpty(m)).ToList();
 				// extra.Notes = string.IsNullOrEmpty(extra.Notes) ? string.Empty : extra.Notes;
 
-				extras[index] = extra;
-				await hotelsRepoService.SaveExtrasAsync(extras, hotelCode);
-				return RedirectToAction(nameof(ExtraEdit), new { IsSuccess = true, HotelCode = hotelCode, Code = extra.Code });
+				discounts[index] = extra;
+				await hotelsRepoService.SaveDiscountCodesAsync(discounts, hotelCode);
+				return RedirectToAction(nameof(DiscountEdit), new { IsSuccess = true, HotelCode = hotelCode, Code = extra.Code });
 			}
 			else
 			{
@@ -180,8 +178,8 @@ public partial class HotelsController
 	}
 
 
-	[Route("ExtraEditDates")]
-	public async Task<IActionResult> ExtraEditDates(string hotelCode, string code, bool isSuccess = false)
+	[Route("DiscountEditDates")]
+	public async Task<IActionResult> DiscountEditDates(string hotelCode, string code, bool isSuccess = false)
 	{
 		try
 		{
@@ -206,44 +204,5 @@ public partial class HotelsController
 		return RedirectToAction("HotelList");
 	}
 
-	[HttpPost]
-	[Route("ExtraMove")]
-	public async Task<IActionResult> ExtraMove([FromBody] ApiInput input)
-	{
-		try
-		{
-
-			var hotelCode = input.HotelCode;
-			var hotels = await hotelsRepoService.GetHotelsAsync();
-			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
-			{
-				return GetFail($"Invalid hotel code {hotelCode}");
-			}
-
-			var srcItems = await hotelsRepoService.GetExtrasAsync(hotelCode);
-
-			var currentIndex = srcItems.FindIndex(item => item.Code.EqualsAnyCase(input.Code));
-			var swapIndex = input.Direction == 0 ? currentIndex - 1 : currentIndex + 1;
-			var currentItem = srcItems[currentIndex];
-			var swapItem = srcItems[swapIndex];
-			srcItems[swapIndex] = currentItem;
-			srcItems[currentIndex] = swapItem;
-			await hotelsRepoService.SaveExtrasAsync(srcItems, hotelCode);
-
-			var table = new ExtrasListVm
-			{
-				Hotels = hotels,
-				HotelCode = hotelCode,
-				Extras = srcItems
-			};
-
-			return PartialView("Hotels/_ExtrasTable", table);
-
-		}
-		catch (Exception ex)
-		{
-			return GetFail(ex.Message);
-		}
-	}
-
+	
 }

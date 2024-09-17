@@ -57,6 +57,7 @@ public partial class HotelsController
 		}
 	}
 
+
 	[HttpGet]
 	[Route("RatePlanAdd")]
 	public async Task<IActionResult> RatePlanAdd(string hotelCode, bool isSuccess = false)
@@ -77,7 +78,6 @@ public partial class HotelsController
 			BookTo = DateOnly.FromDateTime(DateTime.Now).AddDays(1),
 		});
 	}
-
 
 	[HttpPost]
 	[Route("RatePlanAdd")]
@@ -120,6 +120,7 @@ public partial class HotelsController
 		}
 	}
 
+
 	[HttpGet]
 	[Route("RatePlanEdit")]
 	public async Task<IActionResult> RatePlanEdit(string code, string hotelCode, bool isSuccess = false)
@@ -141,7 +142,6 @@ public partial class HotelsController
 
 		return RedirectToAction(nameof(RoomTypeList));
 	}
-
 
 	[HttpPost]
 	[Route("RatePlanEdit")]
@@ -183,6 +183,7 @@ public partial class HotelsController
 			return View();
 		}
 	}
+
 
 	[HttpPost]
 	[Route("RatePlanMove")]

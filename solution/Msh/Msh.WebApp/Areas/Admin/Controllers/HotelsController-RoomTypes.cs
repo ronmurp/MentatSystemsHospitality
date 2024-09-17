@@ -56,6 +56,7 @@ public partial class HotelsController
 		}
 	}
 
+
 	[HttpGet]
 	[Route("RoomTypeAdd")]
 	public async Task<IActionResult> RoomTypeAdd(string hotelCode, bool isSuccess = false)
@@ -70,7 +71,6 @@ public partial class HotelsController
 
 		return View(new RoomType());
 	}
-
 
 	[HttpPost]
 	[Route("RoomTypeAdd")]
@@ -113,6 +113,7 @@ public partial class HotelsController
 		}
 	}
 
+
 	[HttpGet]
 	[Route("RoomTypeEdit")]
 	public async Task<IActionResult> RoomTypeEdit(string code, string hotelCode, bool isSuccess = false)
@@ -134,7 +135,6 @@ public partial class HotelsController
 
 		return RedirectToAction(nameof(RoomTypeList));
 	}
-
 
 	[HttpPost]
 	[Route("RoomTypeEdit")]

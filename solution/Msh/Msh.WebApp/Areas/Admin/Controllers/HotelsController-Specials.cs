@@ -59,6 +59,7 @@ public partial class HotelsController
 		}
 	}
 
+
 	[HttpGet]
 	[Route("SpecialAdd")]
 	public async Task<IActionResult> SpecialAdd(string hotelCode, bool isSuccess = false)
@@ -73,7 +74,6 @@ public partial class HotelsController
 
 		return View(new Special());
 	}
-
 
 	[HttpPost]
 	[Route("SpecialAdd")]
@@ -117,6 +117,7 @@ public partial class HotelsController
 		}
 	}
 
+
 	[HttpGet]
 	[Route("SpecialEdit")]
 	public async Task<IActionResult> SpecialEdit(string code, string hotelCode, bool isSuccess = false)
@@ -138,7 +139,6 @@ public partial class HotelsController
 
 		return RedirectToAction(nameof(ExtrasList));
 	}
-
 
 	[HttpPost]
 	[Route("SpecialEdit")]
@@ -184,6 +184,7 @@ public partial class HotelsController
 			return View();
 		}
 	}
+
 
 	[Route("SpecialEditDates")]
 	public async Task<IActionResult> SpecialEditDates(string hotelCode, string code, bool isSuccess = false)
@@ -271,7 +272,6 @@ public partial class HotelsController
 		return RedirectToAction("SpecialsList");
 	}
 
-
 	[Route("SpecialEditRatePlans")]
 	public async Task<IActionResult> SpecialEditRatePlans(string hotelCode, string code, bool isSuccess = false)
 	{
@@ -318,8 +318,6 @@ public partial class HotelsController
 		return RedirectToAction("SpecialsList");
 	}
 
-
-
 	[HttpPost]
 	[Route("SpecialMove")]
 	public async Task<IActionResult> SpecialMove([FromBody]ApiInput input)
@@ -359,8 +357,5 @@ public partial class HotelsController
 		}
 	}
 
-	private IActionResult GetFail(string message)
-	{
-		return Ok(new ObjectVm { Success = false, UserErrorMessage = message });
-	}
+	
 }

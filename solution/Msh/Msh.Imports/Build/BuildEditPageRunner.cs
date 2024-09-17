@@ -35,6 +35,12 @@ public class BuildEditPageRunner
 	{
 		BuildPage(typeof(Msh.HotelCache.Models.Specials.Special), "Specials List");
 	}
+
+	[Test]
+	public void BuildDiscountsEditPage()
+	{
+		BuildPage(typeof(Msh.HotelCache.Models.Discounts.DiscountCode), "Discounts List");
+	}
 	private void BuildPage(Type classType, string publishName)
 	{
 		var service = new EditPageBuildService();
