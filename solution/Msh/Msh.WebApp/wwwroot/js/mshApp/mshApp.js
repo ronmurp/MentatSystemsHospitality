@@ -2645,4 +2645,119 @@
 
     }());
 
+    window.mshPageApp.hotelSelectService = (function () {
+
+        var app = mshPageApp;
+        var meth = app.methodsService;
+        var util = app.utilityService;
+        var modal = app.modalService;
+        var api = app.apiService;
+        var mom = app.momentDateService;
+        var htmlS = app.htmlService;
+
+        var currentHotelCode = '';
+        var currentCode = '';
+
+        var listSrc = [];
+        var listDst = [];
+
+        var options = {
+            hotelCode: '',
+            code: '',
+            getSrc: '/api/hotelapi/RoomTypes',
+            getDst: '/api/hotelapi/SpecialRoomTypes',
+           
+        };
+
+        function getListSrc() {
+            api.getAsync(`${options.getSrc}?hotelCode=${currentHotelCode}`, (data) => {
+                if (data.success) {
+                    listSrc = data.data;
+                    getListDst();
+                }
+            })
+        }
+
+        function getListDst() {
+            api.getAsync(`${options.getDst}?hotelCode=${currentHotelCode}&code=${currentCode}`, (data) => {
+                if (data.success) {
+                    listDst = data.data;
+                    var html = getTableHtml();
+                    $('#table-target').html(html);
+                }
+            })
+        }
+        function getTableHtml() {
+
+            var headArray = [
+                'Selected',
+                htmlS.cellIcons([
+                    `<a href="javascript:window.mshMethods.addListItem()"><i class="fa-solid fa-plus"></i></a>`
+                ])
+            ];
+
+            var bodyArray = [];
+            var i = 0;
+
+            listDst.forEach((v) => {
+
+                var select = `<select id="sel-${i}">`;
+                select += `<option value="" >Select ...</option>`
+                listSrc.forEach((w) => {
+                    if (v.code === w.code) {
+                        select += `<option value="${w.code}" selected >${w.name}</option>`
+                    } else {
+                        select += `<option value="${w.code}" >${w.name}</option>`
+                    }
+                    
+                });
+                select += '</select>';
+
+                var rowArray = [
+                    `${select}`,
+                   
+
+                    htmlS.cellIcons([
+                        `<a href="javascript:window.mshMethods.deleteSpecialOption(${i})"><i class="fa-solid fa-times"></i></a>`
+                    ]),
+
+                ];
+                bodyArray.push(rowArray);
+
+                i++;
+            });
+
+            var html = htmlS.table(headArray, bodyArray);
+
+            return html;
+
+        }
+
+        function addListItem() {
+            listDst.push({
+                code: ''
+            });
+            var html =getTableHtml();
+            $('#table-target').html(html);
+        }
+
+        meth.extendMethods({
+            addListItem: addListItem,
+         
+        });
+
+        function init(inputOptions) {
+            options = $.extend({}, options, inputOptions);
+            currentHotelCode = options.hotelCode;
+            currentCode = options.code;
+            getListSrc();
+        }
+
+
+        return {
+            init: init
+        }
+
+    }());
+
 }(jQuery));
