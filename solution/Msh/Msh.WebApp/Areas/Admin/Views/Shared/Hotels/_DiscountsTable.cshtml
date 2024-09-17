@@ -21,7 +21,8 @@
 		</th>
 		<th>Enabled</th>
 		<th>Description</th>
-		<th>Dates</th>
+		<th>Offers</th>
+		<th>Book</th>
 		<th class="text-center" style="width:40px;">Move</th>
 		<th>
 			<div class="cell-outer">
@@ -61,7 +62,19 @@
 						@item.OfferDates.Count
 					</div>
 					<div class="cell-inner">
-						<a asp-controller="Hotels" asp-action="DiscountEditDates" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
+						<a asp-controller="Hotels" asp-action="DiscountEditDatesOffer" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
+							<i class="fa-solid fa-calendar"></i>
+						</a>
+					</div>
+				</div>
+			</td>
+			<td style="width:80px;">
+				<div class="cell-outer">
+					<div class="cell-inner">
+						@item.BookDates.Count
+					</div>
+					<div class="cell-inner">
+						<a asp-controller="Hotels" asp-action="DiscountEditDatesBook" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
 							<i class="fa-solid fa-calendar"></i>
 						</a>
 					</div>

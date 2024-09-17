@@ -138,7 +138,7 @@ public partial class HotelsController
 
 	[HttpPost]
 	[Route("DiscountEdit")]
-	public async Task<IActionResult> DiscountEdit([FromForm] DiscountCode extra, string hotelCode)
+	public async Task<IActionResult> DiscountEdit([FromForm] DiscountCode discount, string hotelCode)
 	{
 		ViewBag.Languages = GetLanguages();
 		ViewBag.Hotels = await GetHotels();
@@ -146,15 +146,23 @@ public partial class HotelsController
 		if (ModelState.IsValid)
 		{
 			var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
-			var index = discounts.FindIndex(m => m.Code == extra.Code);
+			var index = discounts.FindIndex(m => m.Code == discount.Code);
 			if (index >= 0)
 			{
-				//testModel.Hotels = testModel.Hotels.Where(m => !string.IsNullOrEmpty(m)).ToList();
-				// extra.Notes = string.IsNullOrEmpty(extra.Notes) ? string.Empty : extra.Notes;
-
-				discounts[index] = extra;
+				// Keep other properties not in the main edit
+				discount.Notes = string.IsNullOrEmpty(discount.Notes) ? string.Empty : discount.Notes;
+				discount.OfferDates = discounts[index].OfferDates; //
+				discount.BookDates = discounts[index].BookDates; //
+				discount.DayRates = discounts[index].DayRates;
+				discount.DisabledHotelPlans = discounts[index].DisabledHotelPlans;
+				discount.EnabledHotelPlans = discounts[index].EnabledHotelPlans;
+				discount.DiscountErrors = discounts[index].DiscountErrors;
+				discount.OneTime = discounts[index].OneTime;
+				// Now update
+				discounts[index] = discount;
+				// And save
 				await hotelsRepoService.SaveDiscountCodesAsync(discounts, hotelCode);
-				return RedirectToAction(nameof(DiscountEdit), new { IsSuccess = true, HotelCode = hotelCode, Code = extra.Code });
+				return RedirectToAction(nameof(DiscountEdit), new { IsSuccess = true, HotelCode = hotelCode, Code = discount.Code });
 			}
 			else
 			{
@@ -178,19 +186,14 @@ public partial class HotelsController
 	}
 
 
-	[Route("DiscountEditDates")]
-	public async Task<IActionResult> DiscountEditDates(string hotelCode, string code, bool isSuccess = false)
+	[Route("DiscountEditDatesOffer")]
+	public async Task<IActionResult> DiscountEditDatesOffer(string hotelCode, string code, bool isSuccess = false)
 	{
 		try
 		{
 			await Task.Delay(0);
 
-			//var hotels = await hotelsRepoService.GetHotelsAsync();
-			//var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
-			//if (hotel == null)
-			//{
-			//	return RedirectToAction("HotelList");
-			//}
+			
 			ViewBag.Code = code;
 			ViewBag.HotelCode = hotelCode;
 
@@ -204,5 +207,25 @@ public partial class HotelsController
 		return RedirectToAction("HotelList");
 	}
 
-	
+	[Route("DiscountEditDatesBook")]
+	public async Task<IActionResult> DiscountEditDatesBook(string hotelCode, string code, bool isSuccess = false)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+
+			ViewBag.Code = code;
+			ViewBag.HotelCode = hotelCode;
+
+			return View();
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"{ex.Message}");
+		}
+
+		return RedirectToAction("HotelList");
+	}
+
 }

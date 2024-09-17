@@ -24,10 +24,6 @@
         util.redirectTo(`admin/hotels/DiscountsList?hotelCode=${hotelCode}`);
     });
 
-    if (app.itemDatesService) {
-        app.itemDatesService.init({ datesApiAction: 'DiscountDates' });
-    }
-
     app.hotelActionService.init({
         deleteApi: '/api/hotelapi/DiscountDelete',
         copyApi: '/api/hotelapi/DiscountCopy',
