@@ -2658,101 +2658,44 @@
         var currentHotelCode = '';
         var currentCode = '';
 
-        var listSrc = [];
-        var listDst = [];
-
         var options = {
             hotelCode: '',
             code: '',
-            getSrc: '/api/hotelapi/RoomTypes',
-            getDst: '/api/hotelapi/SpecialRoomTypes',
-           
+            saveApi: '/api/hotelapi/SpecialRoomTypesSave'
         };
 
-        function getListSrc() {
-            api.getAsync(`${options.getSrc}?hotelCode=${currentHotelCode}`, (data) => {
-                if (data.success) {
-                    listSrc = data.data;
-                    getListDst();
+        function saveCodeCheckList() {
+
+            var list = [];
+            $('[name="select-codes"]').each(function (index) {
+                var code = $(this).attr('data-msh-code');
+                var selected = $(this).is(':checked');
+                if (selected) {
+                    list.push(code);
                 }
-            })
-        }
 
-        function getListDst() {
-            api.getAsync(`${options.getDst}?hotelCode=${currentHotelCode}&code=${currentCode}`, (data) => {
-                if (data.success) {
-                    listDst = data.data;
-                    var html = getTableHtml();
-                    $('#table-target').html(html);
-                }
-            })
-        }
-        function getTableHtml() {
-
-            var headArray = [
-                'Selected',
-                htmlS.cellIcons([
-                    `<a href="javascript:window.mshMethods.addListItem()"><i class="fa-solid fa-plus"></i></a>`
-                ])
-            ];
-
-            var bodyArray = [];
-            var i = 0;
-
-            listDst.forEach((v) => {
-
-                var select = `<select id="sel-${i}">`;
-                select += `<option value="" >Select ...</option>`
-                listSrc.forEach((w) => {
-                    if (v.code === w.code) {
-                        select += `<option value="${w.code}" selected >${w.name}</option>`
-                    } else {
-                        select += `<option value="${w.code}" >${w.name}</option>`
-                    }
-                    
-                });
-                select += '</select>';
-
-                var rowArray = [
-                    `${select}`,
-                   
-
-                    htmlS.cellIcons([
-                        `<a href="javascript:window.mshMethods.deleteSpecialOption(${i})"><i class="fa-solid fa-times"></i></a>`
-                    ]),
-
-                ];
-                bodyArray.push(rowArray);
-
-                i++;
             });
 
-            var html = htmlS.table(headArray, bodyArray);
+            var d = {
+                hotelCode: currentHotelCode,
+                code: currentCode,
+                codeList: list
+            };
 
-            return html;
-
-        }
-
-        function addListItem() {
-            listDst.push({
-                code: ''
+            api.postAsync(`/api/hotelapi/SpecialRoomTypesSave`, d, (data) => {
+                $('#success-alert').addClass('show');
             });
-            var html =getTableHtml();
-            $('#table-target').html(html);
         }
 
         meth.extendMethods({
-            addListItem: addListItem,
-         
-        });
+            saveCodeCheckList: saveCodeCheckList
+        });    
 
         function init(inputOptions) {
             options = $.extend({}, options, inputOptions);
             currentHotelCode = options.hotelCode;
             currentCode = options.code;
-            getListSrc();
         }
-
 
         return {
             init: init

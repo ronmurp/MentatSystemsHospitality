@@ -1,15 +1,15 @@
 ﻿namespace Msh.WebApp.Models.Admin.ViewModels
 {
-	public class SpecialRoomTypesVm
+	public class CodeCheckListVm
 	{
 		public string HotelCode { get; set; } = string.Empty;
 
 		public string Code { get; set; } = string.Empty;
 
-		public List<SpecialRoomTypeRow> List { get; set; } = [];
+		public List<CodeCheckListRow> List { get; set; } = [];
 	}
 
-	public class SpecialRoomTypeRow
+	public class CodeCheckListRow
 	{
 		public string GroupCode { get; set; } = string.Empty;
 

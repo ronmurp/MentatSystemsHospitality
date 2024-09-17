@@ -234,7 +234,7 @@ public partial class HotelsController
 			ViewBag.Code = code;
 			ViewBag.HotelCode = hotelCode;
 
-			var vm = new SpecialRoomTypesVm
+			var vm = new CodeCheckListVm
 			{
 				HotelCode = hotelCode,
 				Code = code
@@ -249,7 +249,7 @@ public partial class HotelsController
 
 				foreach (var rt in roomTypes.OrderBy(x => x.GroupCode).ThenBy(x => x.Code).ToList())
 				{
-					var rtr = new SpecialRoomTypeRow
+					var rtr = new CodeCheckListRow
 					{
 						Code = rt.Code,
 						GroupCode = rt?.GroupCode ?? string.Empty,

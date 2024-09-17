@@ -1,0 +1,30 @@
+﻿@model Msh.WebApp.Models.Admin.ViewModels.CodeCheckListVm
+
+<table>
+	<tr>
+		<th>Group</th>
+		<th>Code</th>
+		<th>Name</th>
+		<th>Select</th>
+	</tr>
+	@foreach (var item in @Model.List)
+	{
+		<tr>
+			<td>@item.GroupCode</td>
+			<td>@item.Code</td>
+			<td>@item.Name</td>
+			<td>
+				@if (item.Selected)
+				{
+					<input type="checkbox" name="select-codes" id="item-@item.Code" data-msh-code="@item.Code" class="form-check-input" checked />
+
+				}
+				else
+				{
+					<input type="checkbox" name="select-codes" id="item-@item.Code" data-msh-code="@item.Code" class="form-check-input" />
+				}
+				
+			</td>
+		</tr>
+	}
+</table>

@@ -1,4 +1,4 @@
-﻿@model Msh.WebApp.Models.Admin.ViewModels.SpecialRoomTypesVm
+﻿@model Msh.WebApp.Models.Admin.ViewModels.CodeCheckListVm
 @{
 	var title = "Special Room Types";
 	ViewData["Title"] = title;
@@ -24,14 +24,14 @@
 
 <div class="row">
 	<div class="col-12" id="table-target">
-		@await Html.PartialAsync("Hotels/_SpecialEditRoomTypes", @Model)
+		@await Html.PartialAsync("Hotels/_CheckListSelectEditor", @Model)
 
 	</div>
 </div>
 
 <div class="mt-3" style="display:flex;justify-content:start;">
 	<div class="input-group">
-		<button id="save-options" class="btn btn-outline-primary" onclick="window.mshMethods.saveSpecialRoomTypes()" class="mr-3">Save</button>
+		<button id="save-options" class="btn btn-outline-primary" onclick="window.mshMethods.saveCodeCheckList()" class="mr-3">Save</button>
 		<a asp-contoller="Hotels" asp-action="SpecialsList" asp-route-hotelCode="@hotelCode" asp-route-code="@itemCode" class="btn btn-outline-secondary">Return to list</a>
 	</div>
 		
@@ -51,7 +51,7 @@
 @section Scripts {
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
-	<script src="~/js/admin/hotels/msh-admin-specials-RoomTypes.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-check-codes-select.js"></script>
 	
 }
 
