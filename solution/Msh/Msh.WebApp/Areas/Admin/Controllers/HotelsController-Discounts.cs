@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Msh.Common.Exceptions;
+using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Discounts;
 using Msh.HotelCache.Models.Extras;
@@ -73,7 +74,7 @@ public partial class HotelsController
 
 	[HttpPost]
 	[Route("DiscountAdd")]
-	public async Task<IActionResult> DiscountAdd([FromForm]DiscountCode extra, string hotelCode)
+	public async Task<IActionResult> DiscountAdd([FromForm]DiscountCode discount, string hotelCode)
 	{
 		ViewBag.Languages = GetLanguages();
 		ViewBag.Hotels = await GetHotels();
@@ -83,14 +84,14 @@ public partial class HotelsController
 		{
 			var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
 
-			if (discounts.All(tm => tm.Code != extra.Code))
+			if (discounts.All(tm => tm.Code != discount.Code))
 			{
 				//testModel.Hotels = testModel.Hotels.Where(m => !string.IsNullOrEmpty(m)).ToList();
 				//roomType.Notes = string.IsNullOrEmpty(roomType.Notes) ? string.Empty : roomType.Notes;
 
-				discounts.Add(extra);
+				discounts.Add(discount);
 				await hotelsRepoService.SaveDiscountCodesAsync(discounts, hotelCode);
-				return RedirectToAction(nameof(DiscountAdd), new { IsSuccess = true, HotelCode = hotelCode, Code = extra.Code });
+				return RedirectToAction(nameof(DiscountAdd), new { IsSuccess = true, HotelCode = hotelCode, Code = discount.Code });
 			}
 			else
 			{
@@ -99,7 +100,7 @@ public partial class HotelsController
 
 				ModelState.AddModelError("", "That Code already exists");
 
-				return View(extra);
+				return View(discount);
 			}
 		}
 		else
@@ -109,7 +110,7 @@ public partial class HotelsController
 
 			ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
 
-			return View(extra);
+			return View(discount);
 		}
 	}
 
@@ -171,7 +172,7 @@ public partial class HotelsController
 
 				ModelState.AddModelError("", "That Code does not exist");
 
-				return View();
+				return View(new DiscountCode());
 			}
 		}
 		else
@@ -181,7 +182,7 @@ public partial class HotelsController
 
 			ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
 
-			return View();
+			return View(new DiscountCode());
 		}
 	}
 
@@ -228,4 +229,95 @@ public partial class HotelsController
 		return RedirectToAction("HotelList");
 	}
 
+	[Route("DiscountEditRatePlansEnable")]
+	public async Task<IActionResult> DiscountEditRatePlansEnable(string hotelCode, string code, bool isSuccess = false)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			ViewBag.Code = code;
+			ViewBag.HotelCode = hotelCode;
+
+			var vm = new CodeCheckListVm
+			{
+				HotelCode = hotelCode,
+				Code = code
+			};
+
+			var ratePlans = await hotelsRepoService.GetRatePlansAsync(hotelCode);
+			var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+			var discount = discounts.FirstOrDefault(s => s.Code.EqualsAnyCase(code));
+			if (discount != null)
+			{
+				var selected = discount.EnabledHotelPlans;
+
+				foreach (var rt in ratePlans.OrderBy(x => x.Group).ThenBy(x => x.RatePlanCode).ToList())
+				{
+					var rtr = new CodeCheckListRow
+					{
+						Code = rt.RatePlanCode,
+						GroupCode = rt?.Group ?? string.Empty,
+						Name = rt?.Description ?? string.Empty,
+						Selected = selected.Any(r => r.EqualsAnyCase(rt.RatePlanCode))
+					};
+					vm.List.Add(rtr);
+				}
+			}
+
+			return View(vm);
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"{ex.Message}");
+		}
+
+		return RedirectToAction("DiscountsList");
+	}
+
+	[Route("DiscountEditRatePlansDisable")]
+	public async Task<IActionResult> DiscountEditRatePlansDisable(string hotelCode, string code, bool isSuccess = false)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			ViewBag.Code = code;
+			ViewBag.HotelCode = hotelCode;
+
+			var vm = new CodeCheckListVm
+			{
+				HotelCode = hotelCode,
+				Code = code
+			};
+
+			var ratePlans = await hotelsRepoService.GetRatePlansAsync(hotelCode);
+			var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+			var discount = discounts.FirstOrDefault(s => s.Code.EqualsAnyCase(code));
+			if (discount != null)
+			{
+				var selected = discount.DisabledHotelPlans;
+
+				foreach (var rt in ratePlans.OrderBy(x => x.Group).ThenBy(x => x.RatePlanCode).ToList())
+				{
+					var rtr = new CodeCheckListRow
+					{
+						Code = rt.RatePlanCode,
+						GroupCode = rt?.Group ?? string.Empty,
+						Name = rt?.Description ?? string.Empty,
+						Selected = selected.Any(r => r.EqualsAnyCase(rt.RatePlanCode))
+					};
+					vm.List.Add(rtr);
+				}
+			}
+
+			return View(vm);
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"{ex.Message}");
+		}
+
+		return RedirectToAction("DiscountsList");
+	}
 }

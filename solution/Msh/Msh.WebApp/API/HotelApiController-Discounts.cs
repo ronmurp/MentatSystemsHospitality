@@ -268,7 +268,7 @@ public partial class HotelApiController
 
 	[HttpPost]
 	[Route("DiscountBookDates")]
-	public async Task<IActionResult> DiscouDiscountBookDatesntOfferDates([FromBody] ItemDatesVm data)
+	public async Task<IActionResult> DiscountBookDates([FromBody] ItemDatesVm data)
 	{
 		try
 		{
@@ -298,5 +298,70 @@ public partial class HotelApiController
 		}
 	}
 
+
+	[HttpPost]
+	[Route("DiscountRatePlansSaveEnable")]
+	public async Task<IActionResult> DiscountRatePlansSaveEnable([FromBody] ApiInput data)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			var items = await hotelsRepoService.GetDiscountCodesAsync(data.HotelCode);
+			var index = items.FindIndex(h => h.Code == data.Code);
+
+			if (index >= 0)
+			{
+				items[index].EnabledHotelPlans = data.CodeList;
+				await hotelsRepoService.SaveDiscountCodesAsync(items, data.HotelCode);
+			}
+
+			return Ok(new ObjectVm
+			{
+				Data = new Hotel()
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
+
+
+	[HttpPost]
+	[Route("DiscountRatePlansSaveDisable")]
+	public async Task<IActionResult> DiscountRatePlansSaveDisable([FromBody] ApiInput data)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			var items = await hotelsRepoService.GetDiscountCodesAsync(data.HotelCode);
+			var index = items.FindIndex(h => h.Code == data.Code);
+
+			if (index >= 0)
+			{
+				items[index].DisabledHotelPlans = data.CodeList;
+				await hotelsRepoService.SaveDiscountCodesAsync(items, data.HotelCode);
+			}
+
+			return Ok(new ObjectVm
+			{
+				Data = new Hotel()
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
 
 }

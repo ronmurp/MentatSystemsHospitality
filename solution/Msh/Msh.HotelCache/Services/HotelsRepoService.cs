@@ -66,10 +66,10 @@ public class HotelsRepoService(IConfigRepository configRepository) : IHotelsRepo
 	}
 
 	public async Task<List<DiscountCode>> GetDiscountCodesAsync(string hotelCode) =>
-		await configRepository.GetConfigContentAsync<List<DiscountCode>>(ConstHotel.Cache.Discounts) ?? [];
+		await configRepository.GetConfigContentAsync<List<DiscountCode>>(ConstHotel.Cache.Discounts, hotelCode) ?? [];
 
 	public async Task SaveDiscountCodesAsync(List<DiscountCode> discountCodes, string hotelCode)
 	{
-		await configRepository.SaveConfigAsync(ConstHotel.Cache.Discounts, discountCodes);
+		await configRepository.SaveConfigAsync(ConstHotel.Cache.Discounts, hotelCode, discountCodes);
 	}
 }

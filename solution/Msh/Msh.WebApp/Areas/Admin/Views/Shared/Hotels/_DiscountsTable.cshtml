@@ -21,6 +21,8 @@
 		</th>
 		<th>Enabled</th>
 		<th>Description</th>
+		<th>E Plans</th>
+		<th>D Plans</th>
 		<th>Offers</th>
 		<th>Book</th>
 		<th class="text-center" style="width:40px;">Move</th>
@@ -56,6 +58,30 @@
 			@await Html.PartialAsync("Hotels/_TableCheckMarkCell", item.Enabled)
 			
 			<td>@item.Description</td>
+			<td style="width:80px;">
+				<div class="cell-outer">
+					<div class="cell-inner">
+						@item.EnabledHotelPlans.Count
+					</div>
+					<div class="cell-inner">
+						<a asp-controller="Hotels" asp-action="DiscountEditRatePlansEnable" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
+							<i class="fab fa-windows"></i>
+						</a>
+					</div>
+				</div>
+			</td>
+			<td style="width:80px;">
+				<div class="cell-outer">
+					<div class="cell-inner">
+						@item.DisabledHotelPlans.Count
+					</div>
+					<div class="cell-inner">
+						<a asp-controller="Hotels" asp-action="DiscountEditRatePlansDisable" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
+							<i class="fab fa-windows"></i>
+						</a>
+					</div>
+				</div>
+			</td>
 			<td style="width:80px;">
 				<div class="cell-outer">
 					<div class="cell-inner">
