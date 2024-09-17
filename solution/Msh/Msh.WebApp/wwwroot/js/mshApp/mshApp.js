@@ -2682,7 +2682,7 @@
                 codeList: list
             };
 
-            api.postAsync(`/api/hotelapi/SpecialRoomTypesSave`, d, (data) => {
+            api.postAsync(options.saveApi, d, (data) => {
                 $('#success-alert').addClass('show');
             });
         }

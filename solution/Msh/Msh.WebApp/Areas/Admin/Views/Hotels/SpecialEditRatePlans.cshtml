@@ -1,6 +1,6 @@
 ﻿@model Msh.WebApp.Models.Admin.ViewModels.CodeCheckListVm
 @{
-	var title = "Disabled Room Types";
+	var title = "Disabled Rate Plans";
 	ViewData["Title"] = title;
 	var itemCode = ViewBag.Code as string;
 	var hotelCode = ViewBag.HotelCode as string;
@@ -9,14 +9,13 @@
 <input type="hidden" id="edit-type" value="item-options"/>
 <input type="hidden" id="item-code" value="@itemCode" />
 <input type="hidden" id="hotel-code" value="@hotelCode" />
-<input type="hidden" id="save-api-url" value="/api/hotelapi/SpecialRoomTypesSave" />
+<input type="hidden" id="save-api-url" value="/api/hotelapi/SpecialRatePlansSave" />
 
 <div class="text-center">
 	<h1 class="display-6">@title for Special  @itemCode in @hotelCode</h1>
-	<p>This Special, @itemCode, cannot be used for the room types selected here.</p>
-	<p>For more information click <info-icon name="info-special-room-types" /></p>
+	<p>This Special, @itemCode, cannot be used for the rate plans selected here.</p>
+	<p>For more information click <info-icon name="info-special-rate-plans" /></p>
 </div>
-
 
 <div class="row">
 	<div class="col-12" id="table-target">
@@ -34,11 +33,11 @@
 </div>
 
 <div id="page-info" style="display:none;">
-	<div data-info-for="info-special-room-types">
+	<div data-info-for="info-special-rate-plans">
 		<span>Disabled Room Types</span>
 		<div>
 			<p>
-				Select the room types for which this special cannot be used.
+				Select the rate plans for which this room type cannot be used.
 			</p>
 		</div>
 	</div>
@@ -50,4 +49,3 @@
 	<script src="~/js/admin/hotels/msh-admin-check-codes-select.js"></script>
 	
 }
-

@@ -46,9 +46,6 @@ public class Special
 	public List<ItemDate> ItemDates { get; set; } = [];
 
 
-	[Display(Name = "Disabling Set"), Info("disabling-set")]
-	public DisablingSet DisablingSet { get; set; } = new DisablingSet();
-
 
 	[Display(Name = "Warning Text"), Info("warning-text")]
 	public string? WarningText { get; set; } = string.Empty;

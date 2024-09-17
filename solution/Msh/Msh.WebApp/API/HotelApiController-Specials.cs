@@ -360,6 +360,40 @@ public partial class HotelApiController
 	}
 
 
+	[HttpPost]
+	[Route("SpecialRatePlansSave")]
+	public async Task<IActionResult> SpecialRatePlansSave([FromBody] ApiInput data)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			var items = await hotelsRepoService.GetSpecialsAsync(data.HotelCode);
+			var index = items.FindIndex(h => h.Code == data.Code);
+
+			if (index >= 0)
+			{
+				items[index].RatePlanCodes = data.CodeList;
+				await hotelsRepoService.SaveSpecialsAsync(items, data.HotelCode);
+			}
+
+			return Ok(new ObjectVm
+			{
+				Data = new Hotel()
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
+
+
+
 	[HttpGet]
 	[Route("SpecialRatePlans")]
 	public async Task<IActionResult> SpecialRatePlans(string code, string hotelCode)

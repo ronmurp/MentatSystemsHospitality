@@ -157,7 +157,8 @@ public partial class HotelsController
 				special.Notes = string.IsNullOrEmpty(special.Notes) ? string.Empty : special.Notes;
 				special.Options = items[index].Options;
 				special.ItemDates = items[index].ItemDates;
-				special.DisablingSet = items[index].DisablingSet;
+				special.RoomTypeCodes = items[index].RoomTypeCodes;
+				special.RatePlanCodes = items[index].RatePlanCodes;
 
 				items[index] = special;
 				await hotelsRepoService.SaveSpecialsAsync(items, hotelCode);
@@ -269,6 +270,55 @@ public partial class HotelsController
 
 		return RedirectToAction("SpecialsList");
 	}
+
+
+	[Route("SpecialEditRatePlans")]
+	public async Task<IActionResult> SpecialEditRatePlans(string hotelCode, string code, bool isSuccess = false)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			ViewBag.Code = code;
+			ViewBag.HotelCode = hotelCode;
+
+			var vm = new CodeCheckListVm
+			{
+				HotelCode = hotelCode,
+				Code = code
+			};
+
+			var roomTypes = await hotelsRepoService.GetRatePlansAsync(hotelCode);
+			var specials = await hotelsRepoService.GetSpecialsAsync(hotelCode);
+			var special = specials.FirstOrDefault(s => s.Code.EqualsAnyCase(code));
+			if (special != null)
+			{
+				var selected = special.RoomTypeCodes;
+
+				foreach (var rt in roomTypes.OrderBy(x => x.Group).ThenBy(x => x.RatePlanCode).ToList())
+				{
+					var rtr = new CodeCheckListRow
+					{
+						Code = rt.RatePlanCode,
+						GroupCode = rt?.Group ?? string.Empty,
+						Name = rt?.Description ?? string.Empty,
+						Selected = selected.Any(r => r.EqualsAnyCase(rt.RatePlanCode))
+					};
+					vm.List.Add(rtr);
+				}
+			}
+
+			return View(vm);
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"{ex.Message}");
+		}
+
+		return RedirectToAction("SpecialsList");
+	}
+
+
 
 	[HttpPost]
 	[Route("SpecialMove")]

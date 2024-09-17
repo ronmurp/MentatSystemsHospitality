@@ -7,11 +7,12 @@
       
     var hotelCode = $('#hotel-code').val();
     var code = $('#item-code').val();
+    var saveApi = $('#save-api-url').val();
 
     window.mshPageApp.hotelSelectService.init({
         hotelCode: hotelCode,
         code: code,
-        saveApi: '/api/hotelapi/SpecialRoomTypesSave'
+        saveApi: saveApi
     });
    
 
