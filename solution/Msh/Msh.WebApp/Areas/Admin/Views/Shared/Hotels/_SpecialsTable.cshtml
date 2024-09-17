@@ -19,11 +19,13 @@
 				</div>
 			</div>
 		</th>
-		<th style="width:60px;">Type</th>
 		<th class="text-center" style="width:50px;">Enabled</th>
+		<th style="width:60px;">Type</th>
 		<th>Text</th>
 		<th>Options</th>
 		<th>Dates</th>
+		<th>Rm Types</th>
+		<th>Rates</th>
 		<th class="text-center" style="width:40px;">Move</th>
 		<th>
 			<div class="cell-outer">
@@ -55,8 +57,8 @@
 		var itemType = string.Format("{0}", rt.ItemType);
 		<tr>
 			<td>@rt.Code</td>
-			<td>@itemType</td>
 			@await Html.PartialAsync("Hotels/_TableCheckMarkCell", rt.Enabled)
+			<td>@itemType</td>
 			<td>@rt.Text</td>
 			<td style="width:80px;">
 				<div class="cell-outer">
@@ -78,6 +80,30 @@
 					<div class="cell-inner">
 						<a asp-controller="Hotels" asp-action="SpecialEditDates" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
 							<i class="fa-solid fa-calendar"></i>
+						</a>
+					</div>
+				</div>
+			</td>
+			<td style="width:80px;">
+				<div class="cell-outer">
+					<div class="cell-inner">
+						@rt.RoomTypeCodes.Count
+					</div>
+					<div class="cell-inner">
+						<a asp-controller="Hotels" asp-action="SpecialEditRoomTypes" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
+							<i class="fab fa-windows"></i>
+						</a>
+					</div>
+				</div>
+			</td>
+			<td style="width:80px;">
+				<div class="cell-outer">
+					<div class="cell-inner">
+						@rt.RatePlanCodes.Count
+					</div>
+					<div class="cell-inner">
+						<a asp-controller="Hotels" asp-action="SpecialEditRates" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
+							<i class="fab fa-windows"></i>
 						</a>
 					</div>
 				</div>

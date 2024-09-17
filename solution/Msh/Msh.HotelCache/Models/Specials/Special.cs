@@ -54,6 +54,22 @@ public class Special
 	public string? WarningText { get; set; } = string.Empty;
 
 
+	[Display(Name = "Room Type Codes"), Info("room-type-codes")]
+	public List<string> RoomTypeCodes { get; set; } = [];
+
+
+	[Display(Name = "Rate Plan Codes"), Info("rate-plan-codes")]
+	public List<string> RatePlanCodes { get; set; } = [];
+
+
+	[Display(Name = "Adults Only"), Info("adults-only")]
+	public bool AdultsOnly { get; set; }
+
+
+	[Display(Name = "Disabled Text"), Info("disabled-text")]
+	public string DisabledText { get; set; } = string.Empty;
+
+
 	[Display(Name = "Notes"), Info("notes")]
 	[DataType(DataType.MultilineText)]
 	[Category("TextArea")]

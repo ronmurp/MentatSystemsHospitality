@@ -201,7 +201,7 @@ public partial class HotelsController
 			logger.LogError($"{ex.Message}");
 		}
 
-		return RedirectToAction("HotelList");
+		return RedirectToAction("SpecialsList");
 	}
 
 	[Route("SpecialEditOptions")]
@@ -221,7 +221,53 @@ public partial class HotelsController
 			logger.LogError($"{ex.Message}");
 		}
 
-		return RedirectToAction("HotelList");
+		return RedirectToAction("SpecialsList");
+	}
+
+	[Route("SpecialEditRoomTypes")]
+	public async Task<IActionResult> SpecialEditRoomTypes(string hotelCode, string code, bool isSuccess = false)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			ViewBag.Code = code;
+			ViewBag.HotelCode = hotelCode;
+
+			var vm = new SpecialRoomTypesVm
+			{
+				HotelCode = hotelCode,
+				Code = code
+			};
+
+			var roomTypes = await hotelsRepoService.GetRoomTypesAsync(hotelCode);
+			var specials = await hotelsRepoService.GetSpecialsAsync(hotelCode);
+			var special = specials.FirstOrDefault(s => s.Code.EqualsAnyCase(code));
+			if (special != null)
+			{
+				var selected = special.RoomTypeCodes;
+
+				foreach (var rt in roomTypes.OrderBy(x => x.GroupCode).ThenBy(x => x.Code).ToList())
+				{
+					var rtr = new SpecialRoomTypeRow
+					{
+						Code = rt.Code,
+						GroupCode = rt?.GroupCode ?? string.Empty,
+						Name = rt?.Name ?? string.Empty,
+						Selected = selected.Any(r => r.EqualsAnyCase(rt.Code))
+					};
+					vm.List.Add(rtr);
+				}
+			}
+
+			return View(vm);
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"{ex.Message}");
+		}
+
+		return RedirectToAction("SpecialsList");
 	}
 
 	[HttpPost]
