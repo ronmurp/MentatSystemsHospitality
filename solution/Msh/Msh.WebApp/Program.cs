@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Msh.Common.Data;
@@ -35,6 +36,10 @@ builder.Services.AddControllersWithViews();
 // Make this conditional - with a pragma, or with a configuration option - needs reload of system
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
+//builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(opt =>
+//{
+//	opt.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+//});
 
 // Register our services
 builder.LoadServices();
