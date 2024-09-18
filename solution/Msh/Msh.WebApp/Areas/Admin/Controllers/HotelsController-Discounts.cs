@@ -139,7 +139,7 @@ public partial class HotelsController
 
 	[HttpPost]
 	[Route("DiscountEdit")]
-	public async Task<IActionResult> DiscountEdit([FromForm] DiscountCode discount, string hotelCode)
+	public async Task<IActionResult> DiscountEdit([FromForm] DiscountCode discountCode, string hotelCode)
 	{
 		ViewBag.Languages = GetLanguages();
 		ViewBag.Hotels = await GetHotels();
@@ -147,23 +147,23 @@ public partial class HotelsController
 		if (ModelState.IsValid)
 		{
 			var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
-			var index = discounts.FindIndex(m => m.Code == discount.Code);
+			var index = discounts.FindIndex(m => m.Code == discountCode.Code);
 			if (index >= 0)
 			{
-				// Keep other properties not in the main edit
-				discount.Notes = string.IsNullOrEmpty(discount.Notes) ? string.Empty : discount.Notes;
-				discount.OfferDates = discounts[index].OfferDates; //
-				discount.BookDates = discounts[index].BookDates; //
-				discount.DayRates = discounts[index].DayRates;
-				discount.DisabledHotelPlans = discounts[index].DisabledHotelPlans;
-				discount.EnabledHotelPlans = discounts[index].EnabledHotelPlans;
-				discount.DiscountErrors = discounts[index].DiscountErrors;
-				discount.OneTime = discounts[index].OneTime;
-				// Now update
-				discounts[index] = discount;
+				// Prevent nullifying other properties not in the main edit
+				discountCode.Notes = string.IsNullOrEmpty(discountCode.Notes) ? string.Empty : discountCode.Notes;
+				discountCode.OfferDates = discounts[index].OfferDates; //
+				discountCode.BookDates = discounts[index].BookDates; //
+				discountCode.DayRates = discounts[index].DayRates;
+				discountCode.DisabledHotelPlans = discounts[index].DisabledHotelPlans;
+				discountCode.EnabledHotelPlans = discounts[index].EnabledHotelPlans;
+				discountCode.DiscountErrors = discounts[index].DiscountErrors;
+				discountCode.OneTime = discounts[index].OneTime;
+				// Now that passed parameter has been updated with properties not edited, update the original
+				discounts[index] = discountCode;
 				// And save
 				await hotelsRepoService.SaveDiscountCodesAsync(discounts, hotelCode);
-				return RedirectToAction(nameof(DiscountEdit), new { IsSuccess = true, HotelCode = hotelCode, Code = discount.Code });
+				return RedirectToAction(nameof(DiscountEdit), new { IsSuccess = true, HotelCode = hotelCode, Code = discountCode.Code });
 			}
 			else
 			{

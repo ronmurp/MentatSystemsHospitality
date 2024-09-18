@@ -14,7 +14,7 @@
 
 <div class="text-center">
 	<h1 class="display-6">@title for @itemCode in @hotelCode</h1>
-	<p>For more information click <info-icon name="info-extra-dates" /></p>
+	<p>For more information click <info-icon name="info-discount-dates" /></p>
 </div>
 
 <div class="row">
@@ -32,12 +32,19 @@
 </div>
 
 <div id="page-info" style="display:none;">
-	<div data-info-for="info-discounts-dates">
-		<span>Discounts Dates</span>
+	<div data-info-for="info-discount-dates">
+		<span>Discounts Offer Dates</span>
 		<div>
-			
+			<p>A set of date ranges used to prohibit or allow Discounts.</p>
+			<p>Prohibit date ranges might be used for discounts that are generally available but occasionally are not.</p>
+			<p>Allow date ranges might be used for discounts that are seasonal and available for a short time.</p>
+			<p>If no dates are supplied the discount will be available all the time, though that may also be determined by Opera for some discount types.</p>
+			<p>Editing the date list: <info-icon name="info-date-range-list" /></p>
 		</div>
 	</div>
+	
+	@await Html.PartialAsync("Admin/_AdminDatesList")
+
 </div>
 
 @section Scripts {

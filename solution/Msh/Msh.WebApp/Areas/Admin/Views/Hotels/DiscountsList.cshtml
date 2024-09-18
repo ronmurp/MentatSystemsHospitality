@@ -35,27 +35,41 @@
 
 <div id="page-info" style="display:none;">
 	
+	@await Html.PartialAsync("Hotels/_ListIconsInfo")
 	
-	
-	<div data-info-for="info-extras">
+	<div data-info-for="info-discounts">
 		<span>Discounts List</span>
 		<div>
-			<p>The list shows the Extras (representing Opera Packages) for the selected hotel.</p>
-			<p>The icons in the table are used to perform actions on the table.</p>
-			<p>Use the bulk action checkboxes to bulk copy or bulk delete rows - 
-				the bulk action buttons are exposed if any checkbox is set.
+			<p>A list shows the Discounts for the selected hotel.</p>
+			<p>
+				Click here to see the standard table icons: <info-icon name="info-icons" />
 			</p>
-			@await Html.PartialAsync("Hotels/_ListIconsInfo")
+			
+			<p>Column icons specific to this list are used to edit the properties that contain more details than a single field:</p>
+			<ul>
+				<li>
+
+					<p><strong>Enabled Plans</strong> - A list of rate plans that this discount code <strong>can</strong> be used with.</p>
+					<p>Use this list where the discount applies to only a few rate plans.</p>
+				</li>
+				<li>
+					<p><strong>Disabled Plans</strong> - A list of rate plans that this discount code <strong>cannot</strong> be used with.</p>
+					<p>Use this list where the discount does not apply to only a few rate plans.</p>
+				</li>
+				<li>
+					<p><strong>Offer Dates</strong> - A list of dates when the discount applies.</p>
+					<p>If this list is empty the discount is available any time.</p>
+				</li>
+				<li>
+					<p><strong>Book Dates</strong> - A list of dates when the discount can be booked - i.e., can the discount be booked today, for some future dates.</p>
+					<p>If this list is empty the discount is can be booked any time.</p>
+				</li>
+			</ul>
+			
 		</div>
 		
 	</div>
 
-	<div data-info-for="info-hotel-code">
-		<span>@ViewBag.InfoIcons Hotel</span>
-		<div>
-			<p>Select a hotel to view @ViewBag.InfoIcons for that hotel</p>
-		</div>
-	</div>
 </div>
 
 @section Scripts{

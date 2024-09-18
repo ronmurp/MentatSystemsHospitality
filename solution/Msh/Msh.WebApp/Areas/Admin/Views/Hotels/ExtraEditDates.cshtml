@@ -35,9 +35,15 @@
 	<div data-info-for="info-extra-dates">
 		<span>Extra Dates</span>
 		<div>
-			
+			<p>A set of date ranges used to prohibit or allow Extras.</p>
+			<p>Prohibit date ranges might be used for items that are generally available but occasionally are not.</p>
+			<p>Allow date ranges might be used for items that are seasonal and available for a short time.</p>
+			<p>If no dates are supplied the extra will be available all the time, though that may also be determined by Opera.</p>
+			<p>Editing the date list: <info-icon name="info-date-range-list"/></p>
 		</div>
 	</div>
+	
+	@await Html.PartialAsync("Admin/_AdminDatesList")
 </div>
 
 @section Scripts {

@@ -1,0 +1,36 @@
+﻿@{
+	var datesFor = ViewBag?.DateItemsFor ?? "a record";
+}
+
+
+<div data-info-for="info-date-range-list">
+	<span>An editable list of date ranges</span>
+	<div>
+		<p>Enter a set of date ranges for @datesFor</p>
+		<ul>
+			<li>
+				<strong><i class="fa-solid fa-plus"></i> - </strong> Add a new date range record.
+			</li>
+			<li>
+				<strong><i class="fa-solid fa-times"></i> - </strong> Remove a date range record.
+			</li>
+		</ul>
+		<p></p>
+		<ul>
+			<li>
+				<strong>Type</strong> - The date range type is either Prohibit or Allow:
+				<ul>
+					<li>Prohibit - The item is not available in this date range.</li>
+					<li>Allow - The item is available only in this date range.</li>
+				</ul>
+			</li>
+			<li>
+				<strong>Enabled</strong> - Must be enabled for the date range to apply.
+			</li>
+			<li>
+				<strong>From/To</strong> - The date range. From must be less than To.
+			</li>
+		</ul>
+	</div>
+
+</div>

@@ -1,7 +1,11 @@
-﻿namespace Msh.Common.Models.Dates;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using System.Text.Json.Serialization;
+
+namespace Msh.Common.Models.Dates;
 
 public class ItemDate
 {
+	[JsonConverter(typeof(JsonStringEnumConverter))]
 	public ItemDateType DateType { get; set; } = ItemDateType.Prohibit;
 	public DateOnly FromDate { get; set; }
     public DateOnly ToDate { get; set; }
