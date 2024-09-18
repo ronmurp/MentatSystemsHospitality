@@ -74,7 +74,7 @@ public partial class HotelsController
 
 	[HttpPost]
 	[Route("DiscountAdd")]
-	public async Task<IActionResult> DiscountAdd([FromForm]DiscountCode discount, string hotelCode)
+	public async Task<IActionResult> DiscountAdd([FromForm]DiscountCode discountCode, string hotelCode)
 	{
 		ViewBag.Languages = GetLanguages();
 		ViewBag.Hotels = await GetHotels();
@@ -84,14 +84,14 @@ public partial class HotelsController
 		{
 			var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
 
-			if (discounts.All(tm => tm.Code != discount.Code))
+			if (discounts.All(tm => tm.Code != discountCode.Code))
 			{
 				//testModel.Hotels = testModel.Hotels.Where(m => !string.IsNullOrEmpty(m)).ToList();
 				//roomType.Notes = string.IsNullOrEmpty(roomType.Notes) ? string.Empty : roomType.Notes;
 
-				discounts.Add(discount);
+				discounts.Add(discountCode);
 				await hotelsRepoService.SaveDiscountCodesAsync(discounts, hotelCode);
-				return RedirectToAction(nameof(DiscountAdd), new { IsSuccess = true, HotelCode = hotelCode, Code = discount.Code });
+				return RedirectToAction(nameof(DiscountAdd), new { IsSuccess = true, HotelCode = hotelCode, Code = discountCode.Code });
 			}
 			else
 			{
@@ -100,7 +100,7 @@ public partial class HotelsController
 
 				ModelState.AddModelError("", "That Code already exists");
 
-				return View(discount);
+				return View(discountCode);
 			}
 		}
 		else
@@ -110,7 +110,7 @@ public partial class HotelsController
 
 			ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
 
-			return View(discount);
+			return View(discountCode);
 		}
 	}
 
@@ -183,6 +183,69 @@ public partial class HotelsController
 			ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
 
 			return View(new DiscountCode());
+		}
+	}
+
+	[HttpGet]
+	[Route("DiscountEditErrors")]
+	public async Task<IActionResult> DiscountEditErrors(string code, string hotelCode, bool isSuccess = false)
+	{
+		await Task.Delay(0);
+
+		ViewBag.IsSuccess = isSuccess;
+		ViewBag.Code = code;
+		ViewBag.Languages = GetLanguages();
+		ViewBag.Hotels = await GetHotels();
+		ViewBag.HotelCode = hotelCode;
+
+		var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+		var discount = discounts.FirstOrDefault(m => m.Code == code);
+		if (discount != null)
+		{
+			return View(discount.DiscountErrors);
+		}
+
+		return RedirectToAction(nameof(DiscountsList));
+	}
+
+	[HttpPost]
+	[Route("DiscountEditErrors")]
+	public async Task<IActionResult> DiscountEditErrors([FromForm] DiscountErrors discountErrors, string hotelCode, string code)
+	{
+		ViewBag.Languages = GetLanguages();
+		ViewBag.Hotels = await GetHotels();
+
+		if (ModelState.IsValid)
+		{
+			var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+			var index = discounts.FindIndex(m => m.Code == code);
+			if (index >= 0)
+			{
+				
+				// Now that passed parameter has been updated with properties not edited, update the original
+				discounts[index].DiscountErrors = discountErrors;
+				// And save
+				await hotelsRepoService.SaveDiscountCodesAsync(discounts, hotelCode);
+				return RedirectToAction(nameof(DiscountEditErrors), new { IsSuccess = true, HotelCode = hotelCode, Code = code });
+			}
+			else
+			{
+				ViewBag.IsSuccess = false;
+				ViewBag.Code = string.Empty;
+
+				ModelState.AddModelError("", "That Code does not exist");
+
+				return View(new DiscountErrors());
+			}
+		}
+		else
+		{
+			ViewBag.IsSuccess = false;
+			ViewBag.Code = string.Empty;
+
+			ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
+
+			return View(new DiscountErrors());
 		}
 	}
 

@@ -43,6 +43,7 @@ public class DiscountCode
 
 	[Display(Name = "Discount Type")]
 	[Info("discount-type")]
+	[Category("Enum")]
 	public DiscountTypes DiscountType { get; set; } = DiscountTypes.None;
 
     public DiscountOneTime OneTime { get; set; } = new DiscountOneTime();
@@ -55,21 +56,18 @@ public class DiscountCode
 	public int Discount { get; set; }
 
 	[Display(Name = "Description")]
-	[Info("discription")]
 	public string? Description { get; set; } = string.Empty;
 
 	/// <summary>
 	/// Additional text details, such as the dates
 	/// </summary>
 	[Display(Name = "Details")]
-	[Info("details")]
 	public string? Details { get; set; } = string.Empty;
 
 	/// <summary>
 	/// If not empty, then emails are required to validate the application of the discount
 	/// </summary>
 	[Display(Name = "Email Validation List")]
-	[Info("emails")] 
 	public string? EmailValidationList { get; set; } = string.Empty;
 
     /// <summary>
@@ -139,6 +137,7 @@ public class DiscountCode
 	[Info("discount-warning")] 
 	public string? DiscountWarning { get; set; } = string.Empty;
 
-	[Description("Notes"), Info("extra-notes")]
+	[Description("Admin Notes"), Info("extra-notes")]
+	[Category("TextArea")]
 	public string? Notes { get; set; } = string.Empty;
 }

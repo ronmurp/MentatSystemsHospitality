@@ -25,6 +25,7 @@
 		<th class="text-center">Disabled Plans</th>
 		<th class ="text-center">Offer Dates</th>
 		<th class="text-center">Book Dates</th>
+		<th class="text-center">Errors</th>
 		<th class="text-center" style="width:40px;">Move</th>
 		<th>
 			<div class="cell-outer">
@@ -102,6 +103,15 @@
 					<div class="cell-inner">
 						<a asp-controller="Hotels" asp-action="DiscountEditDatesBook" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
 							<i class="fa-solid fa-calendar"></i>
+						</a>
+					</div>
+				</div>
+			</td>
+			<td style="width:80px;">
+				<div class="cell-outer">
+					<div class="cell-inner">
+						<a asp-controller="Hotels" asp-action="DiscountEditErrors" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
+							<i class="fas fa-exclamation-triangle"></i>
 						</a>
 					</div>
 				</div>

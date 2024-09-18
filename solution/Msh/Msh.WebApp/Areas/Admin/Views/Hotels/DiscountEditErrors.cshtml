@@ -1,0 +1,28 @@
+﻿@using Msh.WebApp.Models.Admin
+
+@model Msh.HotelCache.Models.Discounts.DiscountErrors;
+@{
+	ViewData["Title"] = "Edit Discount Errors";
+
+	var hotelCode = ViewBag.HotelCode;
+	var code = ViewBag.Code;
+
+	ViewBag.Success = new SuccessAlert
+	{
+		ModelName = "DiscountErrors",
+		ReturnPath = "/admin/hotels/DiscountsList?hotelCode=" + hotelCode,
+		ReturnPathName = "Discounts List",
+		KeyPropertyLabel = "Discount Errors",
+		KeyPropertyName = "Code",
+		KeyPropertyValue = code,
+		FormAction = "DiscountEditErrors"
+	};
+}
+
+@await Html.PartialAsync("Hotels/_DiscountEditErrors", @Model)
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-discounts.js"></script>
+}

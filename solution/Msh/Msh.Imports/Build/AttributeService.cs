@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Msh.Imports.Build;
 
@@ -39,15 +40,21 @@ public class AttributeService
 
 	public string GetInfoAttribute(PropertyInfo prop)
 	{
+		var info = string.Empty;
 		var attributes = prop.GetCustomAttributes(true);
 		var attr = GetAttribute(attributes, "InfoAttribute");
 		if (attr != null)
 		{
 			var y = (Msh.Common.Attributes.InfoAttribute)attr;
-			return y.Info;
+			info = y.Info;
 
 		}
-		return string.Empty;
+
+		if (string.IsNullOrEmpty(info))
+		{
+			info = InsertHyphen(prop.Name);
+		}
+		return info;
 	}
 
 	public string GetCssClassAttribute(PropertyInfo prop)
@@ -74,5 +81,11 @@ public class AttributeService
 			}
 		}
 		return null;
+	}
+
+	private string InsertHyphen(string input)
+	{
+		// Regex pattern: Look for transitions from a lowercase letter followed by an uppercase letter
+		return Regex.Replace(input, "(?<!^)([A-Z])", "-$1").ToLower();
 	}
 }
