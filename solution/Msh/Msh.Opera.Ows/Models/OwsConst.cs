@@ -2,6 +2,10 @@
 
 public static class OwsConst
 {
+	public static class Cache
+	{
+		public const string OwsConfig = "OwsConfig";
+	}
 	public static class OgHeader
 	{
 		public const string SoapBody = "{{Soap.Body}}";

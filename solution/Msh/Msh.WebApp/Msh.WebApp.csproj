@@ -26,6 +26,7 @@
     <ProjectReference Include="..\Msh.Admin\Msh.Admin.csproj" />
     <ProjectReference Include="..\Msh.Common\Msh.Common.csproj" />
     <ProjectReference Include="..\Msh.HotelCache\Msh.HotelCache.csproj" />
+    <ProjectReference Include="..\Msh.Opera.Ows\Msh.Opera.Ows.csproj" />
     <ProjectReference Include="..\Msh.Pay.CoinCorner\Msh.Pay.CoinCorner.csproj" />
     <ProjectReference Include="..\Msh.Pay.FreedomPay\Msh.Pay.FreedomPay.csproj" />
   </ItemGroup>

@@ -22,9 +22,14 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Msh.Common\Msh.Common.csproj" />
+	  <ProjectReference Include="..\Msh.Opera.Ows\Msh.Opera.Ows.csproj" />
 	  <ProjectReference Include="..\Msh.Pay.CoinCorner\Msh.Pay.CoinCorner.csproj" />
 	  <ProjectReference Include="..\Msh.TestSupport\Msh.TestSupport.csproj" />
 	  <ProjectReference Include="..\Msh.WebApp\Msh.WebApp.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Build\NewFolder\" />
 	</ItemGroup>
 
 </Project>

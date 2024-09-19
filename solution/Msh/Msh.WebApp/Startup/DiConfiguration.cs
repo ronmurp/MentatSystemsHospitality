@@ -2,6 +2,7 @@
 using Msh.Common.Models;
 using Msh.Common.Startup;
 using Msh.HotelCache.Startup;
+using Msh.Opera.Ows.Startup;
 using Msh.Pay.CoinCorner.Startup;
 using Msh.Pay.FreedomPay.Startup;
 using Msh.WebApp.Repositories;
@@ -23,6 +24,7 @@ public static class DiConfiguration
         services.RegisterCcServices();
         services.RegisterHotelServices();
         services.RegisterAdminServices();
+        services.RegisterOwsServices();
 
     }
 }

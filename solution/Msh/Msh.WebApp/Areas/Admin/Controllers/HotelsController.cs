@@ -18,7 +18,7 @@ namespace Msh.WebApp.Areas.Admin.Controllers;
 [Authorize]
 [Area("Admin")]
 [Route("admin/hotels")]
-public partial class HotelsController(ILogger<WebApp.Controllers.HomeController> logger, 
+public partial class HotelsController(ILogger<HotelsController> logger, 
 	IHotelsRepoService hotelsRepoService,
 	IConfigRepository configRepository,
 	IUserService userService) : Controller

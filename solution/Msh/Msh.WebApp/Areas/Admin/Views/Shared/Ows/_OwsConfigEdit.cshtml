@@ -1,0 +1,233 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.WebApp.Models.Admin
+@using Msh.WebApp.TagHelpers
+@model Msh.Opera.Ows.Models.OwsConfig;
+@{
+	var success = ViewBag.Success as SuccessAlert;
+	var formAction = success?.FormAction ?? "OwsConfigEdit";
+	var title = ViewData["Title"];
+}
+
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
+
+
+<div class="row">
+	<div class="col-6">
+
+		<form asp-action="OwsConfigEdit">
+
+			
+			<div class="form-group mb-3">
+				<label asp-for="PasswordEnvVar" class="control-label"></label>&nbsp;
+				<info-icon name="info-password-env-var" />
+				<input asp-for="PasswordEnvVar" class="form-control " />
+				<span asp-validation-for="PasswordEnvVar" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="Password" class="control-label"></label>&nbsp;
+				<info-icon name="info-password" />
+				<input asp-for="Password" class="form-control " />
+				<span asp-validation-for="Password" class="text-danger"></span>
+			</div>
+
+			
+
+
+			
+
+
+			<div class="form-group mb-3">
+				<label asp-for="BaseUrl" class="control-label"></label>&nbsp;
+				<info-icon name="info-base-url" />
+				<input asp-for="BaseUrl" class="form-control " />
+				<span asp-validation-for="BaseUrl" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="DefaultHotelCode" class="control-label"></label>&nbsp;
+				<info-icon name="info-default-hotel-code" />
+				<input asp-for="DefaultHotelCode" class="form-control " />
+				<span asp-validation-for="DefaultHotelCode" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="ChainCode" class="control-label"></label>&nbsp;
+				<info-icon name="info-chain-code" />
+				<input asp-for="ChainCode" class="form-control " />
+				<span asp-validation-for="ChainCode" class="text-danger"></span>
+			</div>
+
+
+
+			
+			<div class="form-group mb-3">
+				<label asp-for="ElhUserId" class="control-label"></label>&nbsp;
+				<info-icon name="info-elh-user-id" />
+				<input asp-for="ElhUserId" class="form-control " />
+				<span asp-validation-for="ElhUserId" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="DefaultCardPaymentMethod" class="control-label"></label>&nbsp;
+				<info-icon name="info-default-card-payment-method" />
+				<input asp-for="DefaultCardPaymentMethod" class="form-control " />
+				<span asp-validation-for="DefaultCardPaymentMethod" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="VoucherPaymentMethod" class="control-label"></label>&nbsp;
+				<info-icon name="info-voucher-payment-method" />
+				<input asp-for="VoucherPaymentMethod" class="form-control " />
+				<span asp-validation-for="VoucherPaymentMethod" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="RetryCount" class="control-label"></label>&nbsp;
+				<info-icon name="info-retry-count" />
+				<input asp-for="RetryCount" class="form-control " />
+				<span asp-validation-for="RetryCount" class="text-danger"></span>
+			</div>
+
+
+
+			<div class="input-group sticky-bottom">
+				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
+				<a asp-controller="Ows" asp-action="Index" class="btn btn-outline-secondary">Return to dashboard</a>
+			</div>
+
+		</form>
+
+	</div>
+</div>
+
+<div id="page-info" style="display:none;">
+
+	<div data-info-for="info-elh-user-id">
+		<span>ELH User ID (Channel USer ID)</span>
+		<div>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-password">
+		<span>Password</span>
+		<div>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-chain-code">
+		<span>Chain Code</span>
+		<div>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-default-hotel-code">
+		<span>Default Hotel Code</span>
+		<div>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-password-env-var">
+		<span>Password Environment Variable</span>
+		<div>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-base-url">
+		<span>BASE URL</span>
+		<div>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-information-url">
+		<span>Information Url</span>
+		<div>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-availability-url">
+		<span>Availability Url</span>
+		<div>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-reservation-url">
+		<span>Reservation Url</span>
+		<div>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-resv-advanced-url">
+		<span>Resv Advanced Url</span>
+		<div>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-security-url">
+		<span>Security Url</span>
+		<div>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-name-url">
+		<span>Name Url</span>
+		<div>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-retry-count">
+		<span>OWS Retry Count</span>
+		<div>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-default-card-payment-method">
+		<span>Default Card Payment Method</span>
+		<div>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-voucher-payment-method">
+		<span>Voucher Paymen tMethod</span>
+		<div>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+
+
+</div>
+
+
+
+

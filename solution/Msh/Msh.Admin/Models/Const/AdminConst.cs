@@ -9,5 +9,6 @@ public static class AdminConst
 	public const string MenuHotels = "Hotels";
 	public const string MenuCoinCorner = "CoinCorner";
 	public const string MenuAdministrator = "MenuAdministrator";
+	public const string MenuOws = "OWS";
 
 }

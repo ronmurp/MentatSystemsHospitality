@@ -1,0 +1,35 @@
+﻿@using Msh.WebApp.Models.Admin
+
+@model Msh.Opera.Ows.Models.OwsConfig;
+@{
+	var title = "OWS Config";
+	ViewData["Title"] = title;
+
+	ViewBag.Success = new SuccessAlert
+	{
+		ModelName = "OwsConfig",
+		ReturnPath = "/admin/ows",
+		ReturnPathName = "OWS Dashboard",
+		KeyPropertyLabel = title,
+		KeyPropertyName = "Code",
+		KeyPropertyValue = "",
+		FormAction = "OwsConfigEdit"
+	};
+}
+
+<div class="text-center">
+	<h1 class="display-6">@title</h1>
+	<p>Edit the main OWS Config properties</p>
+	<p><a asp-controller="Ows" asp-action="Index">Index</a></p>
+</div>
+
+
+
+
+@await Html.PartialAsync("Ows/_OwsConfigEdit", @Model)
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	
+}

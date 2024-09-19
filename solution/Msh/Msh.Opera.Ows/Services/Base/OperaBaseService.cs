@@ -53,7 +53,7 @@ public class OperaBaseService
 
 		if (opt != null)
 		{
-			return _owsConfigService.OwsConfigList.FirstOrDefault();
+			//return _owsConfigService.OwsConfigList.FirstOrDefault();
 
 		}
 
