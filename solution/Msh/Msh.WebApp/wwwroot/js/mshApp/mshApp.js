@@ -257,19 +257,28 @@
 
         }
 
-        function tableHeadHtml(a) {
+        function getClasses(c) {
+            return c && c ? ` class="${c}"` : ' ';
+        }
+        function tableHeadHtml(a, c) {
             var html = '<tr>';
+            var i = 0;
             a.forEach((v) => {
-                html += `<th>${v}</th>`;
+                var x = getClasses(c[i]);
+                html += `<th${x}>${v}</th>`;
+                i++;
             });
             html += '</tr>';
 
             return html;
         }
-        function tableRowHtml(a) {
+        function tableRowHtml(a, c) {
             var html = '<tr>';
+            var i = 0;
             a.forEach((v) => {
-                html += `<td>${v}</td>`;
+                var x = getClasses(c[i]);
+                html += `<td${x}>${v}</td>`;
+                i++;
             });
             html += '</tr>';
 
@@ -285,11 +294,12 @@
             return html;
         }
 
-        function table(headerArray, bodyArray) {
+        function table(headerArray, bodyArray, cellClassArray) {
             var html = '<table>';
-            html += tableHeadHtml(headerArray);
+            html += tableHeadHtml(headerArray, cellClassArray);
+            var i = 0;
             bodyArray.forEach((v) => {
-                html += tableRowHtml(v);
+                html += tableRowHtml(v, cellClassArray);
             });
 
             html += '</table>';

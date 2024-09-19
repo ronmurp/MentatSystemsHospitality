@@ -63,7 +63,7 @@
                     `<input type="checkbox" id="Enabled-${i}" data-msh-index="${i}" class="form-control-check text-center" name="Enabled" ${checked} />`,
                     `<input type="date" id="FromDate-${i}" data-msh-index="${i}" class="form-control" name="FromDate" value="${v.fromDate}" />`,
                     `<input type="date" id="ToDate-${i}" data-msh-index="${i}" class="form-control" name="ToDate" value="${v.toDate}" />`,
-
+                  
                     htmlS.cellIcons([
                         `<a href="javascript:window.mshMethods.deleteItemDates(${i})"><i class="fa-solid fa-times"></i></a>`
                     ]),

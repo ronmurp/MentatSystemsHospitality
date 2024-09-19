@@ -47,7 +47,7 @@ public class OwsApiController(IOwsConfigService owsConfigService) : Controller
 			var owsConfig = await owsConfigService.GetOwsConfigAsync();
 			owsConfig.SchemeMap = data.SchemaMaps;
 
-			await owsConfigService.SaveHotelsAsync(owsConfig);
+			await owsConfigService.SaveOwsConfigAsync(owsConfig);
 
 			return Ok(new ObjectVm
 			{
@@ -64,5 +64,54 @@ public class OwsApiController(IOwsConfigService owsConfigService) : Controller
 		}
 	}
 
-	
+
+	[Route("OwsConfigEditTriggers")]
+	public async Task<IActionResult> OwsConfigEditTriggers()
+	{
+		var owsConfig = await owsConfigService.GetOwsConfigAsync();
+
+		if (owsConfig != null)
+		{
+			return Ok(new ObjectVm
+			{
+				Data = owsConfig.CriticalErrorTriggers
+			});
+		}
+
+		return Ok(new ObjectVm
+		{
+			Data = new List<OwsPaymentCodeMap>()
+		});
+	}
+
+
+	[HttpPost]
+	[Route("OwsConfigEditTriggers")]
+	public async Task<IActionResult> OwsConfigEditTriggers([FromBody] OwsConfigVm data)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			var owsConfig = await owsConfigService.GetOwsConfigAsync();
+			owsConfig.CriticalErrorTriggers = data.CriticalErrorTriggers;
+
+			await owsConfigService.SaveOwsConfigAsync(owsConfig);
+
+			var owsConfig2 = await owsConfigService.GetOwsConfigAsync();
+
+			return Ok(new ObjectVm
+			{
+				Data = owsConfig2.CriticalErrorTriggers
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
 }

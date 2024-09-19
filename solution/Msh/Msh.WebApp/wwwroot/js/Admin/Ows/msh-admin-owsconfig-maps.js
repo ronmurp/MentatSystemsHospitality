@@ -78,9 +78,17 @@
 
     $('#save-owsconfig-maps').on('click', () => {
         saveValuesLocally();
-        var d = {
-            schemaMaps: maps
-        };
+        var d = {};
+        switch (apiMethod) {
+            case "OwsConfigEditTriggers":
+                d.CriticalErrorTriggers = maps
+                break;
+
+            default:
+                d.schemeMaps = maps
+                break;
+        }
+       
         var url = `/api/owsapi/${apiMethod}`;
         api.postAsync(url, d, (data) => {
             if (data.success) {
@@ -97,6 +105,8 @@
         addMap: addMap,
         deleteMap: deleteMap
     });   
+
+    init();
 
     loadMaps();
 

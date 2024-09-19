@@ -1,4 +1,5 @@
-﻿using Msh.Common.Models.Dates;
+﻿using Msh.Common.Exceptions;
+using Msh.Common.Models.Dates;
 using Msh.HotelCache.Models.Specials;
 using Msh.Opera.Ows.Models;
 
@@ -27,4 +28,5 @@ public class SpecialOptionsVm
 public class OwsConfigVm
 {
 	public List<OwsPaymentCodeMap> SchemaMaps { get; set; } = [];
+	public List<CriticalErrorTrigger> CriticalErrorTriggers { get; set; } = [];
 }

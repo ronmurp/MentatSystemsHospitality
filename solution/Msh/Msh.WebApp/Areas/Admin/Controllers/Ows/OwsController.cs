@@ -35,7 +35,7 @@ public class OwsController(ILogger<OwsController> logger,
 		if (owsConfig == null)
 		{
 			owsConfig = new OwsConfig();
-			await owsConfigService.SaveHotelsAsync(owsConfig);
+			await owsConfigService.SaveOwsConfigAsync(owsConfig);
 		}
 
 		return View(owsConfig);
@@ -56,7 +56,7 @@ public class OwsController(ILogger<OwsController> logger,
 			owsConfig.CriticalErrorTriggers = owsConfigCurrent.CriticalErrorTriggers;
 			owsConfig.SchemeMap = owsConfigCurrent.SchemeMap;
 
-			await owsConfigService.SaveHotelsAsync(owsConfig);
+			await owsConfigService.SaveOwsConfigAsync(owsConfig);
 
 			return RedirectToAction(nameof(OwsConfigEdit), new { IsSuccess = true });
 
@@ -75,6 +75,23 @@ public class OwsController(ILogger<OwsController> logger,
 	
 	[Route("OwsConfigEditMap")]
 	public async Task<IActionResult> OwsConfigEditMap(bool isSuccess = false)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			return View();
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"{ex.Message}");
+		}
+
+		return RedirectToAction("Index");
+	}
+
+	[Route("OwsConfigEditTriggers")]
+	public async Task<IActionResult> OwsConfigEditTriggers(bool isSuccess = false)
 	{
 		try
 		{
