@@ -1,4 +1,6 @@
-﻿namespace Msh.Common.Exceptions;
+﻿using System.Reflection.Emit;
+
+namespace Msh.Common.Exceptions;
 
 /// <summary>
 /// An exception thrown when an expected Config does not exist in the db
