@@ -3,6 +3,7 @@ using System.Xml.Linq;
 using Msh.Common.Logger;
 using Msh.Common.Models.OwsCommon;
 using Msh.Common.Services;
+using Msh.Opera.Ows.ExtensionMethods;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Services.Base;
 using Msh.Opera.Ows.Services.Builders;
@@ -36,7 +37,7 @@ public class OperaSecurityService : OperaBaseService, IOperaSecurityService
 
 		//_logXmlService.LogXmlText(sb.ToString(), "AuthenticateUserReq", user.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl());
 
 		//_logXmlService.LogXmlText(contents, "AuthenticateUserRes", user.SessionKey);
 
@@ -55,7 +56,7 @@ public class OperaSecurityService : OperaBaseService, IOperaSecurityService
 
 		_logXmlService.LogXmlText(sb.ToString(), "CreateUserReq", user.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl());
 
 		_logXmlService.LogXmlText(contents, "CreateUserRes", user.SessionKey);
 
@@ -74,7 +75,7 @@ public class OperaSecurityService : OperaBaseService, IOperaSecurityService
 
 		//_logXmlService.LogXmlText(sb.ToString(), "FetchQuestionListReq", user.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl());
 
 		//_logXmlService.LogXmlText(contents, "FetchQuestionListRes", user.SessionKey);
 
@@ -93,7 +94,7 @@ public class OperaSecurityService : OperaBaseService, IOperaSecurityService
 
 		//_logXmlService.LogXmlText(sb.ToString(), "ResetPasswordReq", user.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl());
 
 		//_logXmlService.LogXmlText(contents, "ResetPasswordRes", user.SessionKey);
 
@@ -110,7 +111,7 @@ public class OperaSecurityService : OperaBaseService, IOperaSecurityService
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl());
 
 		var decode = DecodeUpdateQuestionResponse(xdoc, contents);
 
@@ -126,7 +127,7 @@ public class OperaSecurityService : OperaBaseService, IOperaSecurityService
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl());
 
 		var decode = DecodeUpdatePasswordResponse(user, xdoc, contents);
 

@@ -9,7 +9,7 @@ public interface IOwsConfigService
 {
 	Task<OwsConfig> GetOwsConfigAsync();
 
-	Task SaveHotelsAsync(OwsConfig config);
+	Task SaveOwsConfigAsync(OwsConfig config);
 
 	OwsConfig OwsConfig { get; }
 

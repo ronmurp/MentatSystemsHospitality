@@ -20,13 +20,18 @@ public class CriticalErrorTrigger
 
 	public bool IsRegEx { get; set; } = false;
 
+
 	[JsonConverter(typeof(JsonStringEnumConverter))]
 	public CriticalErrorType ErrorType { get; set; } = CriticalErrorType.Critical;
 
+
 	// [JsonConverter(typeof(EnumListConverter<CriticalErrorCall>))]
 	public List<CriticalErrorCall> CallTypes { get; set; } = [];
+
 	public string UserMessage { get; set; } = string.Empty;
+
 	public string ValueType { get; set; } = string.Empty;
+
 
 	[JsonConverter(typeof(JsonStringEnumConverter))]
 	public HttpStatusCode StatusCode { get; set; } = HttpStatusCode.NotFound;
@@ -43,6 +48,5 @@ public class CriticalErrorTrigger
 	/// </summary>
 	public string Notes { get; set; } = string.Empty;
 
-	public bool Applies(CriticalErrorCall callType) =>
-		CallTypes.Any(ct => ct == callType || ct == CriticalErrorCall.Any);
+	
 }

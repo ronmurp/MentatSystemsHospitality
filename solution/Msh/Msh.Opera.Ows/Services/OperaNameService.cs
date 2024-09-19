@@ -4,6 +4,7 @@ using Msh.Common.Logger;
 using Msh.Common.Models.BaseModels;
 using Msh.Common.Models.OwsCommon;
 using Msh.Common.Services;
+using Msh.Opera.Ows.ExtensionMethods;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Services.Base;
 using Msh.Opera.Ows.Services.Builders;
@@ -35,7 +36,7 @@ public class OperaNameService : OperaBaseService, IOperaNameService
 
 		_logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl());
 
 		_logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
 
@@ -54,7 +55,7 @@ public class OperaNameService : OperaBaseService, IOperaNameService
 
 		_logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = await PostAsync(sb, config.NameUrl, reqData.SessionKey);
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.NameUrl(), reqData.SessionKey);
 
 		_logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
 
@@ -73,7 +74,7 @@ public class OperaNameService : OperaBaseService, IOperaNameService
 
 		_logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl());
 
 		_logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
 
@@ -92,7 +93,7 @@ public class OperaNameService : OperaBaseService, IOperaNameService
 
 		_logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl());
 
 		_logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
 
@@ -111,7 +112,7 @@ public class OperaNameService : OperaBaseService, IOperaNameService
 
 		_logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl());
 
 		_logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
 
@@ -130,7 +131,7 @@ public class OperaNameService : OperaBaseService, IOperaNameService
 
 		_logXmlService.LogXmlText(sb.ToString(), "FetchNameReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl());
 
 		_logXmlService.LogXmlText(contents, "FetchNameRes", reqData.SessionKey);
 
@@ -149,7 +150,7 @@ public class OperaNameService : OperaBaseService, IOperaNameService
 
 		_logXmlService.LogXmlText(sb.ToString(), "FetchNameReq", user.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl());
 
 		_logXmlService.LogXmlText(contents, "FetchNameRes", user.SessionKey);
 

@@ -5,6 +5,7 @@ using Msh.Common.Constants;
 using Msh.Common.Logger;
 using Msh.Common.Models.OwsCommon;
 using Msh.Common.Services;
+using Msh.Opera.Ows.ExtensionMethods;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Models.AvailabilityResponses;
 using Msh.Opera.Ows.Models.ReservationRequestModels;
@@ -76,7 +77,7 @@ public class OperaReservationService : OperaBaseService, IOperaReservationServic
 
 		LastRequest = sb.FormatXml(Formatting.Indented).ToString();
 
-		var (xdoc, contents, owsResult) = PostSync(sb.FormatXml(Formatting.None), config.ReservationUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb.FormatXml(Formatting.None), config.ReservationUrl());
 
 		var decode = DecodeOwsReservation(xdoc, contents, mainElement);
 
@@ -94,7 +95,7 @@ public class OperaReservationService : OperaBaseService, IOperaReservationServic
 
 		_logXmlService.LogXmlText(LastRequest, "UpdatePackageReq");
 
-		var (xdoc, contents, owsResult) = PostSync(sb.FormatXml(Formatting.None), config.ReservationUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb.FormatXml(Formatting.None), config.ReservationUrl());
 
 		_logXmlService.LogXmlText(contents, "UpdatePackageRes");
 
@@ -121,7 +122,7 @@ public class OperaReservationService : OperaBaseService, IOperaReservationServic
 
 		_logXmlService.LogXmlText(LastRequest, "AddBookingCommentsReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb.FormatXml(Formatting.None), config.ReservationUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb.FormatXml(Formatting.None), config.ReservationUrl());
 
 		_logXmlService.LogXmlText(contents, "AddBookingCommentsRes", reqData.SessionKey);
 
@@ -142,7 +143,7 @@ public class OperaReservationService : OperaBaseService, IOperaReservationServic
 
 		_logXmlService.LogXmlText(LastRequest, "AddBookingCommentsReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ReservationUrl, reqData.SessionKey);
+		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ReservationUrl(), reqData.SessionKey);
 
 		_logXmlService.LogXmlText(contents, "AddBookingCommentsRes", reqData.SessionKey);
 
@@ -163,7 +164,7 @@ public class OperaReservationService : OperaBaseService, IOperaReservationServic
 
 		_logXmlService.LogXmlText(LastRequest, "AddBookingPaymentReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb.FormatXml(Formatting.None), config.ResvAdvancedUrl, reqData.SessionKey);
+		var (xdoc, contents, owsResult) = PostSync(sb.FormatXml(Formatting.None), config.ResvAdvancedUrl(), reqData.SessionKey);
 
 		_logXmlService.LogXmlText(contents, "AddBookingPaymentRes", reqData.SessionKey);
 
@@ -184,7 +185,7 @@ public class OperaReservationService : OperaBaseService, IOperaReservationServic
 
 		_logXmlService.LogXmlText(LastRequest, "AddBookingPaymentReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ResvAdvancedUrl, reqData.SessionKey);
+		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ResvAdvancedUrl(), reqData.SessionKey);
 
 		_logXmlService.LogXmlText(contents, "AddBookingPaymentRes", reqData.SessionKey);
 
@@ -248,7 +249,7 @@ public class OperaReservationService : OperaBaseService, IOperaReservationServic
 		_logXmlService.LogXml(xElement, reqData.Modify ? "BookModReq" : "BookReq", reqData.SessionKey, redactor);
 		//_logXmlService.LogXmlText(LastRequest, keyReq, reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb.FormatXml(Formatting.None), config.ReservationUrl, reqData.SessionKey);
+		var (xdoc, contents, owsResult) = PostSync(sb.FormatXml(Formatting.None), config.ReservationUrl(), reqData.SessionKey);
 
           
 		_logXmlService.LogXml(contents, reqData.Modify ? "BookModRes" : "BookRes", reqData.SessionKey, redactor);
@@ -271,7 +272,7 @@ public class OperaReservationService : OperaBaseService, IOperaReservationServic
 		_logXmlService.LogXml(xElement, reqData.Modify ? "BookModReq" : "BookReq", reqData.SessionKey, redactor);
 		//_logXmlService.LogXmlText(LastRequest, keyReq, reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ReservationUrl, reqData.SessionKey);
+		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ReservationUrl(), reqData.SessionKey);
 
 
 		_logXmlService.LogXml(contents, reqData.Modify ? "BookModRes" : "BookRes", reqData.SessionKey, redactor);
@@ -294,7 +295,7 @@ public class OperaReservationService : OperaBaseService, IOperaReservationServic
 		_logXmlService.LogXml(xElement, "BookStatusReq", reqData.SessionKey, redactor);
 		//_logXmlService.LogXmlText(LastRequest, keyReq, reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ReservationUrl, reqData.SessionKey);
+		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ReservationUrl(), reqData.SessionKey);
 
 
 		_logXmlService.LogXml(contents, "BookStatusRes", reqData.SessionKey, redactor);

@@ -3,6 +3,7 @@ using System.Xml.Linq;
 using Msh.Common.Logger;
 using Msh.Common.Models.OwsCommon;
 using Msh.Common.Services;
+using Msh.Opera.Ows.ExtensionMethods;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Models.AvailabilityResponseModels;
 using Msh.Opera.Ows.Models.AvailabilityResponses;
@@ -41,7 +42,7 @@ public class OperaAvailabilityService : OperaBaseService, IOperaAvailabilityServ
 
 		_logXmlService.LogXml(xElement, "AvailGenReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.AvailabilityUrl, reqData.SessionKey);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.AvailabilityUrl(), reqData.SessionKey);
 
 		_logXmlService.LogXml(contents, "AvailGenRes", reqData.SessionKey);
 
@@ -61,7 +62,7 @@ public class OperaAvailabilityService : OperaBaseService, IOperaAvailabilityServ
 
 		_logXmlService.LogXml(xElement, "AvailGenReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = await PostAsync(sb, config.AvailabilityUrl, reqData.SessionKey);
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.AvailabilityUrl(), reqData.SessionKey);
 
 		_logXmlService.LogXml(contents, "AvailGenRes", reqData.SessionKey);
 
@@ -81,7 +82,7 @@ public class OperaAvailabilityService : OperaBaseService, IOperaAvailabilityServ
 		LastRequest = sb.ToString();
 		_logXmlService.LogXmlText(LastRequest, "AvailDetReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.AvailabilityUrl, reqData.SessionKey);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.AvailabilityUrl(), reqData.SessionKey);
 
 		_logXmlService.LogXmlText(contents, "AvailDetRes", reqData.SessionKey);
 		var decode = DecodeOwsDetailAvailability(xdoc, contents);
@@ -101,7 +102,7 @@ public class OperaAvailabilityService : OperaBaseService, IOperaAvailabilityServ
 		LastRequest = sb.ToString();
 		_logXmlService.LogXmlText(LastRequest, "FetchPackagesReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = await PostAsync(sb, config.AvailabilityUrl, reqData.SessionKey);
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.AvailabilityUrl(), reqData.SessionKey);
 
 		_logXmlService.LogXmlText(contents, "FetchPackagesRes", reqData.SessionKey);
 		var decode = DecodeOwsPackages(xdoc, contents);
@@ -120,7 +121,7 @@ public class OperaAvailabilityService : OperaBaseService, IOperaAvailabilityServ
 		LastRequest = sb.ToString();
 		_logXmlService.LogXmlText(LastRequest, "FetchPackagesReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.AvailabilityUrl, reqData.SessionKey);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.AvailabilityUrl(), reqData.SessionKey);
 
 		_logXmlService.LogXmlText(contents, "FetchPackagesRes", reqData.SessionKey);
 

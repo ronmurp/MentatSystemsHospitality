@@ -14,8 +14,4 @@
     <ProjectReference Include="..\Msh.Common\Msh.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ExtensionMethods\" />
-  </ItemGroup>
-
 </Project>

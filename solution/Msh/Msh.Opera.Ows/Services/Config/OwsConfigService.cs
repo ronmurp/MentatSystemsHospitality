@@ -13,7 +13,7 @@ public class OwsConfigService(IConfigRepository configRepository) : IOwsConfigSe
 	public async Task<OwsConfig> GetOwsConfigAsync() => 
 		await configRepository.GetConfigContentAsync<OwsConfig>(OwsConst.Cache.OwsConfig);
 
-	public async Task SaveHotelsAsync(OwsConfig config)
+	public async Task SaveOwsConfigAsync(OwsConfig config)
 	{
 		await configRepository.SaveConfigAsync(OwsConst.Cache.OwsConfig, config);
 	}

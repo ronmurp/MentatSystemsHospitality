@@ -42,13 +42,7 @@ public class OwsConfig
 	public string BaseUrl { get; set; } =
 		"https://he13-uat-ssd-osb.oracleindustry.com:443/OPERAOSB/OPERA_OWS/OWS_WS_51/";
        
-	public string InformationUrl => $"{BaseUrl}Information";
-	public string AvailabilityUrl => $"{BaseUrl}Availability";
-	public string ReservationUrl => $"{BaseUrl}Reservation";
-
-	public string ResvAdvancedUrl => $"{BaseUrl}ResvAdvanced";
-	public string SecurityUrl => $"{BaseUrl}Security";
-	public string NameUrl => $"{BaseUrl}Name";
+	
 
 	/// <summary>
 	/// The number of retries a post will attempt before giving up

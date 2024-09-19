@@ -3,6 +3,7 @@ using System.Xml.Linq;
 using Msh.Common.Logger;
 using Msh.Common.Models.OwsCommon;
 using Msh.Common.Services;
+using Msh.Opera.Ows.ExtensionMethods;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Services.Base;
 using Msh.Opera.Ows.Services.Builders;
@@ -34,7 +35,7 @@ public class OperaInformationService : OperaBaseService, IOperaInformationServic
 
 		_logXmlService.LogXmlText(sb.ToString(), "GetBusinessDateReq");
 
-		var (xdoc, contents, owsResult) = await PostAsync(sb, config.InformationUrl, "");
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.InformationUrl(), "");
 
 		_logXmlService.LogXmlText(contents, "GetBusinessDateRes");
 
@@ -52,7 +53,7 @@ public class OperaInformationService : OperaBaseService, IOperaInformationServic
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.InformationUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.InformationUrl());
 
 		var decode = DecodeOwsBusinessDate(xdoc, contents);
 
@@ -67,7 +68,7 @@ public class OperaInformationService : OperaBaseService, IOperaInformationServic
 		var xElement = InformationBuildService.LovQuery2(reqData, OwsConst.LovQuery2.CountryCodes, config);
 		var sb = new StringBuilder(xElement.ToString());
 
-		var (xdoc, contents, owsResult) = await PostAsync(sb, config.InformationUrl);
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.InformationUrl());
 
 		var decode = DecodeOwsCountryCodes(xdoc, contents);
 
@@ -82,7 +83,7 @@ public class OperaInformationService : OperaBaseService, IOperaInformationServic
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		var (xdoc, contents, owsResult) = await PostAsync(sb, config.InformationUrl);
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.InformationUrl());
 
 		var decode = DecodeOwsChainCodes(xdoc, contents);
 
@@ -99,7 +100,7 @@ public class OperaInformationService : OperaBaseService, IOperaInformationServic
 
 		_logXmlService.LogXmlText(sb.ToString(), "InfoLovReq");
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.InformationUrl);
+		var (xdoc, contents, owsResult) = PostSync(sb, config.InformationUrl());
 
 		_logXmlService.LogXmlText(contents, "InfoLovRes");
 
