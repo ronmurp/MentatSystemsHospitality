@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Msh.Common.Models.OwsCommon;
 
 namespace Msh.HotelCache.Models.Discounts;
 
