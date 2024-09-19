@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.HotelCache.Models.Discounts
 @using Msh.WebApp.Models.Admin
 @using Msh.WebApp.TagHelpers
 @model Msh.HotelCache.Models.Discounts.DiscountOneTime;
@@ -8,6 +9,7 @@
 	var hotelCode = ViewBag.HotelCode;
 	var itemCode = ViewBag.Code;
 	var title = ViewData["Title"];
+	
 }
 
 <div class="text-center">
@@ -21,7 +23,27 @@
 <div class="row">
 	<div class="col-6">
 		<form asp-action="@formAction" asp-route-hotelCode="@hotelCode" asp-route-code="@itemCode" id="main-form">
+			
+			<div class="form-group mb-3">
+				<label asp-for="Mode" class="control-label"></label>&nbsp;
+				<info-icon name="info-mode" />
+				<select asp-for="Mode" class="form-control " asp-items="Html.GetEnumSelectList<OneTimeMode>()"></select>
+				<span asp-validation-for="Mode" class="text-danger"></span>
+			</div>
 
+			<div class="form-group mb-3">
+				<label asp-for="HashMethod" class="control-label"></label>&nbsp;
+				<info-icon name="info-hash-method" />
+				<select asp-for="HashMethod" class="form-control " asp-items="Html.GetEnumSelectList<OneTimeHashVersion>()"></select>
+				<span asp-validation-for="HashMethod" class="text-danger"></span>
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="BookingStatus" class="control-label"></label>&nbsp;
+				<info-icon name="info-booking-status" />
+				<select asp-for="BookingStatus" class="form-control " asp-items="Html.GetEnumSelectList<BookingStatus>()"></select>
+				<span asp-validation-for="BookingStatus" class="text-danger"></span>
+			</div>
 
 			<div class="form-check form-switch mb-3">
 				<input asp-for="RequiresReservationId" type="checkbox" class="form-check-input " />
@@ -77,7 +99,13 @@
 				<label asp-for="UpdateBooker" class="form-check-label"></label>&nbsp;
 				<info-icon name="info-update-booker" />
 			</div>
-
+			
+			<div class="form-group mb-3">
+				<label asp-for="ExpireCountMode" class="control-label"></label>&nbsp;
+				<info-icon name="info-expire-count" />
+				<select asp-for="ExpireCountMode" class="form-control " asp-items="Html.GetEnumSelectList<ExpireCountMode>()"></select>
+				<span asp-validation-for="ExpireCountMode" class="text-danger"></span>
+			</div>
 
 			<div class="form-group mb-3">
 				<label asp-for="ExpireCount" class="control-label"></label>&nbsp;
@@ -89,7 +117,6 @@
 				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
 				<a asp-controller="Hotels" asp-action="DiscountsList" asp-route-hotelCode="@hotelCode" asp-route-code="@itemCode" class="btn btn-outline-secondary">Return to list</a>
 			</div>
-
 		</form>
 
 	</div>

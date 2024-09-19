@@ -53,6 +53,7 @@ public class EditPageBuildService : AttributeService
 
 			switch ($"{prop.PropertyType}")
 			{
+				
 				case "System.String" when category == "Html":
 					file = "EditFieldTextArea.cshtml";
 					break;
@@ -82,6 +83,10 @@ public class EditPageBuildService : AttributeService
 					break;
 
 				default:
+					if(prop.PropertyType.IsEnum)
+					{
+						file = "EditFieldEnum.cshtml";
+					}
 					break;
 			}
 
@@ -95,6 +100,7 @@ public class EditPageBuildService : AttributeService
 			textField = textField.Replace("{PropertyDescription}", GetDescriptionAttribute(prop));
 			textField = textField.Replace("{PropertyInfo}", GetInfoAttribute(prop));
 			textField = textField.Replace("{CssClass}", GetCssClassAttribute(prop));
+			textField = textField.Replace("{PropertyType}",$"{prop.PropertyType}");
 
 			outputFields.AppendLine(textField);
 

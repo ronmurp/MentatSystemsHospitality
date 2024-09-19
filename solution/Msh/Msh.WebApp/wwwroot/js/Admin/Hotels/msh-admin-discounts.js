@@ -38,5 +38,6 @@
         listPath: 'admin/hotels/DiscountsList'
     });
 
+   
 
 }(jQuery));

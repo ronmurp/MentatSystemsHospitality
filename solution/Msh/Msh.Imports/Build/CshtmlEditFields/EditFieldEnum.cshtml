@@ -1,0 +1,6 @@
+﻿<div class="form-group mb-3">
+	<label asp-for="{Property}" class="control-label"></label>&nbsp;
+	<info-icon name="info-{PropertyInfo}" />
+	<select asp-for="{Property}" class="form-control {CssClass}" asp-items="Html.GetEnumSelectList<{PropertyType}>()"></select>
+	<span asp-validation-for="{Property}" class="text-danger"></span>
+</div>

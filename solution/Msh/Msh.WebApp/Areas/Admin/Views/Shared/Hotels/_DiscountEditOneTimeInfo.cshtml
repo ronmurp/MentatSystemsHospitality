@@ -1,12 +1,90 @@
 ﻿@* Info blocks for _HotelEdit.cshtml *@
 
 <div id="page-info" style="display:none;">
+	
+	<div data-info-for="info-mode">
+		<span>One-Time Mode</span>
+		<div>
+			<p>
+				Determines how a one-time discount is implemented.
+			</p>
+			<ul>
+				<li>
+					<p>
+						<strong>None - </strong>Default - this discount is not treated as a one-time offer.
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Code - </strong>Requires a specific discount code (that might need to be hashed)
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Reservation - </strong>Validates a previous reservation
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Login - </strong>Validates using a login
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Email - </strong>Validates using an email
+					</p>
+				</li>
+			</ul>
+		</div>
+	</div>
+	
+	<div data-info-for="info-hash-method">
+		<span>One-Time Mode</span>
+		<div>
+			<p>
+				If the <strong>Code</strong> mode is used, which hash mode is used?
+			</p>
+			<ul>
+				<li>
+					<p>
+						<strong>None - </strong>Default - the code is not hashed.
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Rfc2898 - </strong>Use the RFC 2898 hash method.
+					</p>
+				</li>
+				
+			</ul>
+		</div>
+	</div>
+	
+	<div data-info-for="info-booking-status">
+		<span>Booking Status</span>
+		<div>
+			<p>
+				Where a one-time discount is used, and it is a <strong>Reservation</strong> mode discount (it depends on a previous reservation), 
+				what status is required on that previous reservation.
+			</p>
+			<p>
+				The default is <string>Any</string>, that is, the previous reservation can be in any state.
+			</p>
+			<p>
+				Typically, the customer is prevented from taking advantage of the one-time discount until their previous reservation reaches some other status, 
+				such <b>InHouse</b>, or perhaps <b>CheckedOut</b>.
+			</p>
+			<p><em>
+					(A future implementation may make this a multiple status setting - e.g., either <b>InHouse</b> or <b>CheckedOut</b>)
+			</em></p>
+		</div>
+	</div>
 
 	<div data-info-for="info-requires-reservation-id">
 		<span>Requires Reservation Id</span>
 		<div>
 			<p>
-			
+			The link used to initiate the one-time booking must contain the reservation ID of a previous booking.
 			</p>
 		</div>
 	</div>
@@ -14,7 +92,7 @@
 		<span>Requires Resv Id</span>
 		<div>
 			<p>
-			
+				The link used to initiate the one-time booking must contain the RESV ID of a previous booking.
 			</p>
 		</div>
 	</div>
@@ -22,7 +100,7 @@
 		<span>Requires Profile Id</span>
 		<div>
 			<p>
-			
+				The link used to initiate the one-time booking must contain the customer's Opera Profile ID associated with the previous booking.
 			</p>
 		</div>
 	</div>
@@ -30,7 +108,7 @@
 		<span>Requires Email</span>
 		<div>
 			<p>
-			
+				The link used to initiate the one-time booking must contain the customer's email address associated with the previous booking. 
 			</p>
 		</div>
 	</div>
@@ -38,7 +116,7 @@
 		<span>Requires Login</span>
 		<div>
 			<p>
-			
+			The user must login to use the one-time reservation.
 			</p>
 		</div>
 	</div>
@@ -46,7 +124,7 @@
 		<span>Requires Past Depart</span>
 		<div>
 			<p>
-			
+			The user must have departed - typically determined by the status of the previous reservation.
 			</p>
 		</div>
 	</div>
@@ -54,7 +132,7 @@
 		<span>Allow Rollover</span>
 		<div>
 			<p>
-			
+			A one-time booking may itself be used as the basis of a another one-time booking.
 			</p>
 		</div>
 	</div>
@@ -67,12 +145,16 @@
 		</div>
 	</div>
 	<div data-info-for="info-expire-count">
-		<span>Expire Count</span>
+		<span>Expire Count Mode</span>
 		<div>
 			<p>
-			
+				The <b>Expire Count</b> is the number of days, weeks, etc., that must expire between the qualifying reservation and the one-time reservation.
+			</p>
+			<p>
+				The <b>Expire Count Mode</b> determines whether the number in <b>Expire Count</b> is days, weeks, etc.
 			</p>
 		</div>
 	</div>
+	
 
 </div>

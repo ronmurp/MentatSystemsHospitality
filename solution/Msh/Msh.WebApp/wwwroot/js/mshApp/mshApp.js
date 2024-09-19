@@ -2703,4 +2703,11 @@
 
     }());
 
+    var success = $('#is-success').val() === 'true';
+    if (success) {
+        setTimeout(function () {
+            $('#success-alert').fadeOut(3000);
+        }, 3000);
+    }
+
 }(jQuery));
