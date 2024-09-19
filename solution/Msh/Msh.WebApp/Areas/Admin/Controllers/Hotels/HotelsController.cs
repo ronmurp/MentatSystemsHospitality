@@ -1,5 +1,4 @@
 ﻿using Mapster;
-using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Msh.Common.Data;
@@ -10,10 +9,9 @@ using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Hotels;
 using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Models;
-using Msh.WebApp.Models.Admin.ViewModels;
 using Msh.WebApp.Services;
 
-namespace Msh.WebApp.Areas.Admin.Controllers;
+namespace Msh.WebApp.Areas.Admin.Controllers.Hotels;
 
 [Authorize]
 [Area("Admin")]
@@ -23,6 +21,7 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 	IConfigRepository configRepository,
 	IUserService userService) : Controller
 {
+	
 	[Route("")]
 	public async Task<IActionResult> Index()
 	{

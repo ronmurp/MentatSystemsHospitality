@@ -6,7 +6,7 @@ using Msh.HotelCache.Models.RoomTypes;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
 
-namespace Msh.WebApp.Areas.Admin.Controllers;
+namespace Msh.WebApp.Areas.Admin.Controllers.Hotels;
 
 public partial class HotelsController
 {

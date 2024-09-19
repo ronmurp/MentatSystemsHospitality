@@ -1,14 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Msh.Common.Data;
-using Msh.HotelCache.Models.Extras;
 using Msh.HotelCache.Models;
-using Msh.HotelCache.Services;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Services.Config;
-using Msh.WebApp.Services;
 
-namespace Msh.WebApp.Areas.Admin.Controllers;
+namespace Msh.WebApp.Areas.Admin.Controllers.Ows;
 
 [Authorize]
 [Area("Admin")]
@@ -74,5 +70,23 @@ public class OwsController(ILogger<OwsController> logger,
 
 			return View();
 		}
+	}
+
+	
+	[Route("OwsConfigEditMap")]
+	public async Task<IActionResult> OwsConfigEditMap(bool isSuccess = false)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			return View();
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"{ex.Message}");
+		}
+
+		return RedirectToAction("Index");
 	}
 }

@@ -9,7 +9,7 @@ using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Data;
 using Msh.WebApp.Areas.Admin.Models;
 
-namespace Msh.WebApp.API;
+namespace Msh.WebApp.API.Hotels;
 
 [ApiController]
 [Route("api/hotelapi")]
@@ -26,7 +26,7 @@ public partial class HotelApiController(IHotelsRepoService hotelsRepoService) : 
 		{
 			return Ok(new ObjectVm
 			{
-				Success = true,
+				Success = false,
 				UserErrorMessage = $"Dates not found for hotel code {hotelCode}"
 			});
 		}

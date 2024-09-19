@@ -1,15 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Msh.Common.Exceptions;
 using Msh.Common.ExtensionMethods;
-using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models;
-using Msh.HotelCache.Models.Extras;
 using Msh.HotelCache.Models.RoomTypes;
 using Msh.HotelCache.Models.Specials;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
 
-namespace Msh.WebApp.Areas.Admin.Controllers;
+namespace Msh.WebApp.Areas.Admin.Controllers.Hotels;
 
 public partial class HotelsController
 {

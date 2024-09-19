@@ -5,7 +5,7 @@ using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Hotels;
 
-namespace Msh.WebApp.Areas.Admin.Controllers;
+namespace Msh.WebApp.Areas.Admin.Controllers.Hotels;
 public partial class HotelsController
 {
 

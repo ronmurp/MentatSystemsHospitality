@@ -2,19 +2,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Msh.Common.ExtensionMethods;
 using Msh.Common.Models.ViewModels;
-using Msh.HotelCache.Models.Extras;
-using Msh.HotelCache.Models.RatePlans;
+using Msh.HotelCache.Models.RoomTypes;
 using Msh.WebApp.Areas.Admin.Models;
 
-namespace Msh.WebApp.API;
-
-
+namespace Msh.WebApp.API.Hotels;
 public partial class HotelApiController
 {
-	
 	[HttpPost]
-	[Route("RatePlanCopy")]
-	public async Task<IActionResult> RatePlanCopy(ApiInput input)
+	[Route("RoomTypeCopy")]
+	public async Task<IActionResult> RoomTypeCopy(ApiInput input)
 	{
 		try
 		{
@@ -22,13 +18,12 @@ public partial class HotelApiController
 			{
 				return GetFail("At least one code must change");
 			}
-
-			var ratePlans = await hotelsRepoService.GetRatePlansAsync(input.HotelCode);
-			var ratePlan = ratePlans.FirstOrDefault(h => h.RatePlanCode == input.Code);
-			if (ratePlan != null)
+			var roomTypes = await hotelsRepoService.GetRoomTypesAsync(input.HotelCode);
+			var roomType = roomTypes.FirstOrDefault(h => h.Code == input.Code);
+			if (roomType != null)
 			{
-				var newRatePlan = ratePlan.Adapt(ratePlan);
-				newRatePlan.RatePlanCode = input.NewCode;
+				var newRoomType = roomType.Adapt(roomType);
+				newRoomType.Code = input.NewCode;
 
 				var result = await CheckHotel(input.NewHotelCode);
 				if (!result.success)
@@ -36,36 +31,14 @@ public partial class HotelApiController
 					return GetFail("The hotel does not exist.");
 				}
 
-				var newRatePlans = await hotelsRepoService.GetRatePlansAsync(input.NewHotelCode);
-				if (newRatePlans.Any(c => c.RatePlanCode.EqualsAnyCase(input.NewCode)))
+				var newRoomTypes = await hotelsRepoService.GetRoomTypesAsync(input.NewHotelCode);
+				if (newRoomTypes.Any(c => c.Code.EqualsAnyCase(input.NewCode)))
 				{
 					return GetFail("The code already exists.");
 				}
 
-				newRatePlans.Add(newRatePlan);
-				await hotelsRepoService.SaveRatePlansAsync(newRatePlans, input.NewHotelCode);
-			}
-
-			return Ok(new ObjectVm());
-		}
-		catch (Exception ex)
-		{
-			return GetFail(ex.Message);
-		}
-	}
-
-	[HttpPost]
-	[Route("RatePlanDelete")]
-	public async Task<IActionResult> RatePlanDelete(ApiInput input)
-	{
-		try
-		{
-			var ratePlans = await hotelsRepoService.GetRatePlansAsync(input.HotelCode);
-			var ratePlan = ratePlans.FirstOrDefault(h => h.RatePlanCode == input.Code);
-			if (ratePlan != null)
-			{
-				ratePlans.Remove(ratePlan);
-				await hotelsRepoService.SaveRatePlansAsync(ratePlans, input.HotelCode);
+				newRoomTypes.Add(newRoomType);
+				await hotelsRepoService.SaveRoomTypesAsync(newRoomTypes, input.NewHotelCode);
 			}
 
 			return Ok(new ObjectVm());
@@ -78,8 +51,37 @@ public partial class HotelApiController
 	}
 
 	[HttpPost]
-	[Route("RatePlanCopyBulk")]
-	public async Task<IActionResult> RatePlanCopyBulk(ApiInput input)
+	[Route("RoomTypeDelete")]
+	public async Task<IActionResult> RoomTypeDelete(ApiInput input)
+	{
+		try
+		{
+			var roomTypes = await hotelsRepoService.GetRoomTypesAsync(input.HotelCode);
+			var roomType = roomTypes.FirstOrDefault(h => h.Code == input.Code);
+			if (roomType != null)
+			{
+				roomTypes.Remove(roomType);
+				await hotelsRepoService.SaveRoomTypesAsync(roomTypes, input.HotelCode);
+			}
+
+			return Ok(new ObjectVm
+			{
+
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
+
+	[HttpPost]
+	[Route("RoomTypeCopyBulk")]
+	public async Task<IActionResult> RoomTypeCopyBulk(ApiInput input)
 	{
 		try
 		{
@@ -99,20 +101,20 @@ public partial class HotelApiController
 			}
 
 			var missingList = new List<string>();
-			var newList = new List<RoomRatePlan>();
+			var newList = new List<RoomType>();
 
-			var srcExtras = await hotelsRepoService.GetRatePlansAsync(input.HotelCode);
-			var dstExtras = await hotelsRepoService.GetRatePlansAsync(input.NewHotelCode);
+			var srcExtras = await hotelsRepoService.GetRoomTypesAsync(input.HotelCode);
+			var dstExtras = await hotelsRepoService.GetRoomTypesAsync(input.NewHotelCode);
 
 			foreach (var code in input.CodeList)
 			{
-				var extra = srcExtras.FirstOrDefault(h => h.RatePlanCode == code);
+				var extra = srcExtras.FirstOrDefault(h => h.Code == code);
 				if (extra != null)
 				{
-					if (dstExtras.Any(e => e.RatePlanCode == extra.RatePlanCode))
+					if (dstExtras.Any(e => e.Code == extra.Code))
 					{
 						// Already exists
-						missingList.Add(extra.RatePlanCode);
+						missingList.Add(extra.Code);
 						continue;
 					}
 					newList.Add(extra);
@@ -121,7 +123,7 @@ public partial class HotelApiController
 
 			dstExtras.AddRange(newList);
 
-			await hotelsRepoService.SaveRatePlansAsync(dstExtras, input.NewHotelCode);
+			await hotelsRepoService.SaveRoomTypesAsync(dstExtras, input.NewHotelCode);
 
 			if (missingList.Count > 0)
 			{
@@ -140,8 +142,8 @@ public partial class HotelApiController
 	}
 
 	[HttpPost]
-	[Route("RatePlanDeleteBulk")]
-	public async Task<IActionResult> RatePlanDeleteBulk(ApiInput input)
+	[Route("RoomTypeDeleteBulk")]
+	public async Task<IActionResult> RoomTypeDeleteBulk(ApiInput input)
 	{
 		try
 		{
@@ -151,18 +153,18 @@ public partial class HotelApiController
 				return GetFail($"Invalid source hotel code {input.HotelCode}");
 			}
 
-			var items = await hotelsRepoService.GetRatePlansAsync(input.HotelCode);
+			var items = await hotelsRepoService.GetRoomTypesAsync(input.HotelCode);
 
 			for (var i = items.Count - 1; i >= 0; i--)
 			{
 				var item = items[i];
-				if (input.CodeList.Any(c => c.EqualsAnyCase(item.RatePlanCode)))
+				if (input.CodeList.Any(c => c.EqualsAnyCase(item.Code)))
 				{
 					items.RemoveAt(i);
 				}
 			}
 
-			await hotelsRepoService.SaveRatePlansAsync(items, input.HotelCode);
+			await hotelsRepoService.SaveRoomTypesAsync(items, input.HotelCode);
 
 
 
@@ -175,9 +177,10 @@ public partial class HotelApiController
 		}
 	}
 
+
 	[HttpPost]
-	[Route("RatePlansSort")]
-	public async Task<IActionResult> RatePlansSort(ApiInput input)
+	[Route("RoomTypesSort")]
+	public async Task<IActionResult> RoomTypesSort(ApiInput input)
 	{
 		try
 		{
@@ -188,9 +191,9 @@ public partial class HotelApiController
 				return GetFail($"Invalid hotel code {hotelCode}");
 			}
 
-			var srcExtras = await hotelsRepoService.GetRatePlansAsync(hotelCode);
+			var srcExtras = await hotelsRepoService.GetRoomTypesAsync(hotelCode);
 
-			await hotelsRepoService.SaveRatePlansAsync(srcExtras.OrderBy(e => e.RatePlanCode)
+			await hotelsRepoService.SaveRoomTypesAsync(srcExtras.OrderBy(e => e.Code)
 				.ToList(), hotelCode);
 
 			return Ok(new ObjectVm());
