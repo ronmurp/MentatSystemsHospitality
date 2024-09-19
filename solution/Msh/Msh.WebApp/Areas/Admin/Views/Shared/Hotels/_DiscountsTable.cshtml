@@ -20,12 +20,14 @@
 			</div>
 		</th>
 		<th class="text-center">Enabled</th>
+		<th class="text-center">Type</th>
 		<th>Description</th>
 		<th class="text-center">Enabled Plans</th>
 		<th class="text-center">Disabled Plans</th>
 		<th class ="text-center">Offer Dates</th>
 		<th class="text-center">Book Dates</th>
 		<th class="text-center">Errors</th>
+		<th class="text-center">One Time</th>
 		<th class="text-center" style="width:40px;">Move</th>
 		<th>
 			<div class="cell-outer">
@@ -57,7 +59,7 @@
 		<tr>
 			<td>@item.Code</td>
 			@await Html.PartialAsync("Hotels/_TableCheckMarkCell", item.Enabled)
-			
+			<td class="text-center">@item.DiscountType</td>
 			<td>@item.Description</td>
 			<td style="width:80px;">
 				<div class="cell-outer">
@@ -116,7 +118,15 @@
 					</div>
 				</div>
 			</td>
-
+			<td style="width:80px;">
+				<div class="cell-outer">
+					<div class="cell-inner">
+						<a asp-controller="Hotels" asp-action="DiscountEditOneTime" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
+							<i class="fas fa-clock"></i>
+						</a>
+					</div>
+				</div>
+			</td>
 			@{
 				var vm = new TableCommonCellsVm
 				{

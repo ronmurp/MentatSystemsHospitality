@@ -47,6 +47,12 @@ public class BuildEditPageRunner
 	{
 		BuildPage(typeof(Msh.HotelCache.Models.Discounts.DiscountErrors), "Discounts Errors");
 	}
+
+	[Test]
+	public void BuildDiscountsOneTime()
+	{
+		BuildPage(typeof(Msh.HotelCache.Models.Discounts.DiscountOneTime), "Discounts One Time");
+	}
 	private void BuildPage(Type classType, string publishName)
 	{
 		var service = new EditPageBuildService();

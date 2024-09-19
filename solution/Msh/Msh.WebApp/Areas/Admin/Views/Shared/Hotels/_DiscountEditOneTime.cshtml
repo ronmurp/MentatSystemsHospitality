@@ -1,0 +1,99 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.WebApp.Models.Admin
+@using Msh.WebApp.TagHelpers
+@model Msh.HotelCache.Models.Discounts.DiscountOneTime;
+@{
+	var success = ViewBag.Success as SuccessAlert;
+	var formAction = success?.FormAction ?? "DiscountEditOneTime";
+	var hotelCode = ViewBag.HotelCode;
+	var itemCode = ViewBag.Code;
+	var title = ViewData["Title"];
+}
+
+<div class="text-center">
+	<h1 class="display-6">@title</h1>
+	<p>Edit error messages for Discount @itemCode in hotel @hotelCode</p>
+</div>
+
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
+
+
+<div class="row">
+	<div class="col-6">
+		<form asp-action="@formAction" asp-route-hotelCode="@hotelCode" asp-route-code="@itemCode" id="main-form">
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="RequiresReservationId" type="checkbox" class="form-check-input " />
+				<label asp-for="RequiresReservationId" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-requires-reservation-id" />
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="RequiresResvId" type="checkbox" class="form-check-input " />
+				<label asp-for="RequiresResvId" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-requires-resv-id" />
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="RequiresProfileId" type="checkbox" class="form-check-input " />
+				<label asp-for="RequiresProfileId" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-requires-profile-id" />
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="RequiresEmail" type="checkbox" class="form-check-input " />
+				<label asp-for="RequiresEmail" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-requires-email" />
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="RequiresLogin" type="checkbox" class="form-check-input " />
+				<label asp-for="RequiresLogin" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-requires-login" />
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="RequiresPastDepart" type="checkbox" class="form-check-input " />
+				<label asp-for="RequiresPastDepart" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-requires-past-depart" />
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="AllowRollover" type="checkbox" class="form-check-input " />
+				<label asp-for="AllowRollover" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-allow-rollover" />
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="UpdateBooker" type="checkbox" class="form-check-input " />
+				<label asp-for="UpdateBooker" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-update-booker" />
+			</div>
+
+
+			<div class="form-group mb-3">
+				<label asp-for="ExpireCount" class="control-label"></label>&nbsp;
+				<info-icon name="info-expire-count" />
+				<input asp-for="ExpireCount" class="form-control " />
+				<span asp-validation-for="ExpireCount" class="text-danger"></span>
+			</div>
+			<div class="input-group sticky-bottom">
+				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
+				<a asp-controller="Hotels" asp-action="DiscountsList" asp-route-hotelCode="@hotelCode" asp-route-code="@itemCode" class="btn btn-outline-secondary">Return to list</a>
+			</div>
+
+		</form>
+
+	</div>
+</div>
+
+
+@await Html.PartialAsync("Hotels/_DiscountEditOneTimeInfo", "Extra Edit")

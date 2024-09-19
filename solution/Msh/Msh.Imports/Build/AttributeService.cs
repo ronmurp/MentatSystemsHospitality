@@ -10,20 +10,27 @@ public class AttributeService
 {
 	public string GetDescriptionAttribute(PropertyInfo prop)
 	{
+		var description = string.Empty;
+
 		var attributes = prop.GetCustomAttributes(true);
 		var attr = GetAttribute(attributes, "DescriptionAttribute");
 		if (attr != null)
 		{
 			var y = (System.ComponentModel.DescriptionAttribute)attr;
-			return y.Description;
+			if(!string.IsNullOrEmpty(y.Description))
+				return y.Description;
 		}
 		attr = GetAttribute(attributes, "DisplayAttribute");
 		if (attr != null)
 		{
 			var y = (System.ComponentModel.DataAnnotations.DisplayAttribute)attr;
-			return y.Name;
+			if (!string.IsNullOrEmpty(y.Name))
+				return y.Name;
 		}
-		return string.Empty;
+
+		description = InsertSpace(prop.Name);
+
+		return description;
 	}
 
 	public string GetCategoryAttribute(PropertyInfo prop)
@@ -87,5 +94,10 @@ public class AttributeService
 	{
 		// Regex pattern: Look for transitions from a lowercase letter followed by an uppercase letter
 		return Regex.Replace(input, "(?<!^)([A-Z])", "-$1").ToLower();
+	}
+	private string InsertSpace(string input)
+	{
+		// Regex pattern: Look for transitions from a lowercase letter followed by an uppercase letter
+		return Regex.Replace(input, "(?<!^)([A-Z])", " $1");
 	}
 }

@@ -250,6 +250,71 @@ public partial class HotelsController
 	}
 
 
+	[HttpGet]
+	[Route("DiscountEditOneTime")]
+	public async Task<IActionResult> DiscountEditOneTime(string code, string hotelCode, bool isSuccess = false)
+	{
+		await Task.Delay(0);
+
+		ViewBag.IsSuccess = isSuccess;
+		ViewBag.Code = code;
+		ViewBag.Languages = GetLanguages();
+		ViewBag.Hotels = await GetHotels();
+		ViewBag.HotelCode = hotelCode;
+
+		var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+		var discount = discounts.FirstOrDefault(m => m.Code == code);
+		if (discount != null)
+		{
+			return View(discount.OneTime);
+		}
+
+		return RedirectToAction(nameof(DiscountsList));
+	}
+
+	[HttpPost]
+	[Route("DiscountEditOneTime")]
+	public async Task<IActionResult> DiscountEditOneTime([FromForm] DiscountOneTime discountOneTime, string hotelCode, string code)
+	{
+		ViewBag.Languages = GetLanguages();
+		ViewBag.Hotels = await GetHotels();
+
+		if (ModelState.IsValid)
+		{
+			var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+			var index = discounts.FindIndex(m => m.Code == code);
+			if (index >= 0)
+			{
+
+				// Now that passed parameter has been updated with properties not edited, update the original
+				discounts[index].OneTime = discountOneTime;
+				// And save
+				await hotelsRepoService.SaveDiscountCodesAsync(discounts, hotelCode);
+				return RedirectToAction(nameof(DiscountEditOneTime), new { IsSuccess = true, HotelCode = hotelCode, Code = code });
+			}
+			else
+			{
+				ViewBag.IsSuccess = false;
+				ViewBag.Code = string.Empty;
+
+				ModelState.AddModelError("", "That Code does not exist");
+
+				return View(new DiscountOneTime());
+			}
+		}
+		else
+		{
+			ViewBag.IsSuccess = false;
+			ViewBag.Code = string.Empty;
+
+			ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
+
+			return View(new DiscountOneTime());
+		}
+	}
+
+
+
 	[Route("DiscountEditDatesOffer")]
 	public async Task<IActionResult> DiscountEditDatesOffer(string hotelCode, string code, bool isSuccess = false)
 	{
