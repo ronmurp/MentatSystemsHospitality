@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using Msh.Common.Logger;
 using Msh.Common.Models.OwsCommon;
@@ -21,23 +22,22 @@ public class OperaSecurityService : OperaBaseService, IOperaSecurityService
 	public OperaSecurityService(IOwsConfigService owsConfigService,
 		IOwsPostService owsPostService,
 		ISecurityBuildService securityBuildService,
-		ISwitchListLoader switchListLoader,
-		ILogXmlService logXmlService): base(owsConfigService.OwsConfig, logXmlService, switchListLoader, owsConfigService, owsPostService)
+		ILogXmlService logXmlService): base(owsConfigService.OwsConfig, logXmlService, owsConfigService, owsPostService)
 	{
 		_securityBuildService = securityBuildService;
 	}
 
-	public (OwsUser owsUser, OwsResult owsResult) AuthenticateUserRequest(OwsUser user)
+	public async Task<(OwsUser owsUser, OwsResult owsResult)> AuthenticateUserRequestAsync(OwsUser user)
 	{
-		var config = GetConfigOverride(string.Empty, OwsService.Reservation);
+		var config = _config;
 
 		var xElement = _securityBuildService.AuthenticateUserRequest(user, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		//_logXmlService.LogXmlText(sb.ToString(), "AuthenticateUserReq", user.SessionKey);
+		// _logXmlService.LogXmlText(sb.ToString(), "AuthenticateUserReq", user.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl());
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.SecurityUrl());
 
 		//_logXmlService.LogXmlText(contents, "AuthenticateUserRes", user.SessionKey);
 
@@ -46,72 +46,88 @@ public class OperaSecurityService : OperaBaseService, IOperaSecurityService
 		return (decode.user, decode.owsResult ?? owsResult);
 	}
 
-	public (OwsUser owsUser, OwsResult owsResult) CreateUserRequest(OwsUser user)
+	public async Task<(OwsUser owsUser, OwsResult owsResult)> CreateUserRequestAsync(OwsUser user)
 	{
-		var config = GetConfigOverride(string.Empty, OwsService.Reservation);
+		var config = _config;
 
 		var xElement = _securityBuildService.CreateUserRequest(user, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		_logXmlService.LogXmlText(sb.ToString(), "CreateUserReq", user.SessionKey);
+		await _logXmlService.LogXmlText(sb.ToString(), "CreateUserReq", user.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl());
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.SecurityUrl());
 
-		_logXmlService.LogXmlText(contents, "CreateUserRes", user.SessionKey);
+		await _logXmlService.LogXmlText(contents, "CreateUserRes", user.SessionKey);
 
 		var decode = DecodeCreateUserResponse(xdoc, contents);
 
 		return (decode.user, decode.owsResult ?? owsResult);
 	}
 
-	public (List<OwsQuestion> questions, OwsResult owsResult) FetchQuestionListRequest(OwsUser user)
+	public async Task<(OwsUser owsUser, OwsResult owsResult)> UpdatePasswordAsync(OwsUser user, string oldPassword, string newPassword)
 	{
-		var config = GetConfigOverride(string.Empty, OwsService.Reservation);
+		var config = _config;
 
-		var xElement = _securityBuildService.FetchQuestionListRequest(user, config);
+		var xElement = _securityBuildService.UpdatePasswordRequest(user, oldPassword, newPassword, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		//_logXmlService.LogXmlText(sb.ToString(), "FetchQuestionListReq", user.SessionKey);
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.SecurityUrl());
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl());
+		var decode = DecodeUpdatePasswordResponse(user, xdoc, contents);
 
-		//_logXmlService.LogXmlText(contents, "FetchQuestionListRes", user.SessionKey);
-
-		var decode = DecodeFetchQuestionListResponse(xdoc, contents);
-
-		return (decode.questions, decode.owsResult ?? owsResult);
+		// return the user because on success nothing is added
+		return (user, decode.owsResult ?? owsResult);
 	}
 
-	public (OwsUser owsUser, OwsResult owsResult) ResetPasswordRequest(OwsUser user)
+	public async Task<(OwsUser owsUser, OwsResult owsResult)> ResetPasswordRequestAsync(OwsUser user)
 	{
-		var config = GetConfigOverride(string.Empty, OwsService.Reservation);
+		var config = _config;
 
 		var xElement = _securityBuildService.ResetPasswordRequest(user, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		//_logXmlService.LogXmlText(sb.ToString(), "ResetPasswordReq", user.SessionKey);
+		//await _logXmlService.LogXmlText(sb.ToString(), "ResetPasswordReq", user.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl());
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.SecurityUrl());
 
-		//_logXmlService.LogXmlText(contents, "ResetPasswordRes", user.SessionKey);
+		//await _logXmlService.LogXmlText(contents, "ResetPasswordRes", user.SessionKey);
 
 		var decode = DecodeResetPasswordResponse(xdoc, contents);
 
 		return (decode.user, decode.owsResult ?? owsResult);
 	}
 
-	public (OwsUser owsUser, OwsResult owsResult) UpdateQuestionRequest(OwsUser user)
+	public async Task<(List<OwsQuestion> questions, OwsResult owsResult)> FetchQuestionListRequestAsync(OwsUser user)
 	{
-		var config = GetConfigOverride(string.Empty, OwsService.Reservation);
+		var config = _config;
+
+		var xElement = _securityBuildService.FetchQuestionListRequest(user, config);
+
+		var sb = new StringBuilder(xElement.ToString());
+
+		//await _logXmlService.LogXmlText(sb.ToString(), "FetchQuestionListReq", user.SessionKey);
+
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.SecurityUrl());
+
+		//await _logXmlService.LogXmlText(contents, "FetchQuestionListRes", user.SessionKey);
+
+		var decode = DecodeFetchQuestionListResponse(xdoc, contents);
+
+		return (decode.questions, decode.owsResult ?? owsResult);
+	}
+
+	public async Task<(OwsUser owsUser, OwsResult owsResult)> UpdateQuestionRequestAsync(OwsUser user)
+	{
+		var config = _config;
 
 		var xElement = _securityBuildService.UpdateQuestionRequest(user, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl());
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.SecurityUrl());
 
 		var decode = DecodeUpdateQuestionResponse(xdoc, contents);
 
@@ -119,21 +135,6 @@ public class OperaSecurityService : OperaBaseService, IOperaSecurityService
 		return (user, decode.owsResult ?? owsResult);
 	}
 
-	public (OwsUser owsUser, OwsResult owsResult) UpdatePassword(OwsUser user, string oldPassword, string newPassword)
-	{
-		var config = GetConfigOverride(string.Empty, OwsService.Reservation);
-
-		var xElement = _securityBuildService.UpdatePasswordRequest(user, oldPassword, newPassword, config);
-
-		var sb = new StringBuilder(xElement.ToString());
-
-		var (xdoc, contents, owsResult) = PostSync(sb, config.SecurityUrl());
-
-		var decode = DecodeUpdatePasswordResponse(user, xdoc, contents);
-
-		// return the user because on success nothing is added
-		return (user, decode.owsResult ?? owsResult);
-	}
 
 	private (OwsUser user, OwsResult owsResult) DecodeUpdatePasswordResponse(OwsUser user, XDocument xdocInput, string contents)
 	{

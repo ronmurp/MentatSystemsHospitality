@@ -1,10 +1,8 @@
-﻿using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Xml.Linq;
 using Msh.Common.Constants;
 using Msh.Common.Logger;
 using Msh.Common.Models.OwsCommon;
-using Msh.Common.Services;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Models.AvailabilityResponses;
 using Msh.Opera.Ows.Models.ReservationRequestModels;
@@ -20,45 +18,20 @@ public class OperaBaseService
 {
 	protected readonly OwsConfig _config;
 	protected readonly ILogXmlService _logXmlService;
-	protected readonly ISwitchListLoader _switchListLoader;
 	protected readonly IOwsConfigService _owsConfigService;
 	private readonly IOwsPostService _owsPostService;
-	private IOwsPostService _owsPostServiceMock = null;
 
 	protected OperaBaseService(OwsConfig config, 
 		ILogXmlService logXmlService, 
-		ISwitchListLoader switchListLoader, 
 		IOwsConfigService owsConfigService,
 		IOwsPostService owsPostService)
 	{
 		_config = config;
 		_logXmlService = logXmlService;
-		_switchListLoader = switchListLoader;
 		_owsConfigService = owsConfigService;
 		_owsPostService = owsPostService;
 	}
 
-	protected OwsConfig GetConfigOverride(string hotelCodeIn, OwsService service)
-	{
-            
-		var list = _switchListLoader.SwitchList;
-
-		// Use the default config if there's no OwsSources.xml file
-		if (list == null) return _config;
-
-		var hotelCode = string.IsNullOrEmpty(hotelCodeIn) ? _config.DefaultHotelCode : hotelCodeIn;
-
-		var opt = list.SingleOrDefault(x => x.HotelCode == hotelCode)?.Services
-			.SingleOrDefault(o => o.Service == service);
-
-		if (opt != null)
-		{
-			//return _owsConfigService.OwsConfigList.FirstOrDefault();
-
-		}
-
-		return _config;
-	}
 
 	/// <summary>
 	/// Checks for Fault, then checks for FAIL
@@ -68,19 +41,17 @@ public class OperaBaseService
 	/// <param name="responseElement"></param>
 	/// <param name="source"></param>
 	/// <returns></returns>
-	protected (XDocument xdoc, OwsResult owsResult) ParseAndCheckForFail(XDocument xdocInput, string contents, string responseElement, string source)
+	protected (XDocument xdoc, OwsResult? owsResult) ParseAndCheckForFail(XDocument xdocInput, string contents, string responseElement, string source)
 	{
            
 		// Parse and check for Fault ...
 		var (xdoc, owsResultFault) = ParseAndCheckForFault(xdocInput, contents);
 
 		if (owsResultFault != null)
-			return (null as XDocument, owsResultFault);
+			return (null as XDocument, owsResultFault)!;
 
-		if (xdoc.Descendants(responseElement).FirstOrDefault() == null)
-			return (null, OwsResultHelper.WbsResultMessage(
-				CommonConst.GdsError.MissingElement,
-				$"The main response element is missing: {responseElement}"));
+		if (xdoc?.Descendants(responseElement).FirstOrDefault() == null)
+			return (null, OwsResultHelper.WbsResultMessage(CommonConst.GdsError.MissingElement, $"The main response element is missing: {responseElement}"))!;
 
 		var owsResult = xdoc.Descendants(responseElement)
 			.Select(resp => new 
@@ -89,9 +60,9 @@ public class OperaBaseService
 
 			}).SingleOrDefault()?.OwsResult ?? OwsResultHelper.WbsResult;
 
-		return owsResult.ResultStatusFlag == CommonConst.OwsResultStatusFlag.Success
+		return (owsResult.ResultStatusFlag == CommonConst.OwsResultStatusFlag.Success
 			? (xdoc, null as OwsResult)
-			: (null as XDocument, owsResult);
+			: (null as XDocument, owsResult))!;
 
 	}
 
@@ -100,7 +71,7 @@ public class OperaBaseService
 	/// </summary>
 	/// <param name="owsDecodedData"></param>
 	/// <param name="source"></param>
-	protected OwsResult CheckForNoData(object owsDecodedData, string source)
+	protected OwsResult? CheckForNoData(object? owsDecodedData, string source)
 	{
 		if (owsDecodedData != null) return null;
 
@@ -125,12 +96,12 @@ public class OperaBaseService
 	/// <param name="xdoc"></param>
 	/// <param name="contents"></param>
 	/// <returns></returns>
-	private (XDocument xdoc, OwsResult owsResult) ParseAndCheckForFault(XDocument xdoc, string contents)
+	private (XDocument? xdoc, OwsResult? owsResult) ParseAndCheckForFault(XDocument? xdoc, string contents)
 	{
 		try
 		{
 			// Should have failed by now if it cannot already be parsed, but try again
-			if(xdoc == null) xdoc = XDocument.Parse(contents);
+			xdoc ??= XDocument.Parse(contents);
 
 			xdoc.StripNameSpaces();
 
@@ -187,11 +158,11 @@ public class OperaBaseService
 		catch (System.Xml.XmlException ex)
 		{
 			// WbsLogger.Error(LogCodes.OwsOperaParseFault, ex, contents);
-			throw ex;
+			throw;
 		}
 		catch (Exception ex)
 		{
-			throw ex;
+			throw;
 		}
            
 
@@ -265,29 +236,6 @@ public class OperaBaseService
 		return data;
 	}
 
-	protected async Task<(XDocument xdoc, string contents, OwsResult owsResult)> PostAsync(StringBuilder sb, string url, string sessionId = "")
-	{
-		if (_owsPostServiceMock != null)
-		{
-			return await _owsPostServiceMock.PostAsync(sb, url, sessionId);
-		}
-
-		return await _owsPostService.PostAsync(sb, url, sessionId);
-
-	}
-
-	protected (XDocument xdoc, string contents, OwsResult owsResult) PostSync(StringBuilder sb, string url, string sessionKey = "")
-	{
-		if (_owsPostServiceMock != null)
-		{
-			return _owsPostServiceMock.PostSync(sb, url, sessionKey);
-		}
-
-		return _owsPostService.PostSync(sb, url, sessionKey);
-	}
-
-	public void MockOwsPostService(IOwsPostService owsPostService)
-	{
-		_owsPostServiceMock = owsPostService;
-	}
+	protected async Task<(XDocument xdoc, string contents, OwsResult owsResult)> PostAsync(StringBuilder sb, string url, string sessionId = "") => 
+		await _owsPostService.PostAsync(sb, url, sessionId);
 }

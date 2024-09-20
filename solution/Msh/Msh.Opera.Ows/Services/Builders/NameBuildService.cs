@@ -78,7 +78,7 @@ public class NameBuildService : INameBuildService
 
 	public XElement NameLookupRequestByEmail(OwsBaseSession reqData, string email, OwsConfig config)
 	{
-		var xElement = new XElement(name + "NameLookupRequest",
+		var xElement = new XElement(name + "NameLookupRequestAsync",
 			new XAttribute(XNamespace.Xmlns + "name", name),
 			new XAttribute(XNamespace.Xmlns + "nm", nm),
 			new XElement(name + "NameLookupCriteria",
@@ -101,7 +101,7 @@ public class NameBuildService : INameBuildService
 		var elLastName = string.IsNullOrEmpty(lastName) ? null : new XElement(nm + "LastName", lastName);
 		var elEmail = string.IsNullOrEmpty(email) ? null : new XElement(nm + "EmailAddress", email);
 
-		var xElement = new XElement(name + "NameLookupRequest",
+		var xElement = new XElement(name + "NameLookupRequestAsync",
 			new XAttribute(XNamespace.Xmlns + "name", name),
 			new XAttribute(XNamespace.Xmlns + "nm", nm),
 			new XElement(name + "NameLookupCriteria",
@@ -120,7 +120,7 @@ public class NameBuildService : INameBuildService
 
 	public XElement NameLookupRequestByName(OwsBaseSession reqData, string nameToFind, string nameType, OwsConfig config)
 	{
-		var xElement = new XElement(name + "NameLookupRequest",
+		var xElement = new XElement(name + "NameLookupRequestAsync",
 			new XAttribute(XNamespace.Xmlns + "name", name),
 			new XAttribute(XNamespace.Xmlns + "nm", nm),
 			new XElement(name + "NameLookupCriteria",

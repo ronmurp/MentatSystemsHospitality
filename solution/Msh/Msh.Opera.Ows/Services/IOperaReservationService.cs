@@ -10,22 +10,19 @@ namespace Msh.Opera.Ows.Services;
 /// </summary>
 public interface IOperaReservationService
 {
-	(OwsReservation owsReservation, OwsResult owsResult) CreateBooking(OwsReservationRequest reqData, IXmlRedactor redactor);
 	Task<(OwsReservation owsReservation, OwsResult owsResult)> CreateBookingAsync(OwsReservationRequest reqData, IXmlRedactor redactor);
 
-
-	(OwsReservation owsReservation, OwsResult owsResult) ModifyBooking(OwsReservationRequest reqData, IXmlRedactor redactor);
 	Task<(OwsReservation owsReservation, OwsResult owsResult)> ModifyBookingAsync(OwsReservationRequest reqData, IXmlRedactor redactor);
 
+	Task<(OwsReservation owsReservation, OwsResult owsResult)> FetchBookingAsync(OwsBaseSession reqData, string reservationId);
 
-	(OwsReservation owsReservation, OwsResult owsResult) FetchBooking(OwsBaseSession reqData, string reservationId);
-	(OwsPackageExtraRes owsPackageExtraRes, OwsResult owsResult) UpdatePackage(OwsPackageRequest reqData);
+	Task<(OwsPackageExtraRes owsPackageExtraRes, OwsResult owsResult)> UpdatePackageAsync(OwsPackageRequest reqData);
 
-	(CommentList list, OwsResult owsResult) AddBookingComments(OwsAddBookingCommentRequest reqData);
 	Task<(CommentList list, OwsResult owsResult)> AddBookingCommentsAsync(OwsAddBookingCommentRequest reqData);
 
-	(string resvId, OwsResult owsResult) AddBookingPayment(OwsAddPaymentRequest reqData);
 	Task<(string resvId, OwsResult owsResult)> AddBookingPaymentAsync(OwsAddPaymentRequest reqData);
+
+	Task<(OwsReservation owsReservation, OwsResult owsResult)> GetReservationStatusAsync(OwsBaseSession reqData, string hotelCode, string reservationId, IXmlRedactor redactor, OwsConfig config);
 
 	string LastRequest { get; }
        

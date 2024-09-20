@@ -12,13 +12,9 @@ public interface IOperaAvailabilityService
 	string LastRequest { get; }
 
 	Task<(OwsRoomStay owsRoomStay, OwsResult owsResult)> GetGeneralAvailabilityAsync(OwsAvailabilityRequest reqData);
-	(OwsRoomStay owsRoomStay, OwsResult owsResult) GetGeneralAvailability(OwsAvailabilityRequest reqData);
-
-
-	(OwsRoomStayDetail owsRoomStayDetail, OwsResult owsResult) GetDetailAvailability(OwsAvailabilityRequest reqData);
+	
+	Task<(OwsRoomStayDetail owsRoomStayDetail, OwsResult owsResult)> GetDetailAvailabilityAsync(OwsAvailabilityRequest reqData);
 
 	Task<(List<OwsPackage> packages, OwsResult owsResult)> FetchPackagesAsync(OwsAvailabilityRequest reqData);
-	(List<OwsPackage> packages, OwsResult owsResult) FetchPackages(OwsAvailabilityRequest reqData);
-
-	void MockOwsPostService(IOwsPostService owsPostService);
+	
 }

@@ -8,14 +8,15 @@ namespace Msh.Opera.Ows.Services;
 public interface IOperaSecurityService
 {
 	/// <summary>
-	/// Creates a userLogin+password for a profileId
-	/// </summary>
-	(OwsUser owsUser, OwsResult owsResult) CreateUserRequest(OwsUser user);
-
-	/// <summary>
 	/// Authenticates a user for login
 	/// </summary>
-	(OwsUser owsUser, OwsResult owsResult) AuthenticateUserRequest(OwsUser user);
+	Task<(OwsUser owsUser, OwsResult owsResult)> AuthenticateUserRequestAsync(OwsUser user);
+
+	/// <summary>
+	/// Creates a userLogin+password for a profileId
+	/// </summary>
+	Task<(OwsUser owsUser, OwsResult owsResult)> CreateUserRequestAsync(OwsUser user);
+
 
 	/// <summary>
 	/// Updates a password. This is not a recovery call.
@@ -24,12 +25,12 @@ public interface IOperaSecurityService
 	/// <param name="oldPassword"></param>
 	/// <param name="newPassword"></param>
 	/// <returns></returns>
-	(OwsUser owsUser, OwsResult owsResult) UpdatePassword(OwsUser user, string oldPassword, string newPassword);
+	Task<(OwsUser owsUser, OwsResult owsResult)> UpdatePasswordAsync(OwsUser user, string oldPassword, string newPassword);
 
-	(OwsUser owsUser, OwsResult owsResult) ResetPasswordRequest(OwsUser user);
+	Task<(OwsUser owsUser, OwsResult owsResult)> ResetPasswordRequestAsync(OwsUser user);
 
-	(List<OwsQuestion> questions, OwsResult owsResult) FetchQuestionListRequest(OwsUser user);
-        
-	(OwsUser owsUser, OwsResult owsResult) UpdateQuestionRequest(OwsUser user);
+	Task<(List<OwsQuestion> questions, OwsResult owsResult)> FetchQuestionListRequestAsync(OwsUser user);
+
+	Task<(OwsUser owsUser, OwsResult owsResult)> UpdateQuestionRequestAsync(OwsUser user);
        
 }

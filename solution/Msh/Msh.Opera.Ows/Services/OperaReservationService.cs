@@ -19,179 +19,134 @@ namespace Msh.Opera.Ows.Services;
 /// <summary>
 /// Calls OWS cloud services for reservations
 /// </summary>
-public class OperaReservationService : OperaBaseService, IOperaReservationService
+public class OperaReservationService(
+	IOwsConfigService owsConfigService,
+	IOwsPostService owsPostService,
+	IReservationBuildService reservationBuildService,
+	ILogXmlService logXmlService)
+	: OperaBaseService(owsConfigService.OwsConfig, logXmlService, owsConfigService, owsPostService),
+		IOperaReservationService
 {
-	protected readonly IReservationBuildService _reservationBuildService;
 
-      
-	public string LastRequest { get; private set; }
 
-	public OperaReservationService(IOwsConfigService owsConfigService,
-		IOwsPostService owsPostService,
-		IReservationBuildService reservationBuildService,
-		ISwitchListLoader switchListLoader,
-		ILogXmlService logXmlService) : base(owsConfigService.OwsConfig, logXmlService, switchListLoader, owsConfigService, owsPostService)
-	{
-		_reservationBuildService = reservationBuildService;
-	}
-
-	public (OwsReservation owsReservation, OwsResult owsResult) CreateBooking(OwsReservationRequest reqData, IXmlRedactor redactor)
-	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Reservation);
-		reqData.Modify = false;
-		return CreateModifyBooking(reqData, redactor, config);
-	}
+	public string LastRequest { get; private set; } = string.Empty;
 
 	public async Task<(OwsReservation owsReservation, OwsResult owsResult)> CreateBookingAsync(OwsReservationRequest reqData, IXmlRedactor redactor)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Reservation);
+		var config = _config;
 		reqData.Modify = false;
 		return await CreateModifyBookingAsync(reqData, redactor, config);
-	}
-
-	public (OwsReservation owsReservation, OwsResult owsResult) ModifyBooking(OwsReservationRequest reqData, IXmlRedactor redactor)
-	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Reservation);
-		reqData.Modify = true;
-		return CreateModifyBooking(reqData, redactor, config);
 	}
 
 	public async Task<(OwsReservation owsReservation, OwsResult owsResult)> ModifyBookingAsync(OwsReservationRequest reqData, IXmlRedactor redactor)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Reservation);
+		var config = _config;
 		reqData.Modify = true;
 		return await CreateModifyBookingAsync(reqData, redactor, config);
 	}
 
-	public (OwsReservation owsReservation, OwsResult owsResult) FetchBooking(OwsBaseSession reqData, string reservationId)
+	public async Task<(OwsReservation owsReservation, OwsResult owsResult)> FetchBookingAsync(OwsBaseSession reqData, string reservationId)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Reservation);
+		var config = _config;
 
 		const string mainElement = "FetchBookingResponse";
 
-           
-
-		var xElement = _reservationBuildService.FetchBooking(reqData, reservationId, config);
+		var xElement = reservationBuildService.FetchBooking(reqData, reservationId, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
 		LastRequest = sb.FormatXml(Formatting.Indented).ToString();
 
-		var (xdoc, contents, owsResult) = PostSync(sb.FormatXml(Formatting.None), config.ReservationUrl());
+		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ReservationUrl());
 
 		var decode = DecodeOwsReservation(xdoc, contents, mainElement);
 
 		return (decode.owsReservation, decode.owsResult ?? owsResult);
 	}
-	public (OwsPackageExtraRes owsPackageExtraRes, OwsResult owsResult) UpdatePackage(OwsPackageRequest reqData)
+	public async Task<(OwsPackageExtraRes owsPackageExtraRes, OwsResult owsResult)> UpdatePackageAsync(OwsPackageRequest reqData)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Reservation);
+		var config = _config;
 
-		var xElement = _reservationBuildService.UpdatePackages(reqData, config);
+		var xElement = reservationBuildService.UpdatePackages(reqData, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
 		LastRequest = sb.FormatXml(Formatting.Indented).ToString();
 
-		_logXmlService.LogXmlText(LastRequest, "UpdatePackageReq");
+		await _logXmlService.LogXmlText(LastRequest, "UpdatePackageReq");
 
-		var (xdoc, contents, owsResult) = PostSync(sb.FormatXml(Formatting.None), config.ReservationUrl());
+		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ReservationUrl());
 
-		_logXmlService.LogXmlText(contents, "UpdatePackageRes");
+		await _logXmlService.LogXmlText(contents, "UpdatePackageRes");
 
 		var decode = DecodeOwsPackage(xdoc, contents);
 
 		return (decode.owsPackageExtraRes, decode.owsResult ?? owsResult);
 	}
 
-	/// <summary>
-	/// Used to add comments to a booking
-	/// </summary>
-	/// <param name="reqData"></param>
-	/// <param name="owsRunMode"></param>
-	/// <returns></returns>
-	public (CommentList list, OwsResult owsResult) AddBookingComments(OwsAddBookingCommentRequest reqData)
-	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Reservation);
-
-		var xElement = _reservationBuildService.AddBookingComments(reqData, config);
-
-		var sb = new StringBuilder(xElement.ToString());
-
-		LastRequest = sb.FormatXml(Formatting.Indented).ToString();
-
-		_logXmlService.LogXmlText(LastRequest, "AddBookingCommentsReq", reqData.SessionKey);
-
-		var (xdoc, contents, owsResult) = PostSync(sb.FormatXml(Formatting.None), config.ReservationUrl());
-
-		_logXmlService.LogXmlText(contents, "AddBookingCommentsRes", reqData.SessionKey);
-
-		var decode = DecodeOwsAddedComments(xdoc, contents);
-
-		return (decode.list, decode.owsResult ?? owsResult);
-	}
-
 	public async Task<(CommentList list, OwsResult owsResult)> AddBookingCommentsAsync(OwsAddBookingCommentRequest reqData)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Reservation);
+		var config = _config;
 
-		var xElement = _reservationBuildService.AddBookingComments(reqData, config);
+		var xElement = reservationBuildService.AddBookingComments(reqData, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
 		LastRequest = sb.FormatXml(Formatting.Indented).ToString();
 
-		_logXmlService.LogXmlText(LastRequest, "AddBookingCommentsReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(LastRequest, "AddBookingCommentsReq", reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ReservationUrl(), reqData.SessionKey);
 
-		_logXmlService.LogXmlText(contents, "AddBookingCommentsRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, "AddBookingCommentsRes", reqData.SessionKey);
 
 		var decode = DecodeOwsAddedComments(xdoc, contents);
 
 		return (decode.list, decode.owsResult ?? owsResult);
-	}
-
-	public (string resvId, OwsResult owsResult) AddBookingPayment(OwsAddPaymentRequest reqData)
-	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Reservation);
-
-		var xElement = _reservationBuildService.AddPayment(reqData, config);
-
-		var sb = new StringBuilder(xElement.ToString());
-
-		LastRequest = sb.FormatXml(Formatting.Indented).ToString();
-
-		_logXmlService.LogXmlText(LastRequest, "AddBookingPaymentReq", reqData.SessionKey);
-
-		var (xdoc, contents, owsResult) = PostSync(sb.FormatXml(Formatting.None), config.ResvAdvancedUrl(), reqData.SessionKey);
-
-		_logXmlService.LogXmlText(contents, "AddBookingPaymentRes", reqData.SessionKey);
-
-		var decode = DecodePayment(xdoc, contents);
-
-		return (decode.resvId, decode.owsResult ?? owsResult);
 	}
 
 	public async Task<(string resvId, OwsResult owsResult)> AddBookingPaymentAsync(OwsAddPaymentRequest reqData)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Reservation);
+		var config = _config;
 
-		var xElement = _reservationBuildService.AddPayment(reqData, config);
+		var xElement = reservationBuildService.AddPayment(reqData, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
 		LastRequest = sb.FormatXml(Formatting.Indented).ToString();
 
-		_logXmlService.LogXmlText(LastRequest, "AddBookingPaymentReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(LastRequest, "AddBookingPaymentReq", reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ResvAdvancedUrl(), reqData.SessionKey);
 
-		_logXmlService.LogXmlText(contents, "AddBookingPaymentRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, "AddBookingPaymentRes", reqData.SessionKey);
 
 		var decode = DecodePayment(xdoc, contents);
 
 		return (decode.resvId, decode.owsResult ?? owsResult);
+	}
+
+	public async Task<(OwsReservation owsReservation, OwsResult owsResult)> GetReservationStatusAsync(OwsBaseSession reqData, string hotelCode, string reservationId, IXmlRedactor redactor, OwsConfig config)
+	{
+		var xElement = reservationBuildService.GetReservationStatus(reqData, hotelCode, reservationId, config);
+
+		var sb = new StringBuilder(xElement.ToString());
+
+
+		LastRequest = sb.FormatXml(Formatting.Indented).ToString();
+
+		await _logXmlService.LogXml(xElement, "BookStatusReq", reqData.SessionKey, redactor);
+		//_logXmlService.LogXmlText(LastRequest, keyReq, reqData.SessionKey);
+
+		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ReservationUrl(), reqData.SessionKey);
+
+
+		await _logXmlService.LogXml(contents, "BookStatusRes", reqData.SessionKey, redactor);
+
+		var mainElement = "GetReservationStatusResponse";
+		var decode = DecodeOwsReservationStatus(xdoc, contents, mainElement);
+
+		return (decode.owsReservation, decode.owsResult ?? owsResult);
 	}
 
 	private (string resvId, OwsResult owsResult) DecodePayment(XDocument xdocInput, string contents)
@@ -237,74 +192,29 @@ public class OperaReservationService : OperaBaseService, IOperaReservationServic
 		return (list, new OwsResult { ResultStatusFlag = CommonConst.OwsResultStatusFlag.Success });
 	}
 
-	protected (OwsReservation owsReservation, OwsResult owsResult) CreateModifyBooking(OwsReservationRequest reqData, IXmlRedactor redactor, OwsConfig config)
-	{
-		var xElement = _reservationBuildService.MakeReservation(reqData, config);
-
-		var sb = new StringBuilder(xElement.ToString());
-
-          
-		LastRequest = sb.FormatXml(Formatting.Indented).ToString();
-
-		_logXmlService.LogXml(xElement, reqData.Modify ? "BookModReq" : "BookReq", reqData.SessionKey, redactor);
-		//_logXmlService.LogXmlText(LastRequest, keyReq, reqData.SessionKey);
-
-		var (xdoc, contents, owsResult) = PostSync(sb.FormatXml(Formatting.None), config.ReservationUrl(), reqData.SessionKey);
-
-          
-		_logXmlService.LogXml(contents, reqData.Modify ? "BookModRes" : "BookRes", reqData.SessionKey, redactor);
-
-		var mainElement = reqData.Modify ? "ModifyBookingResponse" : "CreateBookingResponse";
-		var decode = DecodeOwsReservation(xdoc, contents, mainElement);
-
-		return (decode.owsReservation, decode.owsResult ?? owsResult);
-	}
 
 	protected async Task<(OwsReservation owsReservation, OwsResult owsResult)> CreateModifyBookingAsync(OwsReservationRequest reqData, IXmlRedactor redactor, OwsConfig config)
 	{
-		var xElement = _reservationBuildService.MakeReservation(reqData, config);
+		var xElement = reservationBuildService.MakeReservation(reqData, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
 
 		LastRequest = sb.FormatXml(Formatting.Indented).ToString();
 
-		_logXmlService.LogXml(xElement, reqData.Modify ? "BookModReq" : "BookReq", reqData.SessionKey, redactor);
-		//_logXmlService.LogXmlText(LastRequest, keyReq, reqData.SessionKey);
+		await _logXmlService.LogXml(xElement, reqData.Modify ? "BookModReq" : "BookReq", reqData.SessionKey, redactor);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ReservationUrl(), reqData.SessionKey);
 
-
-		_logXmlService.LogXml(contents, reqData.Modify ? "BookModRes" : "BookRes", reqData.SessionKey, redactor);
+		await _logXmlService.LogXml(contents, reqData.Modify ? "BookModRes" : "BookRes", reqData.SessionKey, redactor);
 
 		var mainElement = reqData.Modify ? "ModifyBookingResponse" : "CreateBookingResponse";
+
 		var decode = DecodeOwsReservation(xdoc, contents, mainElement);
 
 		return (decode.owsReservation, decode.owsResult ?? owsResult);
 	}
 
-	protected async Task<(OwsReservation owsReservation, OwsResult owsResult)> GetReservationStatusAsync(OwsBaseSession reqData, string hotelCode, string reservationId, IXmlRedactor redactor, OwsConfig config)
-	{
-		var xElement = _reservationBuildService.GetReservationStatus(reqData, hotelCode, reservationId, config);
-
-		var sb = new StringBuilder(xElement.ToString());
-
-
-		LastRequest = sb.FormatXml(Formatting.Indented).ToString();
-
-		_logXmlService.LogXml(xElement, "BookStatusReq", reqData.SessionKey, redactor);
-		//_logXmlService.LogXmlText(LastRequest, keyReq, reqData.SessionKey);
-
-		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ReservationUrl(), reqData.SessionKey);
-
-
-		_logXmlService.LogXml(contents, "BookStatusRes", reqData.SessionKey, redactor);
-
-		var mainElement = "GetReservationStatusResponse";
-		var decode = DecodeOwsReservationStatus(xdoc, contents, mainElement);
-
-		return (decode.owsReservation, decode.owsResult ?? owsResult);
-	}
 
 	/// <summary>
 	/// WORK IN PROGRESS - THIS DOES NOT IMPLEMENT THE DECODING OF RESERVATION STATUS, YET

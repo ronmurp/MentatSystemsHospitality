@@ -5,24 +5,22 @@ namespace Msh.Opera.Ows.Services;
 
 public interface IOperaNameService
 {
-	(OwsProfile owsProfile, OwsResult owsResult) FetchProfile(OwsBaseSession reqData, string profileId);
-
 	Task<(OwsProfile owsProfile, OwsResult owsResult)> FetchProfileAsync(OwsBaseSession reqData, string profileId);
 
-	(List<OwsProfile> owsProfiles, OwsResult owsResult) NameLookupRequest(OwsBaseSession reqData, string email);
+	Task<(List<OwsProfile> owsProfiles, OwsResult owsResult)> NameLookupRequestAsync(OwsBaseSession reqData, string email);
 
 	/// <summary>
 	/// NameType: COMPANY, TRAVEL_AGENT, D
 	/// </summary>
-	/// <param name="hotelCode"></param>
+	/// <param name="reqData"></param>
 	/// <param name="name"></param>
 	/// <param name="nameType">COMPANY, TRAVEL_AGENT, D</param>
 	/// <returns></returns>
-	(List<OwsProfile> owsProfiles, OwsResult owsResult) NameLookupRequestByName(OwsBaseSession reqData, string name, string nameType);
+	Task<(List<OwsProfile> owsProfiles, OwsResult owsResult)> NameLookupRequestByNameAsync(OwsBaseSession reqData, string name, string nameType);
 
-	(List<OwsProfile> owsProfiles, OwsResult owsResult) NameLookupRequestByPerson(OwsBaseSession reqData, string firstName, string lastName, string email);
+	Task<(List<OwsProfile> owsProfiles, OwsResult owsResult)> NameLookupRequestByPersonAsync(OwsBaseSession reqData, string firstName, string lastName, string email);
 
-	(OwsProfile owsProfile, OwsResult owsResult) FetchName(OwsBaseSession reqData, string profileId);
+	Task<(OwsProfile owsProfile, OwsResult owsResult)> FetchNameAsync(OwsBaseSession reqData, string profileId);
 
-	(OwsProfile owsProfile, OwsResult owsResult) RegisterName(OwsUser user);
+	Task<(OwsProfile owsProfile, OwsResult owsResult)> RegisterNameAsync(OwsUser user);
 }

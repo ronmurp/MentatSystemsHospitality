@@ -3,7 +3,6 @@ using System.Xml.Linq;
 using Msh.Common.Logger;
 using Msh.Common.Models.BaseModels;
 using Msh.Common.Models.OwsCommon;
-using Msh.Common.Services;
 using Msh.Opera.Ows.ExtensionMethods;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Services.Base;
@@ -12,33 +11,26 @@ using Msh.Opera.Ows.Services.Config;
 
 namespace Msh.Opera.Ows.Services;
 
-public class OperaNameService : OperaBaseService, IOperaNameService
+public class OperaNameService(
+	IOwsConfigService owsConfigService,
+	IOwsPostService owsPostService,
+	INameBuildService nameBuildService,
+	ILogXmlService logXmlService)
+	: OperaBaseService(owsConfigService.OwsConfig, logXmlService, owsConfigService, owsPostService), IOperaNameService
 {
-	private readonly INameBuildService _nameBuildService;
-
-	public OperaNameService(IOwsConfigService owsConfigService,
-		IOwsPostService owsPostService,
-		INameBuildService nameBuildService,
-		ISwitchListLoader switchListLoader, 
-		ILogXmlService logXmlService) : base(owsConfigService.OwsConfig, logXmlService, switchListLoader, owsConfigService, owsPostService)
+	public async Task<(OwsProfile owsProfile, OwsResult owsResult)> FetchProfile(OwsBaseSession reqData, string profileId)
 	{
-		_nameBuildService = nameBuildService;
-	}
+		var config = _config;
 
-       
-	public (OwsProfile owsProfile, OwsResult owsResult) FetchProfile(OwsBaseSession reqData, string profileId)
-	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Name);
-
-		var xElement = _nameBuildService.FetchProfileRequest(reqData, profileId, config);
+		var xElement = nameBuildService.FetchProfileRequest(reqData, profileId, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		_logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl());
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.NameUrl());
 
-		_logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
 
 		var decode = DecodeProfileResponse(xdoc, contents);
 
@@ -47,127 +39,128 @@ public class OperaNameService : OperaBaseService, IOperaNameService
 
 	public async Task<(OwsProfile owsProfile, OwsResult owsResult)> FetchProfileAsync(OwsBaseSession reqData, string profileId)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Name);
+		var config = _config;
 
-		var xElement = _nameBuildService.FetchProfileRequest(reqData, profileId, config);
+		var xElement = nameBuildService.FetchProfileRequest(reqData, profileId, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		_logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.NameUrl(), reqData.SessionKey);
 
-		_logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
 
 		var decode = DecodeProfileResponse(xdoc, contents);
 
 		return (decode.owsProfile, decode.owsResult ?? owsResult);
 	}
 
-	public (List<OwsProfile> owsProfiles, OwsResult owsResult) NameLookupRequest(OwsBaseSession reqData, string email)
+	public async Task<(List<OwsProfile> owsProfiles, OwsResult owsResult)> NameLookupRequestAsync(OwsBaseSession reqData, string email)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Name);
+		var config = _config;
 
-		var xElement = _nameBuildService.NameLookupRequestByEmail(reqData, email, config);
+		var xElement = nameBuildService.NameLookupRequestByEmail(reqData, email, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		_logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl());
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.NameUrl());
 
-		_logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
 
 		var decode = DecodeNameLookupResponse(xdoc, contents);
 
 		return (decode.owsProfiles, decode.owsResult ?? owsResult);
 	}
 
-	public (List<OwsProfile> owsProfiles, OwsResult owsResult) NameLookupRequestByName(OwsBaseSession reqData, string name, string nameType)
+	public async Task<(List<OwsProfile> owsProfiles, OwsResult owsResult)> NameLookupRequestByNameAsync(OwsBaseSession reqData, string name, string nameType)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Name);
+		var config = _config;
 
-		var xElement = _nameBuildService.NameLookupRequestByName(reqData, name, nameType, config);
+		var xElement = nameBuildService.NameLookupRequestByName(reqData, name, nameType, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		_logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl());
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.NameUrl());
 
-		_logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
 
 		var decode = DecodeNameLookupResponse(xdoc, contents);
 
 		return (decode.owsProfiles, decode.owsResult ?? owsResult);
 	}
 
-	public (List<OwsProfile> owsProfiles, OwsResult owsResult) NameLookupRequestByPerson(OwsBaseSession reqData, string firstName, string lastName, string email)
+	public async Task<(List<OwsProfile> owsProfiles, OwsResult owsResult)> NameLookupRequestByPersonAsync(OwsBaseSession reqData, string firstName, string lastName, string email)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Name);
+		var config = _config;
 
-		var xElement = _nameBuildService.NameLookupRequestByPerson(reqData, firstName, lastName, email, config);
+		var xElement = nameBuildService.NameLookupRequestByPerson(reqData, firstName, lastName, email, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		_logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl());
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.NameUrl());
 
-		_logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
 
 		var decode = DecodeNameLookupResponse(xdoc, contents);
 
 		return (decode.owsProfiles, decode.owsResult ?? owsResult);
 	}
 
-	public (OwsProfile owsProfile, OwsResult owsResult) FetchName(OwsBaseSession reqData, string profileId)
+	public async Task<(OwsProfile owsProfile, OwsResult owsResult)> FetchNameAsync(OwsBaseSession reqData, string profileId)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Name);
+		var config = _config;
 
-		var xElement = _nameBuildService.FetchNameRequest(reqData, profileId, config);
+		var xElement = nameBuildService.FetchNameRequest(reqData, profileId, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		_logXmlService.LogXmlText(sb.ToString(), "FetchNameReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(sb.ToString(), "FetchNameReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl());
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.NameUrl());
 
-		_logXmlService.LogXmlText(contents, "FetchNameRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, "FetchNameRes", reqData.SessionKey);
 
 		var decode = DecodeNameResponse(xdoc, contents);
 
 		return (decode.owsProfile, decode.owsResult ?? owsResult);
 	}
 
-	public (OwsProfile owsProfile, OwsResult owsResult) RegisterName(OwsUser user)
+	public async Task<(OwsProfile owsProfile, OwsResult owsResult)> RegisterNameAsync(OwsUser user)
 	{
-		var config = GetConfigOverride(user.HotelCode, OwsService.Name);
+		var config = _config;
 
-		var xElement = _nameBuildService.RegisterNameRequest(user, config);
+		var xElement = nameBuildService.RegisterNameRequest(user, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		_logXmlService.LogXmlText(sb.ToString(), "FetchNameReq", user.SessionKey);
+		await _logXmlService.LogXmlText(sb.ToString(), "FetchNameReq", user.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.NameUrl());
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.NameUrl());
 
-		_logXmlService.LogXmlText(contents, "FetchNameRes", user.SessionKey);
+		await _logXmlService.LogXmlText(contents, "FetchNameRes", user.SessionKey);
 
-		var decode = DecodeRegisterNameResponse(xdoc, contents, user);
+		var decode = await DecodeRegisterNameResponse(xdoc, contents, user);
 
 		return (decode.owsProfile, decode.owsResult ?? owsResult);
 	}
 
-	private (OwsProfile owsProfile, OwsResult owsResult) DecodeRegisterNameResponse(XDocument xdocInput, string contents, OwsUser user)
+	private async Task<(OwsProfile owsProfile, OwsResult owsResult)> DecodeRegisterNameResponse(XDocument xdocInput, string contents, OwsUser user)
 	{
+
 		const string mainElement = "RegisterNameResponse";
 		const string methodName = "DecodeRegisterNameResponse";
 
 		var (xdoc, owsResult) = ParseAndCheckForFail(xdocInput, contents, mainElement, methodName);
 
 		if (owsResult != null)
-			return (null, owsResult);
+			return (null, owsResult)!;
 
 		var prof = xdoc.Descendants("IDPair")
 			.Select(p => new
@@ -178,10 +171,10 @@ public class OperaNameService : OperaBaseService, IOperaNameService
 		if (prof == null)
 		{
 			var nullResult = CheckForNoData(prof, "DecodeRegisterNameResponse");
-			return (null, nullResult);
+			return (null, nullResult)!;
 		}
 
-		var result = FetchProfile(user, prof.ProfileId);
+		var result = await FetchProfile(user, prof.ProfileId);
 
 		return result;
 	}
@@ -194,7 +187,7 @@ public class OperaNameService : OperaBaseService, IOperaNameService
 		var (xdoc, owsResult) = ParseAndCheckForFail(xdocInput, contents, mainElement, methodName);
 
 		if (owsResult != null)
-			return (null, owsResult);
+			return (null, owsResult)!;
 
 		var prof = xdoc.Descendants("ProfileDetails")
 			.Select(p => new

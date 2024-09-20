@@ -11,49 +11,29 @@ using Msh.Opera.Ows.Services.Config;
 
 namespace Msh.Opera.Ows.Services;
 
-public class OperaInformationService : OperaBaseService, IOperaInformationService
+public class OperaInformationService(
+	IOwsConfigService owsConfigService,
+	IOwsPostService owsPostService,
+	IInformationBuildService informationBuildService,
+	ILogXmlService logXmlService)
+	: OperaBaseService(owsConfigService.OwsConfig, logXmlService, owsConfigService, owsPostService),
+		IOperaInformationService
 {
-	protected readonly IInformationBuildService InformationBuildService;
-
-	public OperaInformationService(IOwsConfigService owsConfigService,
-		IOwsPostService owsPostService,
-		IInformationBuildService informationBuildService,
-		ISwitchListLoader switchListLoader,
-		ILogXmlService logXmlService) 
-		: base(owsConfigService.OwsConfig, logXmlService, switchListLoader, owsConfigService, owsPostService)
-	{
-		InformationBuildService = informationBuildService;
-	}
+	protected readonly IInformationBuildService InformationBuildService = informationBuildService;
 
 	public async Task<(OwsBusinessDate owsBusinessDate, OwsResult owsResult)> GetBusinessDateAsync(OwsBaseSession reqData)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Information);
+		var config = _config;
 
 		var xElement = InformationBuildService.LovQuery2(reqData, OwsConst.LovQuery2.BusinessDate, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		_logXmlService.LogXmlText(sb.ToString(), "GetBusinessDateReq");
+		await _logXmlService.LogXmlText(sb.ToString(), "GetBusinessDateReq");
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.InformationUrl(), "");
 
-		_logXmlService.LogXmlText(contents, "GetBusinessDateRes");
-
-		var decode = DecodeOwsBusinessDate(xdoc, contents);
-
-		return (decode.owsBusinessDate, decode.owsResult ?? owsResult);
-
-	}
-
-	public (OwsBusinessDate owsBusinessDate, OwsResult owsResult) GetBusinessDate(OwsBaseSession reqData)
-	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Information);
-
-		var xElement = InformationBuildService.LovQuery2(reqData, OwsConst.LovQuery2.BusinessDate, config);
-
-		var sb = new StringBuilder(xElement.ToString());
-
-		var (xdoc, contents, owsResult) = PostSync(sb, config.InformationUrl());
+		await _logXmlService.LogXmlText(contents, "GetBusinessDateRes");
 
 		var decode = DecodeOwsBusinessDate(xdoc, contents);
 
@@ -63,7 +43,7 @@ public class OperaInformationService : OperaBaseService, IOperaInformationServic
 
 	public async Task<(List<OwsCountry> countries, OwsResult owsResult)> GetCountryCodesAsync(OwsBaseSession reqData)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Information);
+		var config = _config;
 
 		var xElement = InformationBuildService.LovQuery2(reqData, OwsConst.LovQuery2.CountryCodes, config);
 		var sb = new StringBuilder(xElement.ToString());
@@ -77,7 +57,7 @@ public class OperaInformationService : OperaBaseService, IOperaInformationServic
 
 	public async Task<(OwsChainInformation owsChainInformation, OwsResult owsResult)> GetChainAsync(OwsBaseSession reqData)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Information);
+		var config = _config;
 
 		var xElement = InformationBuildService.ChainInformationRequest(reqData, config);
 
@@ -87,22 +67,22 @@ public class OperaInformationService : OperaBaseService, IOperaInformationServic
 
 		var decode = DecodeOwsChainCodes(xdoc, contents);
 
-		return (decode.owsChainInformation, decode.owsResult ?? owsResult);
+		return (decode.owsChainInformation, decode.owsResult ?? owsResult)!;
 
 	}
 
-	public (List<InformationItem> information, OwsResult owsResult) GetLovInformation(OwsBaseSession reqData, LovTypes lovType, string subType)
+	public async Task<(List<InformationItem> information, OwsResult owsResult)> GetLovInformationAsync(OwsBaseSession reqData, LovTypes lovType, string subType)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Information);
+		var config = _config;
 
 		var xElement = InformationBuildService.LovQuery2(reqData, lovType, config);
 		var sb = new StringBuilder(xElement.ToString());
 
-		_logXmlService.LogXmlText(sb.ToString(), "InfoLovReq");
+		await _logXmlService.LogXmlText(sb.ToString(), "InfoLovReq");
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.InformationUrl());
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.InformationUrl());
 
-		_logXmlService.LogXmlText(contents, "InfoLovRes");
+		await _logXmlService.LogXmlText(contents, "InfoLovRes");
 
 		var decode = DecodeLovResponse(xdoc, contents);
 
@@ -118,7 +98,7 @@ public class OperaInformationService : OperaBaseService, IOperaInformationServic
 		var (xdoc, owsResultFail) = ParseAndCheckForFail(xdocInput, contents, mainElement, methodName);
 
 		if (owsResultFail != null)
-			return (null, owsResultFail);
+			return (null, owsResultFail)!;
 
 		var result = xdoc.Descendants(mainElement)
 			.Select(resp => new LovQueryResponse
@@ -136,7 +116,7 @@ public class OperaInformationService : OperaBaseService, IOperaInformationServic
 
 		var owsResultNull = CheckForNoData(result, methodName);
 
-		return (result?.OwsBusinessDate, owsResultNull);
+		return (result?.OwsBusinessDate, owsResultNull)!;
 
 	}
 
@@ -148,7 +128,7 @@ public class OperaInformationService : OperaBaseService, IOperaInformationServic
 		var (xdoc, owsResultFail) = ParseAndCheckForFail(xdocInput, contents, mainElement, methodName);
 
 		if (owsResultFail != null)
-			return (null, owsResultFail);
+			return (null, owsResultFail)!;
 
 		var result = xdoc.Descendants(mainElement)
 			.Select(resp => new LovQueryResponse
@@ -165,7 +145,7 @@ public class OperaInformationService : OperaBaseService, IOperaInformationServic
 
 		var owsResultNull = CheckForNoData(result, methodName);
 
-		return (result?.Countries, owsResultNull);
+		return (result?.Countries, owsResultNull)!;
 
 	}
 
@@ -193,7 +173,7 @@ public class OperaInformationService : OperaBaseService, IOperaInformationServic
 
 	}
 
-	private (OwsChainInformation owsChainInformation, OwsResult owsResult) DecodeOwsChainCodes(XDocument xdocInput, string contents)
+	private (OwsChainInformation? owsChainInformation, OwsResult owsResult) DecodeOwsChainCodes(XDocument xdocInput, string contents)
 	{
 		const string mainElement = "ChainInformation";
 		const string methodName = "DecodeOwsChainCodes";
@@ -218,7 +198,7 @@ public class OperaInformationService : OperaBaseService, IOperaInformationServic
 
 		var owsResultNull = CheckForNoData(result, methodName);
 
-		return (result?.OwsChainInformation, owsResultNull);
+		return (result?.OwsChainInformation, owsResultNull)!;
 	}
 
 }

@@ -82,60 +82,6 @@ public class OwsPostService : IOwsPostService
 
 	}
 
-      
-	public (XDocument xdoc, string contents, OwsResult owsResult) PostSync(StringBuilder sb, string url, string sessionId = "")
-	{
-		var retryCount = _owsConfigService.OwsConfig.RetryCount;
-
-		var count = 0;
-		var contents = "";
-		OwsResult httpOwsResult = null;
-
-		while (true)
-		{
-			if (++count > retryCount)
-			{
-				throw RetryError($"Retry count {count} greater than max {retryCount}, SessionId {sessionId}", "PostSync");
-			}
-
-			try
-			{
-				using (var client = new HttpClient())
-				{
-					var httpContent = new StringContent(sb.ToString(), Encoding.UTF8, "text/xml");
-
-					client.DefaultRequestHeaders.Add("User-Agent", "WBS");
-
-					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/xml"));
-
-					var response = client.PostAsync(new Uri(url), httpContent).Result;
-
-					if (response.StatusCode != HttpStatusCode.OK)
-					{
-						_logXmlService.LogJsonText(response, "OwsPostSyncNotOk", "PostSync");
-						httpOwsResult = OwsResultHelper.HttpResult(response);
-					}
-
-					contents = response.Content.ReadAsStringAsync().Result;
-
-					var (hasError, xdoc) = CheckForCriticalErrors(url, sessionId, sb.ToString(), contents, count);
-
-					if (hasError) continue;
-
-					return (xdoc, contents, httpOwsResult);
-				}
-			}
-			catch (Exception ex)
-			{
-				//WbsLogger.Error(LogCodes.OwsCriticalError, ex, $"Retry count {count}. Max {retryCount}. SessionId {sessionId}");
-				if (count <= 0)
-					throw ex;
-			}
-
-		}
-
-	}
-
 	private (bool hasError, XDocument xdoc) CheckForCriticalErrors(string url, string sessionId, string request, string contents, int count)
 	{
 		var list = _owsConfigService.OwsConfig.CriticalErrorTriggers;
@@ -180,7 +126,6 @@ public class OwsPostService : IOwsPostService
 			return (true, null);
 		}
 	}
-
 
 	private LibException RetryError(string message, string method)
 	{

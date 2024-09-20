@@ -16,75 +16,52 @@ namespace Msh.Opera.Ows.Services;
 /// <summary>
 /// Availability requests: building, sending, parsing result
 /// </summary>
-public class OperaAvailabilityService : OperaBaseService, IOperaAvailabilityService
+public class OperaAvailabilityService(
+	IOwsConfigService owsConfigService,
+	IOwsPostService owsPostService,
+	IAvailabilityBuildService availabilityBuildService,
+	ILogXmlService logXmlService)
+	: OperaBaseService(owsConfigService.OwsConfig, logXmlService, owsConfigService, owsPostService),
+		IOperaAvailabilityService
 {
-	private readonly IAvailabilityBuildService _availabilityBuildService;
-        
-	public string LastRequest { get; private set; }
-	public OperaAvailabilityService(IOwsConfigService owsConfigService,
-		IOwsPostService owsPostService,
-		IAvailabilityBuildService availabilityBuildService, 
-		ISwitchListLoader switchListLoader, 
-		ILogXmlService logXmlService) : base(
-		owsConfigService.OwsConfig, logXmlService, switchListLoader, owsConfigService, owsPostService)
-	{
-		_availabilityBuildService = availabilityBuildService;
-	}
+	public string LastRequest { get; private set; } = string.Empty;
 
-	public (OwsRoomStay owsRoomStay, OwsResult owsResult) GetGeneralAvailability(OwsAvailabilityRequest reqData)
-	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Availability);
-
-		var xElement = _availabilityBuildService.BuildAvailabilityGen(reqData, config);
-		var sb = new StringBuilder(xElement.ToString());
-
-		LastRequest = sb.ToString();
-
-		_logXmlService.LogXml(xElement, "AvailGenReq", reqData.SessionKey);
-
-		var (xdoc, contents, owsResult) = PostSync(sb, config.AvailabilityUrl(), reqData.SessionKey);
-
-		_logXmlService.LogXml(contents, "AvailGenRes", reqData.SessionKey);
-
-		var decode = DecodeOwsGeneralAvailability(xdoc, contents);
-
-		return (decode.roomStay, decode.owsResult ?? owsResult);
-	}
 	public async Task<(OwsRoomStay owsRoomStay, OwsResult owsResult)> GetGeneralAvailabilityAsync(OwsAvailabilityRequest reqData)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Availability);
+		var config = _config;
 
-		var xElement = _availabilityBuildService.BuildAvailabilityGen(reqData, config);
+		var xElement = availabilityBuildService.BuildAvailabilityGen(reqData, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
 		LastRequest = sb.ToString();
 
-		_logXmlService.LogXml(xElement, "AvailGenReq", reqData.SessionKey);
+		await _logXmlService.LogXml(xElement, "AvailGenReq", reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.AvailabilityUrl(), reqData.SessionKey);
 
-		_logXmlService.LogXml(contents, "AvailGenRes", reqData.SessionKey);
+		await _logXmlService.LogXml(contents, "AvailGenRes", reqData.SessionKey);
 
 		var decode = DecodeOwsGeneralAvailability(xdoc, contents);
 
 		return (decode.roomStay, decode.owsResult ?? owsResult);
 	}
 
-	public (OwsRoomStayDetail owsRoomStayDetail, OwsResult owsResult) GetDetailAvailability(OwsAvailabilityRequest reqData)
+	public async Task<(OwsRoomStayDetail owsRoomStayDetail, OwsResult owsResult)> GetDetailAvailabilityAsync(OwsAvailabilityRequest reqData)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Availability);
+		var config = _config;
 
-		var xElement = _availabilityBuildService.BuildAvailabilityDet(reqData, config);
+		var xElement = availabilityBuildService.BuildAvailabilityDet(reqData, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
 		LastRequest = sb.ToString();
-		_logXmlService.LogXmlText(LastRequest, "AvailDetReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(LastRequest, "AvailDetReq", reqData.SessionKey);
 
-		var (xdoc, contents, owsResult) = PostSync(sb, config.AvailabilityUrl(), reqData.SessionKey);
+		var (xdoc, contents, owsResult) = await PostAsync(sb, config.AvailabilityUrl(), reqData.SessionKey);
 
-		_logXmlService.LogXmlText(contents, "AvailDetRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, "AvailDetRes", reqData.SessionKey);
+
 		var decode = DecodeOwsDetailAvailability(xdoc, contents);
 
 		return (decode.roomStayDetail, decode.owsResult ?? owsResult);
@@ -93,43 +70,25 @@ public class OperaAvailabilityService : OperaBaseService, IOperaAvailabilityServ
 
 	public async Task<(List<OwsPackage> packages, OwsResult owsResult)> FetchPackagesAsync(OwsAvailabilityRequest reqData)
 	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Availability);
+		var config = _config;
 
-		var xElement = _availabilityBuildService.BuildFetchPackages(reqData, config);
+		var xElement = availabilityBuildService.BuildFetchPackages(reqData, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
 		LastRequest = sb.ToString();
-		_logXmlService.LogXmlText(LastRequest, "FetchPackagesReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(LastRequest, "FetchPackagesReq", reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.AvailabilityUrl(), reqData.SessionKey);
 
-		_logXmlService.LogXmlText(contents, "FetchPackagesRes", reqData.SessionKey);
-		var decode = DecodeOwsPackages(xdoc, contents);
-
-		return (decode.packages, decode.owsResult ?? owsResult);
-	}
-
-	public (List<OwsPackage> packages, OwsResult owsResult) FetchPackages(OwsAvailabilityRequest reqData)
-	{
-		var config = GetConfigOverride(reqData.HotelCode, OwsService.Availability);
-
-		var xElement = _availabilityBuildService.BuildFetchPackages(reqData, config);
-
-		var sb = new StringBuilder(xElement.ToString());
-
-		LastRequest = sb.ToString();
-		_logXmlService.LogXmlText(LastRequest, "FetchPackagesReq", reqData.SessionKey);
-
-		var (xdoc, contents, owsResult) = PostSync(sb, config.AvailabilityUrl(), reqData.SessionKey);
-
-		_logXmlService.LogXmlText(contents, "FetchPackagesRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, "FetchPackagesRes", reqData.SessionKey);
 
 		var decode = DecodeOwsPackages(xdoc, contents);
 
 		return (decode.packages, decode.owsResult ?? owsResult);
 	}
 
+	
 	protected (OwsRoomStay roomStay, OwsResult owsResult) DecodeOwsGeneralAvailability(XDocument xdocInput, string contents)
 	{
 		const string mainElement = "AvailabilityResponse";

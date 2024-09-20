@@ -1,17 +1,17 @@
-﻿using System.Reflection.Emit;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using Msh.Common.Models;
 
 namespace Msh.Common.Logger;
 
 public interface ILogXmlService
 {
-	void LogXml(object obj, string key, string sessionKey = "", IXmlRedactor redactor = null);
+	Task LogXml(object obj, string key, string sessionKey = "", IXmlRedactor? redactor = null);
 
-	void LogXmlText(string xml, string key, string sessionKey = "", IXmlRedactor redactor = null);
+	Task LogXmlText(string xml, string key, string sessionKey = "", IXmlRedactor? redactor = null);
 
-	void LogJsonText(object obj, string key, string sessionKey = "");
-	string LogCriticalError(string key, string url, string sessionId, string request, string contents);
+	Task LogJsonText(object obj, string key, string sessionKey = "");
+
+	Task<string> LogCriticalError(string key, string url, string sessionId, string request, string contents);
 }
 
 public interface IXmlRedactor
