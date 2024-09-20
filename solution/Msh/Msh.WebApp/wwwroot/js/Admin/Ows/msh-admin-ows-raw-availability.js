@@ -10,6 +10,12 @@
     var mom = app.momentDateService;
     var math = app.mathService;
 
+    var util = {
+        setHtml: function (html) {
+            $('#data').html(html);
+        }
+    }
+
     var sel = {
         dataType: '#dataType',
         sort: '#sort',
@@ -46,16 +52,23 @@
         return `<td${a}>${v}</td>`
     }
 
+    function setArrive(arriveStr) { $(sel.dateArrive).val(arriveStr); }
+    function setDepart(departStr) { $(sel.dateArrive).val(departStr); }
+
+    function dateArrive() { return $(sel.dateArrive).val(); }
+    function dateDepart() { return $(sel.dateDepart).val(); }
+    function setHtml(html) { $(sel.data).html(html); }
+
     function onSuccessLoadData(data) {
-        util2.hideProgress();
+        //util2.hideProgress();
         if (!data.Success) {
-            util.showError(data.ErrorMessage);
-            util.setHtml("");
+            // util.showError(data.ErrorMessage);
+            setHtml("");
             return;
         }
 
-        util.setArrive(data.ArriveText);
-        util.setDepart(data.DepartText);
+        setArrive(data.ArriveText);
+        setDepart(data.DepartText);
         var dataType = funcs.dataType();
 
         var text = '<table>';
@@ -77,7 +90,7 @@
 
         text += '</table>';
 
-        util.setHtml(text);
+        setHtml(text);
     }
 
     function getRoomRates(data, text) {
@@ -86,10 +99,7 @@
             + addTd("RatePlan")
             + addTd("Price")
             + addTd("Units")
-
             + "</tr>";
-
-
         data.List.forEach(function (r) {
 
 
@@ -164,8 +174,7 @@
     }
 
     function setFormData(d) {
-        var data = d.data;
-       
+        var data = d.data;      
 
         $(sel.hotelCode).val(data.HotelCode);
         $(sel.dateArrive).val(data.Arrive);
@@ -186,12 +195,10 @@
     }
 
     function loadData() {
-        util.clearError();
-        util2.showProgress();
-
+       
         var req = getFormData();
 
-        api.postAsync(req, '/api/owsapi/OwsRawAvailability', onSuccessLoadData);
+        api.postAsync('/api/owsapi/Availability', req, onSuccessLoadData);
     };
 
     var today = mom.today();
@@ -229,8 +236,12 @@
     var list = [];
     var storeId = 'ows-raw';
 
-    $('#save-button').on('click', function () {
+    $('#load-button').on('click', function () {
 
+        loadData();
+    });
+
+    $('#save-button').on('click', function () {
         var id = $('#store-id').val();
         var exists = false;
         list.forEach(function (v, i) {
@@ -249,8 +260,7 @@
             list.push(data);
             var json = JSON.stringify(list);
             store.saveData(storeId, json);
-            fillSelect(list);
-        }
+            fillSelect(list);        }
 
     });
 
