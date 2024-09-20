@@ -126,6 +126,7 @@ public class OwsApiController(IOwsConfigService owsConfigService) : Controller
 		{
 			req.Depart = req.Arrive.AddDays(req.Nights);
 			// AdminSiteAuth.VerifyUserForApi();
+			return Ok();
 
 			//return Ok(LoadAvailability(req.OwsSource, req.DataType, req.HotelCode, req.Arrive, req.Nights, req.Adults, req.Children, req.Sort, req.QualifyingIdType, req.QualifyingIdValue));
 		}
