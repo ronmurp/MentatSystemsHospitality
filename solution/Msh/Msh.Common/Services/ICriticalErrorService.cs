@@ -10,3 +10,12 @@ public interface ICriticalErrorService
 	(bool foundCriticalError, bool canRetry, string errorCode) CheckForCriticalError(List<CriticalErrorTrigger> criticalErrorTriggers,
 		string contents, int count, int retryCount, string logCode, string url, string message);
 }
+
+public class CriticalErrorService : ICriticalErrorService
+{
+	public (bool foundCriticalError, bool canRetry, string errorCode) CheckForCriticalError(List<CriticalErrorTrigger> criticalErrorTriggers,
+		string contents, int count, int retryCount, string logCode, string url, string message)
+	{
+		throw new NotImplementedException();
+	}
+}

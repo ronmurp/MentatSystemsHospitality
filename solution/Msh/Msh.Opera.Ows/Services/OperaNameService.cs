@@ -26,11 +26,11 @@ public class OperaNameService(
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		await _logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(sb.ToString(), LogXmls.OwsFetchProfileReq, reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.NameUrl());
 
-		await _logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, LogXmls.OwsFetchProfileRes, reqData.SessionKey);
 
 		var decode = DecodeProfileResponse(xdoc, contents);
 
@@ -45,11 +45,11 @@ public class OperaNameService(
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		await _logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(sb.ToString(), LogXmls.OwsFetchProfileReq, reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.NameUrl(), reqData.SessionKey);
 
-		await _logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, LogXmls.OwsFetchProfileRes, reqData.SessionKey);
 
 		var decode = DecodeProfileResponse(xdoc, contents);
 
@@ -64,11 +64,11 @@ public class OperaNameService(
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		await _logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(sb.ToString(), LogXmls.OwsNameLookupReq, reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.NameUrl());
 
-		await _logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, LogXmls.OwsNameLookupRes, reqData.SessionKey);
 
 		var decode = DecodeNameLookupResponse(xdoc, contents);
 
@@ -83,11 +83,11 @@ public class OperaNameService(
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		await _logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(sb.ToString(), LogXmls.OwsNameLookupByNameReq, reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.NameUrl());
 
-		await _logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, LogXmls.OwsNameLookupByNameRes, reqData.SessionKey);
 
 		var decode = DecodeNameLookupResponse(xdoc, contents);
 
@@ -102,11 +102,11 @@ public class OperaNameService(
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		await _logXmlService.LogXmlText(sb.ToString(), "FetchProfileReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(sb.ToString(), LogXmls.OwsNameLookupByPersonReq, reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.NameUrl());
 
-		await _logXmlService.LogXmlText(contents, "FetchProfileRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, LogXmls.OwsNameLookupByPersonReq, reqData.SessionKey);
 
 		var decode = DecodeNameLookupResponse(xdoc, contents);
 
@@ -121,11 +121,11 @@ public class OperaNameService(
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		await _logXmlService.LogXmlText(sb.ToString(), "FetchNameReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(sb.ToString(), LogXmls.OwsFetchNameReq, reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.NameUrl());
 
-		await _logXmlService.LogXmlText(contents, "FetchNameRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, LogXmls.OwsFetchNameRes, reqData.SessionKey);
 
 		var decode = DecodeNameResponse(xdoc, contents);
 
@@ -140,11 +140,11 @@ public class OperaNameService(
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		await _logXmlService.LogXmlText(sb.ToString(), "FetchNameReq", user.SessionKey);
+		await _logXmlService.LogXmlText(sb.ToString(), LogXmls.OwsRegisterNameReq, user.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.NameUrl());
 
-		await _logXmlService.LogXmlText(contents, "FetchNameRes", user.SessionKey);
+		await _logXmlService.LogXmlText(contents, LogXmls.OwsRegisterNameRes, user.SessionKey);
 
 		var decode = await DecodeRegisterNameResponse(xdoc, contents, user);
 
@@ -263,7 +263,7 @@ public class OperaNameService(
 
 			}).FirstOrDefault();
 
-		//_logXmlService.LogJsonText(profile, "FetchProfileRes");
+		//_logXmlService.LogJsonText(profile, "OwsFetchProfileRes");
 
 		var owsResultDecode = CheckForNoData(prof, methodName);
 
@@ -330,7 +330,7 @@ public class OperaNameService(
 				Title = p.ValueE("nameTitle")
 			}).SingleOrDefault();
 
-		//_logXmlService.LogJsonText(profile, "FetchProfileRes");
+		//_logXmlService.LogJsonText(profile, "OwsFetchProfileRes");
 
 		var owsResultDecode = CheckForNoData(profile, methodName);
 
@@ -367,7 +367,7 @@ public class OperaNameService(
 				Email = p.Descendant("EMails", "NameEmail").ValueE()
 			}).ToList();
 
-		//_logXmlService.LogJsonText(profile, "FetchProfileRes");
+		//_logXmlService.LogJsonText(profile, "OwsFetchProfileRes");
 
 		var owsResultDecode = CheckForNoData(profiles, methodName);
 

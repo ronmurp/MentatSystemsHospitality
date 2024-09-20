@@ -3,6 +3,7 @@ using System.Xml.Linq;
 using Msh.Common.Logger;
 using Msh.Common.Models.OwsCommon;
 using Msh.Common.Services;
+using Msh.Loggers.Const;
 using Msh.Opera.Ows.ExtensionMethods;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Models.AvailabilityResponseModels;
@@ -36,11 +37,11 @@ public class OperaAvailabilityService(
 
 		LastRequest = sb.ToString();
 
-		await _logXmlService.LogXml(xElement, "AvailGenReq", reqData.SessionKey);
+		await _logXmlService.LogXml(xElement, LogXmls.OwsAvailGenReq, reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.AvailabilityUrl(), reqData.SessionKey);
 
-		await _logXmlService.LogXml(contents, "AvailGenRes", reqData.SessionKey);
+		await _logXmlService.LogXml(contents, LogXmls.OwsAvailGenRes, reqData.SessionKey);
 
 		var decode = DecodeOwsGeneralAvailability(xdoc, contents);
 
@@ -56,11 +57,11 @@ public class OperaAvailabilityService(
 		var sb = new StringBuilder(xElement.ToString());
 
 		LastRequest = sb.ToString();
-		await _logXmlService.LogXmlText(LastRequest, "AvailDetReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(LastRequest,  LogXmls.OwsAvailDetReq, reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.AvailabilityUrl(), reqData.SessionKey);
 
-		await _logXmlService.LogXmlText(contents, "AvailDetRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, LogXmls.OwsAvailDetRes, reqData.SessionKey);
 
 		var decode = DecodeOwsDetailAvailability(xdoc, contents);
 
@@ -77,11 +78,11 @@ public class OperaAvailabilityService(
 		var sb = new StringBuilder(xElement.ToString());
 
 		LastRequest = sb.ToString();
-		await _logXmlService.LogXmlText(LastRequest, "FetchPackagesReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(LastRequest, LogXmls.OwsFetchPackagesReq, reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.AvailabilityUrl(), reqData.SessionKey);
 
-		await _logXmlService.LogXmlText(contents, "FetchPackagesRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, LogXmls.OwsFetchPackagesRes, reqData.SessionKey);
 
 		var decode = DecodeOwsPackages(xdoc, contents);
 

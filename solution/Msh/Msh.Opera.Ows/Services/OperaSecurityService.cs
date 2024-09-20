@@ -54,11 +54,11 @@ public class OperaSecurityService : OperaBaseService, IOperaSecurityService
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		await _logXmlService.LogXmlText(sb.ToString(), "CreateUserReq", user.SessionKey);
+		await _logXmlService.LogXmlText(sb.ToString(), LogXmls.OwsCreateUserReq, user.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.SecurityUrl());
 
-		await _logXmlService.LogXmlText(contents, "CreateUserRes", user.SessionKey);
+		await _logXmlService.LogXmlText(contents, LogXmls.OwsCreateUserRes, user.SessionKey);
 
 		var decode = DecodeCreateUserResponse(xdoc, contents);
 

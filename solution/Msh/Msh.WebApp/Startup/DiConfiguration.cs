@@ -2,6 +2,7 @@
 using Msh.Common.Models;
 using Msh.Common.Startup;
 using Msh.HotelCache.Startup;
+using Msh.Loggers.Startup;
 using Msh.Opera.Ows.Startup;
 using Msh.Pay.CoinCorner.Startup;
 using Msh.Pay.FreedomPay.Startup;
@@ -20,12 +21,14 @@ public static class DiConfiguration
 		services.AddScoped<IUserService, UserService>();
 
 		services.RegisterCommonServices();
-        services.RegisterFpServices();
+		services.RegisterLogServices();
+		services.RegisterFpServices();
         services.RegisterCcServices();
         services.RegisterHotelServices();
         services.RegisterAdminServices();
         services.RegisterOwsServices();
         services.RegisterCcServices();
+       
 
 
     }

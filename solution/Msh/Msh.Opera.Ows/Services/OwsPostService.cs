@@ -11,24 +11,15 @@ using Msh.Opera.Ows.Services.Helpers;
 
 namespace Msh.Opera.Ows.Services;
 
-public class OwsPostService : IOwsPostService
+public class OwsPostService(
+	ILogXmlService logXmlService,
+	IOwsConfigService owsConfigService,
+	ICriticalErrorService criticalErrorService)
+	: IOwsPostService
 {
-	private readonly ILogXmlService _logXmlService;
-	private readonly IOwsConfigService _owsConfigService;
-	private readonly ICriticalErrorService _criticalErrorService;
-
-	public OwsPostService(ILogXmlService logXmlService, 
-		IOwsConfigService owsConfigService,
-		ICriticalErrorService criticalErrorService)
-	{
-		_logXmlService = logXmlService;
-		_owsConfigService = owsConfigService;
-		_criticalErrorService = criticalErrorService;
-	}
-
 	public async Task<(XDocument xdoc, string contents, OwsResult owsResult)> PostAsync(StringBuilder sb, string url, string sessionId = "")
 	{
-		var retryCount = _owsConfigService.OwsConfig.RetryCount;
+		var retryCount = owsConfigService.OwsConfig.RetryCount;
 
 		var count = 0;
 		var contents = "";
@@ -74,7 +65,7 @@ public class OwsPostService : IOwsPostService
 			catch (Exception ex)
 			{
 				//WbsLogger.Error("CRITICAL-ERROR", ex, $"Retry count {count}, SessionId {sessionId}");
-				_logXmlService.LogXml(contents, "CriticalErrorPostAsync", $"{sessionId}");
+				await logXmlService.LogXml(contents, LogXmls.OwsCriticalErrorPostAsync, $"{sessionId}");
 				if (count > retryCount)
 					throw ex;
 			}
@@ -84,14 +75,14 @@ public class OwsPostService : IOwsPostService
 
 	private (bool hasError, XDocument xdoc) CheckForCriticalErrors(string url, string sessionId, string request, string contents, int count)
 	{
-		var list = _owsConfigService.OwsConfig.CriticalErrorTriggers;
-		var retryCount = _owsConfigService.OwsConfig.RetryCount;
+		var list = owsConfigService.OwsConfig.CriticalErrorTriggers;
+		var retryCount = owsConfigService.OwsConfig.RetryCount;
 
-		var result = _criticalErrorService.CheckForCriticalError(list, contents, count, retryCount, LogCodes.OwsCriticalError, url, string.Empty);
+		var result = criticalErrorService.CheckForCriticalError(list, contents, count, retryCount, LogCodes.OwsCriticalError, url, string.Empty);
 
 		if (result.foundCriticalError)
 		{
-			var filename = _logXmlService.LogCriticalError("CriticalError", url, sessionId, request, contents);
+			var filename = logXmlService.LogCriticalError("CriticalError", url, sessionId, request, contents);
 			var obj = new
 			{
 				CriticalErrorCode = result.errorCode,
@@ -120,7 +111,7 @@ public class OwsPostService : IOwsPostService
 		}
 		catch (Exception ex)
 		{
-			var filename = _logXmlService.LogCriticalError("CriticalError", url, sessionId, request, contents);
+			var filename = logXmlService.LogCriticalError("CriticalError", url, sessionId, request, contents);
 			//WbsLogger.Error(LogCodes.OwsCriticalError, ex, $"Error parsing XML. Retry count {count}, SessionId {sessionId}. SOAP file {filename}");
 
 			return (true, null);

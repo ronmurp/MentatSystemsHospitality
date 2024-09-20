@@ -57,7 +57,9 @@ namespace Msh.WebApp.Components
 				case AdminConst.MenuOws:
 					list = AdminMenuOws();
 					break;
-
+				case AdminConst.MenuLog:
+					list = AdminMenuLog();
+					break;
 
 				default:
 					return [];
@@ -84,6 +86,8 @@ namespace Msh.WebApp.Components
 					return new AdminMenuItem { Name = "HotelsIndex", Controller = "Hotels", Action = "Index", Text = "Hotels Home" };
 				case AdminConst.MenuOws:
 					return new AdminMenuItem { Name = "OwsIndex", Controller = "Ows", Action = "Index", Text = "OWS Dashboard" };
+				case AdminConst.MenuLog:
+					return new AdminMenuItem { Name = "OwsIndex", Controller = "Loggers", Action = "Index", Text = "Log Config Dashboard" };
 				default:
 					return new AdminMenuItem { Name = "AdminIndex", Controller = "Admin", Action = "Index", Text = "Admin Home" };
 			}
@@ -97,7 +101,8 @@ namespace Msh.WebApp.Components
 			AdminRootItem(AdminConst.MenuDev),
 			AdminRootItem(AdminConst.MenuCoinCorner),
 			AdminRootItem(AdminConst.MenuAdministrator),
-			AdminRootItem(AdminConst.MenuOws)
+			AdminRootItem(AdminConst.MenuOws),
+			AdminRootItem(AdminConst.MenuLog)
 		];
 
 		private List<AdminMenuItem> AdminMenuHotels() =>
@@ -148,5 +153,13 @@ namespace Msh.WebApp.Components
             new AdminMenuItem { Name = "OwsConfigEditTriggers", Controller = "Ows", Action = "OwsConfigEditTriggers", Text = "Crit. Error Triggers" },
             new AdminMenuItem { Name = "OwsConfigEditMaps", Controller = "Ows", Action = "OwsRawAvailability", Text = "Raw Availability" },
         ];
+
+		private List<AdminMenuItem> AdminMenuLog() =>
+		[
+			AdminRootItem(AdminConst.MenuAdmin),
+			AdminRootItem(AdminConst.MenuLog),
+			new AdminMenuItem { Name = "LogConfigEdit", Controller = "Loggers", Action = "LogXmlConfigEdit", Text = "Log Config" },
+			
+		];
 	}
 }

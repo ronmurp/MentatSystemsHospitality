@@ -1,0 +1,74 @@
+﻿@using Msh.WebApp.Models.Admin
+
+@model Msh.Loggers.XmlLogger.LogXmlConfig;
+@{
+	var title = "Log XML Config";
+	ViewData["Title"] = title;
+
+	var group = ViewBag.Group as string ?? "Ows";
+
+	ViewBag.Success = new SuccessAlert
+	{
+		ModelName = "LogXmlConfig",
+		ReturnPath = "/admin/loggers",
+		ReturnPathName = "Loggers Dashboard",
+		KeyPropertyLabel = title,
+		KeyPropertyName = "Group",
+		KeyPropertyValue = group,
+		FormAction = "LogXmlConfigEdit"
+	};
+}
+
+<div class="text-center">
+	<h1 class="display-6">@title</h1>
+	<p>Edit the main Log XML Config properties. For more information click <info-icon name="info-log-xml-items" /></p>
+	<p>Return to <a asp-controller="Loggers" asp-action="Index">Dashboard</a></p>
+</div>
+
+<input type="hidden" id="api-method" value="LogXmlConfigEditItems" />
+<input type="hidden" id="api-group" value="@group" />
+
+<div class="row">
+	<div class="col-12" id="table-target">
+	</div>
+</div>
+
+<div class="input-group mt-3 sticky-bottom">
+	<button id="save-logxmlconfig-items" class="btn btn-outline-primary" class="mr-3">Save</button>
+	<a href="javascript:mshMethods.presetItems()" class="btn btn-outline-secondary">Preset Items</a>
+	<a asp-contoller="Loggers" asp-action="Index" class="btn btn-outline-secondary">Return to dashboard</a>
+</div>
+
+<div id="page-info" style="display:none;">
+
+<div data-info-for="info-log-xml-items">
+	<span>Log XML Items for @group</span>
+		<div>
+			<p>
+				For XML APIs such as Opera's OWS SOAP interface, request and response may be logged.
+				This list of key values, and the Enabled flag, determine which calls can be logged.
+				Note that for many items there are options to log the request and/or the response. 
+				Records will be logged only if the item is enabled.
+			</p>
+			<p>
+				Some calls cannot be logged - those relating to security requests to opera, such as passwords, logins.
+			</p>
+			<p>
+				You could add the keys manually, but they have specific values in the code, so the best options is the 
+				preset the values using the Preset button.
+			</p>
+			<p>
+				Records will be logged only if the item is enabled.
+			</p>
+			<p>
+				The filename can be used to override the default filename format, if file logging is used.
+			</p>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/loggers/msh-admin-logxmlconfig-items.js"></script>
+}

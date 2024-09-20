@@ -5,9 +5,9 @@
 /// </summary>
 public class LogXmlConfigItem
 {
-	public string Key { get; set; }
+	public string Key { get; set; } = string.Empty;
 	public bool Enabled { get; set; }
-	public string Filename { get; set; }
-	public string MessageName { get; set; } // In order to find it for SoapTrace
+	public string Filename { get; set; } = string.Empty;
+	public string MessageName { get; set; } = string.Empty; // In order to find it for SoapTrace
 	public bool FullTrace { get; set; }
 }

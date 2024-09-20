@@ -1,0 +1,17 @@
+﻿@using Msh.Admin.Models.Const
+@{
+	var title = "Admin Log XML Config";
+	ViewData["Title"] = title;
+}
+
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuLog, currentItem = "LogIndex" })
+
+
+<div class="text-center">
+	<h1 class="display-6">@title</h1>
+	
+	<ul>
+		<li><a asp-controller="Loggers" asp-action="LogXmlConfigEdit" asp-route-group="Ows">OWS Log XML Configuration</a></li>
+	</ul>
+</div>
+

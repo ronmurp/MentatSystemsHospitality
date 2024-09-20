@@ -1,6 +1,7 @@
 ﻿using Msh.Common.Exceptions;
 using Msh.Common.Models.Dates;
 using Msh.HotelCache.Models.Specials;
+using Msh.Loggers.XmlLogger;
 using Msh.Opera.Ows.Models;
 
 namespace Msh.WebApp.Areas.Admin.Data;
@@ -29,4 +30,9 @@ public class OwsConfigVm
 {
 	public List<OwsPaymentCodeMap> SchemaMaps { get; set; } = [];
 	public List<CriticalErrorTrigger> CriticalErrorTriggers { get; set; } = [];
+}
+
+public class LogConfigVm
+{
+	public List<LogXmlConfigItem> Items { get; set; } = [];
 }

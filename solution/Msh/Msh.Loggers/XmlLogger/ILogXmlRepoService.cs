@@ -5,8 +5,8 @@
 /// </summary>
 public interface ILogXmlRepoService
 {
-	Task<LogXmlConfig> GetConfig();
+	Task<LogXmlConfig> GetConfig(string group);
 
-	Task SaveConfig(LogXmlConfig config);
+	Task SaveConfig(LogXmlConfig config, string group);
 
 }

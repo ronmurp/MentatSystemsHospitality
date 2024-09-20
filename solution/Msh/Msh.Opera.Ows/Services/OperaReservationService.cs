@@ -73,11 +73,11 @@ public class OperaReservationService(
 
 		LastRequest = sb.FormatXml(Formatting.Indented).ToString();
 
-		await _logXmlService.LogXmlText(LastRequest, "UpdatePackageReq");
+		await _logXmlService.LogXmlText(LastRequest, LogXmls.OwsUpdatePackageReq);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ReservationUrl());
 
-		await _logXmlService.LogXmlText(contents, "UpdatePackageRes");
+		await _logXmlService.LogXmlText(contents, LogXmls.OwsUpdatePackageRes);
 
 		var decode = DecodeOwsPackage(xdoc, contents);
 
@@ -94,11 +94,11 @@ public class OperaReservationService(
 
 		LastRequest = sb.FormatXml(Formatting.Indented).ToString();
 
-		await _logXmlService.LogXmlText(LastRequest, "AddBookingCommentsReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(LastRequest, LogXmls.OwsAddBookingCommentsReq, reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ReservationUrl(), reqData.SessionKey);
 
-		await _logXmlService.LogXmlText(contents, "AddBookingCommentsRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, LogXmls.OwsAddBookingCommentsRes, reqData.SessionKey);
 
 		var decode = DecodeOwsAddedComments(xdoc, contents);
 
@@ -115,11 +115,11 @@ public class OperaReservationService(
 
 		LastRequest = sb.FormatXml(Formatting.Indented).ToString();
 
-		await _logXmlService.LogXmlText(LastRequest, "AddBookingPaymentReq", reqData.SessionKey);
+		await _logXmlService.LogXmlText(LastRequest, LogXmls.OwsAddBookingPaymentReq, reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ResvAdvancedUrl(), reqData.SessionKey);
 
-		await _logXmlService.LogXmlText(contents, "AddBookingPaymentRes", reqData.SessionKey);
+		await _logXmlService.LogXmlText(contents, LogXmls.OwsAddBookingPaymentRes, reqData.SessionKey);
 
 		var decode = DecodePayment(xdoc, contents);
 
@@ -135,13 +135,13 @@ public class OperaReservationService(
 
 		LastRequest = sb.FormatXml(Formatting.Indented).ToString();
 
-		await _logXmlService.LogXml(xElement, "BookStatusReq", reqData.SessionKey, redactor);
+		await _logXmlService.LogXml(xElement, LogXmls.OwsBookStatusReq, reqData.SessionKey, redactor);
 		//_logXmlService.LogXmlText(LastRequest, keyReq, reqData.SessionKey);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ReservationUrl(), reqData.SessionKey);
 
 
-		await _logXmlService.LogXml(contents, "BookStatusRes", reqData.SessionKey, redactor);
+		await _logXmlService.LogXml(contents, LogXmls.OwsBookStatusRes, reqData.SessionKey, redactor);
 
 		var mainElement = "GetReservationStatusResponse";
 		var decode = DecodeOwsReservationStatus(xdoc, contents, mainElement);
@@ -202,11 +202,11 @@ public class OperaReservationService(
 
 		LastRequest = sb.FormatXml(Formatting.Indented).ToString();
 
-		await _logXmlService.LogXml(xElement, reqData.Modify ? "BookModReq" : "BookReq", reqData.SessionKey, redactor);
+		await _logXmlService.LogXml(xElement, reqData.Modify ? LogXmls.OwsBookModReq : LogXmls.OwsBookReq, reqData.SessionKey, redactor);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb.FormatXml(Formatting.None), config.ReservationUrl(), reqData.SessionKey);
 
-		await _logXmlService.LogXml(contents, reqData.Modify ? "BookModRes" : "BookRes", reqData.SessionKey, redactor);
+		await _logXmlService.LogXml(contents, reqData.Modify ? LogXmls.OwsBookModRes : LogXmls.OesBookRes, reqData.SessionKey, redactor);
 
 		var mainElement = reqData.Modify ? "ModifyBookingResponse" : "CreateBookingResponse";
 

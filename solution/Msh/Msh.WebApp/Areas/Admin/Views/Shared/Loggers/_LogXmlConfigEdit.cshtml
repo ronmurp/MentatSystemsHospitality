@@ -1,0 +1,115 @@
+﻿@using Msh.WebApp.Models.Admin
+@model Msh.Loggers.XmlLogger.LogXmlConfig
+@{
+	var success = ViewBag.Success as SuccessAlert;
+	var group = ViewBag.Group as string ?? "Ows";
+	var formAction = success?.FormAction ?? "LogXmlConfigEdit";
+	var title = ViewData["Title"];
+}
+
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
+
+<div class="row">
+	<div class="col-6">
+
+		<form asp-action="LogXmlConfigEdit" asp-route-group="@group">
+
+			<div class="form-group mb-3">
+				<label asp-for="Path" class="control-label"></label>&nbsp;
+				<info-icon name="info-path" />
+				<input asp-for="Path" class="form-control " />
+				<span asp-validation-for="Path" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="RelativePath" type="checkbox" class="form-check-input " />
+				<label asp-for="RelativePath" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-relative-path" />
+			</div>
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="EnableSoapTrace" type="checkbox" class="form-check-input " />
+				<label asp-for="EnableSoapTrace" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-enable-soap-trace" />
+			</div>
+
+
+			<div class="form-check form-switch mb-3">
+				<input asp-for="Redact" type="checkbox" class="form-check-input " />
+				<label asp-for="Redact" class="form-check-label"></label>&nbsp;
+				<info-icon name="info-redact" />
+			</div>
+			
+			<div class="form-group mb-3">
+				<label asp-for="LogDestination" class="control-label"></label>&nbsp;
+				<info-icon name="info-log-destination" />
+				<select asp-for="LogDestination" class="form-control " asp-items="Html.GetEnumSelectList<Msh.Loggers.XmlLogger.LogDestination>()"></select>
+				<span asp-validation-for="LogDestination" class="text-danger"></span>
+			</div>
+
+
+
+			<div class="input-group sticky-bottom">
+				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
+				
+				
+
+				<a asp-controller="Loggers" asp-action="Index"  class="btn btn-outline-secondary">Return to dashboard</a>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+
+<div id="page-info" style="display:none;">
+
+	<div data-info-for="info-path">
+	<span>File Path</span>
+	<div>
+		<p>
+			
+		</p>
+	</div>
+</div>
+<div data-info-for="info-relative-path">
+	<span>Relative Path</span>
+	<div>
+		<p>
+			
+		</p>
+	</div>
+</div>
+<div data-info-for="info-enable-soap-trace">
+	<span>Enable Soap Trace</span>
+	<div>
+		<p>
+			
+		</p>
+	</div>
+</div>
+<div data-info-for="info-redact">
+	<span>Redact</span>
+	<div>
+		<p>
+			
+		</p>
+	</div>
+</div>
+
+	<div data-info-for="info-log-destination">
+		<span>Log Destination</span>
+		<div>
+			<p>
+				Database - The logs will be recorded in the database.
+			</p>
+			<p>
+				File - The logs will be recorded in the file system.
+			</p>
+		</div>
+
+	</div>
+</div>
+
+

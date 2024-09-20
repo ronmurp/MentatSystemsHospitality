@@ -4,7 +4,7 @@ namespace Msh.Loggers.XmlLogger;
 
 public class LogXmlService : ILogXmlService
 {
-	public async Task LogXml(object obj, string key, string sessionKey = "", IXmlRedactor? redactor = null)
+	public async Task LogXml(object obj, LogXmls key, string sessionKey = "", IXmlRedactor? redactor = null)
 	{
 		if (obj is string xml)
 			await LogXmlText(xml, key, sessionKey, redactor);
@@ -12,18 +12,28 @@ public class LogXmlService : ILogXmlService
 			await LogXmlObject(obj, key, sessionKey, redactor);
 	}
 
-	public Task LogXmlText(string xml, string key, string sessionKey = "", IXmlRedactor? redactor = null)
+	public async Task LogXmlText(string xml, LogXmls key, string sessionKey = "", IXmlRedactor? redactor = null)
 	{
-		throw new NotImplementedException();
+		await Task.Delay(0);
+		//throw new NotImplementedException();
 	}
 
-	public Task LogJsonText(object obj, string key, string sessionKey = "")
+	public async Task LogJsonText(object obj, string key, string sessionKey = "")
 	{
-		throw new NotImplementedException();
+		await Task.Delay(0);
+		//throw new NotImplementedException();
 	}
 
-	public Task<string> LogCriticalError(string key, string url, string sessionId, string request, string contents)
+	public async Task<string> LogCriticalError(string key, string url, string sessionId, string request, string contents)
 	{
-		throw new NotImplementedException();
+		await Task.Delay(0);
+		//throw new NotImplementedException();
+		return string.Empty;
+	}
+
+	protected async Task LogXmlObject(object obj, LogXmls key, string sessionKey = "", IXmlRedactor? redactor = null)
+	{
+		await Task.Delay(0);
+		//throw new NotImplementedException();
 	}
 }

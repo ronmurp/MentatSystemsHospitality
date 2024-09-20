@@ -1,0 +1,37 @@
+﻿@using Msh.WebApp.Models.Admin
+
+@model Msh.Loggers.XmlLogger.LogXmlConfig;
+@{
+	var title = "Log XML Config";
+	ViewData["Title"] = title;
+
+	var group = ViewBag.Group as string ?? "Ows";
+
+	ViewBag.Success = new SuccessAlert
+	{
+		ModelName = "LogXmlConfig",
+		ReturnPath = "/admin/loggers",
+		ReturnPathName = "Loggers Dashboard",
+		KeyPropertyLabel = title,
+		KeyPropertyName = "Group",
+		KeyPropertyValue = group,
+		FormAction = "LogXmlConfigEdit"
+	};
+}
+
+<div class="text-center">
+	<h1 class="display-6">@title</h1>
+	<p>Edit the main Log XML Config properties for group @group</p>
+	<p><a asp-area="Admin" asp-controller="Loggers" asp-action="LogXmlConfigEditItems" asp-route-group="@group">Edit Items</a></p>
+</div>
+
+
+
+
+@await Html.PartialAsync("Loggers/_LogXmlConfigEdit", @Model)
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	
+}

@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Msh.Common\Msh.Common.csproj" />
+    <ProjectReference Include="..\Msh.Loggers\Msh.Loggers.csproj" />
   </ItemGroup>
 
 </Project>

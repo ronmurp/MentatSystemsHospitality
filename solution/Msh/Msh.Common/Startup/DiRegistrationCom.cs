@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Msh.Common.Data;
+using Msh.Common.Services;
 
 namespace Msh.Common.Startup;
 
@@ -9,5 +10,6 @@ public static class DiRegistrationCom
     {
         services.AddScoped<IConfigRepository, ConfigRepository>();
         services.AddScoped<ConfigDbContext, ConfigDbContext>();
+        services.AddScoped<ICriticalErrorService, CriticalErrorService>();
     }
 }

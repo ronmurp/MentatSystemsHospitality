@@ -5,9 +5,9 @@ namespace Msh.Common.Logger;
 
 public interface ILogXmlService
 {
-	Task LogXml(object obj, string key, string sessionKey = "", IXmlRedactor? redactor = null);
+	Task LogXml(object obj, LogXmls key, string sessionKey = "", IXmlRedactor? redactor = null);
 
-	Task LogXmlText(string xml, string key, string sessionKey = "", IXmlRedactor? redactor = null);
+	Task LogXmlText(string xml, LogXmls key, string sessionKey = "", IXmlRedactor? redactor = null);
 
 	Task LogJsonText(object obj, string key, string sessionKey = "");
 

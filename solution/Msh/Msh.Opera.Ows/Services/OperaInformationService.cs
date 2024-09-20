@@ -29,11 +29,11 @@ public class OperaInformationService(
 
 		var sb = new StringBuilder(xElement.ToString());
 
-		await _logXmlService.LogXmlText(sb.ToString(), "GetBusinessDateReq");
+		await _logXmlService.LogXmlText(sb.ToString(), LogXmls.OwsBusinessDateReq);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.InformationUrl(), "");
 
-		await _logXmlService.LogXmlText(contents, "GetBusinessDateRes");
+		await _logXmlService.LogXmlText(contents, LogXmls.OwsBusinessDateRes);
 
 		var decode = DecodeOwsBusinessDate(xdoc, contents);
 
@@ -78,11 +78,11 @@ public class OperaInformationService(
 		var xElement = InformationBuildService.LovQuery2(reqData, lovType, config);
 		var sb = new StringBuilder(xElement.ToString());
 
-		await _logXmlService.LogXmlText(sb.ToString(), "InfoLovReq");
+		await _logXmlService.LogXmlText(sb.ToString(), LogXmls.OwsInfoLovReq);
 
 		var (xdoc, contents, owsResult) = await PostAsync(sb, config.InformationUrl());
 
-		await _logXmlService.LogXmlText(contents, "InfoLovRes");
+		await _logXmlService.LogXmlText(contents, LogXmls.OwsInfoLovRes);
 
 		var decode = DecodeLovResponse(xdoc, contents);
 

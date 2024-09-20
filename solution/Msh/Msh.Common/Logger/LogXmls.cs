@@ -1,0 +1,42 @@
+﻿namespace Msh.Common.Logger;
+
+public enum LogXmls
+{
+	OwsAvailGenReq,
+	OwsAvailGenRes,
+	OwsAvailDetReq,
+	OwsAvailDetRes,
+	OwsBookModReq,
+	OwsBookModRes,
+	OwsBookReq,
+	OesBookRes,
+	OwsBookStatusReq,
+	OwsBookStatusRes,
+	OwsFetchPackagesReq,
+	OwsFetchPackagesRes,
+	OwsBusinessDateReq,
+	OwsBusinessDateRes,
+	OwsInfoLovReq,
+	OwsInfoLovRes,
+	OwsFetchProfileReq,
+	OwsFetchProfileRes,
+	OwsNameLookupReq,
+	OwsNameLookupRes,
+	OwsNameLookupByNameReq,
+	OwsNameLookupByNameRes,
+	OwsNameLookupByPersonReq,
+	OwsFetchNameReq,
+	OwsFetchNameRes,
+	OwsRegisterNameReq,
+	OwsRegisterNameRes,
+	OwsUpdatePackageReq,
+	OwsUpdatePackageRes,
+	OwsAddBookingCommentsReq,
+	OwsAddBookingCommentsRes,
+	OwsAddBookingPaymentReq,
+	OwsAddBookingPaymentRes,
+	OwsCreateUserReq,
+	OwsCreateUserRes,
+	OwsCriticalErrorPostAsync
+	
+}
