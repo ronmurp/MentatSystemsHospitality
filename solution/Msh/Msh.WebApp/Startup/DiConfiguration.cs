@@ -25,6 +25,8 @@ public static class DiConfiguration
         services.RegisterHotelServices();
         services.RegisterAdminServices();
         services.RegisterOwsServices();
+        services.RegisterCcServices();
+
 
     }
 }

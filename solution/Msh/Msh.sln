@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Msh.Admin", "Msh.Admin\Msh.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Msh.Opera.Ows", "Msh.Opera.Ows\Msh.Opera.Ows.csproj", "{BD4744E0-4CDC-4004-ACC3-A6529EA61909}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Msh.Loggers", "Msh.Loggers\Msh.Loggers.csproj", "{7E8AEF52-AE35-4A77-B9C4-94BCA1FAC76A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{BD4744E0-4CDC-4004-ACC3-A6529EA61909}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD4744E0-4CDC-4004-ACC3-A6529EA61909}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD4744E0-4CDC-4004-ACC3-A6529EA61909}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E8AEF52-AE35-4A77-B9C4-94BCA1FAC76A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E8AEF52-AE35-4A77-B9C4-94BCA1FAC76A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E8AEF52-AE35-4A77-B9C4-94BCA1FAC76A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E8AEF52-AE35-4A77-B9C4-94BCA1FAC76A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
