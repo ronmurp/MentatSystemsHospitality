@@ -143,7 +143,10 @@ namespace Msh.WebApp.Components
 		[
 			AdminRootItem(AdminConst.MenuAdmin),
 			AdminRootItem(AdminConst.MenuOws),
-			new AdminMenuItem { Name = "OwsConfigEdit", Controller = "Ows", Action = "OwsConfigEdit", Text = "OWS Config" }
-		];
+			new AdminMenuItem { Name = "OwsConfigEdit", Controller = "Ows", Action = "OwsConfigEdit", Text = "OWS Config" },
+            new AdminMenuItem { Name = "OwsConfigEditMaps", Controller = "Ows", Action = "OwsConfigEditMaps", Text = "Schema Maps" },
+            new AdminMenuItem { Name = "OwsConfigEditTriggers", Controller = "Ows", Action = "OwsConfigEditTriggers", Text = "Crit. Error Triggers" },
+            new AdminMenuItem { Name = "OwsConfigEditMaps", Controller = "Ows", Action = "OwsRawAvailability", Text = "Raw Availability" },
+        ];
 	}
 }

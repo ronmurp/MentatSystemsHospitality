@@ -106,4 +106,22 @@ public class OwsController(ILogger<OwsController> logger,
 
 		return RedirectToAction("Index");
 	}
+
+	[Route("OwsRawAvailability")]
+	public async Task<IActionResult> OwsRawAvailability(bool isSuccess = false)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			return View();
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"{ex.Message}");
+		}
+
+		return RedirectToAction("Index");
+	}
+
 }
