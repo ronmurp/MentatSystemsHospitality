@@ -1,6 +1,4 @@
-﻿using Msh.Pay.FreedomPay.Models.Configuration;
-
-namespace Msh.Pay.FreedomPay.Models;
+﻿namespace Msh.Pay.FreedomPay.Models;
 
 public static class ConstFp
 {
@@ -8,7 +6,7 @@ public static class ConstFp
     public const string FpErrorCodeBank = "FpErrorCodeBank";
     public const string FpErrorCode = "FpErrorCode";
     public const string FpPaymentType = "FpPaymentType";
-    public const string FpKmapConfig = "KmapConfig";
+    public const string FpKmapConfig = "FpKmapConfig";
 
     public static class PaymentType
     {
