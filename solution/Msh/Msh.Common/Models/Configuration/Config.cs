@@ -23,4 +23,10 @@ public class Config
     /// Admin notes
     /// </summary>
     public string? Notes { get; set; }
+
+    public bool Locked { get; set; }
+
+    public DateTime Published { get; set; }
+
+    public string PublishedBy { get; set; } = string.Empty;
 }
