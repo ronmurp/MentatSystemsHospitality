@@ -9,11 +9,14 @@
 ///
 /// All messages depend on a LibException being thrown, or a LibException being constructed to replace another exception. 
 /// </remarks>
-public class OwsErrorList : Dictionary<string, OwsError>
+public class OwsErrorList
 {
 	/// <summary>
 	/// The message returned if all other attempts fail or return an empty message.
 	/// Can be used to simplify the XML when a number of OWS/WBS errors
 	/// </summary>
 	public string DefaultErrorMessage { get; set; } = string.Empty;
+
+	public Dictionary<string, OwsError> ErrorMessages { get; set; } = new Dictionary<string, OwsError>();
+
 }
