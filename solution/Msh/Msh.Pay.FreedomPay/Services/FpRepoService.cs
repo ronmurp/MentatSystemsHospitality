@@ -14,4 +14,11 @@ public class FpRepoService(IConfigRepository configRepository) : IFpRepoService
 		await configRepository.SaveConfigAsync($"{ConstFp.FpConfig}", config);
 	}
 
+	public async Task<List<FpErrorCodeBank>> GetFpErrorCodeBank() =>
+		await configRepository.GetConfigContentAsync<List<FpErrorCodeBank>>($"{ConstFp.FpErrorCodeBank}");
+
+	public async Task SaveFpErrorCodeBank(List<FpErrorCodeBank> list)
+	{
+		await configRepository.SaveConfigAsync($"{ConstFp.FpErrorCodeBank}", list);
+	}
 }

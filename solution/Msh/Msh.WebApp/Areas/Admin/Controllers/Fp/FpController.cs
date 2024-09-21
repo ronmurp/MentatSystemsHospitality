@@ -11,9 +11,8 @@ namespace Msh.WebApp.Areas.Admin.Controllers.Fp;
 [Authorize]
 [Area("Admin")]
 [Route("admin/fp")]
-public class FpController(IFpRepoService fpRepoService) : Controller
+public class FpController(ILogger<FpController> logger, IFpRepoService fpRepoService) : Controller
 {
-
 	[HttpGet]
 	[Route("")]
 	public async Task<IActionResult> Index()
@@ -70,4 +69,21 @@ public class FpController(IFpRepoService fpRepoService) : Controller
 		}
 	}
 
+
+	[Route("FpErrorBankList")]
+	public async Task<IActionResult> FpErrorBankList(string hotelCode, string code, bool isSuccess = false)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			return View();
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"{ex.Message}");
+		}
+
+		return RedirectToAction("");
+	}
 }
