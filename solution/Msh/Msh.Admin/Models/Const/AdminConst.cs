@@ -10,6 +10,7 @@ public static class AdminConst
 	public const string MenuCoinCorner = "CoinCorner";
 	public const string MenuAdministrator = "MenuAdministrator";
 	public const string MenuOws = "OWS";
+	public const string MenuFp = "Fp";
 	public const string MenuLog = "Log";
 
 }

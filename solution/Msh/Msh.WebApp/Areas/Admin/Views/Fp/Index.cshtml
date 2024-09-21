@@ -1,0 +1,13 @@
+﻿@using Msh.Admin.Models.Const
+@{
+	var title = "Admin FreedomPay";
+	ViewData["Title"] = title;
+}
+
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuFp, currentItem = "FpIndex" })
+
+
+<div class="text-center">
+	<h1 class="display-6">@title</h1>
+</div>
+

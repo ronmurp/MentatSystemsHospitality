@@ -61,6 +61,10 @@ namespace Msh.WebApp.Components
 					list = AdminMenuLog();
 					break;
 
+				case AdminConst.MenuFp:
+					list = AdminMenuFp();
+					break;
+
 				default:
 					return [];
 			}
@@ -78,6 +82,8 @@ namespace Msh.WebApp.Components
 					return new AdminMenuItem { Name = "UsersIndex", Controller = "Users", Action = "Index", Text = "Users Home" };
 				case AdminConst.MenuDev:
 					return new AdminMenuItem { Name = "DevIndex", Controller = "Dev", Action = "Index", Text = "Dev Home" };
+				case AdminConst.MenuFp:
+					return new AdminMenuItem { Name = "FpIndex", Controller = "Fp", Action = "Index", Text = "FreedomPay Dashboard" };
 				case AdminConst.MenuCoinCorner:
 					return new AdminMenuItem { Name = "CcIndex", Controller = "CoinCorner", Action = "Index", Text = "Coin Corner Home" };
 				case AdminConst.MenuAdministrator:
@@ -99,6 +105,7 @@ namespace Msh.WebApp.Components
 			AdminRootItem(AdminConst.MenuUsers),
 			AdminRootItem(AdminConst.MenuHotels),
 			AdminRootItem(AdminConst.MenuDev),
+			AdminRootItem(AdminConst.MenuFp),
 			AdminRootItem(AdminConst.MenuCoinCorner),
 			AdminRootItem(AdminConst.MenuAdministrator),
 			AdminRootItem(AdminConst.MenuOws),
@@ -160,6 +167,14 @@ namespace Msh.WebApp.Components
 			AdminRootItem(AdminConst.MenuLog),
 			new AdminMenuItem { Name = "LogConfigEdit", Controller = "Loggers", Action = "LogXmlConfigEdit", Text = "Log Config" },
 			
+		];
+
+		private List<AdminMenuItem> AdminMenuFp() =>
+		[
+			AdminRootItem(AdminConst.MenuAdmin),
+			AdminRootItem(AdminConst.MenuFp),
+			new AdminMenuItem { Name = "FpConfigEdit", Controller = "Fp", Action = "FpConfigEdit", Text = "FP Config" },
+
 		];
 	}
 }

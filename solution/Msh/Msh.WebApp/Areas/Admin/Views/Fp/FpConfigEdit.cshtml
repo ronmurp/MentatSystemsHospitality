@@ -1,0 +1,36 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.WebApp.Models.Admin
+
+@model Msh.Pay.FreedomPay.Models.Configuration.FpConfig;
+@{
+	var title = "FP Config";
+	ViewData["Title"] = title;
+
+	ViewBag.Success = new SuccessAlert
+	{
+		ModelName = "FpConfig",
+		ReturnPath = "/admin/fp",
+		ReturnPathName = "FP Dashboard",
+		KeyPropertyLabel = title,
+		KeyPropertyName = "Code",
+		KeyPropertyValue = "",
+		FormAction = "FpConfigEdit"
+	};
+}
+
+<div class="text-center">
+	<h1 class="display-6">@title</h1>
+	<p>Edit the main FP Config properties</p>
+	<p><a asp-controller="Fp" asp-action="Index">Dashboard</a></p>
+</div>
+
+
+
+
+@await Html.PartialAsync("Fp/_FpConfigEdit", @Model)
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	
+}
