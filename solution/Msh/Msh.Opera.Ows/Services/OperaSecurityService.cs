@@ -1,37 +1,29 @@
 ﻿using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Msh.Common.Logger;
-using Msh.Common.Models.OwsCommon;
-using Msh.Common.Services;
+using Msh.Opera.Ows.Cache;
 using Msh.Opera.Ows.ExtensionMethods;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Services.Base;
 using Msh.Opera.Ows.Services.Builders;
-using Msh.Opera.Ows.Services.Config;
 
 namespace Msh.Opera.Ows.Services;
 
 /// <summary>
 /// Provides a subset of security service methods for user logins
 /// </summary>
-public class OperaSecurityService : OperaBaseService, IOperaSecurityService
+public class OperaSecurityService(
+	IOwsCacheService owsCacheService,
+	IOwsPostService owsPostService,
+	ISecurityBuildService securityBuildService,
+	ILogXmlService logXmlService)
+	: OperaBaseService(logXmlService, owsCacheService, owsPostService), IOperaSecurityService
 {
-	private readonly ISecurityBuildService _securityBuildService;
-
-	public OperaSecurityService(IOwsConfigService owsConfigService,
-		IOwsPostService owsPostService,
-		ISecurityBuildService securityBuildService,
-		ILogXmlService logXmlService): base(owsConfigService.OwsConfig, logXmlService, owsConfigService, owsPostService)
-	{
-		_securityBuildService = securityBuildService;
-	}
-
 	public async Task<(OwsUser owsUser, OwsResult owsResult)> AuthenticateUserRequestAsync(OwsUser user)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
-		var xElement = _securityBuildService.AuthenticateUserRequest(user, config);
+		var xElement = securityBuildService.AuthenticateUserRequest(user, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
@@ -48,9 +40,9 @@ public class OperaSecurityService : OperaBaseService, IOperaSecurityService
 
 	public async Task<(OwsUser owsUser, OwsResult owsResult)> CreateUserRequestAsync(OwsUser user)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
-		var xElement = _securityBuildService.CreateUserRequest(user, config);
+		var xElement = securityBuildService.CreateUserRequest(user, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
@@ -67,9 +59,9 @@ public class OperaSecurityService : OperaBaseService, IOperaSecurityService
 
 	public async Task<(OwsUser owsUser, OwsResult owsResult)> UpdatePasswordAsync(OwsUser user, string oldPassword, string newPassword)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
-		var xElement = _securityBuildService.UpdatePasswordRequest(user, oldPassword, newPassword, config);
+		var xElement = securityBuildService.UpdatePasswordRequest(user, oldPassword, newPassword, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
@@ -83,9 +75,9 @@ public class OperaSecurityService : OperaBaseService, IOperaSecurityService
 
 	public async Task<(OwsUser owsUser, OwsResult owsResult)> ResetPasswordRequestAsync(OwsUser user)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
-		var xElement = _securityBuildService.ResetPasswordRequest(user, config);
+		var xElement = securityBuildService.ResetPasswordRequest(user, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
@@ -102,9 +94,9 @@ public class OperaSecurityService : OperaBaseService, IOperaSecurityService
 
 	public async Task<(List<OwsQuestion> questions, OwsResult owsResult)> FetchQuestionListRequestAsync(OwsUser user)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
-		var xElement = _securityBuildService.FetchQuestionListRequest(user, config);
+		var xElement = securityBuildService.FetchQuestionListRequest(user, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 
@@ -121,9 +113,9 @@ public class OperaSecurityService : OperaBaseService, IOperaSecurityService
 
 	public async Task<(OwsUser owsUser, OwsResult owsResult)> UpdateQuestionRequestAsync(OwsUser user)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
-		var xElement = _securityBuildService.UpdateQuestionRequest(user, config);
+		var xElement = securityBuildService.UpdateQuestionRequest(user, config);
 
 		var sb = new StringBuilder(xElement.ToString());
 

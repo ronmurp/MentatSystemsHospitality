@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Msh.HotelCache.Models;
+using Msh.Opera.Ows.Cache;
 using Msh.Opera.Ows.Models;
-using Msh.Opera.Ows.Services.Config;
+
 
 namespace Msh.WebApp.Areas.Admin.Controllers.Ows;
 
@@ -10,7 +11,7 @@ namespace Msh.WebApp.Areas.Admin.Controllers.Ows;
 [Area("Admin")]
 [Route("admin/ows")]
 public class OwsController(ILogger<OwsController> logger,
-	IOwsConfigService owsConfigService) : Controller
+	IOwsRepoService owsRepoService) : Controller
 {
 
 	[HttpGet]
@@ -31,11 +32,11 @@ public class OwsController(ILogger<OwsController> logger,
 
 
 
-		var owsConfig = await owsConfigService.GetOwsConfigAsync();
+		var owsConfig = await owsRepoService.GetOwsConfigAsync();
 		if (owsConfig == null)
 		{
 			owsConfig = new OwsConfig();
-			await owsConfigService.SaveOwsConfigAsync(owsConfig);
+			await owsRepoService.SaveOwsConfigAsync(owsConfig);
 		}
 
 		return View(owsConfig);
@@ -50,13 +51,13 @@ public class OwsController(ILogger<OwsController> logger,
 		if (ModelState.IsValid)
 		{
 
-			var owsConfigCurrent = await owsConfigService.GetOwsConfigAsync();
+			var owsConfigCurrent = await owsRepoService.GetOwsConfigAsync();
 
 			// Retain properties not edited here
 			owsConfig.CriticalErrorTriggers = owsConfigCurrent.CriticalErrorTriggers;
 			owsConfig.SchemeMap = owsConfigCurrent.SchemeMap;
 
-			await owsConfigService.SaveOwsConfigAsync(owsConfig);
+			await owsRepoService.SaveOwsConfigAsync(owsConfig);
 
 			return RedirectToAction(nameof(OwsConfigEdit), new { IsSuccess = true });
 

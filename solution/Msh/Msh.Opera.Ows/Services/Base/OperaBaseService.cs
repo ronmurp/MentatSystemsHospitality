@@ -3,10 +3,10 @@ using System.Xml.Linq;
 using Msh.Common.Constants;
 using Msh.Common.Logger;
 using Msh.Common.Models.OwsCommon;
+using Msh.Opera.Ows.Cache;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Models.AvailabilityResponses;
 using Msh.Opera.Ows.Models.ReservationRequestModels;
-using Msh.Opera.Ows.Services.Config;
 using Msh.Opera.Ows.Services.Helpers;
 
 namespace Msh.Opera.Ows.Services.Base;
@@ -16,19 +16,17 @@ namespace Msh.Opera.Ows.Services.Base;
 /// </summary>
 public class OperaBaseService
 {
-	protected readonly OwsConfig _config;
 	protected readonly ILogXmlService _logXmlService;
-	protected readonly IOwsConfigService _owsConfigService;
+	protected readonly IOwsCacheService _owsCacheService;
+
 	private readonly IOwsPostService _owsPostService;
 
-	protected OperaBaseService(OwsConfig config, 
-		ILogXmlService logXmlService, 
-		IOwsConfigService owsConfigService,
+	protected OperaBaseService(ILogXmlService logXmlService, 
+		IOwsCacheService owsCacheService,
 		IOwsPostService owsPostService)
 	{
-		_config = config;
 		_logXmlService = logXmlService;
-		_owsConfigService = owsConfigService;
+		_owsCacheService = owsCacheService;
 		_owsPostService = owsPostService;
 	}
 

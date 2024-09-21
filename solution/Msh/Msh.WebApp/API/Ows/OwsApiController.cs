@@ -2,21 +2,20 @@
 using Msh.Common.Models.ViewModels;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Services;
-using Msh.Opera.Ows.Services.Config;
 using Msh.WebApp.Areas.Admin.Data;
 using Msh.WebApp.Areas.Admin.Models.Ows;
 using System.Security.Authentication;
 using Msh.Common.Models.OwsCommon;
 using Msh.Opera.Ows.Services.CustomTest;
-using Msh.Common.Logger;
+using Msh.Opera.Ows.Cache;
 
 namespace Msh.WebApp.API.Ows;
 
 [ApiController]
 [Route("api/owsapi")]
-public class OwsApiController(IOwsConfigService owsConfigService,
+public class OwsApiController(IOwsRepoService owsRepoService,
 	IOperaAvailabilityService operaAvailabilityService,
-	ILogXmlService logXmlService) : Controller
+	CustomAvailabilityService customAvailabilityService) : Controller
 {
 
 
@@ -24,7 +23,7 @@ public class OwsApiController(IOwsConfigService owsConfigService,
 	[Route("OwsConfigMaps")]
 	public async Task<IActionResult> OwsConfigMaps()
 	{
-		var owsConfig = await owsConfigService.GetOwsConfigAsync();
+		var owsConfig = await owsRepoService.GetOwsConfigAsync();
 		
 		if (owsConfig != null)
 		{
@@ -48,10 +47,10 @@ public class OwsApiController(IOwsConfigService owsConfigService,
 		{
 			await Task.Delay(0);
 
-			var owsConfig = await owsConfigService.GetOwsConfigAsync();
+			var owsConfig = await owsRepoService.GetOwsConfigAsync();
 			owsConfig.SchemeMap = data.SchemaMaps;
 
-			await owsConfigService.SaveOwsConfigAsync(owsConfig);
+			await owsRepoService.SaveOwsConfigAsync(owsConfig);
 
 			return Ok(new ObjectVm
 			{
@@ -72,7 +71,7 @@ public class OwsApiController(IOwsConfigService owsConfigService,
 	[Route("OwsConfigEditTriggers")]
 	public async Task<IActionResult> OwsConfigEditTriggers()
 	{
-		var owsConfig = await owsConfigService.GetOwsConfigAsync();
+		var owsConfig = await owsRepoService.GetOwsConfigAsync();
 
 		if (owsConfig != null)
 		{
@@ -97,12 +96,12 @@ public class OwsApiController(IOwsConfigService owsConfigService,
 		{
 			await Task.Delay(0);
 
-			var owsConfig = await owsConfigService.GetOwsConfigAsync();
+			var owsConfig = await owsRepoService.GetOwsConfigAsync();
 			owsConfig.CriticalErrorTriggers = data.CriticalErrorTriggers;
 
-			await owsConfigService.SaveOwsConfigAsync(owsConfig);
+			await owsRepoService.SaveOwsConfigAsync(owsConfig);
 
-			var owsConfig2 = await owsConfigService.GetOwsConfigAsync();
+			var owsConfig2 = await owsRepoService.GetOwsConfigAsync();
 
 			return Ok(new ObjectVm
 			{
@@ -172,22 +171,22 @@ public class OwsApiController(IOwsConfigService owsConfigService,
 			vm.Arrive = arrive;
 			vm.Depart = depart;
 
-			var sut = new CustomAvailabilityService(owsConfigService, logXmlService);
+			
 
 			switch (dataType)
 			{
 				case "RoomTypes":
-					var roomTypes = await sut.RunAvailabilityRoomTypes(hotelCode, arrive, depart, adults, children, qualifyingType, qualifyingCode);
+					var roomTypes = await customAvailabilityService.RunAvailabilityRoomTypes(hotelCode, arrive, depart, adults, children, qualifyingType, qualifyingCode);
 					vm.ListRoomTypes = roomTypes.OrderBy(r => r.RoomTypeCode).ToList();
 					break;
 				case "RatePlans":
-					var ratePlans = await sut.RunAvailabilityRatePlans(hotelCode, arrive, depart, adults, children, qualifyingType, qualifyingCode);
+					var ratePlans = await customAvailabilityService.RunAvailabilityRatePlans(hotelCode, arrive, depart, adults, children, qualifyingType, qualifyingCode);
 					vm.ListRatePlans = ratePlans.OrderBy(r => r.RatePlanCode).ToList();
 					break;
 
 				case "RoomRates":
 				default:
-					var list = await sut.RunAvailability(hotelCode, arrive, depart, adults, children, qualifyingType, qualifyingCode);
+					var list = await customAvailabilityService.RunAvailability(hotelCode, arrive, depart, adults, children, qualifyingType, qualifyingCode);
 
 					vm.List = list.OrderBy(r => r.RoomTypeCode).ThenBy(r => r.RatePlanCode).ThenBy(r => r.Rate).ToList();
 					switch (sort.ToLower())

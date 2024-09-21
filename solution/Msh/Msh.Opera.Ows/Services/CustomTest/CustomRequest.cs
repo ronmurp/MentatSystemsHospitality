@@ -2,15 +2,15 @@
 using System.Xml.Linq;
 using Msh.Common.Logger;
 using Msh.Opera.Ows.ExtensionMethods;
-using Msh.Opera.Ows.Services.Config;
 using RestSharp;
+using IOwsRepoService = Msh.Opera.Ows.Cache.IOwsRepoService;
 
 namespace Msh.Opera.Ows.Services.CustomTest;
 
 /// <summary>
 /// A custom availability service that returns raw data without WBS filtering by RatePlans.xml, RoomTypes.xml etc.
 /// </summary>
-public class CustomAvailabilityService(IOwsConfigService owsConfigService, ILogXmlService logXmlService)
+public class CustomAvailabilityService(IOwsRepoService owsRepoService, ILogXmlService logXmlService)
 {
 	/// <summary>
 	/// Room availability that returns RoomRates with room type number of units added
@@ -117,7 +117,7 @@ public class CustomAvailabilityService(IOwsConfigService owsConfigService, ILogX
 		string qualifyingType, string qualifyingCode)
 	{
 
-		var config = owsConfigService.OwsConfig;
+		var config = await owsRepoService.GetOwsConfigAsync();
 
 		var url = config.AvailabilityUrl();
 
@@ -151,7 +151,7 @@ public class CustomAvailabilityService(IOwsConfigService owsConfigService, ILogX
 
 		var arriveTime = GetTimeStamp(arrive.Date);
 		var departTime = GetTimeStamp(depart.Date);
-		var config = owsConfigService.OwsConfig;
+		var config = await owsRepoService.GetOwsConfigAsync();
 		var password = config.Password;
 		var userName = config.ElhUserId;
 
@@ -255,8 +255,6 @@ public class CustomAvailabilityService(IOwsConfigService owsConfigService, ILogX
 	}
 
 	private string GetTimeStamp(DateTime dt) => $"{dt:yyyy-MM-ddTHH:mm:ss.fff}Z";
-
-	private string GetUrl() => owsConfigService.OwsConfig.AvailabilityUrl();
 
 	public class RoomRate
 	{

@@ -5,6 +5,7 @@ public static class OwsConst
 	public static class Cache
 	{
 		public const string OwsConfig = "OwsConfig";
+		public const string OwsErrorList = "OwsErrorList";
 	}
 	public static class OgHeader
 	{

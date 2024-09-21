@@ -4,7 +4,7 @@ using System.Xml.Linq;
 using Msh.Common.Constants;
 using Msh.Common.Logger;
 using Msh.Common.Models.OwsCommon;
-using Msh.Common.Services;
+using Msh.Opera.Ows.Cache;
 using Msh.Opera.Ows.ExtensionMethods;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Models.AvailabilityResponses;
@@ -12,7 +12,6 @@ using Msh.Opera.Ows.Models.ReservationRequestModels;
 using Msh.Opera.Ows.Models.ReservationResponseModels;
 using Msh.Opera.Ows.Services.Base;
 using Msh.Opera.Ows.Services.Builders;
-using Msh.Opera.Ows.Services.Config;
 
 namespace Msh.Opera.Ows.Services;
 
@@ -20,11 +19,11 @@ namespace Msh.Opera.Ows.Services;
 /// Calls OWS cloud services for reservations
 /// </summary>
 public class OperaReservationService(
-	IOwsConfigService owsConfigService,
+	IOwsCacheService owsCacheService,
 	IOwsPostService owsPostService,
 	IReservationBuildService reservationBuildService,
 	ILogXmlService logXmlService)
-	: OperaBaseService(owsConfigService.OwsConfig, logXmlService, owsConfigService, owsPostService),
+	: OperaBaseService(logXmlService, owsCacheService, owsPostService),
 		IOperaReservationService
 {
 
@@ -33,21 +32,21 @@ public class OperaReservationService(
 
 	public async Task<(OwsReservation owsReservation, OwsResult owsResult)> CreateBookingAsync(OwsReservationRequest reqData, IXmlRedactor redactor)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 		reqData.Modify = false;
 		return await CreateModifyBookingAsync(reqData, redactor, config);
 	}
 
 	public async Task<(OwsReservation owsReservation, OwsResult owsResult)> ModifyBookingAsync(OwsReservationRequest reqData, IXmlRedactor redactor)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 		reqData.Modify = true;
 		return await CreateModifyBookingAsync(reqData, redactor, config);
 	}
 
 	public async Task<(OwsReservation owsReservation, OwsResult owsResult)> FetchBookingAsync(OwsBaseSession reqData, string reservationId)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		const string mainElement = "FetchBookingResponse";
 
@@ -65,7 +64,7 @@ public class OperaReservationService(
 	}
 	public async Task<(OwsPackageExtraRes owsPackageExtraRes, OwsResult owsResult)> UpdatePackageAsync(OwsPackageRequest reqData)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		var xElement = reservationBuildService.UpdatePackages(reqData, config);
 
@@ -86,7 +85,7 @@ public class OperaReservationService(
 
 	public async Task<(CommentList list, OwsResult owsResult)> AddBookingCommentsAsync(OwsAddBookingCommentRequest reqData)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		var xElement = reservationBuildService.AddBookingComments(reqData, config);
 
@@ -107,7 +106,7 @@ public class OperaReservationService(
 
 	public async Task<(string resvId, OwsResult owsResult)> AddBookingPaymentAsync(OwsAddPaymentRequest reqData)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		var xElement = reservationBuildService.AddPayment(reqData, config);
 

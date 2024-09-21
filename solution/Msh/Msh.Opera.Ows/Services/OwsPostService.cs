@@ -5,21 +5,22 @@ using System.Xml.Linq;
 using Msh.Common.Exceptions;
 using Msh.Common.Logger;
 using Msh.Common.Services;
+using Msh.Opera.Ows.Cache;
 using Msh.Opera.Ows.Models;
-using Msh.Opera.Ows.Services.Config;
 using Msh.Opera.Ows.Services.Helpers;
 
 namespace Msh.Opera.Ows.Services;
 
 public class OwsPostService(
 	ILogXmlService logXmlService,
-	IOwsConfigService owsConfigService,
+	IOwsCacheService owsCacheService,
 	ICriticalErrorService criticalErrorService)
 	: IOwsPostService
 {
 	public async Task<(XDocument xdoc, string contents, OwsResult owsResult)> PostAsync(StringBuilder sb, string url, string sessionId = "")
 	{
-		var retryCount = owsConfigService.OwsConfig.RetryCount;
+		var config = await owsCacheService.GetOwsConfig();
+		var retryCount = config.RetryCount;
 
 		var count = 0;
 		var contents = "";
@@ -53,7 +54,7 @@ public class OwsPostService(
 
 					contents = await response.Content.ReadAsStringAsync();
 
-					var (hasError, xdoc) = CheckForCriticalErrors(url, sessionId, sb.ToString(), contents, count);
+					var (hasError, xdoc) = await CheckForCriticalErrors(url, sessionId, sb.ToString(), contents, count);
 
 					if (hasError) continue;
 
@@ -73,10 +74,11 @@ public class OwsPostService(
 
 	}
 
-	private (bool hasError, XDocument xdoc) CheckForCriticalErrors(string url, string sessionId, string request, string contents, int count)
+	private async Task<(bool hasError, XDocument xdoc)> CheckForCriticalErrors(string url, string sessionId, string request, string contents, int count)
 	{
-		var list = owsConfigService.OwsConfig.CriticalErrorTriggers;
-		var retryCount = owsConfigService.OwsConfig.RetryCount;
+		var config = await owsCacheService.GetOwsConfig();
+		var list = config.CriticalErrorTriggers;
+		var retryCount = config.RetryCount;
 
 		var result = criticalErrorService.CheckForCriticalError(list, contents, count, retryCount, LogCodes.OwsCriticalError, url, string.Empty);
 

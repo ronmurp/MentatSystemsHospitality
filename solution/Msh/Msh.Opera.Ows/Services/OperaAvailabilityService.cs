@@ -2,15 +2,13 @@
 using System.Xml.Linq;
 using Msh.Common.Logger;
 using Msh.Common.Models.OwsCommon;
-using Msh.Common.Services;
-using Msh.Loggers.Const;
+using Msh.Opera.Ows.Cache;
 using Msh.Opera.Ows.ExtensionMethods;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Models.AvailabilityResponseModels;
 using Msh.Opera.Ows.Models.AvailabilityResponses;
 using Msh.Opera.Ows.Services.Base;
 using Msh.Opera.Ows.Services.Builders;
-using Msh.Opera.Ows.Services.Config;
 
 namespace Msh.Opera.Ows.Services;
 
@@ -18,18 +16,18 @@ namespace Msh.Opera.Ows.Services;
 /// Availability requests: building, sending, parsing result
 /// </summary>
 public class OperaAvailabilityService(
-	IOwsConfigService owsConfigService,
+	IOwsCacheService owsConfigService,
 	IOwsPostService owsPostService,
 	IAvailabilityBuildService availabilityBuildService,
 	ILogXmlService logXmlService)
-	: OperaBaseService(owsConfigService.OwsConfig, logXmlService, owsConfigService, owsPostService),
+	: OperaBaseService(logXmlService, owsConfigService, owsPostService),
 		IOperaAvailabilityService
 {
 	public string LastRequest { get; private set; } = string.Empty;
 
 	public async Task<(OwsRoomStay owsRoomStay, OwsResult owsResult)> GetGeneralAvailabilityAsync(OwsAvailabilityRequest reqData)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		var xElement = availabilityBuildService.BuildAvailabilityGen(reqData, config);
 
@@ -50,7 +48,7 @@ public class OperaAvailabilityService(
 
 	public async Task<(OwsRoomStayDetail owsRoomStayDetail, OwsResult owsResult)> GetDetailAvailabilityAsync(OwsAvailabilityRequest reqData)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig(); 
 
 		var xElement = availabilityBuildService.BuildAvailabilityDet(reqData, config);
 
@@ -71,7 +69,7 @@ public class OperaAvailabilityService(
 
 	public async Task<(List<OwsPackage> packages, OwsResult owsResult)> FetchPackagesAsync(OwsAvailabilityRequest reqData)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		var xElement = availabilityBuildService.BuildFetchPackages(reqData, config);
 

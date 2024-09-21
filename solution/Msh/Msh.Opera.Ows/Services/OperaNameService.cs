@@ -3,24 +3,24 @@ using System.Xml.Linq;
 using Msh.Common.Logger;
 using Msh.Common.Models.BaseModels;
 using Msh.Common.Models.OwsCommon;
+using Msh.Opera.Ows.Cache;
 using Msh.Opera.Ows.ExtensionMethods;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Services.Base;
 using Msh.Opera.Ows.Services.Builders;
-using Msh.Opera.Ows.Services.Config;
 
 namespace Msh.Opera.Ows.Services;
 
 public class OperaNameService(
-	IOwsConfigService owsConfigService,
-	IOwsPostService owsPostService,
+	IOwsCacheService owsConfigService,
+	IOwsPostService owsCacheService,
 	INameBuildService nameBuildService,
 	ILogXmlService logXmlService)
-	: OperaBaseService(owsConfigService.OwsConfig, logXmlService, owsConfigService, owsPostService), IOperaNameService
+	: OperaBaseService(logXmlService, owsConfigService, owsCacheService), IOperaNameService
 {
 	public async Task<(OwsProfile owsProfile, OwsResult owsResult)> FetchProfile(OwsBaseSession reqData, string profileId)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		var xElement = nameBuildService.FetchProfileRequest(reqData, profileId, config);
 
@@ -39,7 +39,7 @@ public class OperaNameService(
 
 	public async Task<(OwsProfile owsProfile, OwsResult owsResult)> FetchProfileAsync(OwsBaseSession reqData, string profileId)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		var xElement = nameBuildService.FetchProfileRequest(reqData, profileId, config);
 
@@ -58,7 +58,7 @@ public class OperaNameService(
 
 	public async Task<(List<OwsProfile> owsProfiles, OwsResult owsResult)> NameLookupRequestAsync(OwsBaseSession reqData, string email)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		var xElement = nameBuildService.NameLookupRequestByEmail(reqData, email, config);
 
@@ -77,7 +77,7 @@ public class OperaNameService(
 
 	public async Task<(List<OwsProfile> owsProfiles, OwsResult owsResult)> NameLookupRequestByNameAsync(OwsBaseSession reqData, string name, string nameType)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		var xElement = nameBuildService.NameLookupRequestByName(reqData, name, nameType, config);
 
@@ -96,7 +96,7 @@ public class OperaNameService(
 
 	public async Task<(List<OwsProfile> owsProfiles, OwsResult owsResult)> NameLookupRequestByPersonAsync(OwsBaseSession reqData, string firstName, string lastName, string email)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		var xElement = nameBuildService.NameLookupRequestByPerson(reqData, firstName, lastName, email, config);
 
@@ -115,7 +115,7 @@ public class OperaNameService(
 
 	public async Task<(OwsProfile owsProfile, OwsResult owsResult)> FetchNameAsync(OwsBaseSession reqData, string profileId)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		var xElement = nameBuildService.FetchNameRequest(reqData, profileId, config);
 
@@ -134,7 +134,7 @@ public class OperaNameService(
 
 	public async Task<(OwsProfile owsProfile, OwsResult owsResult)> RegisterNameAsync(OwsUser user)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		var xElement = nameBuildService.RegisterNameRequest(user, config);
 

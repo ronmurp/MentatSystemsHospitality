@@ -1,4 +1,7 @@
-﻿namespace Msh.Opera.Ows.Models;
+﻿using Msh.Common.Exceptions;
+using static Msh.Common.Constants.CommonConst;
+
+namespace Msh.Opera.Ows.Models;
 
 /// <summary>
 /// 

@@ -2,28 +2,27 @@
 using System.Xml.Linq;
 using Msh.Common.Logger;
 using Msh.Common.Models.OwsCommon;
-using Msh.Common.Services;
+using Msh.Opera.Ows.Cache;
 using Msh.Opera.Ows.ExtensionMethods;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Services.Base;
 using Msh.Opera.Ows.Services.Builders;
-using Msh.Opera.Ows.Services.Config;
 
 namespace Msh.Opera.Ows.Services;
 
 public class OperaInformationService(
-	IOwsConfigService owsConfigService,
+	IOwsCacheService owsCacheService,
 	IOwsPostService owsPostService,
 	IInformationBuildService informationBuildService,
 	ILogXmlService logXmlService)
-	: OperaBaseService(owsConfigService.OwsConfig, logXmlService, owsConfigService, owsPostService),
+	: OperaBaseService(logXmlService, owsCacheService, owsPostService),
 		IOperaInformationService
 {
 	protected readonly IInformationBuildService InformationBuildService = informationBuildService;
 
 	public async Task<(OwsBusinessDate owsBusinessDate, OwsResult owsResult)> GetBusinessDateAsync(OwsBaseSession reqData)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		var xElement = InformationBuildService.LovQuery2(reqData, OwsConst.LovQuery2.BusinessDate, config);
 
@@ -43,7 +42,7 @@ public class OperaInformationService(
 
 	public async Task<(List<OwsCountry> countries, OwsResult owsResult)> GetCountryCodesAsync(OwsBaseSession reqData)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		var xElement = InformationBuildService.LovQuery2(reqData, OwsConst.LovQuery2.CountryCodes, config);
 		var sb = new StringBuilder(xElement.ToString());
@@ -57,7 +56,7 @@ public class OperaInformationService(
 
 	public async Task<(OwsChainInformation owsChainInformation, OwsResult owsResult)> GetChainAsync(OwsBaseSession reqData)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		var xElement = InformationBuildService.ChainInformationRequest(reqData, config);
 
@@ -73,7 +72,7 @@ public class OperaInformationService(
 
 	public async Task<(List<InformationItem> information, OwsResult owsResult)> GetLovInformationAsync(OwsBaseSession reqData, LovTypes lovType, string subType)
 	{
-		var config = _config;
+		var config = await _owsCacheService.GetOwsConfig();
 
 		var xElement = InformationBuildService.LovQuery2(reqData, lovType, config);
 		var sb = new StringBuilder(xElement.ToString());
