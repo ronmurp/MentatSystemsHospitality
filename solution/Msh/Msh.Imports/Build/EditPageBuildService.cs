@@ -12,7 +12,7 @@ public class EditPageBuildService : AttributeService
 		_templatesPath = Path.Combine(FileUtilities.GetProjectPath(), "Build", "CshtmlEditFields");
 	}
 
-	public StringBuilder BuildEditPage(Type classType, string publishName)
+	public StringBuilder BuildEditPage(Type classType, string controller, string action = "{Action}")
 	{
 		
 		var editPageOutput = new StringBuilder();
@@ -25,7 +25,8 @@ public class EditPageBuildService : AttributeService
 
 		pageText = pageText.Replace("{InputFields}", sb.outputFields.ToString());
 		pageText = pageText.Replace("{InfoFields}", sb.outputInfo.ToString());
-		pageText = pageText.Replace("{PublishName}", publishName);
+		pageText = pageText.Replace("{Controller}", controller);
+		pageText = pageText.Replace("{Action}", action);
 		pageText = pageText.Replace("{Model}", classType.ToString());
 
 		editPageOutput.AppendLine(pageText);
