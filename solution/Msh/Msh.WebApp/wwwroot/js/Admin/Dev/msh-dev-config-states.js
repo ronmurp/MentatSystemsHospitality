@@ -10,7 +10,7 @@
     var options = {
         editTypeId: '#edit-type',
         tableTargetId: '#table-target',
-        saveButtonId: '#save-bank',
+        saveButtonId: '#save-config-state',
         apiUrl: `/api/fpapi/FpErrorBankList`,
 
         editTypeValue: '',
@@ -18,24 +18,33 @@
     }
 
     var items = [];
-  
+
     function getTableHeader() {
         var html = htmls.addTh('Code');
-        html += htmls.addTh('Message');
-        html += htmls.addPlus('addBank()')
+        html += htmls.addTh('Description');
+        html += htmls.addPlus('addState()')
         return htmls.addTr(html);
     }
 
     function getTableHtml() {
         var html = '<table>';
-        
         html += getTableHeader();
-        
         var i = 0;
         items.forEach((v) => {
-            var cells = htmls.addTdText(i, 'Code', v.code, '');
-            cells += htmls.addTdText(i, 'Message', v.message, '');
-            cells += htmls.addDelete(`deleteBank()`);
+
+            var cells = '';
+            if (v.code === 'Pub') {
+                cells += htmls.addTdText(i, 'Code', v.code, '', 'disabled');
+                cells += htmls.addTdText(i, 'Description', v.description, '', 'disabled');
+                cells += htmls.addTd('');
+            }
+            else {
+                cells += htmls.addTdText(i, 'Code', v.code, '');
+                cells += htmls.addTdText(i, 'Description', v.description, '');
+                cells += htmls.addDelete(`deleteState()`);
+            }
+            
+            
             html += htmls.addTr(cells);
             i++;
         });
@@ -47,7 +56,7 @@
         var i = 0;
         items.forEach((v) => {
             v.code = $(`#Code-${i}`).val();
-            v.message = $(`#Message-${i}`).val();
+            v.description = $(`#Description-${i}`).val();
             i++;
         });
 
@@ -56,7 +65,7 @@
         saveValuesLocally();
         items.push({
             code: '',
-            message: ''
+            description: ''
         });
         getTableHtml();
     }
@@ -80,7 +89,7 @@
     $(options.saveButtonId).on('click', () => {
         saveValuesLocally();
         var d = {
-            errorBankList: items
+            configStates: items
         };
         var url = options.apiUrl;
         api.postAsync(url, d, (data) => {
@@ -96,8 +105,8 @@
         if (options.editTypeValue === options.editTypeValueExpected) {
 
             meth.extendMethods({
-                addBank: addItem,
-                deleteBank: deleteItem
+                addState: addItem,
+                deleteState: deleteItem
             });
 
             loadItems();
@@ -107,14 +116,14 @@
     init({
         editTypeId: '#edit-type',
         tableTargetId: '#table-target',
-        saveButtonId: '#save-bank',
-        apiUrl: `/api/fpapi/FpErrorBankList`,
+        saveButtonId: '#save-config-state',
+        apiUrl: `/api/devapi/ConfigStateList`,
         editTypeValue: '',
-        editTypeValueExpected: 'bank-list'
+        editTypeValueExpected: 'config-state-list'
     })
 
-   
-   
+
+
 
 
 }(jQuery));

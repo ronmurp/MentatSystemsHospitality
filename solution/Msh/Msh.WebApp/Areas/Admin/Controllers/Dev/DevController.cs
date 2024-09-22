@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Msh.WebApp.Areas.Admin.Controllers;
+namespace Msh.WebApp.Areas.Admin.Controllers.Dev;
 
 [Area("Admin")]
 [Route("admin/dev")]
@@ -22,6 +22,23 @@ public class DevController(ILogger<WebApp.Controllers.HomeController> logger) : 
 		await Task.Delay(0);
 
 		return View();
+	}
+
+	[Route("ConfigStateList")]
+	public async Task<IActionResult> ConfigStateList(bool isSuccess = false)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			return View();
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"{ex.Message}");
+		}
+
+		return RedirectToAction("");
 	}
 
 }

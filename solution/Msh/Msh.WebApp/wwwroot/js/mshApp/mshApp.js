@@ -352,8 +352,35 @@
             tableHeadHtml: tableHeadHtml,
             tableRowHtml: tableRowHtml,
             table: table,
-            cellIcons: cellIcons
+            cellIcons: cellIcons,
+
+            addTh: function (cell, attrs) {
+                var a = attrs ? ` ${attrs}` : ''
+                return `<th${a}>${cell}</th>`;
+            },
+            addTd: function (cell, attrs) {
+                var a = attrs ? ` ${attrs}` : '';
+                return `<td${a}>${cell}</td>`;
+            },
+            addPlus: function (method) {
+                return `<th class="text-center" style="width:80px;"><a href="javascript:window.mshMethods.${method}"><i class="fa-solid fa-plus"></i></a></th>`;
+            },
+            addDelete: function (method) {
+                return `<th class="text-center" style="width:80px;"><a href="javascript:window.mshMethods.${method}"><i class="fa-solid fa-times"></i></a></th>`;
+            },
+            addTr: function (cells) {
+                var html = `<tr>`;
+                html += cells;
+                html += `</tr>`;
+                return html;
+            },
+            addTdText: function (i, name, value, attrs, inputAttrs) {
+                var a = attrs ? ` ${attrs}` : ''
+                var ia = inputAttrs ? ` ${inputAttrs}` : '';
+                return `<td${a}><input type="text" id="${name}-${i}" data-msh-index="${i}" class="form-control" name=""${name}" value="${value}" ${ia} /></td>`;
+            }
         }
+        
 
     })();
 

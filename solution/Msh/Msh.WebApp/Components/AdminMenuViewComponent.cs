@@ -93,7 +93,7 @@ namespace Msh.WebApp.Components
 				case AdminConst.MenuOws:
 					return new AdminMenuItem { Name = "OwsIndex", Controller = "Ows", Action = "Index", Text = "OWS Dashboard" };
 				case AdminConst.MenuLog:
-					return new AdminMenuItem { Name = "OwsIndex", Controller = "Loggers", Action = "Index", Text = "Log Config Dashboard" };
+					return new AdminMenuItem { Name = "OwsIndex", Controller = "Loggers", Action = "Index", Text = "Log Dashboard" };
 				default:
 					return new AdminMenuItem { Name = "AdminIndex", Controller = "Admin", Action = "Index", Text = "Admin Home" };
 			}
@@ -128,7 +128,8 @@ namespace Msh.WebApp.Components
 		[
 			AdminRootItem(AdminConst.MenuAdmin),
 			AdminRootItem(AdminConst.MenuDev),
-			new AdminMenuItem { Name = "DevScriptsTest", Controller = "Dev", Action = "ScriptsTest", Text = "Scripts Tests" }
+			new AdminMenuItem { Name = "DevScriptsTest", Controller = "Dev", Action = "ScriptsTest", Text = "Scripts Tests" },
+			new AdminMenuItem { Name = "DevConfigStates", Controller = "Dev", Action = "ConfigStateList", Text = "Config States" }
 		];
 		private List<AdminMenuItem> AdminMenuCoinCorner() =>
 		[
@@ -174,6 +175,7 @@ namespace Msh.WebApp.Components
 			AdminRootItem(AdminConst.MenuAdmin),
 			AdminRootItem(AdminConst.MenuFp),
 			new AdminMenuItem { Name = "FpConfigEdit", Controller = "Fp", Action = "FpConfigEdit", Text = "FP Config" },
+			new AdminMenuItem { Name = "FpErrorBankList", Controller = "Fp", Action = "FpErrorBankList", Text = "FP Error Bank" },
 
 		];
 	}
