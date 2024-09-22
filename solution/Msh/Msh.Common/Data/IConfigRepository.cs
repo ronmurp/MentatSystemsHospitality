@@ -57,5 +57,7 @@ public interface IConfigRepository
 	/// </summary>
 	Task RemoveConfigAsync(string configType);
 	void RemoveConfig(string configType);
+
+	Task<bool> PublishConfig(string configType, string userId);
 }
 

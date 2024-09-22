@@ -1,5 +1,6 @@
 ﻿using Msh.Common.Models.Configuration;
 using System.Text.Json;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Msh.Common.Exceptions;
 
@@ -213,5 +214,29 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
 
         configDbContext.Configs.Remove(config);
         configDbContext.SaveChanges();
+    }
+
+    public async Task<bool> PublishConfig(string configType, string userId)
+    {
+	    var configPub = await configDbContext.ConfigsPub.FirstOrDefaultAsync(c => c.ConfigType == configType);
+	    var hasPub = configPub != null;
+
+	    if (configPub is { Locked: true })
+	    {
+		    return false;
+	    }
+		var config = await configDbContext.Configs.FirstOrDefaultAsync(c => c.ConfigType == configType);
+
+		var configPubSave = config.Adapt<ConfigPub>();
+		configPubSave.Locked = true;
+		configPubSave.Published = DateTime.Now;
+		configPubSave.PublishedBy = userId;
+		if (hasPub)
+			configDbContext.ConfigsPub.Update(configPubSave);
+		else
+			await configDbContext.ConfigsPub.AddAsync(configPubSave);
+		await configDbContext.SaveChangesAsync();
+
+		return true;
     }
 }
