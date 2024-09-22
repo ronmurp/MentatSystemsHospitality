@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="libphonenumber-csharp" Version="8.13.45" />
+    <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
   </ItemGroup>
 
