@@ -14,9 +14,7 @@
 
     var currentHotelCode = '';
     
-    meth.extendMethods({
-
-    });
+    
 
     app.hotelActionService.init({
         deleteApi: '/api/hotelapi/HotelDelete',
@@ -34,15 +32,27 @@
         includeBulkCopy: false
     });
 
-    $('#publish-hotels').on('click', function () {
-        api.postAsync('/api/hotelapi/HotelsPublish', {}, function (data) {
-            if (data.success) {
-                modal.showModal('published', 'Publish Hotels', 'The list of hotels was successfully published.')
-                return;
-            } else {
-                modal.showError(data.userErrorMessage);
-            }
-        })
+    meth.extendMethods({
+        publishHotelsConfirm: function () {
+            $('#pubHotel').remove();
+            
+            api.postAsync('/api/hotelapi/HotelsPublish', {}, function (data) {
+                if (data.success) {
+                    modal.showModal('published', 'Publish Hotels', 'The list of hotels was successfully published.')
+                    return;
+                } else {
+                    modal.showError(data.userErrorMessage);
+                }
+            })
+        },
+        publishHotels: function () {
+            modal.showModal('pubHotel', "Confirm Hotels Publish", `Confirm publish of hotels list`, {
+                footerOk: true,
+                okButtonClickScript: `onclick="window.mshMethods.publishHotelsConfirm()"`,
+                okButtonText: 'OK'
+            });
+        }
     });
+
 
 }(jQuery));
