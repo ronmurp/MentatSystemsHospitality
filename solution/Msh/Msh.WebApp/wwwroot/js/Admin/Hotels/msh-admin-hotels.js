@@ -34,4 +34,15 @@
         includeBulkCopy: false
     });
 
+    $('#publish-hotels').on('click', function () {
+        api.postAsync('/api/hotelapi/HotelsPublish', {}, function (data) {
+            if (data.success) {
+                modal.showModal('published', 'Publish Hotels', 'The list of hotels was successfully published.')
+                return;
+            } else {
+                modal.showError(data.userErrorMessage);
+            }
+        })
+    });
+
 }(jQuery));

@@ -12,6 +12,7 @@ public interface IHotelsRepoService
 	Task<List<Hotel>> GetHotelsAsync();
 
 	Task SaveHotelsAsync(List<Hotel> hotels);
+	Task<bool> PublishHotelsAsync(string userId);
 
 	Task<List<RoomType>> GetRoomTypesAsync(string hotelCode);
 

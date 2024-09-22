@@ -8,13 +8,32 @@ using Msh.HotelCache.Models.RoomTypes;
 using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Data;
 using Msh.WebApp.Areas.Admin.Models;
+using Msh.WebApp.Services;
 
 namespace Msh.WebApp.API.Hotels;
 
 [ApiController]
 [Route("api/hotelapi")]
-public partial class HotelApiController(IHotelsRepoService hotelsRepoService) : Controller
+public partial class HotelApiController(IHotelsRepoService hotelsRepoService, IUserService userService) : Controller
 {
+	[HttpPost]
+	[Route("HotelsPublish")]
+	public async Task<IActionResult> HotelsPublish()
+	{
+		var userId = userService.GetUserId();
+		if (string.IsNullOrEmpty(userId))
+		{
+			return GetFail("You must be signed-in to perform this action.");
+		}
+		var result = await hotelsRepoService.PublishHotelsAsync(userId);
+		if (!result)
+		{
+			return GetFail("The publish operation failed. The record may be locked.");
+		}
+
+		return Ok(new ObjectVm());
+	}
+
 
 	[HttpGet]
 	[Route("HotelStayDates")]
@@ -41,6 +60,7 @@ public partial class HotelApiController(IHotelsRepoService hotelsRepoService) : 
 		});
 	}
 
+	
 	[HttpPost]
 	[Route("HotelStayDates")]
 	public async Task<IActionResult> HotelStayDates([FromBody] HotelDatesVm data)

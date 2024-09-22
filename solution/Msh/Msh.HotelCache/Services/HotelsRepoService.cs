@@ -22,6 +22,9 @@ public class HotelsRepoService(IConfigRepository configRepository) : IHotelsRepo
 		await configRepository.SaveConfigAsync(ConstHotel.Cache.Hotel, hotels);
 	}
 
+	public async Task<bool> PublishHotelsAsync(string userId) => 
+		await configRepository.PublishConfig(ConstHotel.Cache.Hotel, userId);
+
 	public async Task<List<RoomType>> GetRoomTypesAsync(string hotelCode) => 
 		await configRepository.GetConfigContentAsync<List<RoomType>>(ConstHotel.Cache.RoomTypes, hotelCode) ?? [];
 
