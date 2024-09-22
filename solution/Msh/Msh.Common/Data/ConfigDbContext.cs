@@ -45,7 +45,13 @@ public class ConfigDbContext : DbContext
 
     /// <summary>
     /// Common configs location, where Content is json for specific config classes
+    /// Published version
     /// </summary>
     public DbSet<Config> Configs { get; set; }
+
+    /// <summary>
+    /// Common configs location, where Content is json for specific config classes
+    /// </summary>
+    public DbSet<ConfigPub> ConfigsPub { get; set; }
 
 }

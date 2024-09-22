@@ -3,18 +3,18 @@
 namespace Msh.Common.Data;
 
 /// <summary>
-/// A repository for Config models
+/// A Published repository for Config models
 /// </summary>
-public interface IConfigRepository
+public interface IConfigPubRepository
 {
     /// <summary>
     /// Get a config record by ConfigType key
     /// </summary>
     /// <param name="configType"></param>
     /// <returns>Null if not found</returns>
-    Task<Config?> GetConfigAsync(string configType);
+    Task<ConfigPub?> GetConfigAsync(string configType);
 
-    Config? GetConfig(string configType);
+    ConfigPub? GetConfig(string configType);
 
 	Task<T> GetConfigContentAsync<T>(string configType);
 	T GetConfigContent<T>(string configType);
@@ -25,8 +25,8 @@ public interface IConfigRepository
 	/// <summary>
 	/// Used by Admin to save the configuration, including Notes
 	/// </summary>
-	Task SaveConfigAsync(Config config);
-	void SaveConfig(Config config);
+	Task SaveConfigAsync(ConfigPub config);
+	void SaveConfig(ConfigPub config);
 
 	/// <summary>
 	/// Save the current type = must exist. NullConfigException = thrown if not.
@@ -49,8 +49,8 @@ public interface IConfigRepository
 	/// Used by Admin to create a new config
 	/// </summary>
 	/// <param name="config"></param>
-	Task AddConfigAsync(Config config);
-	void AddConfig(Config config);
+	Task AddConfigAsync(ConfigPub config);
+	void AddConfig(ConfigPub config);
 
 	/// <summary>
 	/// Should be used only in admin and tests
