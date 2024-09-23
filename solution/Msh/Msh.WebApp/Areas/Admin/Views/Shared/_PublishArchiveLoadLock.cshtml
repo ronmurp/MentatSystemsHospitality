@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Msh.WebApp.Areas.Admin.Models.PublishArchiveLoadLockVm
+@{
+	var publishMethod = Model.OnclickPublish;
+	var loadMethod = Model.OnclickLoad;
+	var lockMethod = Model.OnclickLock;
+	var archiveMethod = Model.OnclickArchive;
+}
+																								
+<div class="mt-3" style="display:flex;justify-content:start;">
+	<div class="input-group">
+		<button class="btn btn-outline-primary" class="mr-3" onclick="@publishMethod">Publish</button>
+		<button class="btn btn-outline-primary" class="mr-3" onclick="@archiveMethod">Archive</button>
+		<button class="btn btn-outline-primary" class="mr-3" onclick="@loadMethod">Load</button>
+		<button class="btn btn-outline-primary" class="mr-3" onclick="@lockMethod">Lock</button>
+		<a asp-contoller="@Model.Controller" asp-action="@Model.Action" class="btn btn-outline-secondary">Dashboard</a>
+	</div>
+</div>

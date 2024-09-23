@@ -43,7 +43,7 @@
     var mas = app.modalActionService;
 
 
-    var hotelApi = '/api/hotelapi/';
+    var hotelApi = '/api/hotelapi';
 
     var currentHotelCode = '';  
  
@@ -232,3 +232,94 @@
 
 }(jQuery));
 
+
+// Lock/Unlock
+(function ($) {
+
+    "use strict";
+
+    var app = mshPageApp;
+    var meth = app.methodsService;
+    var util = app.utilityService;
+    var api = app.apiService;
+    var mom = app.momentDateService;
+    var htmlS = app.htmlService;
+    var modal = app.modalService;
+    var mas = app.modalActionService;
+
+
+    var apiRoot = '/api/hotelapi';
+
+    var options = {
+        modalActionId: 'lockHotel',
+        modalActionTitle: 'Lock/Unlock Hotels',
+        modalActionBody: 'Confirm lock/unlock of hotels list',
+        modalActionOnCLick: `id="confirm-load-ok" onclick="window.mshMethods.lockHotelsConfirm()"`,
+        modalActionOk: 'OK',
+        loadConfirmApiUrl: `${apiRoot}/HotelsLoad`,
+
+        modalActionedId: 'lockedHotel',
+        modalActionedTitle: 'Load Hotels',
+        modalActionedBody: 'The list of hotels was successfully loaded',
+        modalActionedOnCLick: `onclick="window.mshMethods.lockHotelsConfirmed()"`,
+        // modalPublishedOk: 'OK',
+        modalActionedHideModalEnd: 'window.mshMethods.lockHotelsConfirmed'
+    }
+
+    function getLoadBody(optionsHtml) {
+        var html = '';
+        html += '<p>You can Lock or Unlock one of the records below.</p>';
+        html += '<p>Select the record, and whether you want to lock or unlock.</p>';
+
+        html += '<div class="form-group mb-3">';
+        html += '<label class="form-label">Select the source to lock/unlock</label>';
+        html += `<select class="form-control" id="selected-lock" >`;
+        html += optionsHtml;
+        html += '</select>';
+        html += '</div>';
+        html += '<div class="form-group mb-3">';
+        html += '<input type="checkbox" id="perform-lock" class="form-check-input"/>&nbsp;'
+        html += '<label class="form-label">Set to lock, clear to unlock</label>';
+        html += '</div>';
+        return html;
+    }
+
+    var loadPair = new mas.PairOverlay(options);
+
+    function getLoadList() {
+        api.getAsync(`${apiRoot}/HotelsArchiveSelectList`, function (data) {
+            if (data.success) {
+                var list = data.data;
+                var optionsHtml = '';
+                list.forEach((v) => {
+                    optionsHtml += `<option value="${v.value}">${v.text}</option>`
+                });
+                options.modalActionBody = getLoadBody(optionsHtml);
+                loadPair.action(options);
+                return;
+            } else {
+                modal.showError(data.userErrorMessage);
+
+            }
+        })
+    }
+
+    meth.extendMethods({
+
+        lockHotels: function () {
+            getLoadList();
+        },
+        lockHotelsConfirm: function () {
+            var archiveCode = $('#selected-lock').val();
+            var performLock = $('#perform-lock').is(':checked');
+            options.actionConfirmApiUrl = `${apiRoot}/HotelsLock`;
+            options.actionConfirmData = { code: archiveCode };
+            loadPair.actioned(options);
+        },
+        lockHotelsConfirmed: function () {
+            //util.redirectTo('admin/hotels/hotellist');
+        },
+
+    });
+
+}(jQuery));

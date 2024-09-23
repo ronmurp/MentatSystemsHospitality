@@ -14,4 +14,6 @@ public class ApiInput
 	public List<string> CodeList { get; set; } = [];
 
 	public int Direction { get; set; }
+
+	public bool IsTrue { get; set; }
 }

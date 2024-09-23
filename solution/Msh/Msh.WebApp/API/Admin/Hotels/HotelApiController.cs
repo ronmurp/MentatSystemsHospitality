@@ -102,6 +102,39 @@ public partial class HotelApiController(IHotelsRepoService hotelsRepoService, IU
 	}
 
 	[HttpPost]
+	[Route("HotelsLock")]
+	public async Task<IActionResult> HotelsLock([FromBody] ApiInput input)
+	{
+		var userId = userService.GetUserId();
+		if (string.IsNullOrEmpty(userId))
+		{
+			return GetFail("You must be signed-in to perform this action.");
+		}
+
+		switch (input.Code)
+		{
+			case "Pub":
+				var resultP = await hotelsRepoService.LockPubHotelsAsync(input.IsTrue, userId);
+				if (!resultP)
+				{
+					return GetFail("The publish operation failed. The record may be locked.");
+				}
+				break;
+
+			default:
+				var resultA = await hotelsRepoService.LockArchiveHotelsAsync(input.Code, input.IsTrue, userId);
+				if (!resultA)
+				{
+					return GetFail("The publish operation failed. The record may be locked.");
+				}
+				break;
+		}
+		
+
+		return Ok(new ObjectVm());
+	}
+
+	[HttpPost]
 	[Route("HotelsLoad")]
 	public async Task<IActionResult> HotelsLoad([FromBody] HotelBaseVm data)
 	{
