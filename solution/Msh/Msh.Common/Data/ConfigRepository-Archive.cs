@@ -11,12 +11,36 @@ namespace Msh.Common.Data;
 /// </summary>
 public partial class ConfigRepository
 {
-	public async Task<ConfigArchive?> GetConfigArchiveAsync(string configType) =>
-		await configDbContext.ConfigsArchive.FirstOrDefaultAsync(a => a.ConfigType == configType);
-
-	public async Task<T> GetConfigArchiveContentAsync<T>(string configType)
+	public async Task<List<ConfigArchiveBase>?> GetConfigArchiveListAsync(string configType)
 	{
-		var config = await GetConfigArchiveAsync(configType);
+		
+		var list = configDbContext.ConfigsArchive.Where(a => a.ConfigType.StartsWith($"{configType}="));
+
+			var list2 = await  list
+			.Select(a => new ConfigArchiveBase
+			{
+				ConfigType = a.ConfigType,
+				Locked = a.Locked,
+				Published = a.Published,
+				PublishedBy = a.PublishedBy,
+				Notes = a.Notes
+
+			}).ToListAsync();
+
+		list2.ForEach((item) =>
+		{
+			item.ConfigType = (item.ConfigType.Split('=')[1]);
+		});
+
+		return list2;
+	}
+
+
+	public async Task<T> GetConfigArchiveContentAsync<T>(string configType, string archiveCode)
+	{
+		var archiveType = ArchiveType(configType, archiveCode);
+
+		var config = await GetConfigArchiveAsync(archiveType);
 		if (config == null)
 		{
 			return default!;
@@ -31,9 +55,11 @@ public partial class ConfigRepository
 		return obj;
 	}
 
-	public async Task<bool> SaveConfigArchiveAsync(string configType, string userId)
+	public async Task<bool> SaveConfigArchiveAsync(string configType, string archiveCode, string userId)
 	{
-		var configArchive = await configDbContext.ConfigsArchive.FirstOrDefaultAsync(c => c.ConfigType == configType);
+		var archiveType = $"{configType}={archiveCode}";
+
+		var configArchive = await configDbContext.ConfigsArchive.FirstOrDefaultAsync(c => c.ConfigType == archiveType);
 		var hasArchive = configArchive != null;
 
 		if (configArchive is { Locked: true })
@@ -43,6 +69,7 @@ public partial class ConfigRepository
 		var config = await configDbContext.Configs.FirstOrDefaultAsync(c => c.ConfigType == configType);
 
 		var configArchiveSave = config.Adapt<ConfigArchive>();
+		configArchiveSave.ConfigType = archiveType;
 		configArchiveSave.Locked = true;
 		configArchiveSave.Published = DateTime.Now;
 		configArchiveSave.PublishedBy = userId;
@@ -55,9 +82,9 @@ public partial class ConfigRepository
 		return true;
 	}
 
-	public async Task RemoveConfigArchiveAsync(string configType)
+	public async Task RemoveConfigArchiveAsync(string configType, string archiveCode)
 	{
-		var config = configDbContext.ConfigsArchive.FirstOrDefault(c => c.ConfigType == configType);
+		var config = configDbContext.ConfigsArchive.FirstOrDefault(c => c.ConfigType == ArchiveType(configType, archiveCode));
 		if (config == null)
 		{
 			throw new NullConfigException($"Remove: Archive Config type not found: {configType}");
@@ -67,4 +94,8 @@ public partial class ConfigRepository
 		await configDbContext.SaveChangesAsync();
 	}
 
+	private async Task<ConfigArchive?> GetConfigArchiveAsync(string configType) =>
+		await configDbContext.ConfigsArchive.FirstOrDefaultAsync(a => a.ConfigType == configType);
+
+	private string ArchiveType(string configType, string archiveCode) => $"{configType}={archiveCode}";
 }

@@ -5,7 +5,17 @@ namespace Msh.Common.Models.Configuration;
 /// <summary>
 /// Published versions of the Config record
 /// </summary>
-public class ConfigArchive
+public class ConfigArchive: ConfigArchiveBase
+{
+	
+	/// <summary>
+	/// json that deserializes to an object
+	/// </summary>
+	public string Content { get; set; } = string.Empty;
+
+}
+
+public class ConfigArchiveBase
 {
 	/// <summary>
 	/// A name given to the config record - typically the data type or class name.
@@ -13,11 +23,6 @@ public class ConfigArchive
 	[Key]
 	[MaxLength(100)]
 	public string ConfigType { get; set; } = string.Empty;
-
-	/// <summary>
-	/// json that deserializes to an object
-	/// </summary>
-	public string Content { get; set; } = string.Empty;
 
 	/// <summary>
 	/// Admin notes
@@ -29,5 +34,4 @@ public class ConfigArchive
 	public DateTime Published { get; set; }
 
 	public string PublishedBy { get; set; } = string.Empty;
-
 }
