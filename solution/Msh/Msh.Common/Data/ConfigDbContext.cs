@@ -51,7 +51,13 @@ public class ConfigDbContext : DbContext
 
     /// <summary>
     /// Common configs location, where Content is json for specific config classes
+    /// Published version. This is the data used by customer facing apps
     /// </summary>
     public DbSet<ConfigPub> ConfigsPub { get; set; }
 
+    /// <summary>
+    /// Common configs location, where Content is json for specific config classes
+    /// Archive version. This is where archive and other useful copies are held
+    /// </summary>
+    public DbSet<ConfigPub> ConfigsArchive { get; set; }
 }
