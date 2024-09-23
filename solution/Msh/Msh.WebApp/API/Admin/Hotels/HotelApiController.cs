@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Msh.Common.ExtensionMethods;
+using Msh.Common.Models.Configuration;
 using Msh.Common.Models.ViewModels;
 using Msh.Common.Services;
 using Msh.HotelCache.Models.Hotels;
@@ -17,16 +18,81 @@ namespace Msh.WebApp.API.Admin.Hotels;
 [Route("api/hotelapi")]
 public partial class HotelApiController(IHotelsRepoService hotelsRepoService, IUserService userService) : Controller
 {
+	/// <summary>
+	/// Publishes the Hotels list, copying the hotel list from Config to ConfigPub table
+	/// with the Hotel configType. The user must be signed in, and the Published record in ConfigPub
+	/// must not be locked.
+	/// </summary>
+	/// <returns></returns>
 	[HttpPost]
 	[Route("HotelsPublish")]
 	public async Task<IActionResult> HotelsPublish()
+	{
+		var userId = userService.GetUserId();
+
+		if (string.IsNullOrEmpty(userId))
+		{
+			return GetFail("You must be signed-in to perform this action.");
+		}
+
+		var result = await hotelsRepoService.PublishHotelsAsync(userId);
+
+		if (!result)
+		{
+			return GetFail("The publish operation failed. The record may be locked.");
+		}
+
+		return Ok(new ObjectVm());
+	}
+
+	/// <summary>
+	/// Returns a select list so that the user can select one of the archive records from ConfigArchive,
+	/// or the published data from ConfigPub
+	/// </summary>
+	/// <returns></returns>
+	[HttpGet]
+	[Route("HotelsArchiveSelectList")]
+	public async Task<IActionResult> HotelsArchiveSelectList()
+	{
+		var list = await hotelsRepoService.GetHotelsArchiveListAsync();
+
+		var selectList = list.OrderBy(x => x.ConfigType).Select(x => new AdminSelectItem
+		{
+			Value = x.ConfigType,
+			Text = x.ConfigType
+
+		}).ToList();
+
+		selectList.Insert(0, new AdminSelectItem
+		{
+			Value = "Pub",
+			Text = "Published"
+
+		});
+
+		return Ok(new ObjectVm
+		{
+			Data = selectList
+		});
+	}
+
+	/// <summary>
+	/// Perform an archive save. Gets the current edited data from Config,
+	/// and stores it in ConfigArchive with the archiveCode appended
+	/// </summary>
+	/// <param name="obj">unused</param>
+	/// <param name="archiveCode"></param>
+	/// <returns></returns>
+	[HttpPost]
+	[Route("HotelsArchive/{archiveCode}")]
+	public async Task<IActionResult> HotelsArchive(string archiveCode)
 	{
 		var userId = userService.GetUserId();
 		if (string.IsNullOrEmpty(userId))
 		{
 			return GetFail("You must be signed-in to perform this action.");
 		}
-		var result = await hotelsRepoService.PublishHotelsAsync(userId);
+		var result = await hotelsRepoService.ArchiveHotelsAsync(archiveCode, userId);
 		if (!result)
 		{
 			return GetFail("The publish operation failed. The record may be locked.");
@@ -39,11 +105,22 @@ public partial class HotelApiController(IHotelsRepoService hotelsRepoService, IU
 	[Route("HotelsLoad")]
 	public async Task<IActionResult> HotelsLoad([FromBody] HotelBaseVm data)
 	{
+		var userId = userService.GetUserId();
+		if (string.IsNullOrEmpty(userId))
+		{
+			return GetFail("You must be signed-in to perform this action.");
+		}
+
 		switch (data.Code)
 		{
 			case "Pub":
 				var hotelsPub = await hotelsRepoService.GetHotelsPublishAsync();
 				await hotelsRepoService.SaveHotelsAsync(hotelsPub);
+				break;
+
+			default:
+				var hotelsArch = await hotelsRepoService.GetHotelsArchiveAsync(data.Code);
+				await hotelsRepoService.SaveHotelsAsync(hotelsArch);
 				break;
 		}
 

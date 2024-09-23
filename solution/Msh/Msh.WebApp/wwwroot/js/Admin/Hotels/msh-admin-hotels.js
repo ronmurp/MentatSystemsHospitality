@@ -1,4 +1,34 @@
-﻿
+﻿// Main Edit
+(function ($) {
+
+    "use strict";
+
+    var app = mshPageApp;
+
+    var hotelApi = '/api/hotelapi';
+    var hotelAdmin = 'admin/hotels'
+
+    var currentHotelCode = '';
+
+    app.hotelActionService.init({
+        deleteApi: `${hotelApi}/HotelDelete`,
+        copyApi: `${hotelApi}/HotelCopy`,
+        moveApi: `${hotelApi}/HotelMove`,
+        listPath: `${hotelAdmin}/HotelList`,
+        codeOnly: true
+    });
+
+    app.hotelActionBulkService.init({
+        deleteBulkApi: `${hotelApi}/HotelDeleteBulk`,
+        copyBulkApi: `${hotelApi}/HotelCopyBulk`,
+        sortListApi: `${hotelApi}/HotelsSort`,
+        listPath: `${hotelAdmin}/HotelList`,
+        includeBulkCopy: false
+    });
+
+}(jQuery));
+
+// Publish
 (function ($) {
 
     "use strict";
@@ -16,23 +46,6 @@
     var hotelApi = '/api/hotelapi/';
 
     var currentHotelCode = '';  
-
-    app.hotelActionService.init({
-        deleteApi: '/api/hotelapi/HotelDelete',
-        copyApi: '/api/hotelapi/HotelCopy',
-        moveApi: '/admin/hotels/HotelMove',
-        listPath: 'admin/hotels/HotelList',
-        codeOnly: true
-    });
-
-    app.hotelActionBulkService.init({
-        deleteBulkApi: '/api/hotelapi/HotelDeleteBulk',
-        copyBulkApi: '/api/hotelapi/HotelCopyBulk',
-        sortListApi: '/api/hotelapi/HotelsSort',
-        listPath: 'admin/hotels/HotelList',
-        includeBulkCopy: false
-    });
-
  
     var optionsPublish = {
 
@@ -41,7 +54,7 @@
         modalActionBody: 'Confirm publish of hotels list',
         modalActionOnCLick: `onclick="window.mshMethods.publishHotelsConfirm()"`,
         modalActionOk: 'OK',
-        actionConfirmApiUrl: `/api/hotelapi/HotelsPublish`,
+        actionConfirmApiUrl: `${hotelApi}/HotelsPublish`,
 
         modalActionedId: 'publishedHotel',
         modalActionedTitle: 'Publish Hotels',
@@ -51,38 +64,7 @@
         actionedConfirmApiUrl: ``,
     }
 
-    var optionsLoad = {
-        modalActionId: 'loadHotel',
-        modalActionTitle: 'Confirm Hotels Load',
-        modalActionBody: 'Confirm load of hotels list',
-        modalActionOnCLick: `id="confirm-load-ok" onclick="window.mshMethods.loadHotelsConfirm()"`,
-        modalActionOk: 'OK',
-        loadConfirmApiUrl: `/api/hotelapi/HotelsLoad`,
-
-        modalActionedId: 'loadedHotel',
-        modalActionedTitle: 'Load Hotels',
-        modalActionedBody: 'The list of hotels was successfully loaded',
-        modalActionedOnCLick: `onclick="window.mshMethods.loadHotelsConfirmed()"`,
-        // modalPublishedOk: 'OK',
-    }
-
-    function getBody() {
-        var html = '';
-        html += '<p>Select the source to load</p>'
-        html += '<div class="form-group mb-3">';
-        html += `<select class="form-control" id="selected-load" >`;
-        html += `<option value="Pub">Published</option>`;
-        html += '</select>';
-        html += '</div>';
-        return html;
-    }
-
-    optionsLoad.modalActionBody = getBody();
-
     var publishPair = new mas.PairOverlay(optionsPublish);
-    var loadPair = new mas.PairOverlay(optionsLoad);
-
-    var loadSource = '';
 
     meth.extendMethods({
         publishHotels: function () {
@@ -91,27 +73,162 @@
         publishHotelsConfirm: function () {
             
             publishPair.actioned();
-        },
+        }
+    });
+
+}(jQuery));
+
+
+// Load
+(function ($) {
+
+    "use strict";
+
+    var app = mshPageApp;
+    var meth = app.methodsService;
+    var util = app.utilityService;
+    var api = app.apiService;
+    var mom = app.momentDateService;
+    var htmlS = app.htmlService;
+    var modal = app.modalService;
+    var mas = app.modalActionService;
+
+
+    var apiRoot = '/api/hotelapi';
+
+    var optionsLoad = {
+        modalActionId: 'loadHotel',
+        modalActionTitle: 'Confirm Hotels Load',
+        modalActionBody: 'Confirm load of hotels list',
+        modalActionOnCLick: `id="confirm-load-ok" onclick="window.mshMethods.loadHotelsConfirm()"`,
+        modalActionOk: 'OK',
+        loadConfirmApiUrl: `${apiRoot}/HotelsLoad`,
+
+        modalActionedId: 'loadHotel',
+        modalActionedTitle: 'Load Hotels',
+        modalActionedBody: 'The list of hotels was successfully loaded',
+        modalActionedOnCLick: `onclick="window.mshMethods.loadHotelsConfirmed()"`,
+        // modalPublishedOk: 'OK',
+        modalActionedHideModalEnd: 'window.mshMethods.loadHotelsConfirmed'
+    }
+
+    function getLoadBody(optionsHtml) {
+        var html = '';
+        html += '<p>You can load data from the published content into the editing table, where you can make changes before re-publishing.</p>';
+        html += '<p>Only published configuration data is used in customer facing operations.</p>';
+
+        html += '<div class="form-group mb-3">';
+        html += '<label class="form-label">Select the source to load</label>';
+        html += `<select class="form-control" id="selected-load" >`;
+        html += optionsHtml;
+        html += '</select>';
+        html += '</div>';
+        return html;
+    }
+
+    var loadPair = new mas.PairOverlay(optionsLoad);
+
+    var loadSource = '';
+
+    function getLoadList() {
+        api.getAsync(`${apiRoot}/HotelsArchiveSelectList`, function (data) {
+            if (data.success) {
+                var list = data.data;
+                var optionsHtml = '';
+                list.forEach((v) => {
+                    optionsHtml += `<option value="${v.value}">${v.text}</option>`
+                });
+                optionsLoad.modalActionBody = getLoadBody(optionsHtml);
+                loadPair.action(optionsLoad);
+                return;
+            } else {
+                modal.showError(data.userErrorMessage);
+
+            }
+        })
+    }
+
+    meth.extendMethods({
+    
         loadHotels: function () {
-            loadPair.action();
+            getLoadList();
         },
         loadHotelsConfirm: function () {
             loadSource = $('#selected-load').val();
-            $('#loadHotel').remove();
-            api.postAsync(`/api/hotelapi/HotelsLoad`, { code: loadSource }, function (data) {
-                if (data.success) {
-                    modal.showModal(optionsLoad.modalActionedId, optionsLoad.modalActionedTitle, optionsLoad.modalActionedBody)
-                    util.redirectTo('admin/hotels/hotellist')
-                    return;
-                } else {
-                    modal.showError(data.userErrorMessage);
-                }
-            })
+            optionsLoad.actionConfirmApiUrl = `/api/hotelapi/HotelsLoad`;
+            optionsLoad.actionConfirmData = { code: loadSource };
+            loadPair.actioned(optionsLoad);
         },
         loadHotelsConfirmed: function () {
+            util.redirectTo('admin/hotels/hotellist');
+        },
 
+    });
+
+}(jQuery));
+
+
+// Archive
+(function ($) {
+
+    "use strict";
+
+    var app = mshPageApp;
+    var meth = app.methodsService;
+    var util = app.utilityService;
+    var api = app.apiService;
+    var mom = app.momentDateService;
+    var htmlS = app.htmlService;
+    var modal = app.modalService;
+    var mas = app.modalActionService;
+
+
+    var apiRoot = '/api/hotelapi';
+
+    var optionsArchive = {
+        modalActionId: 'archiveHotel',
+        modalActionTitle: 'Confirm Hotels Archive',
+        modalActionBody: 'Confirm archive of hotels list',
+        modalActionOnCLick: `id="confirm-archive-ok" onclick="window.mshMethods.archiveHotelsConfirm()"`,
+        modalActionOk: 'OK',
+        actionConfirmApiUrl: `${apiRoot}/HotelsArchive`,
+        actionConfirmData: {},
+
+        modalActionedId: 'archiveHotel',
+        modalActionedTitle: 'Archive Hotels',
+        modalActionedBody: 'The list of hotels was successfully archived',
+        modalActionedOnCLick: `onclick="window.mshMethods.archiveHotelsConfirmed()"`,
+
+        // modalPublishedOk: 'OK',
+       
+    }
+
+    function getArchiveBody() {
+        var html = '';
+        html += '<div class="form-group mb-3">';
+        html += '<input type="text" id="archive-code" class="form-control" />'
+        html += '</div>';
+        return html;
+    }
+
+    var archivePair = new mas.PairOverlay(optionsArchive);
+
+    var loadSource = '';
+
+   
+    meth.extendMethods({
+        archiveHotels: function () {
+            optionsArchive.modalActionBody = getArchiveBody();
+            archivePair.action(optionsArchive);
+        },
+        archiveHotelsConfirm: function () {
+            var archiveCode = $('#archive-code').val();
+            optionsArchive.actionConfirmApiUrl = `/api/hotelapi/HotelsArchive/${archiveCode}`;
+            optionsArchive.actionConfirmData = null;
+            archivePair.actioned(optionsArchive);
         }
 
     });
 
 }(jQuery));
+

@@ -585,7 +585,9 @@
             closeButtonText: 'Close',
             footerOk: false,
             okButtonClickScript: '',
-            okButtonText: 'OK'
+            okButtonText: 'OK',
+
+            hideModelEnd: undefined
 
         };
         function processOptions(optionsBase, optionsInput) {
@@ -608,7 +610,8 @@
                 closeButtonText: options.closeButtonText ? options.closeButtonText : '',
                 footerOk: options.footerOk,
                 okButtonClickScript: options.okButtonClickScript ? options.okButtonClickScript : '',
-                okButtonText: options.okButtonText ? options.okButtonText : ''
+                okButtonText: options.okButtonText ? options.okButtonText : '',
+                hideModalEnd: options.hideModalEnd ? options.hideModalEnd : undefined
             };
         }
 
@@ -631,7 +634,7 @@
             if (o.footerOk) {
                 html += `				<button class="btn btn-outline-primary mr-3" ${o.okButtonClickScript}>${o.okButtonText}</button>`;
             }
-            html += `				<button class="btn btn-outline-secondary" onclick="window.mshMethods.hideModal('${id}')">${o.closeButtonText}</button>`;
+            html += `				<button class="btn btn-outline-secondary" onclick="window.mshMethods.hideModal('${id}', ${o.hideModalEnd})">${o.closeButtonText}</button>`;
             
             html += `			</div>`;
             html += `		</div>`;
@@ -644,9 +647,12 @@
             $(`#${id}`).show();
         }
 
-        function hideModal(id) {
+        function hideModal(id, hideModalEnd) {
             $(`#${id}`).hide();
             $(`#${id}`).remove(); 
+            if (hideModalEnd) {
+                hideModalEnd();
+            }
         }
 
         function injectInfo() {
@@ -2761,6 +2767,7 @@
                 modalActionOnCLick: `onclick="window.mshMethods.publishHotelsConfirm()"`,
                 modalActionOk: 'OK',
                 actionConfirmApiUrl: undefined, // `/api/hotelapi/HotelsPublish`,
+                actionConfirmData: {},
 
                 modalActionedId: 'publishedHotel',
                 modalActionedTitle: 'Publish Hotels',
@@ -2774,7 +2781,11 @@
             }
         }
 
-        PairOverlay.prototype.action = function () {
+        PairOverlay.prototype.action = function (options) {
+
+            if (options) {
+                this.options = $.extend({}, this.options, options);
+            }
 
             var self = this;
 
@@ -2785,23 +2796,40 @@
             });
         }
 
-        PairOverlay.prototype.actioned = function () {
+        PairOverlay.prototype.actioned = function (options) {
+
+            if (options) {
+                this.options = $.extend({}, this.options, options);
+            }
 
             var self = this;
 
             $(`#${self.options.modalActionedId}`).remove();
 
             if (self.options.actionConfirmApiUrl) {
-                api.postAsync(self.options.actionConfirmApiUrl, {}, function (data) {
+                api.postAsync(self.options.actionConfirmApiUrl, self.options.actionConfirmData, function (data) {
                     if (data.success) {
-                        modal.showModal(self.options.modalActionedId, self.options.modalActionedTitle, self.options.modalActionedBody)
+                        var param = undefined;
+                        if (self.options.modalActionedOnCLick) {
+                            param = {
+                                footerOk: false,
+                                okButtonClickScript: self.options.modalActionedOnCLick,
+                                okButtonText: self.options.modalActionedOk,
+                                hideModalEnd: self.options.modalActionedHideModalEnd
+                            }
+                        }
+                        modal.showModal(self.options.modalActionedId, self.options.modalActionedTitle, self.options.modalActionedBody, param)
                         return;
                     } else {
                         modal.showError(data.userErrorMessage);
                     }
                 })
+                return;
             }
 
+            if (self.options.actionConfirmOnClick) {
+                self.options.actionConfirmOnClick();
+            }
         }
 
         return {
