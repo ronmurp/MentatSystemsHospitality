@@ -1,23 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Msh.Common.Models.Configuration;
 using Msh.Common.Models.ViewModels;
-using Msh.Common.Services;
 using Msh.Opera.Ows.Models;
+using Msh.Pay.FreedomPay.Services;
 using Msh.WebApp.Models.Admin.ViewModels;
 
-namespace Msh.WebApp.API.Fp;
+namespace Msh.WebApp.API.Admin.Fp;
 
 [ApiController]
-[Route("api/devapi")]
-public class DevApiController(IConfigStateRepo configStateRepo) : Controller
+[Route("api/fpapi")]
+public class FpApiController(IFpRepoService fpRepoService) : Controller
 {
 
 
 	[HttpGet]
-	[Route("ConfigStateList")]
-	public async Task<IActionResult> ConfigStateList()
+	[Route("FpErrorBankList")]
+	public async Task<IActionResult> FpErrorBankList()
 	{
-		var list = await configStateRepo.GetConfigState();
+		var list = await fpRepoService.GetFpErrorCodeBank();
 		
 		if (list != null)
 		{
@@ -34,15 +33,15 @@ public class DevApiController(IConfigStateRepo configStateRepo) : Controller
 	}
 
 	[HttpPost]
-	[Route("ConfigStateList")]
-	public async Task<IActionResult> ConfigStateList([FromBody] ConfigStateVm data)
+	[Route("FpErrorBankList")]
+	public async Task<IActionResult> FpErrorBankList([FromBody] FpApiVm data)
 	{
 		try
 		{
 			await Task.Delay(0);
 
 			
-			await configStateRepo.SaveConfigState(data.ConfigStates);
+			await fpRepoService.SaveFpErrorCodeBank(data.ErrorBankList);
 
 			return Ok(new ObjectVm
 			{

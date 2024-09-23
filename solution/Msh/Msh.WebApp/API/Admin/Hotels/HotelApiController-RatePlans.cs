@@ -5,7 +5,7 @@ using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models.RatePlans;
 using Msh.WebApp.Areas.Admin.Models;
 
-namespace Msh.WebApp.API.Hotels;
+namespace Msh.WebApp.API.Admin.Hotels;
 
 
 public partial class HotelApiController

@@ -11,7 +11,7 @@ using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
 using Msh.WebApp.Services;
 
-namespace Msh.WebApp.API.Hotels;
+namespace Msh.WebApp.API.Admin.Hotels;
 
 [ApiController]
 [Route("api/hotelapi")]

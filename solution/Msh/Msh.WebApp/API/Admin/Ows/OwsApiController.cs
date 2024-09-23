@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Authentication;
+using Microsoft.AspNetCore.Mvc;
+using Msh.Common.Models.OwsCommon;
 using Msh.Common.Models.ViewModels;
+using Msh.Opera.Ows.Cache;
 using Msh.Opera.Ows.Models;
 using Msh.Opera.Ows.Services;
+using Msh.Opera.Ows.Services.CustomTest;
 using Msh.WebApp.Areas.Admin.Data;
 using Msh.WebApp.Areas.Admin.Models.Ows;
-using System.Security.Authentication;
-using Msh.Common.Models.OwsCommon;
-using Msh.Opera.Ows.Services.CustomTest;
-using Msh.Opera.Ows.Cache;
 
-namespace Msh.WebApp.API.Ows;
+namespace Msh.WebApp.API.Admin.Ows;
 
 [ApiController]
 [Route("api/owsapi")]

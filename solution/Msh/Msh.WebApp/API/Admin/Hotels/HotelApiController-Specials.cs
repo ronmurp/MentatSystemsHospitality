@@ -7,7 +7,7 @@ using Msh.HotelCache.Models.Specials;
 using Msh.WebApp.Areas.Admin.Data;
 using Msh.WebApp.Areas.Admin.Models;
 
-namespace Msh.WebApp.API.Hotels;
+namespace Msh.WebApp.API.Admin.Hotels;
 
 public partial class HotelApiController
 {

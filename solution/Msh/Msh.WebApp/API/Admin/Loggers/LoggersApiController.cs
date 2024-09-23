@@ -5,7 +5,7 @@ using Msh.Loggers.XmlLogger;
 using Msh.Opera.Ows.Models;
 using Msh.WebApp.Areas.Admin.Data;
 
-namespace Msh.WebApp.API.Loggers;
+namespace Msh.WebApp.API.Admin.Loggers;
 
 [ApiController]
 [Route("api/loggersapi")]
