@@ -55,6 +55,12 @@ public partial class ConfigRepository
 		return true;
 	}
 
+	public async Task SavePublishConfigAsync(ConfigPub configPub)
+	{
+		configDbContext.ConfigsPub.Update(configPub);
+		await configDbContext.SaveChangesAsync();
+	}
+
 	public async Task RemoveConfigPubAsync(string configType)
 	{
 		var config = configDbContext.ConfigsPub.FirstOrDefault(c => c.ConfigType == configType);
@@ -67,4 +73,18 @@ public partial class ConfigRepository
 		await configDbContext.SaveChangesAsync();
 	}
 
+	public async Task<bool> LockPublishConfigAsync(string configType, bool performLock, string userId)
+	{
+		var config = configDbContext.ConfigsPub.FirstOrDefault(c => c.ConfigType == configType);
+		if (config == null)
+		{
+			throw new NullConfigException($"Remove: Published Config type not found: {configType}");
+		}
+
+		config.Locked = performLock;
+		configDbContext.ConfigsPub.Update(config);
+		await configDbContext.SaveChangesAsync();
+
+		return true;
+	}
 }

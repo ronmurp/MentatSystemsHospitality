@@ -35,7 +35,6 @@ public partial class ConfigRepository
 		return list2;
 	}
 
-
 	public async Task<T> GetConfigArchiveContentAsync<T>(string configType, string archiveCode)
 	{
 		var archiveType = ArchiveType(configType, archiveCode);
@@ -80,6 +79,25 @@ public partial class ConfigRepository
 		await configDbContext.SaveChangesAsync();
 
 		return true;
+	}
+
+	public async Task<bool> LockArchiveConfigAsync(string configType, string archiveCode, bool performLock,
+		string userId)
+	{
+		var archiveType = ArchiveType(configType, archiveCode);
+
+		var config = configDbContext.ConfigsArchive.FirstOrDefault(c => c.ConfigType == archiveType);
+		if (config == null)
+		{
+			throw new NullConfigException($"Remove: Archive Config type not found: {configType} - {archiveCode}");
+		}
+
+		config.Locked = performLock;
+		configDbContext.ConfigsArchive.Update(config);
+		await configDbContext.SaveChangesAsync();
+
+		return true;
+
 	}
 
 	public async Task RemoveConfigArchiveAsync(string configType, string archiveCode)

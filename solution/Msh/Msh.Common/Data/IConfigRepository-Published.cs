@@ -16,5 +16,10 @@ public partial interface IConfigRepository
 	/// <returns></returns>
 	Task<bool> PublishConfigAsync(string configType, string userId);
 
+	Task SavePublishConfigAsync(ConfigPub configPub);
+
+
 	Task RemoveConfigPubAsync(string configType);
+
+	Task<bool> LockPublishConfigAsync(string configType, bool performLock, string userId);
 }
