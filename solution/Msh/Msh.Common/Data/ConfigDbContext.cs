@@ -59,5 +59,5 @@ public class ConfigDbContext : DbContext
     /// Common configs location, where Content is json for specific config classes
     /// Archive version. This is where archive and other useful copies are held
     /// </summary>
-    public DbSet<ConfigPub> ConfigsArchive { get; set; }
+    public DbSet<ConfigArchive> ConfigsArchive { get; set; }
 }

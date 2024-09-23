@@ -31,7 +31,6 @@ public partial class ConfigRepository
 		return obj;
 	}
 
-
 	public async Task<bool> PublishConfigAsync(string configType, string userId)
 	{
 		var configPub = await configDbContext.ConfigsPub.FirstOrDefaultAsync(c => c.ConfigType == configType);
