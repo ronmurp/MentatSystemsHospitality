@@ -9,7 +9,7 @@ namespace Msh.Common.Data;
 /// <summary>
 /// A repository for Config models
 /// </summary>
-public class ConfigRepository(ConfigDbContext configDbContext) : IConfigRepository
+public partial class ConfigRepository(ConfigDbContext configDbContext) : IConfigRepository
 {
 	/// <summary>
 	/// Get a config record by ConfigType
@@ -18,12 +18,13 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
 	/// <returns>Null if not found</returns>
 	public async Task<Config?> GetConfigAsync(string configType) => 
 		await configDbContext.Configs.FirstOrDefaultAsync(a => a.ConfigType == configType);
-	public async Task<ConfigPub?> GetConfigPubAsync(string configType) =>
-		await configDbContext.ConfigsPub.FirstOrDefaultAsync(a => a.ConfigType == configType);
-
-	public Config? GetConfig(string configType) => 
-		configDbContext.Configs.FirstOrDefault(a => a.ConfigType == configType);
-
+	
+	/// <summary>
+	/// Get the config content for a particular type
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="configType"></param>
+	/// <returns></returns>
 	public async Task<T> GetConfigContentAsync<T>(string configType)
 	{
 		var config = await GetConfigAsync(configType);
@@ -40,41 +41,7 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
 
 		return obj;
 	}
-
-	public async Task<T> GetConfigPubContentAsync<T>(string configType)
-	{
-		var config = await GetConfigPubAsync(configType);
-		if (config == null)
-		{
-			return default!;
-		}
-
-		var obj = JsonSerializer.Deserialize<T>(config.Content);
-		if (obj == null)
-		{
-			return default!;
-		}
-
-		return obj;
-	}
-
-	public T GetConfigContent<T>(string configType)
-	{
-		var config = GetConfig(configType);
-		if (config == null)
-		{
-			return default!;
-		}
-
-		var obj = JsonSerializer.Deserialize<T>(config.Content);
-		if (obj == null)
-		{
-			return default!;
-		}
-
-		return obj;
-
-	}
+	
 
 	/// <summary>
 	/// Get a config record by ConfigType and key
@@ -85,9 +52,6 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
 	/// <returns></returns>
 	public async Task<T> GetConfigContentAsync<T>(string configType, string key) => 
 		await GetConfigContentAsync<T>($"{configType}-{key}");
-
-	public T GetConfigContent<T>(string configType, string key) => 
-		GetConfigContent<T>($"{configType}-{key}");
 
 
 	/// <summary>
@@ -100,11 +64,6 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
 		await configDbContext.SaveChangesAsync();
 	}
 
-	public void SaveConfig(Config config)
-	{
-		configDbContext.Configs.Update(config);
-		configDbContext.SaveChanges();
-	}
 
 	public async Task SaveConfigAsync<T>(string configType, T value)
 	{
@@ -123,28 +82,13 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
 
 	}
 
-	public void SaveConfig<T>(string configType, T value)
-	{
-		var json = JsonSerializer.Serialize(value);
-		var config = GetConfig(configType);
-		if (config == null)
-		{
-			config = new Config { ConfigType = configType, Content = json };
-			AddConfig(config);
-		}
-		else
-		{
-			config.Content = json;
-			SaveConfig(config);
-		}
-	}
-
 
 	/// <summary>
 	/// Save the current type = must exist. NullConfigException = thrown if not.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="configType"></param>
+	/// <param name="key"></param>
 	/// <param name="value"></param>
 	/// <exception cref="NullConfigException"></exception>
 	public async Task SaveConfigAsync<T>(string configType, string key, T value)
@@ -152,11 +96,7 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
 		await SaveConfigAsync<T>($"{configType}-{key}", value);
 	}
 
-	public void SaveConfig<T>(string configType, string key, T value)
-	{
-		SaveConfig<T>($"{configType}-{key}", value);
-	}
-
+	
 	public async Task SaveMissingConfigAsync<T>(string configType, T defaultObject)
 	{
 		var config = await GetConfigAsync(configType);
@@ -172,30 +112,11 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
 		}
 	}
 
-	public void SaveMissingConfig<T>(string configType, T defaultObject)
-	{
-		var config = GetConfig(configType);
-		if (config == null)
-		{
-			var json = JsonSerializer.Serialize(defaultObject);
-			config = new Config
-			{
-				ConfigType = configType,
-				Content = json
-			}; 
-			AddConfig(config);
-		}
-	}
-
+	
 	public async Task SaveMissingConfigAsync<T>(string configType, string key, T defaultObject)
 	{
 		await SaveMissingConfigAsync<T>($"{configType}-{key}", defaultObject);
 	}
-
-    public void SaveMissingConfig<T>(string configType, string key, T defaultObject)
-    {
-	    SaveMissingConfig<T>($"{configType}-{key}", defaultObject);
-    }
 
     /// <summary>
     /// Used by Admin to create a new config
@@ -207,55 +128,23 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
 		await configDbContext.SaveChangesAsync();
     }
 
-    public void AddConfig(Config config)
-    {
-        configDbContext.Configs.Add(config);
-        configDbContext.SaveChanges();
-    }
-
-    public Task RemoveConfigAsync(string configType)
-    {
-	    throw new NotImplementedException();
-    }
-
+    
     /// <summary>
     /// Should be used only in admin and tests
     /// </summary>
     /// <param name="configType"></param>
     /// <exception cref="NullConfigException"></exception>
-    public void RemoveConfig(string configType)
+	public async Task RemoveConfigAsync(string configType)
     {
-        var config = configDbContext.Configs.FirstOrDefault(c => c.ConfigType == configType);
-        if (config == null)
-        {
-            throw new NullConfigException($"Remove: Config type not found: {configType}");
-        }
+		var config = configDbContext.Configs.FirstOrDefault(c => c.ConfigType == configType);
+		if (config == null)
+		{
+			throw new NullConfigException($"Remove: Config type not found: {configType}");
+		}
 
-        configDbContext.Configs.Remove(config);
-        configDbContext.SaveChanges();
-    }
-
-    public async Task<bool> PublishConfig(string configType, string userId)
-    {
-	    var configPub = await configDbContext.ConfigsPub.FirstOrDefaultAsync(c => c.ConfigType == configType);
-	    var hasPub = configPub != null;
-
-	    if (configPub is { Locked: true })
-	    {
-		    return false;
-	    }
-		var config = await configDbContext.Configs.FirstOrDefaultAsync(c => c.ConfigType == configType);
-
-		var configPubSave = config.Adapt<ConfigPub>();
-		configPubSave.Locked = true;
-		configPubSave.Published = DateTime.Now;
-		configPubSave.PublishedBy = userId;
-		if (hasPub)
-			configDbContext.ConfigsPub.Update(configPubSave);
-		else
-			await configDbContext.ConfigsPub.AddAsync(configPubSave);
+		configDbContext.Configs.Remove(config);
 		await configDbContext.SaveChangesAsync();
+	}
 
-		return true;
-    }
+   
 }

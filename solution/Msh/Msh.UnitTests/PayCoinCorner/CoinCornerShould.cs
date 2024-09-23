@@ -12,7 +12,7 @@ public class CoinCornerShould
     [Test]
     [TestCase("Test Notes 1")]
     [TestCase("Test Notes 2")]
-    public void AddConfigurationOnce(string notes)
+    public async Task AddConfigurationOnce(string notes)
     {
         var sut = TestConfigUtilities.GetRepository();
 
@@ -30,16 +30,16 @@ public class CoinCornerShould
        
         Assert.That(true, Is.True, "Phase 1");
 
-        sut.AddConfig(config);
+        await sut.AddConfigAsync(config);
         
     }
 
     [Test]
-    public void SaveExistingConfiguration()
+    public async Task SaveExistingConfiguration()
     {
         var sut = TestConfigUtilities.GetRepository();
 
-        var config = sut.GetConfig("TestConfig");
+        var config = await sut.GetConfigAsync("TestConfig");
 
         var json = config.Content;
 
@@ -49,11 +49,11 @@ public class CoinCornerShould
     }
 
     [Test]
-    public void RemoveExistingConfiguration()
+    public async Task RemoveExistingConfiguration()
     {
         var sut = TestConfigUtilities.GetRepository();
 
-        sut.RemoveConfig("TestConfig");
+        await sut.RemoveConfigAsync("TestConfig");
     }
 
 }

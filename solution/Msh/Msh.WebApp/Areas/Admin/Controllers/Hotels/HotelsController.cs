@@ -48,7 +48,7 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 		}
 		catch (NullConfigException ex)
 		{
-			configRepository.SaveMissingConfig(ConstHotel.Cache.Hotel, new List<Hotel>());
+			await configRepository.SaveMissingConfigAsync(ConstHotel.Cache.Hotel, new List<Hotel>());
 
 
 			return View(new List<Hotel>());

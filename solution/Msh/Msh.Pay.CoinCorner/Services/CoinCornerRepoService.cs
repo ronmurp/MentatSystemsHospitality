@@ -8,19 +8,19 @@ namespace Msh.Pay.CoinCorner.Services;
 /// </summary>
 public class CoinCornerRepoService(IConfigRepository configRepository) : ICoinCornerRepoService
 {
-	public CoinCornerConfig GetConfig() => 
-		configRepository.GetConfigContent<CoinCornerConfig>(ConstCc.CoinCornerConfig);
+	public async Task<CoinCornerConfig> GetConfig() => 
+		await configRepository.GetConfigContentAsync<CoinCornerConfig>(ConstCc.CoinCornerConfig);
 
-	public void SaveConfig(CoinCornerConfig config)
+	public async Task SaveConfig(CoinCornerConfig config)
 	{
-		configRepository.SaveConfig(ConstCc.CoinCornerConfig, config);
+		await configRepository.SaveConfigAsync(ConstCc.CoinCornerConfig, config);
 	}
 
-	public CoinCornerGlobal GetGlobal() =>
-		configRepository.GetConfigContent<CoinCornerGlobal>(ConstCc.CoinCornerGlobal);
+	public async Task<CoinCornerGlobal> GetGlobal() =>
+		await configRepository.GetConfigContentAsync<CoinCornerGlobal>(ConstCc.CoinCornerGlobal);
 
-	public void SaveGlobal(CoinCornerGlobal global)
+	public async Task SaveGlobal(CoinCornerGlobal global)
 	{
-		configRepository.SaveConfig(ConstCc.CoinCornerGlobal, global);
+		await configRepository.SaveConfigAsync(ConstCc.CoinCornerGlobal, global);
 	}
 }

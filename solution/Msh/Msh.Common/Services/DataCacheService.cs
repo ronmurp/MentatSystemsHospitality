@@ -14,13 +14,12 @@ public abstract class DataCacheService(IMemoryCache memoryCache, IConfigReposito
     {
         if (loadRaw)
         {
-            await Task.Delay(0);
-            return configRepository.GetConfigContent<T>(cacheName);
+            return await configRepository.GetConfigContentAsync<T>(cacheName);
         }
 
         if (!memoryCache.TryGetValue(cacheName, out T? cacheValue) || cacheValue == null)
         {
-            cacheValue = configRepository.GetConfigContent<T>(cacheName); 
+            cacheValue = await configRepository.GetConfigContentAsync<T>(cacheName); 
 
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetSlidingExpiration(TimeSpan.FromHours(12)); // The expiration could be loaded from config from db object

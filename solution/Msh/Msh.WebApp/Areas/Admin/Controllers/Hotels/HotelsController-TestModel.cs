@@ -14,15 +14,13 @@ public partial class HotelsController
 	{
 		try
 		{
-			await Task.Delay(0);
-
 			var hotels = await hotelsRepoService.GetTestModelsAsync();
 
 			return View(hotels);
 		}
 		catch (NullConfigException ex)
 		{
-			configRepository.SaveMissingConfig(ConstHotel.Cache.Hotel, new List<TestModel>());
+			await configRepository.SaveMissingConfigAsync(ConstHotel.Cache.Hotel, new List<TestModel>());
 
 			return View(new List<TestModel>());
 		}

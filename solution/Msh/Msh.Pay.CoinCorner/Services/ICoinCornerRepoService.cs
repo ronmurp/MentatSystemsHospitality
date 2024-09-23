@@ -7,11 +7,11 @@ namespace Msh.Pay.CoinCorner.Services;
 /// </summary>
 public interface ICoinCornerRepoService
 {
-	CoinCornerConfig GetConfig();
+	Task<CoinCornerConfig> GetConfig();
 
-	void SaveConfig(CoinCornerConfig config);
+	Task SaveConfig(CoinCornerConfig config);
 
-	CoinCornerGlobal GetGlobal();
+	Task<CoinCornerGlobal> GetGlobal();
 
-	void SaveGlobal(CoinCornerGlobal global);
+	Task SaveGlobal(CoinCornerGlobal global);
 }
