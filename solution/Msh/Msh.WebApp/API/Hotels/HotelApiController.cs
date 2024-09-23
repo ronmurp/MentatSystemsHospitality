@@ -8,6 +8,7 @@ using Msh.HotelCache.Models.RoomTypes;
 using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Data;
 using Msh.WebApp.Areas.Admin.Models;
+using Msh.WebApp.Models.Admin.ViewModels;
 using Msh.WebApp.Services;
 
 namespace Msh.WebApp.API.Hotels;
@@ -29,6 +30,21 @@ public partial class HotelApiController(IHotelsRepoService hotelsRepoService, IU
 		if (!result)
 		{
 			return GetFail("The publish operation failed. The record may be locked.");
+		}
+
+		return Ok(new ObjectVm());
+	}
+
+	[HttpPost]
+	[Route("HotelsLoad")]
+	public async Task<IActionResult> HotelsLoad([FromBody] HotelBaseVm data)
+	{
+		switch (data.Code)
+		{
+			case "Pub":
+				var hotelsPub = await hotelsRepoService.GetHotelsPublishAsync();
+				await hotelsRepoService.SaveHotelsAsync(hotelsPub);
+				break;
 		}
 
 		return Ok(new ObjectVm());

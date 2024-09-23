@@ -30,6 +30,7 @@
 <div class="mt-3" style="display:flex;justify-content:start;">
 	<div class="input-group">
 		<button class="btn btn-outline-primary" class="mr-3" onclick="window.mshMethods.publishHotels()">Publish</button>
+		<button class="btn btn-outline-primary" class="mr-3" onclick="window.mshMethods.loadHotels()">Load</button>
 		<a asp-contoller="Hotels" asp-action="Index" class="btn btn-outline-secondary">Return to dashboard</a>
 	</div>
 
@@ -42,7 +43,7 @@
 	<div data-info-for="info-hotels">
 		<span>Hotels List</span>
 		<div>
-			<p></p>
+			
 			@await Html.PartialAsync("Hotels/_ListIconsInfo")
 			<p>Additional icons used in some lists:</p>
 			<ul>
@@ -50,8 +51,13 @@
 			</ul>
 			<p>Stay Dates, if used, determine date ranges within which the guest cannot stay.</p>
 			<p>Book Dates, if used, determine date ranges within which the guest cannot make bookings for the hotel.</p>
+			<h4>Publish and Load</h4>
+			<p>Click <info-icon name="info-publish" /> for more information on the Publish and Load buttons.</p>
 		</div>
 	</div>
+	
+	@await Html.PartialAsync("Admin/_AdminPublish", "")
+
 
 </div>
 

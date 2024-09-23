@@ -16,6 +16,8 @@ public class HotelsRepoService(IConfigRepository configRepository) : IHotelsRepo
 {
 	public async Task<List<Hotel>> GetHotelsAsync() =>
 		await configRepository.GetConfigContentAsync<List<Hotel>>(ConstHotel.Cache.Hotel);
+	public async Task<List<Hotel>> GetHotelsPublishAsync() =>
+		await configRepository.GetConfigPubContentAsync<List<Hotel>>(ConstHotel.Cache.Hotel);
 
 	public async Task SaveHotelsAsync(List<Hotel> hotels)
 	{

@@ -18,6 +18,8 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
 	/// <returns>Null if not found</returns>
 	public async Task<Config?> GetConfigAsync(string configType) => 
 		await configDbContext.Configs.FirstOrDefaultAsync(a => a.ConfigType == configType);
+	public async Task<ConfigPub?> GetConfigPubAsync(string configType) =>
+		await configDbContext.ConfigsPub.FirstOrDefaultAsync(a => a.ConfigType == configType);
 
 	public Config? GetConfig(string configType) => 
 		configDbContext.Configs.FirstOrDefault(a => a.ConfigType == configType);
@@ -25,6 +27,23 @@ public class ConfigRepository(ConfigDbContext configDbContext) : IConfigReposito
 	public async Task<T> GetConfigContentAsync<T>(string configType)
 	{
 		var config = await GetConfigAsync(configType);
+		if (config == null)
+		{
+			return default!;
+		}
+
+		var obj = JsonSerializer.Deserialize<T>(config.Content);
+		if (obj == null)
+		{
+			return default!;
+		}
+
+		return obj;
+	}
+
+	public async Task<T> GetConfigPubContentAsync<T>(string configType)
+	{
+		var config = await GetConfigPubAsync(configType);
 		if (config == null)
 		{
 			return default!;

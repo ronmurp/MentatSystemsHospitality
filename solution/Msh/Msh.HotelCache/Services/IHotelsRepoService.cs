@@ -10,6 +10,7 @@ namespace Msh.HotelCache.Services;
 public interface IHotelsRepoService
 {
 	Task<List<Hotel>> GetHotelsAsync();
+	Task<List<Hotel>> GetHotelsPublishAsync();
 
 	Task SaveHotelsAsync(List<Hotel> hotels);
 	Task<bool> PublishHotelsAsync(string userId);

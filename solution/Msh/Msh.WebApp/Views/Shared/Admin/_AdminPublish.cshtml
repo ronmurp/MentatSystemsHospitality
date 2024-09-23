@@ -1,10 +1,31 @@
 ﻿@model string
 
 <div data-info-for="info-publish">
-	<span>Publish</span>
+	<span>Edit/Publish/Archive</span>
 	<div>
 		<p>This page is used to edit <b>@Model</b> Admin data stored in the database.</p>
-		<p>The data is also held in a memory cache for faster access.</p>
+		<p>The following copies of data are stored, for each configuration item:</p>
+		<ul>
+			<li>
+				<p><b>Edit - </b>This is the store where all the editing occurs.</p>
+			</li>
+			<li>
+				<p><b>Published - </b>This is where the customer facing code retrieves configuration information.</p>
+			</li>
+			<li>
+				<p><b>Archive - </b>This is where you can save copies of items.</p>
+			</li>
+		</ul>
+		<p>On key pages of the admin back office you have the following buttons.</p>
+		<ul>
+			<li>
+				<p><b>Publish - </b>Commits the current edited copy of data to the published table, which is then used by the customer facing code.</p>
+			</li>
+			<li>
+				<p><b>Load - </b>You can load data into the editing store, make changes, and publish it.</p>
+			</li>
+			
+		</ul>
 		<p>After making changes, click Publish to refresh the cache from the latest database information.</p>
 	</div>
 </div>

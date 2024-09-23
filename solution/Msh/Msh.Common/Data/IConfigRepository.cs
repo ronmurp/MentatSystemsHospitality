@@ -14,9 +14,13 @@ public interface IConfigRepository
     /// <returns>Null if not found</returns>
     Task<Config?> GetConfigAsync(string configType);
 
-    Config? GetConfig(string configType);
+    Task<ConfigPub?> GetConfigPubAsync(string configType);
+
+	Config? GetConfig(string configType);
 
 	Task<T> GetConfigContentAsync<T>(string configType);
+	Task<T> GetConfigPubContentAsync<T>(string configType);
+
 	T GetConfigContent<T>(string configType);
 
 	Task<T> GetConfigContentAsync<T>(string configType, string key);
