@@ -1,41 +1,24 @@
-﻿using Msh.HotelCache.Models.Discounts;
-using Msh.HotelCache.Models.Extras;
+﻿using Msh.Common.Models.Configuration;
 using Msh.HotelCache.Models.Hotels;
-using Msh.HotelCache.Models.RatePlans;
-using Msh.HotelCache.Models.RoomTypes;
-using Msh.HotelCache.Models.Specials;
 
 namespace Msh.HotelCache.Services;
 
-public interface IHotelsRepoService
+public partial interface IHotelsRepoService
 {
 	Task<List<Hotel>> GetHotelsAsync();
+
 	Task<List<Hotel>> GetHotelsPublishAsync();
 
+	Task<List<ConfigArchiveBase>?> GetHotelsArchiveListAsync();
+
+	Task<List<Hotel>> GetHotelsArchiveAsync(string archiveCode);
+
 	Task SaveHotelsAsync(List<Hotel> hotels);
+
 	Task<bool> PublishHotelsAsync(string userId);
 
-	Task<List<RoomType>> GetRoomTypesAsync(string hotelCode);
+	Task<bool> ArchiveHotelsAsync(string archiveCode, string userId);
 
-	Task SaveRoomTypesAsync(List<RoomType> roomTypes, string hotelCode);
+	Task<bool> SaveHotelsArchiveAsync(List<Hotel> hotels, string archiveCode, string userId);
 
-	Task<List<RoomRatePlan>> GetRatePlansAsync(string hotelCode);
-
-	Task SaveRatePlansAsync(List<RoomRatePlan> ratePlans, string hotelCode);
-
-	Task<List<Extra>> GetExtrasAsync(string hotelCode);
-
-	Task SaveExtrasAsync(List<Extra> extras, string hotelCode);
-
-	Task<List<Special>> GetSpecialsAsync(string hotelCode);
-
-	Task SaveSpecialsAsync(List<Special> specials, string hotelCode);
-
-	Task<List<TestModel>> GetTestModelsAsync();
-
-	Task SaveTestModelsAsync(List<TestModel> testModels);
-
-	Task<List<DiscountCode>> GetDiscountCodesAsync(string hotelCode);
-
-	Task SaveDiscountCodesAsync(List<DiscountCode> discountCodes, string hotelCode);
 }
