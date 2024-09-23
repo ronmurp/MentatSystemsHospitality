@@ -21,4 +21,7 @@ public partial interface IHotelsRepoService
 
 	Task<bool> SaveHotelsArchiveAsync(List<Hotel> hotels, string archiveCode, string userId);
 
+	Task<bool> LockPubHotelsAsync(bool performLock,string userId);
+
+	Task<bool> LockArchiveHotelsAsync(string archiveCode, bool performLock, string userId);
 }

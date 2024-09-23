@@ -34,4 +34,10 @@ public partial class HotelsRepoService(IConfigRepository configRepository) : IHo
 
 	public async Task<bool> SaveHotelsArchiveAsync(List<Hotel> hotels, string archiveCode, string userId) =>
 		await configRepository.SaveConfigArchiveAsync(ConstHotel.Cache.Hotel, archiveCode, userId);
+
+
+	public async Task<bool> LockPubHotelsAsync(bool performLock, string userId) =>
+		await configRepository.LockPublishConfigAsync(ConstHotel.Cache.Hotel, performLock, userId);
+	public async Task<bool> LockArchiveHotelsAsync(string archiveCode, bool performLock, string userId) => 
+		await configRepository.LockArchiveConfigAsync(ConstHotel.Cache.Hotel, archiveCode, performLock, userId);
 }
