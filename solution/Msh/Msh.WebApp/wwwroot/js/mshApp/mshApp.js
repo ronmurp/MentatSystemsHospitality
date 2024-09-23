@@ -2740,6 +2740,77 @@
 
     }());
 
+
+    window.mshPageApp.modalActionService = (function () {
+
+        var app = mshPageApp;
+        var meth = app.methodsService;
+        var util = app.utilityService;
+        var api = app.apiService;
+        var mom = app.momentDateService;
+        var htmlS = app.htmlService;
+        var modal = app.modalService;
+
+        function PairOverlay(options) {
+
+            this.options = {
+
+                modalActionId: 'publishHotel',
+                modalActionTitle: 'Confirm Hotels Publish',
+                modalActionBody: 'Confirm publish of hotels list',
+                modalActionOnCLick: `onclick="window.mshMethods.publishHotelsConfirm()"`,
+                modalActionOk: 'OK',
+                actionConfirmApiUrl: undefined, // `/api/hotelapi/HotelsPublish`,
+
+                modalActionedId: 'publishedHotel',
+                modalActionedTitle: 'Publish Hotels',
+                modalActionedBody: 'The list of hotels was successfully published',
+                modalActionedOnCLick: `onclick="window.mshMethods.publishHotelsConfirm()"`,
+                modalActionedOk: 'OK',
+                actionedConfirmedApiUrl: undefined,
+            }
+            if (options) {
+                this.options = $.extend({}, this.options, options);
+            }
+        }
+
+        PairOverlay.prototype.action = function () {
+
+            var self = this;
+
+            modal.showModal(self.options.modalActionId, self.options.modalActionTitle, self.options.modalActionBody, {
+                footerOk: true,
+                okButtonClickScript: self.options.modalActionOnCLick,
+                okButtonText: self.options.modalActionOk
+            });
+        }
+
+        PairOverlay.prototype.actioned = function () {
+
+            var self = this;
+
+            $(`#${self.options.modalActionedId}`).remove();
+
+            if (self.options.actionConfirmApiUrl) {
+                api.postAsync(self.options.actionConfirmApiUrl, {}, function (data) {
+                    if (data.success) {
+                        modal.showModal(self.options.modalActionedId, self.options.modalActionedTitle, self.options.modalActionedBody)
+                        return;
+                    } else {
+                        modal.showError(data.userErrorMessage);
+                    }
+                })
+            }
+
+        }
+
+        return {
+            PairOverlay: PairOverlay
+        }
+
+    }());
+
+
     var success = $('#is-success').val() === 'true';
     if (success) {
         setTimeout(function () {
