@@ -18,11 +18,10 @@ public partial class HotelsController
 			HotelCode = string.IsNullOrEmpty(hotelCode) ? string.Empty : hotelCode,
 			HotelName = string.Empty
 		};
-
 		try
 		{
 
-			vm.Hotels = await hotelsRepoService.GetHotelsAsync();
+			vm.Hotels = await hotelRepository.GetData();
 			var hotel = string.IsNullOrEmpty(hotelCode)
 				? vm.Hotels.FirstOrDefault()
 				: vm.Hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
@@ -30,7 +29,7 @@ public partial class HotelsController
 			vm.HotelCode = hotel != null ? hotel.HotelCode : string.Empty;
 			vm.HotelName = hotel != null ? hotel.Name : string.Empty;
 
-			var discounts = (await hotelsRepoService.GetDiscountCodesAsync(vm.HotelCode)) ?? [];
+			var discounts = (await discountRepository.GetData(vm.HotelCode)) ?? [];
 
 			vm.Discounts = discounts;
 
@@ -40,7 +39,7 @@ public partial class HotelsController
 		{
 			if (!string.IsNullOrEmpty(vm.HotelCode))
 			{
-				await configRepository.SaveMissingConfigAsync(ConstHotel.Cache.Extras, vm.HotelCode, new List<RoomType>());
+				await discountRepository.Save( new List<DiscountCode>(), vm.HotelCode);
 			}
 
 			vm.ErrorMessage = $"No extras for hotel {vm.HotelCode}";
@@ -81,7 +80,7 @@ public partial class HotelsController
 
 		if (ModelState.IsValid)
 		{
-			var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+			var discounts = await discountRepository.GetData(hotelCode);
 
 			if (discounts.All(tm => tm.Code != discountCode.Code))
 			{
@@ -89,7 +88,9 @@ public partial class HotelsController
 				//roomType.Notes = string.IsNullOrEmpty(roomType.Notes) ? string.Empty : roomType.Notes;
 
 				discounts.Add(discountCode);
-				await hotelsRepoService.SaveDiscountCodesAsync(discounts, hotelCode);
+
+				await discountRepository.Save(discounts, hotelCode);
+
 				return RedirectToAction(nameof(DiscountAdd), new { IsSuccess = true, HotelCode = hotelCode, Code = discountCode.Code });
 			}
 			else
@@ -126,7 +127,7 @@ public partial class HotelsController
 		ViewBag.Hotels = await GetHotels();
 		ViewBag.HotelCode = hotelCode;
 
-		var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+		var discounts = await discountRepository.GetData(hotelCode);
 		var discount = discounts.FirstOrDefault(m => m.Code == code);
 		if (discount != null)
 		{
@@ -145,7 +146,7 @@ public partial class HotelsController
 
 		if (ModelState.IsValid)
 		{
-			var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+			var discounts = await discountRepository.GetData(hotelCode);
 			var index = discounts.FindIndex(m => m.Code == discountCode.Code);
 			if (index >= 0)
 			{
@@ -161,7 +162,7 @@ public partial class HotelsController
 				// Now that passed parameter has been updated with properties not edited, update the original
 				discounts[index] = discountCode;
 				// And save
-				await hotelsRepoService.SaveDiscountCodesAsync(discounts, hotelCode);
+				await discountRepository.Save(discounts, hotelCode);
 				return RedirectToAction(nameof(DiscountEdit), new { IsSuccess = true, HotelCode = hotelCode, Code = discountCode.Code });
 			}
 			else
@@ -197,7 +198,7 @@ public partial class HotelsController
 		ViewBag.Hotels = await GetHotels();
 		ViewBag.HotelCode = hotelCode;
 
-		var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+		var discounts = await discountRepository.GetData(hotelCode);
 		var discount = discounts.FirstOrDefault(m => m.Code == code);
 		if (discount != null)
 		{
@@ -216,7 +217,7 @@ public partial class HotelsController
 
 		if (ModelState.IsValid)
 		{
-			var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+			var discounts = await discountRepository.GetData(hotelCode);
 			var index = discounts.FindIndex(m => m.Code == code);
 			if (index >= 0)
 			{
@@ -224,7 +225,8 @@ public partial class HotelsController
 				// Now that passed parameter has been updated with properties not edited, update the original
 				discounts[index].DiscountErrors = discountErrors;
 				// And save
-				await hotelsRepoService.SaveDiscountCodesAsync(discounts, hotelCode);
+				await discountRepository.Save(discounts, hotelCode);
+
 				return RedirectToAction(nameof(DiscountEditErrors), new { IsSuccess = true, HotelCode = hotelCode, Code = code });
 			}
 			else
@@ -261,7 +263,8 @@ public partial class HotelsController
 		ViewBag.Hotels = await GetHotels();
 		ViewBag.HotelCode = hotelCode;
 
-		var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+		var discounts = await discountRepository.GetData(hotelCode);
+
 		var discount = discounts.FirstOrDefault(m => m.Code == code);
 		if (discount != null)
 		{
@@ -280,7 +283,7 @@ public partial class HotelsController
 
 		if (ModelState.IsValid)
 		{
-			var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+			var discounts = await discountRepository.GetData(hotelCode);
 			var index = discounts.FindIndex(m => m.Code == code);
 			if (index >= 0)
 			{
@@ -288,7 +291,8 @@ public partial class HotelsController
 				// Now that passed parameter has been updated with properties not edited, update the original
 				discounts[index].OneTime = discountOneTime;
 				// And save
-				await hotelsRepoService.SaveDiscountCodesAsync(discounts, hotelCode);
+				await discountRepository.Save(discounts, hotelCode);
+
 				return RedirectToAction(nameof(DiscountEditOneTime), new { IsSuccess = true, HotelCode = hotelCode, Code = code });
 			}
 			else
@@ -372,8 +376,8 @@ public partial class HotelsController
 				Code = code
 			};
 
-			var ratePlans = await hotelsRepoService.GetRatePlansAsync(hotelCode);
-			var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+			var ratePlans = await ratePlanRepository.GetData(hotelCode);
+			var discounts = await discountRepository.GetData(hotelCode);
 			var discount = discounts.FirstOrDefault(s => s.Code.EqualsAnyCase(code));
 			if (discount != null)
 			{
@@ -418,8 +422,8 @@ public partial class HotelsController
 				Code = code
 			};
 
-			var ratePlans = await hotelsRepoService.GetRatePlansAsync(hotelCode);
-			var discounts = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+			var ratePlans = await ratePlanRepository.GetData(hotelCode);
+			var discounts = await discountRepository.GetData(hotelCode);
 			var discount = discounts.FirstOrDefault(s => s.Code.EqualsAnyCase(code));
 			if (discount != null)
 			{

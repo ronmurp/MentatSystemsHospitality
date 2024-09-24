@@ -1,10 +1,22 @@
 ﻿@using Msh.Admin.Models.Const
+@using Msh.WebApp.Areas.Admin.Models
 @using Msh.WebApp.Models.Admin.ViewModels
+@using Msh.WebApp.TagHelpers
 @model Msh.WebApp.Models.Admin.ViewModels.DiscountsListVm;
 @{
 	var title = "Discounts List";
 	ViewData["Title"] = title;
 	ViewBag.InfoIcons = "Extras";
+
+	var pallModel = new PublishArchiveLoadLockVm
+	{
+		OnclickPublish = "window.mshMethods.publishDiscounts()",
+		OnclickArchive = "window.mshMethods.archiveDiscounts()",
+		OnclickLoad = "window.mshMethods.loadDiscounts()",
+		OnclickLock = "window.mshMethods.lockDiscounts()",
+		Controller = "Hotels",
+		Action = "Index"
+	};
 }
 
 @await Component.InvokeAsync("AdminMenu", new
@@ -30,6 +42,8 @@
 </div>
 
 @await Html.PartialAsync("Hotels/_BulkCopyDelButtons", @Model.HotelCode)
+
+@await Html.PartialAsync("_PublishArchiveLoadLock", pallModel)
 
 @await Html.PartialAsync("Admin/_AdminErrorBlock", @Model.ErrorMessage)
 

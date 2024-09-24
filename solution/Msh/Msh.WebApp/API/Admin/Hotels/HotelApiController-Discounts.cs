@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Msh.Common.ExtensionMethods;
+using Msh.Common.Models.Dates;
 using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models.Discounts;
 using Msh.HotelCache.Models.Hotels;
@@ -25,7 +26,8 @@ public partial class HotelApiController
 				return GetFail("At least one code must change");
 			}
 
-			var discounts = await hotelsRepoService.GetDiscountCodesAsync(input.HotelCode);
+			var discounts = await discountRepository.GetData(input.HotelCode);
+
 			var discount = discounts.FirstOrDefault(h => h.Code == input.Code);
 			if (discount != null)
 			{
@@ -38,14 +40,14 @@ public partial class HotelApiController
 					return result.fail;
 				}
 
-				var newDiscounts = await hotelsRepoService.GetDiscountCodesAsync(input.NewHotelCode);
+				var newDiscounts = await discountRepository.GetData(input.NewHotelCode);
 				if (newDiscounts.Any(c => c.Code.EqualsAnyCase(input.NewCode)))
 				{
 					return GetFail("The code already exists.");
 				}
 
 				newDiscounts.Add(newDiscount);
-				await hotelsRepoService.SaveDiscountCodesAsync(newDiscounts, input.NewHotelCode);
+				await discountRepository.Save(newDiscounts, input.NewHotelCode);
 			}
 
 			return Ok(new ObjectVm());
@@ -68,7 +70,8 @@ public partial class HotelApiController
 				return GetFail("At least one code must change");
 			}
 
-			var hotels = await hotelsRepoService.GetHotelsAsync();
+			var hotels = await hotelRepository.GetData();
+
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
 			{
 				return GetFail($"Invalid source hotel code {input.HotelCode}");
@@ -81,8 +84,8 @@ public partial class HotelApiController
 			var missingList = new List<string>();
 			var newList = new List<DiscountCode>();
 
-			var srcItems = await hotelsRepoService.GetDiscountCodesAsync(input.HotelCode);
-			var dstItems = await hotelsRepoService.GetDiscountCodesAsync(input.NewHotelCode);
+			var srcItems = await discountRepository.GetData(input.HotelCode);
+			var dstItems = await discountRepository.GetData(input.NewHotelCode);
 
 			foreach (var code in input.CodeList)
 			{
@@ -101,7 +104,7 @@ public partial class HotelApiController
 
 			dstItems.AddRange(newList);
 
-			await hotelsRepoService.SaveDiscountCodesAsync(dstItems, input.NewHotelCode);
+			await discountRepository.Save(dstItems, input.NewHotelCode);
 
 			if (missingList.Count > 0)
 			{
@@ -125,13 +128,14 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var hotels = await hotelsRepoService.GetHotelsAsync();
+			var hotels = await hotelRepository.GetData();
+
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
 			{
 				return GetFail($"Invalid source hotel code {input.HotelCode}");
 			}
 
-			var items = await hotelsRepoService.GetDiscountCodesAsync(input.HotelCode);
+			var items = await discountRepository.GetData(input.HotelCode);
 
 			for (var i = items.Count - 1; i >= 0; i--)
 			{
@@ -142,9 +146,8 @@ public partial class HotelApiController
 				}
 			}
 
-			await hotelsRepoService.SaveDiscountCodesAsync(items, input.HotelCode);
+			await discountRepository.Save(items, input.HotelCode);
 
-			
 
 			return Ok(new ObjectVm());
 
@@ -162,15 +165,16 @@ public partial class HotelApiController
 		try
 		{
 			var hotelCode = input.HotelCode;
-			var hotels = await hotelsRepoService.GetHotelsAsync();
+			var hotels = await hotelRepository.GetData();
+
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
 			{
 				return GetFail($"Invalid hotel code {hotelCode}");
 			}
-			
-			var srcItems = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
 
-			await hotelsRepoService.SaveDiscountCodesAsync(srcItems.OrderBy(e => e.Code).ToList(), hotelCode);
+			var srcItems = await discountRepository.GetData(input.HotelCode);
+
+			await discountRepository.Save(srcItems.OrderBy(e => e.Code).ToList(), input.HotelCode);
 
 			return Ok(new ObjectVm());
 
@@ -187,7 +191,7 @@ public partial class HotelApiController
 	[Route("DiscountOfferDates")]
 	public async Task<IActionResult> DiscountOfferDates(string code, string hotelCode)
 	{
-		var items = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+		var items = await discountRepository.GetData(hotelCode);
 		var item = items.FirstOrDefault(h => h.Code == code);
 		if (item == null)
 		{
@@ -214,15 +218,14 @@ public partial class HotelApiController
 	{
 		try
 		{
-			await Task.Delay(0);
 
-			var items = await hotelsRepoService.GetDiscountCodesAsync(data.HotelCode);
+			var items = await discountRepository.GetData(data.HotelCode);
 			var index = items.FindIndex(h => h.Code == data.Code);
 
 			if (index >= 0)
 			{
 				items[index].OfferDates = data.Dates;
-				await hotelsRepoService.SaveDiscountCodesAsync(items, data.HotelCode);
+				await discountRepository.Save(items, data.HotelCode);
 			}
 
 			return Ok(new ObjectVm
@@ -245,7 +248,7 @@ public partial class HotelApiController
 	[Route("DiscountBookDates")]
 	public async Task<IActionResult> DiscountBookDates(string code, string hotelCode)
 	{
-		var items = await hotelsRepoService.GetDiscountCodesAsync(hotelCode);
+		var items = await discountRepository.GetData(hotelCode);
 		var item = items.FirstOrDefault(h => h.Code == code);
 		if (item == null)
 		{
@@ -272,15 +275,14 @@ public partial class HotelApiController
 	{
 		try
 		{
-			await Task.Delay(0);
-
-			var items = await hotelsRepoService.GetDiscountCodesAsync(data.HotelCode);
+			
+			var items = await discountRepository.GetData(data.HotelCode);
 			var index = items.FindIndex(h => h.Code == data.Code);
 
 			if (index >= 0)
 			{
 				items[index].BookDates = data.Dates;
-				await hotelsRepoService.SaveDiscountCodesAsync(items, data.HotelCode);
+				await discountRepository.Save(items, data.HotelCode);
 			}
 
 			return Ok(new ObjectVm
@@ -305,15 +307,15 @@ public partial class HotelApiController
 	{
 		try
 		{
-			await Task.Delay(0);
+			
 
-			var items = await hotelsRepoService.GetDiscountCodesAsync(data.HotelCode);
+			var items = await discountRepository.GetData(data.HotelCode);
 			var index = items.FindIndex(h => h.Code == data.Code);
 
 			if (index >= 0)
 			{
 				items[index].EnabledHotelPlans = data.CodeList;
-				await hotelsRepoService.SaveDiscountCodesAsync(items, data.HotelCode);
+				await discountRepository.Save(items, data.HotelCode);
 			}
 
 			return Ok(new ObjectVm
@@ -340,13 +342,13 @@ public partial class HotelApiController
 		{
 			await Task.Delay(0);
 
-			var items = await hotelsRepoService.GetDiscountCodesAsync(data.HotelCode);
+			var items = await discountRepository.GetData(data.HotelCode);
 			var index = items.FindIndex(h => h.Code == data.Code);
 
 			if (index >= 0)
 			{
 				items[index].DisabledHotelPlans = data.CodeList;
-				await hotelsRepoService.SaveDiscountCodesAsync(items, data.HotelCode);
+				await discountRepository.Save(items, data.HotelCode);
 			}
 
 			return Ok(new ObjectVm
@@ -363,5 +365,7 @@ public partial class HotelApiController
 			});
 		}
 	}
+
+
 
 }

@@ -8,7 +8,16 @@ public static class DiRegistrationHotel
 {
     public static void RegisterHotelServices(this IServiceCollection services)
     {
-        services.AddScoped<IHotelCacheService, HotelCacheService>();
-        services.AddScoped<IHotelsRepoService, HotelsRepoService>();
+	   
+	    services.AddScoped<IDiscountRepository, DiscountRepository>();
+	    services.AddScoped<IExtraRepository, ExtraRepository>();
+	    services.AddScoped<IHotelRepository, HotelRepository>();
+	    services.AddScoped<IRatePlanRepository, RatePlanRepository>();
+	    services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
+	    services.AddScoped<ISpecialsRepository, SpecialsRepository>();
+	    services.AddScoped<ITestModelRepository, TestModelRepository>();
+
+		services.AddScoped<IHotelCacheService, HotelCacheService>();
+       
 	}
 }

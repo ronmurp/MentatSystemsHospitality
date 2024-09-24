@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Msh.Common.ExtensionMethods;
 using Msh.Common.Models.ViewModels;
+using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Extras;
 using Msh.HotelCache.Models.Hotels;
 using Msh.WebApp.Areas.Admin.Data;
@@ -18,12 +19,12 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var extras = await hotelsRepoService.GetExtrasAsync(input.HotelCode);
+			var extras = await extraRepository.GetData(input.HotelCode);
 			var extra = extras.FirstOrDefault(h => h.Code == input.Code);
 			if (extra != null)
 			{
 				extras.Remove(extra);
-				await hotelsRepoService.SaveExtrasAsync(extras, input.HotelCode);
+				await extraRepository.Save(extras, input.HotelCode);
 			}
 
 			return Ok(new ObjectVm
@@ -53,7 +54,7 @@ public partial class HotelApiController
 				return GetFail("At least one code must change");
 			}
 
-			var extras = await hotelsRepoService.GetExtrasAsync(input.HotelCode);
+			var extras = await extraRepository.GetData(input.HotelCode);
 			var extra = extras.FirstOrDefault(h => h.Code == input.Code);
 			if (extra != null)
 			{
@@ -66,14 +67,14 @@ public partial class HotelApiController
 					return result.fail;
 				}
 
-				var newExtras = await hotelsRepoService.GetExtrasAsync(input.NewHotelCode);
+				var newExtras = await extraRepository.GetData(input.NewHotelCode);
 				if (newExtras.Any(c => c.Code.EqualsAnyCase(input.NewCode)))
 				{
 					return GetFail("The code already exists.");
 				}
 
 				newExtras.Add(newExtra);
-				await hotelsRepoService.SaveExtrasAsync(newExtras, input.NewHotelCode);
+				await extraRepository.Save(newExtras, input.NewHotelCode);
 			}
 
 			return Ok(new ObjectVm());
@@ -96,7 +97,7 @@ public partial class HotelApiController
 				return GetFail("At least one code must change");
 			}
 
-			var hotels = await hotelsRepoService.GetHotelsAsync();
+			var hotels = await hotelRepository.GetData();
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
 			{
 				return GetFail($"Invalid source hotel code {input.HotelCode}");
@@ -109,8 +110,8 @@ public partial class HotelApiController
 			var missingList = new List<string>();
 			var newList = new List<Extra>();
 
-			var srcExtras = await hotelsRepoService.GetExtrasAsync(input.HotelCode);
-			var dstExtras = await hotelsRepoService.GetExtrasAsync(input.NewHotelCode);
+			var srcExtras = await extraRepository.GetData(input.HotelCode);
+			var dstExtras = await extraRepository.GetData(input.NewHotelCode);
 
 			foreach (var code in input.CodeList)
 			{
@@ -129,7 +130,7 @@ public partial class HotelApiController
 
 			dstExtras.AddRange(newList);
 
-			await hotelsRepoService.SaveExtrasAsync(dstExtras, input.NewHotelCode);
+			await extraRepository.Save(dstExtras, input.NewHotelCode);
 
 			if (missingList.Count > 0)
 			{
@@ -153,13 +154,14 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var hotels = await hotelsRepoService.GetHotelsAsync();
+			var hotels = await hotelRepository.GetData();
+
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
 			{
 				return GetFail($"Invalid source hotel code {input.HotelCode}");
 			}
 
-			var items = await hotelsRepoService.GetExtrasAsync(input.HotelCode);
+			var items = await extraRepository.GetData(input.HotelCode);
 
 			for (var i = items.Count - 1; i >= 0; i--)
 			{
@@ -170,7 +172,7 @@ public partial class HotelApiController
 				}
 			}
 
-			await hotelsRepoService.SaveExtrasAsync(items, input.HotelCode);
+			await extraRepository.Save(items, input.HotelCode);
 
 			
 
@@ -190,15 +192,16 @@ public partial class HotelApiController
 		try
 		{
 			var hotelCode = input.HotelCode;
-			var hotels = await hotelsRepoService.GetHotelsAsync();
+			var hotels = await hotelRepository.GetData();
+
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
 			{
 				return GetFail($"Invalid hotel code {hotelCode}");
 			}
 			
-			var srcExtras = await hotelsRepoService.GetExtrasAsync(hotelCode);
+			var srcExtras = await extraRepository.GetData(hotelCode);
 
-			await hotelsRepoService.SaveExtrasAsync(srcExtras.OrderBy(e => e.Code).ToList(), hotelCode);
+			await extraRepository.Save(srcExtras.OrderBy(e => e.Code).ToList(), hotelCode);
 
 			return Ok(new ObjectVm());
 
@@ -215,7 +218,7 @@ public partial class HotelApiController
 	[Route("ExtraDates")]
 	public async Task<IActionResult> ExtraDates(string code, string hotelCode)
 	{
-		var extras = await hotelsRepoService.GetExtrasAsync(hotelCode);
+		var extras = await extraRepository.GetData(hotelCode);
 		var extra = extras.FirstOrDefault(h => h.Code == code);
 		if (extra == null)
 		{
@@ -244,13 +247,13 @@ public partial class HotelApiController
 		{
 			await Task.Delay(0);
 
-			var extras = await hotelsRepoService.GetExtrasAsync(data.HotelCode);
+			var extras = await extraRepository.GetData(data.HotelCode);
 			var index = extras.FindIndex(h => h.Code == data.Code);
 
 			if (index >= 0)
 			{
 				extras[index].ItemDates = data.Dates;
-				await hotelsRepoService.SaveExtrasAsync(extras, data.HotelCode);
+				await extraRepository.Save(extras, data.HotelCode);
 			}
 
 			return Ok(new ObjectVm

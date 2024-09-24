@@ -16,9 +16,14 @@ namespace Msh.WebApp.Areas.Admin.Controllers.Hotels;
 [Authorize]
 [Area("Admin")]
 [Route("admin/hotels")]
-public partial class HotelsController(ILogger<HotelsController> logger, 
-	IHotelsRepoService hotelsRepoService,
-	IConfigRepository configRepository,
+public partial class HotelsController(ILogger<HotelsController> logger,
+	IHotelRepository hotelRepository,
+	IDiscountRepository discountRepository,
+	IExtraRepository extraRepository,
+	IRatePlanRepository ratePlanRepository,
+	IRoomTypeRepository roomTypeRepository,
+	ISpecialsRepository specialsRepository,
+	ITestModelRepository testModelRepository,
 	IUserService userService) : Controller
 {
 	
@@ -42,13 +47,13 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 		{
 			await Task.Delay(0);
 
-			var hotels = await hotelsRepoService.GetHotelsAsync();
+			var hotels = await hotelRepository.GetData();
 
 			return View(hotels);
 		}
 		catch (NullConfigException ex)
 		{
-			await configRepository.SaveMissingConfigAsync(ConstHotel.Cache.Hotel, new List<Hotel>());
+			//await hotelRepository.SaveMissingConfigAsync(ConstHotel.Cache.Hotel, new List<Hotel>());
 
 
 			return View(new List<Hotel>());
@@ -101,7 +106,7 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 
 			}
 
-			var hotelList = await hotelsRepoService.GetHotelsAsync();
+			var hotelList = await hotelRepository.GetData();
 			var h = hotelList.FirstOrDefault(x => x.HotelCode == hotel.HotelCode);
 
 			if (h != null)
@@ -120,7 +125,9 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 			var newHotel = hotel.Adapt<Hotel>();
 
 			hotelList.Add(newHotel);
-			await hotelsRepoService.SaveHotelsAsync(hotelList);
+
+			await hotelRepository.Save(hotelList);
+
 			return RedirectToAction(nameof(HotelAdd), new { IsSuccess = true, HotelCode = hotel.HotelCode });
 
 
@@ -145,7 +152,7 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 			ViewBag.Code = string.Empty;
 			ViewBag.HotelCode = hotelCode;
 
-			var hotels = await hotelsRepoService.GetHotelsAsync();
+			var hotels = await hotelRepository.GetData();
 			var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
 			return View(hotel);
 		}
@@ -177,7 +184,7 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 
 			}
 
-			var hotelList = await hotelsRepoService.GetHotelsAsync();
+			var hotelList = await hotelRepository.GetData();
 			var index = hotelList.FindIndex(x => x.HotelCode == hotel.HotelCode);
 
 			if (index < 0)
@@ -198,7 +205,7 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 			updatedHotel.StayDates = hotelList[index].StayDates;
 			hotelList[index] = updatedHotel;
 
-			await hotelsRepoService.SaveHotelsAsync(hotelList);
+			await hotelRepository.Save(hotelList);
 
 			return RedirectToAction(nameof(HotelEdit), new { IsSuccess = true, HotelCode = hotel.HotelCode });
 
@@ -260,7 +267,7 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 		try
 		{
 
-			var srcItems = await hotelsRepoService.GetHotelsAsync();
+			var srcItems = await hotelRepository.GetData();
 
 			var currentIndex = srcItems.FindIndex(item => item.HotelCode.EqualsAnyCase(input.Code));
 			var swapIndex = input.Direction == 0 ? currentIndex - 1 : currentIndex + 1;
@@ -268,7 +275,7 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 			var swapItem = srcItems[swapIndex];
 			srcItems[swapIndex] = currentItem;
 			srcItems[currentIndex] = swapItem;
-			await hotelsRepoService.SaveHotelsAsync(srcItems);
+			await hotelRepository.Save(srcItems);
 
 			return PartialView("Hotels/_HotelsTable", srcItems);
 

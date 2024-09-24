@@ -16,7 +16,7 @@ public partial interface IConfigRepository
 	/// <param name="archiveCode"></param>
 	/// <param name="userId"></param>
 	/// <returns></returns>
-	Task<bool> SaveConfigArchiveAsync(string configType, string archiveCode, string userId);
+	Task<bool> ArchiveConfigAsync(string configType, string archiveCode, string userId);
 
 	Task RemoveConfigArchiveAsync(string configType, string archiveCode);
 

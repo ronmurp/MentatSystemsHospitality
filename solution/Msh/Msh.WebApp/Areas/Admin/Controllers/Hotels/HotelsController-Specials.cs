@@ -2,6 +2,7 @@
 using Msh.Common.Exceptions;
 using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
+using Msh.HotelCache.Models.Hotels;
 using Msh.HotelCache.Models.RoomTypes;
 using Msh.HotelCache.Models.Specials;
 using Msh.WebApp.Areas.Admin.Models;
@@ -24,7 +25,8 @@ public partial class HotelsController
 		{
 			await Task.Delay(0);
 
-			vm.Hotels = await hotelsRepoService.GetHotelsAsync();
+			vm.Hotels = await hotelRepository.GetData();
+
 			var hotel = string.IsNullOrEmpty(hotelCode)
 				? vm.Hotels.FirstOrDefault()
 				: vm.Hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
@@ -32,7 +34,7 @@ public partial class HotelsController
 			vm.HotelCode = hotel != null ? hotel.HotelCode : string.Empty;
 			vm.HotelName = hotel != null ? hotel.Name : string.Empty;
 
-			var items = (await hotelsRepoService.GetSpecialsAsync(vm.HotelCode)) ?? [];
+			var items = (await specialsRepository.GetData(vm.HotelCode)) ?? [];
 
 			vm.Specials = items;
 
@@ -40,10 +42,10 @@ public partial class HotelsController
 		}
 		catch (NullConfigException ex)
 		{
-			if (!string.IsNullOrEmpty(vm.HotelCode))
-			{
-				await configRepository.SaveMissingConfigAsync(ConstHotel.Cache.Extras, vm.HotelCode, new List<RoomType>());
-			}
+			//if (!string.IsNullOrEmpty(vm.HotelCode))
+			//{
+			//	await specialsRepository.SaveMissingConfigAsync($"{ConstHotel.Cache.RoomTypes}-{vm.HotelCode}", new List<RoomType>());
+			//}
 
 			vm.ErrorMessage = $"No extras for hotel {vm.HotelCode}";
 
@@ -83,7 +85,7 @@ public partial class HotelsController
 
 		if (ModelState.IsValid)
 		{
-			var items = await hotelsRepoService.GetSpecialsAsync(hotelCode);
+			var items = await specialsRepository.GetData(hotelCode);
 
 			if (items.All(tm => tm.Code != special.Code))
 			{
@@ -91,7 +93,7 @@ public partial class HotelsController
 				special.Notes = string.IsNullOrEmpty(special.Notes) ? string.Empty : special.Notes;
 
 				items.Add(special);
-				await hotelsRepoService.SaveSpecialsAsync(items, hotelCode);
+				await specialsRepository.Save(items, hotelCode);
 				return RedirectToAction(nameof(SpecialEdit), new { IsSuccess = true, HotelCode = hotelCode, Code = special.Code });
 			}
 			else
@@ -128,7 +130,7 @@ public partial class HotelsController
 		ViewBag.Hotels = await GetHotels();
 		ViewBag.HotelCode = hotelCode;
 
-		var specials = await hotelsRepoService.GetSpecialsAsync(hotelCode);
+		var specials = await specialsRepository.GetData(hotelCode);
 		var special = specials.FirstOrDefault(m => m.Code == code);
 		if (special != null)
 		{
@@ -147,7 +149,7 @@ public partial class HotelsController
 
 		if (ModelState.IsValid)
 		{
-			var items = await hotelsRepoService.GetSpecialsAsync(hotelCode);
+			var items = await specialsRepository.GetData(hotelCode);
 			var index = items.FindIndex(m => m.Code == special.Code);
 			if (index >= 0)
 			{
@@ -159,7 +161,7 @@ public partial class HotelsController
 				special.RatePlanCodes = items[index].RatePlanCodes;
 
 				items[index] = special;
-				await hotelsRepoService.SaveSpecialsAsync(items, hotelCode);
+				await specialsRepository.Save(items, hotelCode);
 				return RedirectToAction(nameof(SpecialEdit), new { IsSuccess = true, HotelCode = hotelCode, Code = special.Code });
 			}
 			else
@@ -240,8 +242,8 @@ public partial class HotelsController
 				Code = code
 			};
 
-			var roomTypes = await hotelsRepoService.GetRoomTypesAsync(hotelCode);
-			var specials = await hotelsRepoService.GetSpecialsAsync(hotelCode);
+			var roomTypes = await roomTypeRepository.GetData(hotelCode);
+			var specials = await specialsRepository.GetData(hotelCode);
 			var special = specials.FirstOrDefault(s => s.Code.EqualsAnyCase(code));
 			if (special != null)
 			{
@@ -286,8 +288,8 @@ public partial class HotelsController
 				Code = code
 			};
 
-			var roomTypes = await hotelsRepoService.GetRatePlansAsync(hotelCode);
-			var specials = await hotelsRepoService.GetSpecialsAsync(hotelCode);
+			var roomTypes = await ratePlanRepository.GetData(hotelCode);
+			var specials = await specialsRepository.GetData(hotelCode);
 			var special = specials.FirstOrDefault(s => s.Code.EqualsAnyCase(code));
 			if (special != null)
 			{
@@ -324,20 +326,20 @@ public partial class HotelsController
 		{
 			
 			var hotelCode = input.HotelCode;
-			var hotels = await hotelsRepoService.GetHotelsAsync();
+			var hotels = await hotelRepository.GetData();
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
 			{
 				return GetFail($"Invalid hotel code {hotelCode}");
 			}
 
-			var srcItems = await hotelsRepoService.GetSpecialsAsync(hotelCode);
+			var srcItems = await specialsRepository.GetData(hotelCode);
 			var currentIndex = srcItems.FindIndex(item => item.Code.EqualsAnyCase(input.Code));
 			var swapIndex = input.Direction == 0 ? currentIndex - 1 : currentIndex + 1;
 			var currentItem = srcItems[currentIndex];
 			var swapItem = srcItems[swapIndex];
 			srcItems[swapIndex] = currentItem;
 			srcItems[currentIndex] = swapItem;
-			await hotelsRepoService.SaveSpecialsAsync(srcItems, hotelCode);
+			await specialsRepository.Save(srcItems, hotelCode);
 
 			var table = new SpecialsListVm
 			{

@@ -15,35 +15,38 @@ public partial interface IConfigRepository
     Task<Config?> GetConfigAsync(string configType);
 
 	Task<T> GetConfigContentAsync<T>(string configType);
-	
-	Task<T> GetConfigContentAsync<T>(string configType, string key);
 
-	Task SaveConfigAsync(Config config);
+	Task<bool> SaveConfigAsync(Config config);
 
 	/// <summary>
 	/// Save the current type = must exist. NullConfigException = thrown if not.
 	/// </summary>
-	Task SaveConfigAsync<T>(string configType, T value);
+	Task<bool> SaveConfigAsync<T>(string configType, T value);
+
+	Task<bool> SaveMissingConfigAsync<T>(string configType, T defaultObject);
 	
-	Task SaveConfigAsync<T>(string configType, string key, T value);
-
-
-	Task SaveMissingConfigAsync<T>(string configType, T defaultObject);
-	
-
-	Task SaveMissingConfigAsync<T>(string configType, string key, T defaultObject);
 
 	/// <summary>
 	/// Used by Admin to create a new config
 	/// </summary>
 	/// <param name="config"></param>
-	Task AddConfigAsync(Config config);
+	Task<bool> AddConfigAsync(Config config);
 	
 
 	/// <summary>
 	/// Should be used only in admin and tests
 	/// </summary>
-	Task RemoveConfigAsync(string configType);
-	
+	Task<bool> RemoveConfigAsync(string configType);
+
+	/// <summary>
+	/// return a constructed configType based on configType + hotelCode
+	/// </summary>
+	/// <param name="configType"></param>
+	/// <param name="hotelCode"></param>
+	/// <returns></returns>
+	string HotelType(string configType, string hotelCode);
+
+	string ArchiveType(string configType, string archiveCode);
+
 }
 

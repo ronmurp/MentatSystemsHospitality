@@ -2,6 +2,7 @@
 using Msh.Common.Exceptions;
 using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
+using Msh.HotelCache.Models.Hotels;
 using Msh.HotelCache.Models.RoomTypes;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
@@ -23,7 +24,8 @@ public partial class HotelsController
 		{
 			await Task.Delay(0);
 
-			vm.Hotels = await hotelsRepoService.GetHotelsAsync();
+			vm.Hotels = await hotelRepository.GetData();
+
 			var hotel = string.IsNullOrEmpty(hotelCode)
 				? vm.Hotels.FirstOrDefault()
 				: vm.Hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
@@ -31,7 +33,7 @@ public partial class HotelsController
 			vm.HotelCode = hotel != null ? hotel.HotelCode : string.Empty;
 			vm.HotelName = hotel != null ? hotel.Name : string.Empty;
 
-			var roomTypes = (await hotelsRepoService.GetRoomTypesAsync(vm.HotelCode)) ?? [];
+			var roomTypes = (await roomTypeRepository.GetData(vm.HotelCode)) ?? [];
 
 			vm.RoomTypes = roomTypes;
 
@@ -39,10 +41,10 @@ public partial class HotelsController
 		}
 		catch (NullConfigException ex)
 		{
-			if (!string.IsNullOrEmpty(vm.HotelCode))
-			{
-				await configRepository.SaveMissingConfigAsync(ConstHotel.Cache.RoomTypes, vm.HotelCode, new List<RoomType>());
-			}
+			//if (!string.IsNullOrEmpty(vm.HotelCode))
+			//{
+			//	await roomTypeRepository.SaveMissingConfigAsync($"{ConstHotel.Cache.RoomTypes}-{vm.HotelCode}", new List<RoomType>());
+			//}
 
 			vm.ErrorMessage = $"No room types for hotel {vm.HotelCode}";
 
@@ -81,7 +83,7 @@ public partial class HotelsController
 
 		if (ModelState.IsValid)
 		{
-			var roomTypes = await hotelsRepoService.GetRoomTypesAsync(hotelCode);
+			var roomTypes = await roomTypeRepository.GetData(hotelCode);
 
 			if (roomTypes.All(tm => tm.Code != roomType.Code))
 			{
@@ -89,7 +91,7 @@ public partial class HotelsController
 				//roomType.Notes = string.IsNullOrEmpty(roomType.Notes) ? string.Empty : roomType.Notes;
 
 				roomTypes.Add(roomType);
-				await hotelsRepoService.SaveRoomTypesAsync(roomTypes, hotelCode);
+				await roomTypeRepository.Save(roomTypes, hotelCode);
 				return RedirectToAction(nameof(RoomTypeAdd), new { IsSuccess = true, HotelCode = hotelCode, Code = roomType.Code });
 			}
 			else
@@ -126,7 +128,7 @@ public partial class HotelsController
 		ViewBag.Hotels = await GetHotels();
 		ViewBag.HotelCode = hotelCode;
 
-		var roomTypes = await hotelsRepoService.GetRoomTypesAsync(hotelCode);
+		var roomTypes = await roomTypeRepository.GetData(hotelCode);
 		var roomType = roomTypes.FirstOrDefault(m => m.Code == code);
 		if (roomType != null)
 		{
@@ -145,7 +147,7 @@ public partial class HotelsController
 
 		if (ModelState.IsValid)
 		{
-			var roomTypes = await hotelsRepoService.GetRoomTypesAsync(hotelCode);
+			var roomTypes = await roomTypeRepository.GetData(hotelCode);
 			var index = roomTypes.FindIndex(m => m.Code == roomType.Code);
 			if (index >= 0)
 			{
@@ -153,7 +155,7 @@ public partial class HotelsController
 				// roomType.Notes = string.IsNullOrEmpty(roomType.Notes) ? string.Empty : roomType.Notes;
 
 				roomTypes[index] = roomType;
-				await hotelsRepoService.SaveRoomTypesAsync(roomTypes, hotelCode);
+				await roomTypeRepository.Save(roomTypes, hotelCode);
 				return RedirectToAction(nameof(RoomTypeEdit), new { IsSuccess = true, HotelCode = hotelCode, Code = roomType.Code });
 			}
 			else
@@ -186,13 +188,13 @@ public partial class HotelsController
 		{
 
 			var hotelCode = input.HotelCode;
-			var hotels = await hotelsRepoService.GetHotelsAsync();
+			var hotels = await hotelRepository.GetData();
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
 			{
 				return GetFail($"Invalid hotel code {hotelCode}");
 			}
 
-			var srcItems = await hotelsRepoService.GetRoomTypesAsync(hotelCode);
+			var srcItems = await roomTypeRepository.GetData(hotelCode);
 
 			var currentIndex = srcItems.FindIndex(item => item.Code.EqualsAnyCase(input.Code));
 			var swapIndex = input.Direction == 0 ? currentIndex - 1 : currentIndex + 1;
@@ -200,7 +202,7 @@ public partial class HotelsController
 			var swapItem = srcItems[swapIndex];
 			srcItems[swapIndex] = currentItem;
 			srcItems[currentIndex] = swapItem;
-			await hotelsRepoService.SaveRoomTypesAsync(srcItems, hotelCode);
+			await roomTypeRepository.Save(srcItems, hotelCode);
 
 			var table = new RoomTypeListVm()
 			{

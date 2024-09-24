@@ -13,7 +13,6 @@ public partial class ConfigRepository
 {
 	public async Task<List<ConfigArchiveBase>?> GetConfigArchiveListAsync(string configType)
 	{
-		
 		var list = configDbContext.ConfigsArchive.Where(a => a.ConfigType.StartsWith($"{configType}="));
 
 			var list2 = await  list
@@ -54,7 +53,7 @@ public partial class ConfigRepository
 		return obj;
 	}
 
-	public async Task<bool> SaveConfigArchiveAsync(string configType, string archiveCode, string userId)
+	public async Task<bool> ArchiveConfigAsync(string configType, string archiveCode, string userId)
 	{
 		var archiveType = $"{configType}={archiveCode}";
 
@@ -115,5 +114,5 @@ public partial class ConfigRepository
 	private async Task<ConfigArchive?> GetConfigArchiveAsync(string configType) =>
 		await configDbContext.ConfigsArchive.FirstOrDefaultAsync(a => a.ConfigType == configType);
 
-	private string ArchiveType(string configType, string archiveCode) => $"{configType}={archiveCode}";
+	public string ArchiveType(string configType, string archiveCode) => $"{configType}={archiveCode}";
 }

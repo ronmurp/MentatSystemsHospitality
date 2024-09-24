@@ -41,31 +41,21 @@ public partial class ConfigRepository(ConfigDbContext configDbContext) : IConfig
 
 		return obj;
 	}
-	
-
-	/// <summary>
-	/// Get a config record by ConfigType and key
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="configType"></param>
-	/// <param name="key">An extra key, where config is broken down by key - e.g. room types for each hotel</param>
-	/// <returns></returns>
-	public async Task<T> GetConfigContentAsync<T>(string configType, string key) => 
-		await GetConfigContentAsync<T>($"{configType}-{key}");
 
 
 	/// <summary>
 	/// Used by Admin to save the configuration, including Notes
 	/// </summary>
 	/// <param name="config"></param>
-	public async Task SaveConfigAsync(Config config)
+	public async Task<bool> SaveConfigAsync(Config config)
 	{
 		configDbContext.Configs.Update(config);
 		await configDbContext.SaveChangesAsync();
+		return true;
 	}
 
 
-	public async Task SaveConfigAsync<T>(string configType, T value)
+	public async Task<bool> SaveConfigAsync<T>(string configType, T value)
 	{
 		var json = JsonSerializer.Serialize(value);
 		var config = await GetConfigAsync(configType);
@@ -80,24 +70,10 @@ public partial class ConfigRepository(ConfigDbContext configDbContext) : IConfig
 			await SaveConfigAsync(config);
 		}
 
+		return true;
 	}
-
-
-	/// <summary>
-	/// Save the current type = must exist. NullConfigException = thrown if not.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="configType"></param>
-	/// <param name="key"></param>
-	/// <param name="value"></param>
-	/// <exception cref="NullConfigException"></exception>
-	public async Task SaveConfigAsync<T>(string configType, string key, T value)
-	{
-		await SaveConfigAsync<T>($"{configType}-{key}", value);
-	}
-
 	
-	public async Task SaveMissingConfigAsync<T>(string configType, T defaultObject)
+	public async Task<bool> SaveMissingConfigAsync<T>(string configType, T defaultObject)
 	{
 		var config = await GetConfigAsync(configType);
 		if (config == null)
@@ -110,22 +86,20 @@ public partial class ConfigRepository(ConfigDbContext configDbContext) : IConfig
 			};
 			await AddConfigAsync(config);
 		}
-	}
 
-	
-	public async Task SaveMissingConfigAsync<T>(string configType, string key, T defaultObject)
-	{
-		await SaveMissingConfigAsync<T>($"{configType}-{key}", defaultObject);
+		return true;
 	}
 
     /// <summary>
     /// Used by Admin to create a new config
     /// </summary>
     /// <param name="config"></param>
-	public async Task AddConfigAsync(Config config)
+	public async Task<bool> AddConfigAsync(Config config)
     {
 		configDbContext.Configs.Add(config);
 		await configDbContext.SaveChangesAsync();
+
+		return true;
     }
 
     
@@ -134,7 +108,7 @@ public partial class ConfigRepository(ConfigDbContext configDbContext) : IConfig
     /// </summary>
     /// <param name="configType"></param>
     /// <exception cref="NullConfigException"></exception>
-	public async Task RemoveConfigAsync(string configType)
+	public async Task<bool> RemoveConfigAsync(string configType)
     {
 		var config = configDbContext.Configs.FirstOrDefault(c => c.ConfigType == configType);
 		if (config == null)
@@ -144,7 +118,16 @@ public partial class ConfigRepository(ConfigDbContext configDbContext) : IConfig
 
 		configDbContext.Configs.Remove(config);
 		await configDbContext.SaveChangesAsync();
-	}
 
-   
+		return true;
+    }
+
+	/// <summary>
+	/// return a constructed configType based on configType + hotelCode
+	/// </summary>
+	/// <param name="configType"></param>
+	/// <param name="hotelCode"></param>
+	/// <returns></returns>
+	public string HotelType(string configType, string hotelCode) => $"{configType}-{hotelCode}";
+
 }

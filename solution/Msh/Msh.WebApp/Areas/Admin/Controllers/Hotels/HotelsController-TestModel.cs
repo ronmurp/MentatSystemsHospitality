@@ -14,13 +14,13 @@ public partial class HotelsController
 	{
 		try
 		{
-			var hotels = await hotelsRepoService.GetTestModelsAsync();
+			var hotels = await testModelRepository.GetData();
 
 			return View(hotels);
 		}
 		catch (NullConfigException ex)
 		{
-			await configRepository.SaveMissingConfigAsync(ConstHotel.Cache.Hotel, new List<TestModel>());
+			//await specialsRepository.SaveMissingConfigAsync(ConstHotel.Cache.Hotel, new List<TestModel>());
 
 			return View(new List<TestModel>());
 		}
@@ -57,7 +57,7 @@ public partial class HotelsController
 
 		if (ModelState.IsValid)
 		{
-			var testModels = await hotelsRepoService.GetTestModelsAsync();
+			var testModels = await testModelRepository.GetData();
 
 			if (testModels.All(tm => tm.Code != testModel.Code))
 			{
@@ -65,7 +65,7 @@ public partial class HotelsController
 				testModel.Notes = string.IsNullOrEmpty(testModel.Notes) ? string.Empty : testModel.Notes;
 
 				testModels.Add(testModel);
-				await hotelsRepoService.SaveTestModelsAsync(testModels);
+				await testModelRepository.Save(testModels);
 				return RedirectToAction(nameof(TestModelAdd), new { IsSuccess = true, Code = testModel.Code });
 			}
 			else
@@ -101,7 +101,7 @@ public partial class HotelsController
 		ViewBag.Languages = GetLanguages();
 		ViewBag.Hotels = await GetHotels();
 
-		var testModels = await hotelsRepoService.GetTestModelsAsync();
+		var testModels = await testModelRepository.GetData();
 		var testModel = testModels.FirstOrDefault(m => m.Code == code);
 		if (testModel != null)
 		{
@@ -121,7 +121,7 @@ public partial class HotelsController
 
 		if (ModelState.IsValid)
 		{
-			var testModels = await hotelsRepoService.GetTestModelsAsync();
+			var testModels = await testModelRepository.GetData();
 			var index = testModels.FindIndex(m => m.Code == testModel.Code);
 			if (index >= 0)
 			{
@@ -129,7 +129,7 @@ public partial class HotelsController
 				testModel.Notes = string.IsNullOrEmpty(testModel.Notes) ? string.Empty : testModel.Notes;
 
 				testModels[index] = testModel;
-				await hotelsRepoService.SaveTestModelsAsync(testModels);
+				await testModelRepository.Save(testModels);
 				return RedirectToAction(nameof(TestModelEdit), new { IsSuccess = true, Code = testModel.Code });
 				
 			}
@@ -162,12 +162,12 @@ public partial class HotelsController
 	{
 		try
 		{
-			var testModels = await hotelsRepoService.GetTestModelsAsync();
+			var testModels = await testModelRepository.GetData();
 			if (testModels.Any(m => m.Code == code))
 			{
 				var tm = testModels.First(m => m.Code == code);
 				testModels.Remove(tm);
-				await hotelsRepoService.SaveTestModelsAsync(testModels);
+				await testModelRepository.Save(testModels);
 
 				return Ok(new ObjectVm());
 			}
@@ -199,7 +199,7 @@ public partial class HotelsController
 
 	private async Task<List<SelectListItem>> GetHotels()
 	{
-		var hotels = await hotelsRepoService.GetHotelsAsync();
+		var hotels = await hotelRepository.GetData();
 
 		var list = new List<SelectListItem>();
 

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Msh.Common.ExtensionMethods;
 using Msh.Common.Models.ViewModels;
+using Msh.HotelCache.Models.Hotels;
+using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.RatePlans;
 using Msh.WebApp.Areas.Admin.Models;
 
@@ -22,7 +24,7 @@ public partial class HotelApiController
 				return GetFail("At least one code must change");
 			}
 
-			var ratePlans = await hotelsRepoService.GetRatePlansAsync(input.HotelCode);
+			var ratePlans = await ratePlanRepository.GetData(input.HotelCode);
 			var ratePlan = ratePlans.FirstOrDefault(h => h.RatePlanCode == input.Code);
 			if (ratePlan != null)
 			{
@@ -35,14 +37,14 @@ public partial class HotelApiController
 					return GetFail("The hotel does not exist.");
 				}
 
-				var newRatePlans = await hotelsRepoService.GetRatePlansAsync(input.NewHotelCode);
+				var newRatePlans = await ratePlanRepository.GetData(input.NewHotelCode);
 				if (newRatePlans.Any(c => c.RatePlanCode.EqualsAnyCase(input.NewCode)))
 				{
 					return GetFail("The code already exists.");
 				}
 
 				newRatePlans.Add(newRatePlan);
-				await hotelsRepoService.SaveRatePlansAsync(newRatePlans, input.NewHotelCode);
+				await ratePlanRepository.Save(newRatePlans, input.NewHotelCode);
 			}
 
 			return Ok(new ObjectVm());
@@ -59,12 +61,12 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var ratePlans = await hotelsRepoService.GetRatePlansAsync(input.HotelCode);
+			var ratePlans = await ratePlanRepository.GetData(input.HotelCode);
 			var ratePlan = ratePlans.FirstOrDefault(h => h.RatePlanCode == input.Code);
 			if (ratePlan != null)
 			{
 				ratePlans.Remove(ratePlan);
-				await hotelsRepoService.SaveRatePlansAsync(ratePlans, input.HotelCode);
+				await ratePlanRepository.Save(ratePlans, input.HotelCode);
 			}
 
 			return Ok(new ObjectVm());
@@ -87,7 +89,8 @@ public partial class HotelApiController
 				return GetFail("At least one code must change");
 			}
 
-			var hotels = await hotelsRepoService.GetHotelsAsync();
+			var hotels = await hotelRepository.GetData();
+
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
 			{
 				return GetFail($"Invalid source hotel code {input.HotelCode}");
@@ -100,15 +103,15 @@ public partial class HotelApiController
 			var missingList = new List<string>();
 			var newList = new List<RoomRatePlan>();
 
-			var srcExtras = await hotelsRepoService.GetRatePlansAsync(input.HotelCode);
-			var dstExtras = await hotelsRepoService.GetRatePlansAsync(input.NewHotelCode);
+			var srcItems = await ratePlanRepository.GetData(input.HotelCode);
+			var dstItems = await ratePlanRepository.GetData(input.NewHotelCode);
 
 			foreach (var code in input.CodeList)
 			{
-				var extra = srcExtras.FirstOrDefault(h => h.RatePlanCode == code);
+				var extra = srcItems.FirstOrDefault(h => h.RatePlanCode == code);
 				if (extra != null)
 				{
-					if (dstExtras.Any(e => e.RatePlanCode == extra.RatePlanCode))
+					if (dstItems.Any(e => e.RatePlanCode == extra.RatePlanCode))
 					{
 						// Already exists
 						missingList.Add(extra.RatePlanCode);
@@ -118,9 +121,9 @@ public partial class HotelApiController
 				}
 			}
 
-			dstExtras.AddRange(newList);
+			dstItems.AddRange(newList);
 
-			await hotelsRepoService.SaveRatePlansAsync(dstExtras, input.NewHotelCode);
+			await ratePlanRepository.Save(dstItems, input.NewHotelCode);
 
 			if (missingList.Count > 0)
 			{
@@ -144,13 +147,13 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var hotels = await hotelsRepoService.GetHotelsAsync();
+			var hotels = await hotelRepository.GetData();
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
 			{
 				return GetFail($"Invalid source hotel code {input.HotelCode}");
 			}
 
-			var items = await hotelsRepoService.GetRatePlansAsync(input.HotelCode);
+			var items = await ratePlanRepository.GetData(input.HotelCode);
 
 			for (var i = items.Count - 1; i >= 0; i--)
 			{
@@ -161,7 +164,7 @@ public partial class HotelApiController
 				}
 			}
 
-			await hotelsRepoService.SaveRatePlansAsync(items, input.HotelCode);
+			await ratePlanRepository.Save(items, input.HotelCode);
 
 
 
@@ -181,15 +184,15 @@ public partial class HotelApiController
 		try
 		{
 			var hotelCode = input.HotelCode;
-			var hotels = await hotelsRepoService.GetHotelsAsync();
+			var hotels = await hotelRepository.GetData();
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
 			{
 				return GetFail($"Invalid hotel code {hotelCode}");
 			}
 
-			var srcExtras = await hotelsRepoService.GetRatePlansAsync(hotelCode);
+			var srcExtras = await ratePlanRepository.GetData(hotelCode);
 
-			await hotelsRepoService.SaveRatePlansAsync(srcExtras.OrderBy(e => e.RatePlanCode)
+			await ratePlanRepository.Save(srcExtras.OrderBy(e => e.RatePlanCode)
 				.ToList(), hotelCode);
 
 			return Ok(new ObjectVm());
