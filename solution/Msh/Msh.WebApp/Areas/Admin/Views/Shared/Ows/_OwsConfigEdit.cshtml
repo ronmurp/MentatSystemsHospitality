@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.WebApp.Areas.Admin.Models
 @using Msh.WebApp.Models.Admin
 @using Msh.WebApp.TagHelpers
 @model Msh.Opera.Ows.Models.OwsConfig;
@@ -90,12 +91,22 @@
 				<span asp-validation-for="RetryCount" class="text-danger"></span>
 			</div>
 
+			@{
+				var pallModel = new PublishArchiveLoadLockVm
+				{
+					OnclickPublish = "window.mshMethods.publishOwsConfig()",
+					OnclickArchive = "window.mshMethods.archiveOwsConfig()",
+					OnclickLoad = "window.mshMethods.loadOwsConfig()",
+					OnclickLock = "window.mshMethods.lockOwsConfig()",
+					ReturnController = "Ows",
+					ReturnAction = "Index",
 
+					IncludeSave = true
+				};
+			}
 
-			<div class="input-group sticky-bottom">
-				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
-				<a asp-controller="Ows" asp-action="Index" class="btn btn-outline-secondary">Return to dashboard</a>
-			</div>
+			@await Html.PartialAsync("_PublishArchiveLoadLock", pallModel)
+
 
 		</form>
 

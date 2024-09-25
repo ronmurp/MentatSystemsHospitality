@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.WebApp.Areas.Admin.Models
 @using Msh.WebApp.Models.Admin
 @using Msh.WebApp.TagHelpers
 @model Msh.Pay.FreedomPay.Models.Configuration.FpConfig;
@@ -311,14 +312,23 @@
 				<input asp-for="ConfigType" class="form-control " />
 				<span asp-validation-for="ConfigType" class="text-danger"></span>
 			</div>
+			
+		@{
+				var pallModel = new PublishArchiveLoadLockVm
+			{
+				OnclickPublish = "window.mshMethods.publishFpConfig()",
+				OnclickArchive = "window.mshMethods.archiveFpConfig()",
+				OnclickLoad = "window.mshMethods.loadFpConfig()",
+				OnclickLock = "window.mshMethods.lockFpConfig()",
+				ReturnController = "Fp",
+				ReturnAction = "Index",
 
+				IncludeSave = true
+			};
+		}
 
+		@await Html.PartialAsync("_PublishArchiveLoadLock", pallModel)
 
-
-			<div class="input-group sticky-bottom">
-				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
-				<a asp-controller="FreedomPay" asp-action="Index" class="btn btn-outline-secondary">Return to list</a>
-			</div>
 		</form>
 
 	</div>

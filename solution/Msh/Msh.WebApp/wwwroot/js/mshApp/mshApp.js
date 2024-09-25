@@ -264,7 +264,8 @@
             var html = '<tr>';
             var i = 0;
             a.forEach((v) => {
-                var x = getClasses(c[i]);
+
+                var x = c ? getClasses(c[i]) : '';
                 html += `<th${x}>${v}</th>`;
                 i++;
             });
@@ -276,7 +277,7 @@
             var html = '<tr>';
             var i = 0;
             a.forEach((v) => {
-                var x = getClasses(c[i]);
+                var x = c ? getClasses(c[i]) : '';
                 html += `<td${x}>${v}</td>`;
                 i++;
             });

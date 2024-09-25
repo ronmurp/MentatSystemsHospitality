@@ -3,7 +3,6 @@ using Msh.Common.Exceptions;
 using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Discounts;
-using Msh.HotelCache.Models.RoomTypes;
 using Msh.WebApp.Models.Admin.ViewModels;
 
 namespace Msh.WebApp.Areas.Admin.Controllers.Hotels;
