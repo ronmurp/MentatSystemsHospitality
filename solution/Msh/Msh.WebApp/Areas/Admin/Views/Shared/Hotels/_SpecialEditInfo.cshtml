@@ -1,17 +1,15 @@
 ﻿@* Info blocks for _SpecialEdit.cshtml *@
 
 
-<div id="page-info" style="display:none;">
-	
-	
-	
+@section InfoItems {
+
 	<div data-info-for="info-code">
 		<span>Special Code</span>
 		<div>
 			<p>
 
 			</p>
-			
+
 		</div>
 	</div>
 
@@ -88,11 +86,4 @@
 		</div>
 	</div>
 
-
-
-	@{
-		await Html.RenderPartialAsync("Admin/_AdminPublish", "Special List");
-	}
-
-</div>
-
+}

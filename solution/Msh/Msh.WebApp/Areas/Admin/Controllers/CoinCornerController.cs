@@ -27,7 +27,7 @@ public class CoinCornerController(
 		{
 			await Task.Delay(0);
 
-			var config = coinCornerRepoService.GetConfig();
+			var config = await coinCornerRepoService.GetConfig();
 
 			return View(config);
 		}
@@ -48,7 +48,7 @@ public class CoinCornerController(
 
 		    if (command == "Save")
 		    {
-			    coinCornerRepoService.SaveConfig(config);
+			    await coinCornerRepoService.SaveConfig(config);
 			}
 			else if (command == "Publish")
 			{
@@ -74,7 +74,7 @@ public class CoinCornerController(
 	    {
 		    await Task.Delay(0);
 
-		    var global = coinCornerRepoService.GetGlobal();
+		    var global = await coinCornerRepoService.GetGlobal();
 
 		    return View(global);
 	    }
@@ -95,7 +95,7 @@ public class CoinCornerController(
 
 		    if (command == "Save")
 		    {
-			    coinCornerRepoService.SaveGlobal(global);
+			   await  coinCornerRepoService.SaveGlobal(global);
 		    }
 		    else if (command == "Publish")
 		    {

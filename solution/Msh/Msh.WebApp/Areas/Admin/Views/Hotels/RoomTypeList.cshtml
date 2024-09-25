@@ -1,4 +1,5 @@
 ﻿@using Msh.Admin.Models.Const
+@using Msh.WebApp.Areas.Admin.Models
 @using Msh.WebApp.Models.Admin.ViewModels
 @model Msh.WebApp.Models.Admin.ViewModels.RoomTypeListVm;
 @{
@@ -32,19 +33,23 @@
 
 @await Html.PartialAsync("Hotels/_BulkCopyDelButtons", @Model.HotelCode)
 
+@* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
+@await Html.PartialAsync("_PublishArchiveLoadLock", new PublishArchiveLoadLockVm
+{
+	ReturnUrl = "/Admin/Hotels",
+	ReturnText = ConstReturnText.ReturnToDash,
+})
+
 @await Html.PartialAsync("Admin/_AdminErrorBlock", @Model.ErrorMessage)
 
-<div id="page-info" style="display:none;">
-	
-	
-
+@section InfoItems {
 	<div data-info-for="info-room-types">
 		<span>Room Types</span>
 		<div>
 			@await Html.PartialAsync("Hotels/_ListIconsInfo")
 		</div>
 	</div>
-</div>
+}
 
 @section Scripts{
 	<script src="~/js/mshapp/msh-ApiService.js"></script>

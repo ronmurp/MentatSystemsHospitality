@@ -1,4 +1,7 @@
-﻿@using Msh.Admin.Models.Const
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.Admin.Models.Const
+@using Msh.WebApp.Areas.Admin.Models
+@using Msh.WebApp.TagHelpers
 @{
 	var title = "FP Error Code Bank";
 	ViewData["Title"] = title;
@@ -18,15 +21,16 @@
 	</div>
 </div>
 
-<div class="mt-3" style="display:flex;justify-content:start;">
-	<div class="input-group">
-		<button id="save-bank" class="btn btn-outline-primary" class="mr-3">Save</button>
-		<a asp-contoller="Fp" asp-action="Index"  class="btn btn-outline-secondary">Return to dashboard</a>
-	</div>
+@* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
+@await Html.PartialAsync("_PublishArchiveLoadLock", new PublishArchiveLoadLockVm
+{
+	ReturnUrl = "/Admin/Fp/",
+	ReturnText = ConstReturnText.ReturnToDash,
+	SaveOperation = "#save-bank"
+})
 
-</div>
+@section InfoItems {
 
-<div id="page-info" style="display:none;">
 	<div data-info-for="info-error-codes-bank">
 		<span>FP Error Code Bank</span>
 		<div>
@@ -36,13 +40,11 @@
 			<p>Prohibit date ranges might be used for discounts that are generally available but occasionally are not.</p>
 			<p>Allow date ranges might be used for discounts that are seasonal and available for a short time.</p>
 			<p>If no dates are supplied the discount will be available all the time, though that may also be determined by Opera for some discount types.</p>
-			<p>Editing the date list: <info-icon name="info-date-range-list" /></p>
+			<p>Editing the date list: <info-icon name="info-date-range-list"/></p>
 		</div>
 	</div>
 
-	@await Html.PartialAsync("Admin/_AdminDatesList")
-
-</div>
+}
 
 @section Scripts {
 	<script src="~/js/mshapp/msh-ApiService.js"></script>

@@ -1,19 +1,21 @@
-﻿@model string
+﻿
 
 <div data-info-for="info-publish">
-	<span>Edit/Publish/Archive</span>
+	<span>Save/Publish/Archive/Load</span>
 	<div>
-		<p>This page is used to edit <b>@Model</b> Admin data stored in the database.</p>
+		<p>This page is used to edit Admin data stored in the database.</p>
 		<p>The following copies of data are stored, for each configuration item:</p>
 		<ul>
 			<li>
-				<p><b>Edit - </b>This is the store where all the editing occurs.</p>
+				<p><b>Edit - </b>This is the store where all the editing occurs - the data you see on screen in the Admin pages.</p>
 			</li>
 			<li>
-				<p><b>Published - </b>This is where the customer facing code retrieves configuration information.</p>
+				<p><b>Published - </b>This is where the customer facing code retrieves configuration information. 
+					You don't edit this directly, you 'publish' edit data to the Published store.</p>
 			</li>
 			<li>
-				<p><b>Archive - </b>This is where you can save copies of items.</p>
+				<p><b>Archive - </b>This is where you can save copies of items, to retrieve them later.</p>
+				<p>This might be used to store test/live copies, or archive copies of the published data.</p>
 			</li>
 		</ul>
 		<p>On key pages of the admin back office you have the following buttons.</p>
@@ -22,10 +24,27 @@
 				<p><b>Publish - </b>Commits the current edited copy of data to the published table, which is then used by the customer facing code.</p>
 			</li>
 			<li>
-				<p><b>Load - </b>You can load data into the editing store, make changes, and publish it.</p>
+				<p><b>Archive - </b>Saves the current edit copy into the archive table, from where it can be retrieved later.</p>
+			</li>
+			<li>
+				<p><b>Load - </b>You can load data into the editing store, make changes, and publish it or archive it.</p>
 			</li>
 			
 		</ul>
-		<p>After making changes, click Publish to refresh the cache from the latest database information.</p>
+		<p>After making changes, click Publish to refresh the cache from the latest edited information.
+			The customer facing operations always use configuration data from a memory cache, which in turn is
+			loaded from the Published configuration, not the edit ot archive stores.
+		</p>
+		<p>
+			Directly after publishing, before making more changes, you can save a copy to the archive,
+			so that you have a copy to return to.
+		</p>
+		<p>Publish and Archive operations always lock the record so that it cannot be updated again accidentally.
+			You must unlock the record before publishing or archiving it again.
+		</p>
+		<p>
+			If you want to make changes to the published data, assume the current edit data has been edited incorrectly.
+			Load the current published data, edit that, and publish (and archive) again.
+		</p>
 	</div>
 </div>

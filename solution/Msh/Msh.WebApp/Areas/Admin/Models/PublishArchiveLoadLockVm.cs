@@ -1,22 +1,30 @@
 ﻿namespace Msh.WebApp.Areas.Admin.Models;
 
-public class PublishArchiveLoadLockVm
+/// <summary>
+/// Determines how the 
+/// </summary>
+public class PublishArchiveLoadLockVm : SaveReturnButtonsVm
 {
-	public bool IncludeSave { get; set; }
-	public string OnclickPublish { get; set; } = "window.mshMethods.publishHotels()";
-	public string OnclickArchive { get; set; } = "window.mshMethods.archiveHotels()";
+	
+	public string OnclickPublish { get; set; } = "window.mshMethods.publishData()";
+	public string OnclickArchive { get; set; } = "window.mshMethods.archiveData()";
 
-	public string OnclickLoad { get; set; } = "window.mshMethods.loadHotels()";
+	public string OnclickLoad { get; set; } = "window.mshMethods.loadData()";
 
-	public string OnclickLock { get; set; } = "window.mshMethods.lockHotels()";
+	public string OnclickLock { get; set; } = "window.mshMethods.lockData()";
+}
 
-	public string ReturnController { get; set; } = "Hotels";
+public class SaveReturnButtonsVm
+{/// <summary>
+	/// Determines the save button use:
+	/// - "" - Save button not included - typically for lists
+	/// - "Submit" - Use the form submit action
+	/// - "#xxx" - Use a listener ( $(#xxx).on('click', ...)
+	/// - "window.mshMethods..."
+	/// </summary>
+	public string SaveOperation { get; set; } = string.Empty;
 
-	public string ReturnAction { get; set; } = "Index";
+	public string ReturnUrl { get; set; } = string.Empty;
 
-	public string ReturnText { get; set; } = "Return to list";
-
-	public string SaveController { get; set; } = "Hotels";
-
-	public string SaveAction { get; set; } = "Index";
+	public string ReturnText { get; set; } = ConstReturnText.ReturnToDash;
 }

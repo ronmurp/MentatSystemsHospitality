@@ -76,7 +76,9 @@ body {
     }
 }
 
-
+.info-item {
+    z-index:9999;
+}
 
 
 table {

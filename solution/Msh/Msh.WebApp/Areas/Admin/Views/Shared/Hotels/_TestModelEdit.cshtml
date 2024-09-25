@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.WebApp.Areas.Admin.Models
 @using Msh.WebApp.Models.Admin
 @using Msh.WebApp.TagHelpers
 @model Msh.HotelCache.Models.Hotels.TestModel;
@@ -16,30 +17,33 @@
 @await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
 
 <div class="row">
-	<div class="col-6">
+	<div class="col-12">
 
 		<form asp-action="@formAction" id="main-form">
 
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			
+			<div class="row">
+				<div class="col-md-6 col-12">
 
-			<div class="form-group mb-3">
-				<label asp-for="Code" class="control-label"></label>&nbsp; <info-icon name="info-code" />
-				@await Html.PartialAsync("Hotels/_EditCode", success)
-			</div>
+					<div class="form-group mb-3">
+						<label asp-for="Code" class="control-label"></label>&nbsp; <info-icon name="info-code" />
+						@await Html.PartialAsync("Hotels/_EditCode", success)
+					</div>
 
-			<div class="form-group mb-3">
-				<label asp-for="Name" class="control-label"></label>&nbsp;<info-icon name="info-name"/>
-				<input asp-for="Name" class="form-control"/>
-				<span asp-validation-for="Name" class="text-danger"></span>
-			</div>
+					<div class="form-group mb-3">
+						<label asp-for="Name" class="control-label"></label>&nbsp;<info-icon name="info-name"/>
+						<input asp-for="Name" class="form-control"/>
+						<span asp-validation-for="Name" class="text-danger"></span>
+					</div>
 
-			@* <div class="form-group mb-3">
+					@* <div class="form-group mb-3">
 			<label asp-for="Email" class="control-label"></label>&nbsp;<info-icon name="info-email"/>
 			<input asp-for="Email" class="form-control"/>
 			<span asp-validation-for="Email" class="text-danger"></span>
 			</div> *@
 
-			@* <div class="form-group mb-3">
+					@* <div class="form-group mb-3">
 			<label asp-for="Password" class="control-label"></label>&nbsp;<info-icon name="info-password" />
 			<input asp-for="Password" class="form-control" />
 			<span asp-validation-for="Password" class="text-danger"></span>
@@ -53,7 +57,7 @@
 			<span asp-validation-for="Language" class="text-danger"></span>
 			</div> *@
 
-			@* <div class="form-group mb-3">
+					@* <div class="form-group mb-3">
 			<label asp-for="Hotels" class="control-label"></label>&nbsp;<info-icon name="info-hotels" />
 			<select asp-for="Hotels" class="form-control" asp-items="ViewBag.Hotels" multiple>
 			<option value="">Please select hotels</option>
@@ -61,24 +65,27 @@
 			<span asp-validation-for="Language" class="text-danger"></span>
 			</div> *@
 
-			@* <div class="form-group mb-3">
+					@* <div class="form-group mb-3">
 			<label asp-for="BookingStatus" class="control-label"></label>&nbsp;<info-icon name="info-booking-status" />
 			<select asp-for="BookingStatus" class="form-control" asp-items="Html.GetEnumSelectList<BookingStatus>()" >
 			</select>
 			<span asp-validation-for="Language" class="text-danger"></span>
 			</div> *@
 
-			<div class="form-group mb-3">
-				<label asp-for="Notes" class="control-label"></label>&nbsp;<info-icon name="info-notes"/>
-				<textarea asp-for="Notes" class="form-control"></textarea>
-				<span asp-validation-for="Notes" class="text-danger"></span>
+					<div class="form-group mb-3">
+						<label asp-for="Notes" class="control-label"></label>&nbsp;<info-icon name="info-notes"/>
+						<textarea asp-for="Notes" class="form-control"></textarea>
+						<span asp-validation-for="Notes" class="text-danger"></span>
+					</div>
+				</div>
 			</div>
 			
-			<div class="input-group">
-				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
-				<a asp-controller="Hotels" asp-action="TestModelList" asp-route-code="@Model.Code" class="btn btn-outline-secondary">Return to list</a>
-			</div>
-
+			@await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
+			{
+				ReturnUrl = $"/Admin/Hotels/TestModelList?code={Model.Code}",
+				ReturnText = ConstReturnText.ReturnToDash,
+				SaveOperation = "#save-ows-config-triggers"
+			})
 
 		</form>
 

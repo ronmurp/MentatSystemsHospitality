@@ -17,12 +17,7 @@
 	</div>
 </div>
 
-<div id="page-info" style="display:none;">
-
+@section {
 	{InfoFields}
-
-	@{
-		await Html.RenderPartialAsync("Admin/_AdminPublish", "{PublishName}");
-	}
-
-</div>
+}
+	

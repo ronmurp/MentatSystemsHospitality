@@ -1,6 +1,6 @@
 ﻿@* Info blocks for _RatePlanEditInfo.cshtml *@
 
-<div id="page-info" style="display:none;">
+@section InfoItems {
 
 	<div data-info-for="info-rate-plan-code">
 		<span>Rate Plan Code</span>
@@ -246,7 +246,7 @@
 		<span>Base Rate</span>
 		<div>
 			<p>
-				Where a rate is to be compared (with a strike-out) 
+				Where a rate is to be compared (with a strike-out)
 				with some base rate, this is the code of the base rate.
 			</p>
 		</div>
@@ -259,11 +259,4 @@
 			</p>
 		</div>
 	</div>
-
-
-	@{
-		await Html.RenderPartialAsync("Admin/_AdminPublish", "Rate Plan List");
-	}
-
-</div>
-
+}

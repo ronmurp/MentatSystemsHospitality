@@ -601,7 +601,7 @@
 
             return {
                 outerStyle: options.outerStyle ? `style="${options.outerStyle}"` : '',
-                outerclass: options.outerClass ? options.outerClass : '',
+                outerClass: options.outerClass ? options.outerClass : '',
 
                 innerStyle: options.innerStyle ? `style="${options.innerStyle}""` : '',
                 innerClass: options.innerClass ? options.innerClass : '',
@@ -621,6 +621,7 @@
             $(`#${id}`).remove(); // Remove any previous instance under this id
 
             var o = processOptions(optionsInitial, optionsInput);
+           
 
             var html = '';
             html += `<div id="${id}" class="modal-base-outer ${o.outerClass}" ${o.outerStyle}>`;
@@ -661,6 +662,7 @@
             $('#page-info').children().each(function () {
                 var $currentElement = $(this);
                 var infoIdList = $currentElement.attr('data-info-for');
+                
                 var warn = $currentElement.attr('data-warn') === 'warn';
                 var noIcon = $currentElement.attr('data-info-noicon');
                 var skipIcon = (noIcon !== undefined) && noIcon.toLowerCase() === 'true' ? true : false;
@@ -679,10 +681,11 @@
 
         function showInfo(id) {
             var selector = `[data-info-for="${id}"]`;
+         
             var title = $(selector + ' span').first().text();
             var html = $(selector + ' div').html();
             window.mshPageApp
-                .modalService.showModal(id, title, html);
+                .modalService.showModal(id, title, html, { outerClass: 'info-item'});
 
         }
 

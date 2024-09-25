@@ -1,4 +1,7 @@
-﻿@using Msh.WebApp.Models.Admin
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.WebApp.Areas.Admin.Models
+@using Msh.WebApp.Models.Admin
+@using Msh.WebApp.TagHelpers
 
 @model Msh.Loggers.XmlLogger.LogXmlConfig;
 @{
@@ -10,13 +13,14 @@
 	ViewBag.Success = new SuccessAlert
 	{
 		ModelName = "LogXmlConfig",
-		ReturnPath = "/admin/loggers",
-		ReturnPathName = "Loggers Dashboard",
+		ReturnUrl = "/admin/loggers",
+		ReturnText = "Loggers Dashboard",
 		KeyPropertyLabel = title,
 		KeyPropertyName = "Group",
 		KeyPropertyValue = group,
 		FormAction = "LogXmlConfigEdit"
 	};
+	var success = ViewBag.Success as SuccessAlert;
 }
 
 <div class="text-center">
@@ -25,10 +29,116 @@
 	<p><a asp-area="Admin" asp-controller="Loggers" asp-action="LogXmlConfigEditItems" asp-route-group="@group">Edit Items</a></p>
 </div>
 
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
+
+<div class="row">
+	<div class="col-12">
+
+		<form asp-action="LogXmlConfigEdit" asp-route-group="@group">
+
+			<div class="row">
+				<div class="col-md-6 col-12">
+
+					<div class="form-group mb-3">
+						<label asp-for="Path" class="control-label"></label>&nbsp;
+						<info-icon name="info-path" />
+						<input asp-for="Path" class="form-control " />
+						<span asp-validation-for="Path" class="text-danger"></span>
+					</div>
 
 
+					<div class="form-check form-switch mb-3">
+						<input asp-for="RelativePath" type="checkbox" class="form-check-input " />
+						<label asp-for="RelativePath" class="form-check-label"></label>&nbsp;
+						<info-icon name="info-relative-path" />
+					</div>
 
-@await Html.PartialAsync("Loggers/_LogXmlConfigEdit", @Model)
+					<div class="form-check form-switch mb-3">
+						<input asp-for="EnableSoapTrace" type="checkbox" class="form-check-input " />
+						<label asp-for="EnableSoapTrace" class="form-check-label"></label>&nbsp;
+						<info-icon name="info-enable-soap-trace" />
+					</div>
+
+
+					<div class="form-check form-switch mb-3">
+						<input asp-for="Redact" type="checkbox" class="form-check-input " />
+						<label asp-for="Redact" class="form-check-label"></label>&nbsp;
+						<info-icon name="info-redact" />
+					</div>
+
+					<div class="form-group mb-3">
+						<label asp-for="LogDestination" class="control-label"></label>&nbsp;
+						<info-icon name="info-log-destination" />
+						<select asp-for="LogDestination" class="form-control " asp-items="Html.GetEnumSelectList<Msh.Loggers.XmlLogger.LogDestination>()"></select>
+						<span asp-validation-for="LogDestination" class="text-danger"></span>
+					</div>
+
+				</div> @* - end col - *@
+
+			</div> @* - end row *@
+
+			@* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
+			@await Html.PartialAsync("_PublishArchiveLoadLock", new PublishArchiveLoadLockVm
+			{
+				ReturnUrl = "/Admin/Loggers/",
+				ReturnText = ConstReturnText.ReturnToDash,
+				SaveOperation = "submit"
+			})
+
+		</form>
+
+	</div>
+</div>
+
+@section InfoItems {
+
+	<div data-info-for="info-path">
+		<span>File Path</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-relative-path">
+		<span>Relative Path</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-enable-soap-trace">
+		<span>Enable Soap Trace</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-redact">
+		<span>Redact</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+
+	<div data-info-for="info-log-destination">
+		<span>Log Destination</span>
+		<div>
+			<p>
+				Database - The logs will be recorded in the database.
+			</p>
+			<p>
+				File - The logs will be recorded in the file system.
+			</p>
+		</div>
+	</div>
+}
+
+
 
 @section Scripts {
 	<script src="~/js/mshapp/msh-apiservice.js"></script>

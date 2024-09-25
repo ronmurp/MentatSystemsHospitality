@@ -1,7 +1,6 @@
 ﻿@* Info blocks for _HotelEdit.cshtml *@
 
-<div id="page-info" style="display:none;">
-
+@section InfoItems {
 
 	<div data-info-for="info-chain-code">
 		<span>Chain Code</span>
@@ -122,8 +121,4 @@
 		</div>
 	</div>
 
-	@{
-		await Html.RenderPartialAsync("Admin/_AdminPublish", "Hotel Edit");
-	}
-
-</div>
+}

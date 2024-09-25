@@ -1,7 +1,7 @@
 ﻿@* Info blocks for _RoomTypeEdit.cshtml *@
 
 
-<div id="page-info" style="display:none;">
+@section InfoItems {
 
 	<div data-info-for="info-room-type-code">
 		<span>Room Type Code</span>
@@ -179,11 +179,4 @@
 			</p>
 		</div>
 	</div>
-
-
-	@{
-		await Html.RenderPartialAsync("Admin/_AdminPublish", "Room Type List");
-	}
-
-</div>
-
+}

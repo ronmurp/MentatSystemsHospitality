@@ -103,7 +103,7 @@ public class FpConfig() : ConfigBase(ConstFp.FpConfig)
 	/// <summary>
 	/// FreedomPay page HTML script tags.
 	/// </summary>
-	[Display(Name = "Page Scripts Pc")]
+	[Display(Name = "Page Scripts")]
 	[Category("TextArea")]
 	public string? PageScripts { get; set; } = string.Empty;
 

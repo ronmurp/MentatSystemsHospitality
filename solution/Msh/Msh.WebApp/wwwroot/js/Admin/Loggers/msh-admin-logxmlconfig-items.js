@@ -23,10 +23,12 @@
     }
 
     function getTableHtml() {
-        var cell = `<input type="checkbox" id="bulk-check" onchange="mshMethods.bulkChange()" />`
+        var cell = `<input type="checkbox" id="bulk-check" onchange="mshMethods.bulkChange()" />`;
+        var preset = `<a href="javascript:mshMethods.presetItems()" class="btn btn-outline-primary">Preset Items</a>`;
         var html = '<table>';
         html += `<tr>`;
-        html += `<th style="width:220px;">Key</th><th class="text-center">Enabled ${cell}</th>`;
+        html += `<th style="width:220px;">Key ${preset}</th>`;
+        html += `<th class="text-center">Enabled ${cell}</th>`;
         html += `<th>Filename</th><th>Message</th><th class="text-center">Trace</th>`;
         html += `<th class="text-center" style="width:80px;"><a href="javascript:window.mshMethods.addItem()"><i class="fa-solid fa-plus"></i></a></th>`;
         html += `</tr>`;

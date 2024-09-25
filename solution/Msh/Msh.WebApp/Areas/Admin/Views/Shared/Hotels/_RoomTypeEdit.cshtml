@@ -1,4 +1,7 @@
-﻿@using Msh.WebApp.Models.Admin
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.WebApp.Areas.Admin.Models
+@using Msh.WebApp.Models.Admin
+@using Msh.WebApp.TagHelpers
 @model Msh.HotelCache.Models.RoomTypes.RoomType;
 @{
 	var success = ViewBag.Success as SuccessAlert;
@@ -15,149 +18,167 @@
 @await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
 
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-12">
 
 		<form asp-action="@formAction" asp-route-hotelCode="@hotelCode">
 			
-			<div class="form-group mb-3">
-				<label asp-for="Code" class="control-label"></label>&nbsp;
-				<info-icon name="info-room-type-code" />
-				@await Html.PartialAsync("Hotels/_EditCode", success)
-			</div>
+			<div class="row">
+				<div class="col-md-6 col-12">
 
-			<div class="form-check form-switch mb-3">
-				<input asp-for="Enabled" type="checkbox" class="form-check-input " />
-				<label asp-for="Enabled" class="form-check-label"></label>&nbsp;
-				<info-icon name="info-enabled" />
-			</div>
+					<div class="form-group mb-3">
+						<label asp-for="Code" class="control-label"></label>&nbsp;
+						<info-icon name="info-room-type-code" />
+						@await Html.PartialAsync("Hotels/_EditCode", success)
+					</div>
 
-			<div class="form-group mb-3">
-				<label asp-for="GroupCode" class="control-label"></label>&nbsp;
-				<info-icon name="info-group-code" />
-				<input asp-for="GroupCode" class="form-control " />
-				<span asp-validation-for="GroupCode" class="text-danger"></span>
-			</div>
-			<div class="form-group mb-3">
-				<label asp-for="Occupancy" class="control-label"></label>&nbsp;
-				<info-icon name="info-occupation" />
-				<input asp-for="Occupancy" class="form-control " />
-				<span asp-validation-for="Occupancy" class="text-danger"></span>
-			</div>
-			<div class="form-group mb-3">
-				<label asp-for="Name" class="control-label"></label>&nbsp;
-				<info-icon name="info-name" />
-				<input asp-for="Name" class="form-control " />
-				<span asp-validation-for="Name" class="text-danger"></span>
-			</div>
-			<div class="form-group mb-3">
-				<label asp-for="Description" class="control-label"></label>&nbsp;
-				<info-icon name="info-description" />
-				<input asp-for="Description" class="form-control " />
-				<span asp-validation-for="Description" class="text-danger"></span>
-			</div>
-			<div class="form-group mb-3">
-				<label asp-for="HtmlDescription" class="control-label"></label>&nbsp;
-				<info-icon name="info-html-description" />
-				<textarea asp-for="HtmlDescription" class="form-control " ></textarea>
-				<span asp-validation-for="HtmlDescription" class="text-danger"></span>
-			</div>
-			<div class="form-group mb-3">
-				<label asp-for="ImageFile" class="control-label"></label>&nbsp;
-				<info-icon name="info-image-file" />
-				<input asp-for="ImageFile" class="form-control " />
-				<span asp-validation-for="ImageFile" class="text-danger"></span>
-			</div>
-			<div class="form-group mb-3">
-				<label asp-for="RoomCount" class="control-label"></label>&nbsp;
-				<info-icon name="info-room-count" />
-				<input asp-for="RoomCount" class="form-control " />
-				<span asp-validation-for="RoomCount" class="text-danger"></span>
-			</div>
-			<div class="form-group mb-3">
-				<label asp-for="RoomCategory" class="control-label"></label>&nbsp;
-				<info-icon name="info-room-category" />
-				<input asp-for="RoomCategory" class="form-control " />
-				<span asp-validation-for="RoomCategory" class="text-danger"></span>
-			</div>
-			<div class="form-check form-switch mb-3">
-				<input asp-for="RoomBlocked" type="checkbox" class="form-check-input " />
-				<label asp-for="RoomBlocked" class="form-check-label"></label>&nbsp;
-				<info-icon name="info-room-blocked" />
-			</div>
-			<div class="form-check form-switch mb-3">
-				<input asp-for="TwinOption" type="checkbox" class="form-check-input " />
-				<label asp-for="TwinOption" class="form-check-label"></label>&nbsp;
-				<info-icon name="info-twin-option" />
-			</div>
-			<div class="form-group mb-3">
-				<label asp-for="OptionTypeCode" class="control-label"></label>&nbsp;
-				<info-icon name="info-option-type-code" />
-				<input asp-for="OptionTypeCode" class="form-control " />
-				<span asp-validation-for="OptionTypeCode" class="text-danger"></span>
-			</div>
-			<div class="form-group mb-3">
-				<label asp-for="OptionTypeWarning" class="control-label"></label>&nbsp;
-				<info-icon name="info-option-warning" />
-				<input asp-for="OptionTypeWarning" class="form-control " />
-				<span asp-validation-for="OptionTypeWarning" class="text-danger"></span>
-			</div>
-			<div class="form-group mb-3">
-				<label asp-for="ImageGallery" class="control-label"></label>&nbsp;
-				<info-icon name="info-image-gallery" />
-				<input asp-for="ImageGallery" class="form-control " />
-				<span asp-validation-for="ImageGallery" class="text-danger"></span>
-			</div>
-			<div class="form-group mb-3">
-				<label asp-for="GroupName" class="control-label"></label>&nbsp;
-				<info-icon name="info-group-name" />
-				<input asp-for="GroupName" class="form-control " />
-				<span asp-validation-for="GroupName" class="text-danger"></span>
-			</div>
-			<div class="form-group mb-3">
-				<label asp-for="GroupDescription" class="control-label"></label>&nbsp;
-				<info-icon name="info-group-description" />
-				<input asp-for="GroupDescription" class="form-control " />
-				<span asp-validation-for="GroupDescription" class="text-danger"></span>
-			</div>
-			<div class="form-group mb-3">
-				<label asp-for="GroupLongDescription" class="control-label"></label>&nbsp;
-				<info-icon name="info-group-html-description" />
-				<input asp-for="GroupLongDescription" class="form-control " />
-				<span asp-validation-for="GroupLongDescription" class="text-danger"></span>
-			</div>
-			<div class="form-group mb-3">
-				<label asp-for="GroupImageFile" class="control-label"></label>&nbsp;
-				<info-icon name="info-group-image" />
-				<input asp-for="GroupImageFile" class="form-control " />
-				<span asp-validation-for="GroupImageFile" class="text-danger"></span>
-			</div>
-			<div class="form-group mb-3">
-				<label asp-for="GroupImageGallery" class="control-label"></label>&nbsp;
-				<info-icon name="info-group-image-gallery" />
-				<textarea asp-for="GroupImageGallery" class="form-control " ></textarea>
-				<span asp-validation-for="GroupImageGallery" class="text-danger"></span>
-			</div>
-			<div class="form-check form-switch mb-3">
-				<input asp-for="GroupTwinOption" type="checkbox" class="form-check-input " />
-				<label asp-for="GroupTwinOption" class="form-check-label"></label>&nbsp;
-				<info-icon name="info-group-twin-description" />
-			</div>
-			<div class="form-check form-switch mb-3">
-				<input asp-for="NoDogs" type="checkbox" class="form-check-input " />
-				<label asp-for="NoDogs" class="form-check-label"></label>&nbsp;
-				<info-icon name="info-no-dogs" />
-			</div>
-			<div class="form-group mb-3">
-				<label asp-for="NoDogsText" class="control-label"></label>&nbsp;
-				<info-icon name="info-no-dogs-text" />
-				<input asp-for="NoDogsText" class="form-control " />
-				<span asp-validation-for="NoDogsText" class="text-danger"></span>
-			</div>
+					<div class="form-check form-switch mb-3">
+						<input asp-for="Enabled" type="checkbox" class="form-check-input " />
+						<label asp-for="Enabled" class="form-check-label"></label>&nbsp;
+						<info-icon name="info-enabled" />
+					</div>
 
-			<div class="input-group sticky-bottom">
-				<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
-				<a asp-controller="Hotels" asp-action="RoomTypeList" asp-route-hotelCode="@hotelCode" class="btn btn-outline-secondary">Return to list</a>
+					<div class="form-group mb-3">
+						<label asp-for="GroupCode" class="control-label"></label>&nbsp;
+						<info-icon name="info-group-code" />
+						<input asp-for="GroupCode" class="form-control " />
+						<span asp-validation-for="GroupCode" class="text-danger"></span>
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="Occupancy" class="control-label"></label>&nbsp;
+						<info-icon name="info-occupation" />
+						<input asp-for="Occupancy" class="form-control " />
+						<span asp-validation-for="Occupancy" class="text-danger"></span>
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="Name" class="control-label"></label>&nbsp;
+						<info-icon name="info-name" />
+						<input asp-for="Name" class="form-control " />
+						<span asp-validation-for="Name" class="text-danger"></span>
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="Description" class="control-label"></label>&nbsp;
+						<info-icon name="info-description" />
+						<input asp-for="Description" class="form-control " />
+						<span asp-validation-for="Description" class="text-danger"></span>
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="ImageFile" class="control-label"></label>&nbsp;
+						<info-icon name="info-image-file" />
+						<input asp-for="ImageFile" class="form-control " />
+						<span asp-validation-for="ImageFile" class="text-danger"></span>
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="ImageGallery" class="control-label"></label>&nbsp;
+						<info-icon name="info-image-gallery" />
+						<input asp-for="ImageGallery" class="form-control " />
+						<span asp-validation-for="ImageGallery" class="text-danger"></span>
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="RoomCount" class="control-label"></label>&nbsp;
+						<info-icon name="info-room-count" />
+						<input asp-for="RoomCount" class="form-control " />
+						<span asp-validation-for="RoomCount" class="text-danger"></span>
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="RoomCategory" class="control-label"></label>&nbsp;
+						<info-icon name="info-room-category" />
+						<input asp-for="RoomCategory" class="form-control " />
+						<span asp-validation-for="RoomCategory" class="text-danger"></span>
+					</div>
+					<div class="form-check form-switch mb-3">
+						<input asp-for="RoomBlocked" type="checkbox" class="form-check-input " />
+						<label asp-for="RoomBlocked" class="form-check-label"></label>&nbsp;
+						<info-icon name="info-room-blocked" />
+					</div>
+				</div>
+				<div class="col-md-6 col-12" >
+					
+					<div class="form-check form-switch mb-3">
+						<input asp-for="TwinOption" type="checkbox" class="form-check-input " />
+						<label asp-for="TwinOption" class="form-check-label"></label>&nbsp;
+						<info-icon name="info-twin-option" />
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="OptionTypeCode" class="control-label"></label>&nbsp;
+						<info-icon name="info-option-type-code" />
+						<input asp-for="OptionTypeCode" class="form-control " />
+						<span asp-validation-for="OptionTypeCode" class="text-danger"></span>
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="OptionTypeWarning" class="control-label"></label>&nbsp;
+						<info-icon name="info-option-warning" />
+						<input asp-for="OptionTypeWarning" class="form-control " />
+						<span asp-validation-for="OptionTypeWarning" class="text-danger"></span>
+					</div>
+					
+					<div class="form-group mb-3">
+						<label asp-for="GroupName" class="control-label"></label>&nbsp;
+						<info-icon name="info-group-name" />
+						<input asp-for="GroupName" class="form-control " />
+						<span asp-validation-for="GroupName" class="text-danger"></span>
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="GroupDescription" class="control-label"></label>&nbsp;
+						<info-icon name="info-group-description" />
+						<input asp-for="GroupDescription" class="form-control " />
+						<span asp-validation-for="GroupDescription" class="text-danger"></span>
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="GroupLongDescription" class="control-label"></label>&nbsp;
+						<info-icon name="info-group-html-description" />
+						<input asp-for="GroupLongDescription" class="form-control " />
+						<span asp-validation-for="GroupLongDescription" class="text-danger"></span>
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="GroupImageFile" class="control-label"></label>&nbsp;
+						<info-icon name="info-group-image" />
+						<input asp-for="GroupImageFile" class="form-control " />
+						<span asp-validation-for="GroupImageFile" class="text-danger"></span>
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="GroupImageGallery" class="control-label"></label>&nbsp;
+						<info-icon name="info-group-image-gallery" />
+						<textarea asp-for="GroupImageGallery" class="form-control " ></textarea>
+						<span asp-validation-for="GroupImageGallery" class="text-danger"></span>
+					</div>
+					<div class="form-check form-switch mb-3">
+						<input asp-for="GroupTwinOption" type="checkbox" class="form-check-input " />
+						<label asp-for="GroupTwinOption" class="form-check-label"></label>&nbsp;
+						<info-icon name="info-group-twin-description" />
+					</div>
+					<div class="form-check form-switch mb-3">
+						<input asp-for="NoDogs" type="checkbox" class="form-check-input " />
+						<label asp-for="NoDogs" class="form-check-label"></label>&nbsp;
+						<info-icon name="info-no-dogs" />
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="NoDogsText" class="control-label"></label>&nbsp;
+						<info-icon name="info-no-dogs-text" />
+						<input asp-for="NoDogsText" class="form-control " />
+						<span asp-validation-for="NoDogsText" class="text-danger"></span>
+					</div>
+					
+				</div>
 			</div>
+			
+			<div class="row">
+				<div class="col-12">
+					<div class="form-group mb-3">
+						<label asp-for="HtmlDescription" class="control-label"></label>&nbsp;
+						<info-icon name="info-html-description" />
+						<textarea asp-for="HtmlDescription" class="form-control "></textarea>
+						<span asp-validation-for="HtmlDescription" class="text-danger"></span>
+					</div>
+				</div>
+			</div>
+			
+			@await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
+			{
+				ReturnUrl = $"/Admin/Hotels/RoomTypeList?hotelCode={hotelCode}",
+				ReturnText = ConstReturnText.ReturnToDash,
+				SaveOperation = "submit"
+			})
+
 		</form>
 
 	</div>

@@ -1,21 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.WebApp.Areas.Admin.Models
 @using Msh.WebApp.Models.Admin
+@using Msh.WebApp.TagHelpers
 
 @model Msh.Pay.FreedomPay.Models.Configuration.FpConfig;
 @{
 	var title = "FP Config";
 	ViewData["Title"] = title;
-
-	ViewBag.Success = new SuccessAlert
-	{
-		ModelName = "FpConfig",
-		ReturnPath = "/admin/fp",
-		ReturnPathName = "FP Dashboard",
-		KeyPropertyLabel = title,
-		KeyPropertyName = "Code",
-		KeyPropertyValue = "",
-		FormAction = "FpConfigEdit"
-	};
 }
 
 <div class="text-center">
@@ -25,9 +16,669 @@
 </div>
 
 
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", new SuccessAlert
+{
+	ModelName = "FpConfig",
+	ReturnUrl = "/admin/fp",
+	ReturnText = ConstReturnText.ReturnToDash,
+	KeyPropertyLabel = title,
+	KeyPropertyName = "Code",
+	KeyPropertyValue = "",
+	FormAction = "FpConfigEdit"
+})
 
 
-@await Html.PartialAsync("Fp/_FpConfigEdit", @Model)
+<div class="row">
+	<div class="col-12">
+
+		<form asp-action="FpConfigEdit">
+
+			<div class="row">
+				<div class="col-md-6 col-12">
+
+					<div class="form-group mb-3">
+						<label asp-for="Version" class="control-label"></label>&nbsp;
+						<info-icon name="info-version" />
+						<input asp-for="Version" class="form-control " />
+						<span asp-validation-for="Version" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="MerchantId" class="control-label"></label>&nbsp;
+						<info-icon name="info-merchant-id" />
+						<input asp-for="MerchantId" class="form-control " />
+						<span asp-validation-for="MerchantId" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="EsKey" class="control-label"></label>&nbsp;
+						<info-icon name="info-es-key" />
+						<input asp-for="EsKey" class="form-control " />
+						<span asp-validation-for="EsKey" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="StoreId" class="control-label"></label>&nbsp;
+						<info-icon name="info-store-id" />
+						<input asp-for="StoreId" class="form-control " />
+						<span asp-validation-for="StoreId" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="TerminalId" class="control-label"></label>&nbsp;
+						<info-icon name="info-terminal-id" />
+						<input asp-for="TerminalId" class="form-control " />
+						<span asp-validation-for="TerminalId" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="WorkflowType" class="control-label"></label>&nbsp;
+						<info-icon name="info-workflow-type" />
+						<input asp-for="WorkflowType" class="form-control " />
+						<span asp-validation-for="WorkflowType" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-check form-switch mb-3">
+						<input asp-for="HideLegal" type="checkbox" class="form-check-input " />
+						<label asp-for="HideLegal" class="form-check-label"></label>&nbsp;
+						<info-icon name="info-hide-legal" />
+					</div>
+
+
+					<div class="form-check form-switch mb-3">
+						<input asp-for="HideLegalCheckbox" type="checkbox" class="form-check-input " />
+						<label asp-for="HideLegalCheckbox" class="form-check-label"></label>&nbsp;
+						<info-icon name="info-hide-legal-checkbox" />
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="LegalTextTypeCard" class="control-label"></label>&nbsp;
+						<info-icon name="info-legal-text-type-card" />
+						<input asp-for="LegalTextTypeCard" class="form-control " />
+						<span asp-validation-for="LegalTextTypeCard" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="LegalTextTypeThirdParty" class="control-label"></label>&nbsp;
+						<info-icon name="info-legal-text-type-third-party" />
+						<input asp-for="LegalTextTypeThirdParty" class="form-control " />
+						<span asp-validation-for="LegalTextTypeThirdParty" class="text-danger"></span>
+					</div>
+
+					<div class="form-check form-switch mb-3">
+						<input asp-for="ThreeDSecureEnabled" type="checkbox" class="form-check-input " />
+						<label asp-for="ThreeDSecureEnabled" class="form-check-label"></label>&nbsp;
+						<info-icon name="info-three-d-secure-enabled" />
+					</div>
+
+
+					<div class="form-check form-switch mb-3">
+						<input asp-for="SoftDeclineEnabled" type="checkbox" class="form-check-input " />
+						<label asp-for="SoftDeclineEnabled" class="form-check-label"></label>&nbsp;
+						<info-icon name="info-soft-decline-enabled" />
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="CurrencyAlphabeticCode" class="control-label"></label>&nbsp;
+						<info-icon name="info-currency-alphabetic-code" />
+						<input asp-for="CurrencyAlphabeticCode" class="form-control " />
+						<span asp-validation-for="CurrencyAlphabeticCode" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="CurrencyNumericCode" class="control-label"></label>&nbsp;
+						<info-icon name="info-currency-numeric-code" />
+						<input asp-for="CurrencyNumericCode" class="form-control " />
+						<span asp-validation-for="CurrencyNumericCode" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="TokenInformationTokenType" class="control-label"></label>&nbsp;
+						<info-icon name="info-token-information-token-type" />
+						<input asp-for="TokenInformationTokenType" class="form-control " />
+						<span asp-validation-for="TokenInformationTokenType" class="text-danger"></span>
+					</div>
+
+					<div class="form-group mb-3">
+						<label asp-for="ConsumerAuthenticationScript" class="control-label"></label>&nbsp;
+						<info-icon name="info-consumer-authentication-script" />
+						<input asp-for="ConsumerAuthenticationScript" class="form-control " />
+						<span asp-validation-for="ConsumerAuthenticationScript" class="text-danger"></span>
+					</div>
+
+					<div class="form-group mb-3">
+						<label asp-for="FreedomPayUrlInit" class="control-label"></label>&nbsp;
+						<info-icon name="info-freedom-pay-url-init" />
+						<input asp-for="FreedomPayUrlInit" class="form-control " />
+						<span asp-validation-for="FreedomPayUrlInit" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="FreedomPayUrlPayments" class="control-label"></label>&nbsp;
+						<info-icon name="info-freedom-pay-url-payments" />
+						<input asp-for="FreedomPayUrlPayments" class="form-control " />
+						<span asp-validation-for="FreedomPayUrlPayments" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="FreedomPayUrlPaymentAck" class="control-label"></label>&nbsp;
+						<info-icon name="info-freedom-pay-url-payment-ack" />
+						<input asp-for="FreedomPayUrlPaymentAck" class="form-control " />
+						<span asp-validation-for="FreedomPayUrlPaymentAck" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="FreedomPayUrlReverse" class="control-label"></label>&nbsp;
+						<info-icon name="info-freedom-pay-url-reverse" />
+						<input asp-for="FreedomPayUrlReverse" class="form-control " />
+						<span asp-validation-for="FreedomPayUrlReverse" class="text-danger"></span>
+					</div>
+
+				</div> @* End Col *@
+
+
+				<div class="col-md-6 col-12">
+
+					<div class="form-group mb-3">
+						<label asp-for="LogFilePath" class="control-label"></label>&nbsp;
+						<info-icon name="info-log-file-path" />
+						<input asp-for="LogFilePath" class="form-control " />
+						<span asp-validation-for="LogFilePath" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-check form-switch mb-3">
+						<input asp-for="LogEnable" type="checkbox" class="form-check-input " />
+						<label asp-for="LogEnable" class="form-check-label"></label>&nbsp;
+						<info-icon name="info-log-enable" />
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="MaxSubmissionAttempts" class="control-label"></label>&nbsp;
+						<info-icon name="info-max-submission-attempts" />
+						<input asp-for="MaxSubmissionAttempts" class="form-control " />
+						<span asp-validation-for="MaxSubmissionAttempts" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="SellingMiddlewareName" class="control-label"></label>&nbsp;
+						<info-icon name="info-selling-middleware-name" />
+						<input asp-for="SellingMiddlewareName" class="form-control " />
+						<span asp-validation-for="SellingMiddlewareName" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="SellingMiddlewareVersion" class="control-label"></label>&nbsp;
+						<info-icon name="info-selling-middleware-version" />
+						<input asp-for="SellingMiddlewareVersion" class="form-control " />
+						<span asp-validation-for="SellingMiddlewareVersion" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="SellingSystemName" class="control-label"></label>&nbsp;
+						<info-icon name="info-selling-system-name" />
+						<input asp-for="SellingSystemName" class="form-control " />
+						<span asp-validation-for="SellingSystemName" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="SellingSystemVersion" class="control-label"></label>&nbsp;
+						<info-icon name="info-selling-system-version" />
+						<input asp-for="SellingSystemVersion" class="form-control " />
+						<span asp-validation-for="SellingSystemVersion" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="ApiTimeoutSeconds" class="control-label"></label>&nbsp;
+						<info-icon name="info-api-timeout-seconds" />
+						<input asp-for="ApiTimeoutSeconds" class="form-control " />
+						<span asp-validation-for="ApiTimeoutSeconds" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="BadStateTransition" class="control-label"></label>&nbsp;
+						<info-icon name="info-bad-state-transition" />
+						<input asp-for="BadStateTransition" class="form-control " />
+						<span asp-validation-for="BadStateTransition" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="PayPalPayMethPayeePreferred" class="control-label"></label>&nbsp;
+						<info-icon name="info-pay-pal-pay-meth-payee-preferred" />
+						<input asp-for="PayPalPayMethPayeePreferred" class="form-control " />
+						<span asp-validation-for="PayPalPayMethPayeePreferred" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="PayPalShippingPreference" class="control-label"></label>&nbsp;
+						<info-icon name="info-pay-pal-shipping-preference" />
+						<input asp-for="PayPalShippingPreference" class="form-control " />
+						<span asp-validation-for="PayPalShippingPreference" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-check form-switch mb-3">
+						<input asp-for="AvsEnabled" type="checkbox" class="form-check-input " />
+						<label asp-for="AvsEnabled" class="form-check-label"></label>&nbsp;
+						<info-icon name="info-avs-enabled" />
+					</div>
+
+
+					<div class="form-check form-switch mb-3">
+						<input asp-for="CvvEnabled" type="checkbox" class="form-check-input " />
+						<label asp-for="CvvEnabled" class="form-check-label"></label>&nbsp;
+						<info-icon name="info-cvv-enabled" />
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="AvsWhitelist" class="control-label"></label>&nbsp;
+						<info-icon name="info-avs-whitelist" />
+						<input asp-for="AvsWhitelist" class="form-control " />
+						<span asp-validation-for="AvsWhitelist" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="CvvWhitelist" class="control-label"></label>&nbsp;
+						<info-icon name="info-cvv-whitelist" />
+						<input asp-for="CvvWhitelist" class="form-control " />
+						<span asp-validation-for="CvvWhitelist" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="ConfigType" class="control-label"></label>&nbsp;
+						<info-icon name="info-config-type" />
+						<input asp-for="ConfigType" class="form-control " />
+						<span asp-validation-for="ConfigType" class="text-danger"></span>
+					</div>
+
+				</div> @* End Column *@
+
+			</div> @* End Row *@
+
+			<div class="row">
+
+				<div class="col-12">
+
+					<div class="form-group mb-3">
+						<label asp-for="PageScripts" class="control-label"></label>&nbsp;
+						<info-icon name="info-page-scripts"/>
+						<textarea asp-for="PageScripts" class="form-control "></textarea>
+						<span asp-validation-for="PageScripts" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="PageScriptsPc" class="control-label"></label>&nbsp;
+						<info-icon name="info-page-scripts-pc"/>
+						<textarea asp-for="PageScriptsPc" class="form-control "></textarea>
+						<span asp-validation-for="PageScriptsPc" class="text-danger"></span>
+					</div>
+
+				</div> @* End Column *@
+
+			</div> @* End Row *@
+
+			@* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
+			@await Html.PartialAsync("_PublishArchiveLoadLock", new PublishArchiveLoadLockVm
+			{
+				ReturnUrl = "/Admin/Fp/",
+				ReturnText = ConstReturnText.ReturnToDash,
+				SaveOperation = "submit"
+			})
+
+		</form>
+
+	</div>
+</div>
+
+@section InfoItems {
+
+	<div data-info-for="info-version">
+		<span>Version</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-merchant-id">
+		<span>Merchant ID</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-es-key">
+		<span>EsKey</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-store-id">
+		<span>Store ID</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-terminal-id">
+		<span>Terminal ID</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-workflow-type">
+		<span>Workflow Type</span>
+		<div>
+			<p>
+				WorkflowType is optional. Default is "Standard" or 1 (can be string or number).
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-hide-legal">
+		<span>Hide Legal</span>
+		<div>
+			<p>
+				Hides legal text and checkboxes by setting Legal = null
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-hide-legal-checkbox">
+		<span>Hide Legal Checkbox</span>
+		<div>
+			<p>
+				If legal is to be shown, this shows it without checkbox
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-legal-text-type-card">
+		<span>Legal Text Type Card</span>
+		<div>
+			<p>
+				Options:
+			</p>
+			<ul>
+				<li>DynamicWithoutCheckbox</li>
+				<li>DynamicWithCheckbox</li>
+			</ul>
+		</div>
+	</div>
+	<div data-info-for="info-legal-text-type-third-party">
+		<span>Legal Text Type Third Party</span>
+		<div>
+			<p>
+				Options:
+			</p>
+			<ul>
+				<li>DynamicThirdPartyWithoutCheckbox</li>
+				<li>DynamicThirdPartyWithCheckbox</li>
+			</ul>
+		</div>
+	</div>
+	<div data-info-for="info-three-d-secure-enabled">
+		<span>3D Secure Enabled</span>
+		<div>
+			<p>
+				Must be set for 3D Secure data to apply.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-soft-decline-enabled">
+		<span>3D Soft Decline Enabled</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-currency-alphabetic-code">
+		<span>Currency Alphabetic Code</span>
+		<div>
+			<p>
+				GBP
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-currency-numeric-code">
+		<span>Currency Numeric Code</span>
+		<div>
+			<p>
+				826
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-token-information-token-type">
+		<span>Token Information Token Type</span>
+		<div>
+			<p>
+				6
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-consumer-authentication-script">
+		<span>Consumer Authentication Script</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-freedom-pay-url-init">
+		<span>FreedomPay Url Init</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-freedom-pay-url-payments">
+		<span>FreedomPay Url Payments</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-freedom-pay-url-payment-ack">
+		<span>FreedomPay Url Payment Ack</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-freedom-pay-url-reverse">
+		<span>FreedomPay Url Payment Reverse</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-page-scripts">
+		<span>Page Scripts</span>
+		<div>
+			<p>
+				The additional scripts for this particular payment page.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-page-scripts-pc">
+		<span>Page Scripts Pc</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-log-file-path">
+		<span>Log File Path</span>
+		<div>
+			<p>
+				The partial path in the main logs location - see appSettings["LogPath"]
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-log-enable">
+		<span>Log Enabled</span>
+		<div>
+			<p>
+				Enable to log payment attempts.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-max-submission-attempts">
+		<span>Max Submission Attempts</span>
+		<div>
+			<p>
+				The maximum number of submission attempts allowed, irrespective of iframe instances, for the same reservationId
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-selling-middleware-name">
+		<span>Selling Middleware Name</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-selling-middleware-version">
+		<span>Selling Middleware Version</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-selling-system-name">
+		<span>Selling System Name</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-selling-system-version">
+		<span>Selling System Version</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-api-timeout-seconds">
+		<span>Api Timeout Seconds</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-bad-state-transition">
+		<span>Bad State Transition</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-pay-pal-pay-meth-payee-preferred">
+		<span>PayPalPay Method Payee Preferred</span>
+		<div>
+			<p>
+				1 - Unrestricted - Can accept pending alternate payment methods (APMs) where the final decision happens later.<br />
+				Note: Merchants must create an Hpc.WebhookUrl for these instances and provide it to FreedomPay’s Boarding Team.<br />
+				When the payment has finally been accepted, FP will send a success notification to this URL informing the integrator<br />
+				that the payment has completed successfully.Refer to Appendix A for more information.
+			</p>
+			<p>
+				2 - ImmediatePaymentRequired - Can only accept instant payments (this will return an error if an APM is used that is pending).
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-pay-pal-shipping-preference">
+		<span>PayPalPay Shipping Preference</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-avs-enabled">
+		<span>Avs Enabled</span>
+		<div>
+			<p>
+				Enable the use of the AVS whitelist.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-cvv-enabled">
+		<span>Cvv Enabled</span>
+		<div>
+			<p>
+				Enable the use of the CSV whitelist.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-avs-whitelist">
+		<span>Avs Whitelist</span>
+		<div>
+			<p>
+				A comma separate list of codes. See documentation and FreedomPay agreed AVS list.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-cvv-whitelist">
+		<span>Cvv Whitelist</span>
+		<div>
+			<p>
+				A comma separate list of codes. See documentation and FreedomPay agreed CSV list.
+			</p>
+		</div>
+	</div>
+	<div data-info-for="info-config-type">
+		<span>Config Type</span>
+		<div>
+			<p>
+
+			</p>
+		</div>
+	</div>
+}
+
 
 @section Scripts {
 	<script src="~/js/mshapp/msh-apiservice.js"></script>

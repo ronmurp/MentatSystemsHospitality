@@ -69,18 +69,17 @@
 	await Html.RenderPartialAsync("Admin/_AdminErrorBlock", "");
 }
 
-<div id="page-info" style="display:none;">
+@section InfoItems {
 
 	<div data-info-for="info-users">
 		<span>Users List</span>
 		<div>
 			@await Html.PartialAsync("Hotels/_ListIconsInfo")
-			
-		</div>
-		
-	</div>
 
-</div>
+		</div>
+
+	</div>
+}
 
 @section Scripts {
 	<script src="~/js/mshapp/mshapp.js"></script>

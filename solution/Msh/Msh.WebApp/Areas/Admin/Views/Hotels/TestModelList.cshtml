@@ -65,7 +65,8 @@
 
 @await Html.PartialAsync("Admin/_AdminErrorBlock", "")
 
-<div id="page-info" style="display:none;">
+@section InfoItems {
+
 	<div>
 		<span>Test Model</span>
 		<div>
@@ -76,7 +77,7 @@
 		</div>
 	</div>
 
-</div>
+}
 
 @section Scripts {
 	<script src="~/js/mshapp/mshapp.js"></script>

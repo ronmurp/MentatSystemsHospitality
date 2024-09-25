@@ -8,15 +8,6 @@
 	ViewData["Title"] = title;
 	ViewBag.InfoIcons = "Extras";
 
-	var pallModel = new PublishArchiveLoadLockVm
-	{
-		OnclickPublish = "window.mshMethods.publishDiscounts()",
-		OnclickArchive = "window.mshMethods.archiveDiscounts()",
-		OnclickLoad = "window.mshMethods.loadDiscounts()",
-		OnclickLock = "window.mshMethods.lockDiscounts()",
-		ReturnController = "Hotels",
-		ReturnAction = "Index"
-	};
 }
 
 @await Component.InvokeAsync("AdminMenu", new
@@ -43,22 +34,31 @@
 
 @await Html.PartialAsync("Hotels/_BulkCopyDelButtons", @Model.HotelCode)
 
-@await Html.PartialAsync("_PublishArchiveLoadLock", pallModel)
+@* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
+@await Html.PartialAsync("_PublishArchiveLoadLock",  new PublishArchiveLoadLockVm
+{
+	OnclickPublish = "window.mshMethods.publishDiscounts()",
+	OnclickArchive = "window.mshMethods.archiveDiscounts()",
+	OnclickLoad = "window.mshMethods.loadDiscounts()",
+	OnclickLock = "window.mshMethods.lockDiscounts()",
+	ReturnUrl = "/Admin/Hotels/DiscountsList",
+	ReturnText = ConstReturnText.ReturnToDash,
+})
 
 @await Html.PartialAsync("Admin/_AdminErrorBlock", @Model.ErrorMessage)
 
-<div id="page-info" style="display:none;">
-	
+@section InfoItems {
+
 	@await Html.PartialAsync("Hotels/_ListIconsInfo")
-	
+
 	<div data-info-for="info-discounts">
 		<span>Discounts List</span>
 		<div>
 			<p>A list shows the Discounts for the selected hotel.</p>
 			<p>
-				Click here to see the standard table icons: <info-icon name="info-icons" />
+				Click here to see the standard table icons: <info-icon name="info-icons"/>
 			</p>
-			
+
 			<p>Column icons specific to this list are used to edit the properties that contain more details than a single field:</p>
 			<ul>
 				<li>
@@ -79,12 +79,12 @@
 					<p>If this list is empty the discount is can be booked any time.</p>
 				</li>
 			</ul>
-			
+
 		</div>
-		
+
 	</div>
 
-</div>
+}
 
 @section Scripts{
 	<script src="~/js/mshapp/msh-ApiService.js"></script>

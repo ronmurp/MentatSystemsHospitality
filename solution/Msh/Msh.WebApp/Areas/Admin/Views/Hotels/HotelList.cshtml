@@ -6,15 +6,6 @@
 	var title = "Hotel List";
 	ViewData["Title"] = title;
 	ViewBag.InfoIcons = "Hotels";
-	var pallModel = new PublishArchiveLoadLockVm
-	{
-		OnclickPublish = "window.mshMethods.publishHotels()",
-		OnclickArchive = "window.mshMethods.archiveHotels()",
-		OnclickLoad = "window.mshMethods.loadHotels()",
-		OnclickLock = "window.mshMethods.lockHotels()",
-		ReturnController = "Hotels",
-		ReturnAction = "Index"
-	};
 }
 
 @await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuHotels, currentItem = "HotelList" })
@@ -37,11 +28,20 @@
 
 @await Html.PartialAsync("Hotels/_BulkCopyDelButtons", "")
 
-@await Html.PartialAsync("_PublishArchiveLoadLock", pallModel)
+@* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
+@await Html.PartialAsync("_PublishArchiveLoadLock", new PublishArchiveLoadLockVm
+{
+	OnclickPublish = "window.mshMethods.publishHotels()",
+	OnclickArchive = "window.mshMethods.archiveHotels()",
+	OnclickLoad = "window.mshMethods.loadHotels()",
+	OnclickLock = "window.mshMethods.lockHotels()",
+	ReturnUrl = "/Admin/Hotels",
+	ReturnText = ConstReturnText.ReturnToDash,
+})
 
 @await Html.PartialAsync("Admin/_AdminErrorBlock", "")
 
-<div id="page-info" style="display:none;">
+@section InfoItems {
 
 	<div data-info-for="info-hotels">
 		<span>Hotels List</span>
@@ -58,11 +58,7 @@
 			<p>Click <info-icon name="info-publish" /> for more information on the Publish and Load buttons.</p>
 		</div>
 	</div>
-	
-	@await Html.PartialAsync("Admin/_AdminPublish", "")
-
-
-</div>
+}
 
 @section Scripts{
 	<script src="~/js/mshapp/msh-ApiService.js"></script>

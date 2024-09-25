@@ -13,12 +13,12 @@ public class SuccessAlert
 	/// <summary>
 	/// The return path on success
 	/// </summary>
-	public string ReturnPath { get; set; } = string.Empty;
+	public string ReturnUrl { get; set; } = string.Empty;
 
 	/// <summary>
 	/// Return path name is displayed as the anchor content
 	/// </summary>
-	public string ReturnPathName { get; set; } = string.Empty;
+	public string ReturnText { get; set; } = string.Empty;
 
 
 	public string KeyPropertyLabel { get; set; } = string.Empty;

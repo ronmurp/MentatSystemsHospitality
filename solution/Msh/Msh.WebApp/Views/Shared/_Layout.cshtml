@@ -36,19 +36,27 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-	<footer class="border-top footer text-muted">
-		<div class="container">
-			&copy; 2024 - Hospitality - <a asp-area="" asp-controller="Dev" asp-action="Privacy">Privacy</a>
-		</div>
-	</footer>
+<footer class="border-top footer text-muted">
+	<div class="container">
+		&copy; 2024 - Hospitality - <a asp-area="" asp-controller="Dev" asp-action="Privacy">Privacy</a>
+	</div>
+</footer>
 
-	<script src="~/lib/jquery/jquery.min.js"></script>
+<div id="page-info" style="display:none;">
+	
+	@await RenderSectionAsync("InfoItems", required: false)
+	
+    @await Html.PartialAsync("Admin/_AdminPublish", "")
+
+</div>
+
+<script src="~/lib/jquery/jquery.min.js"></script>
 	<script src="~/lib/jquery-validate/jquery.validate.min.js"></script>
 	<script src="~/lib/jquery-validate/jquery.validate.unobtrusive.min.js"></script>
 @* <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script> *@

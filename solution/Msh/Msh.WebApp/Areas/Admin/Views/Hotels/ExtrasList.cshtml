@@ -1,4 +1,5 @@
 ﻿@using Msh.Admin.Models.Const
+@using Msh.WebApp.Areas.Admin.Models
 @using Msh.WebApp.Models.Admin.ViewModels
 @model Msh.WebApp.Models.Admin.ViewModels.ExtrasListVm;
 @{
@@ -31,34 +32,41 @@
 
 @await Html.PartialAsync("Hotels/_BulkCopyDelButtons", @Model.HotelCode)
 
+@* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
+@await Html.PartialAsync("_PublishArchiveLoadLock", new PublishArchiveLoadLockVm
+{
+	ReturnUrl = "/Admin/Hotels",
+	ReturnText = ConstReturnText.ReturnToDash,
+})
+
 @await Html.PartialAsync("Admin/_AdminErrorBlock", @Model.ErrorMessage)
 
-<div id="page-info" style="display:none;">
-	
+@section InfoItems {
+
 	@await Html.PartialAsync("Hotels/_ListIconsInfo")
-	
+
 	<div data-info-for="info-extras">
 		<span>Extras List</span>
 		<div>
 			<p>A list of Extras (representing Opera Packages) available for the selected hotel.</p>
 			<p>
-				Click here to see the standard table icons: <info-icon name="info-icons" />
+				Click here to see the standard table icons: <info-icon name="info-icons"/>
 			</p>
 			<p>Column icons specific to this list are used to edit the properties that contain more details than a single field:</p>
 			<ul>
-				
+
 				<li>
 					<p><strong>Dates</strong> - A list of dates when the Extra applies.</p>
 					<p>If this list is empty the Extra is available any time.</p>
 				</li>
-				
+
 			</ul>
-			
+
 		</div>
-		
+
 	</div>
 
-</div>
+}
 
 @section Scripts{
 	<script src="~/js/mshapp/msh-ApiService.js"></script>

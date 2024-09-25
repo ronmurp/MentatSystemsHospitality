@@ -1,0 +1,17 @@
+﻿@model Msh.WebApp.Areas.Admin.Models.SaveReturnButtonsVm
+@{
+	var saveOperation = Model.SaveOperation;
+}	
+		
+<div class="row mt-3 sticky-bottom">
+	<div class="col-12 d-inline-flex justify-content-start flex-wrap" style="width:100%;">
+		
+		@await Html.PartialAsync("_SaveReturnButtonsPart", Model)
+
+		<div class="input-group mt-2 ml-5" style="width:auto;margin-left:5px;">
+			<div class="btn btn-outline-primary">
+				<info-icon name="info-save-return" />
+			</div>
+		</div>
+	</div>
+</div>

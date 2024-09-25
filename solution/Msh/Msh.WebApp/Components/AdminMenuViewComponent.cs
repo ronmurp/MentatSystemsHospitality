@@ -77,25 +77,25 @@ namespace Msh.WebApp.Components
 			switch (name)
 			{
 				case AdminConst.MenuAdmin:
-					return new AdminMenuItem { Name = "AdminIndex", Controller = "Home", Action = "Index", Text = "Admin Home" };
+					return new AdminMenuItem { Name = "AdminIndex", Controller = "Home", Action = "Index", Text = "Admin" };
 				case AdminConst.MenuUsers:
-					return new AdminMenuItem { Name = "UsersIndex", Controller = "Users", Action = "Index", Text = "Users Home" };
+					return new AdminMenuItem { Name = "UsersIndex", Controller = "Users", Action = "Index", Text = "Users" };
 				case AdminConst.MenuDev:
-					return new AdminMenuItem { Name = "DevIndex", Controller = "Dev", Action = "Index", Text = "Dev Home" };
+					return new AdminMenuItem { Name = "DevIndex", Controller = "Dev", Action = "Index", Text = "Dev" };
 				case AdminConst.MenuFp:
-					return new AdminMenuItem { Name = "FpIndex", Controller = "Fp", Action = "Index", Text = "FreedomPay Dashboard" };
+					return new AdminMenuItem { Name = "FpIndex", Controller = "Fp", Action = "Index", Text = "FreedomPay" };
 				case AdminConst.MenuCoinCorner:
-					return new AdminMenuItem { Name = "CcIndex", Controller = "CoinCorner", Action = "Index", Text = "Coin Corner Home" };
+					return new AdminMenuItem { Name = "CcIndex", Controller = "CoinCorner", Action = "Index", Text = "Coin Corner" };
 				case AdminConst.MenuAdministrator:
 					return new AdminMenuItem { Name = "Administrator", Controller = "Administrator", Action = "Index", Text = "Administrator" };
 				case AdminConst.MenuHotels:
-					return new AdminMenuItem { Name = "HotelsIndex", Controller = "Hotels", Action = "Index", Text = "Hotels Home" };
+					return new AdminMenuItem { Name = "HotelsIndex", Controller = "Hotels", Action = "Index", Text = "Hotels" };
 				case AdminConst.MenuOws:
-					return new AdminMenuItem { Name = "OwsIndex", Controller = "Ows", Action = "Index", Text = "OWS Dashboard" };
+					return new AdminMenuItem { Name = "OwsIndex", Controller = "Ows", Action = "Index", Text = "OWS" };
 				case AdminConst.MenuLog:
-					return new AdminMenuItem { Name = "OwsIndex", Controller = "Loggers", Action = "Index", Text = "Log Dashboard" };
+					return new AdminMenuItem { Name = "OwsIndex", Controller = "Loggers", Action = "Index", Text = "Loggers" };
 				default:
-					return new AdminMenuItem { Name = "AdminIndex", Controller = "Admin", Action = "Index", Text = "Admin Home" };
+					return new AdminMenuItem { Name = "AdminIndex", Controller = "Admin", Action = "Index", Text = "Admin" };
 			}
 		}
 

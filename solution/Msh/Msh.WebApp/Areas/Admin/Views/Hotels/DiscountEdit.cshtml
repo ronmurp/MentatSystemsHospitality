@@ -9,8 +9,8 @@
 	ViewBag.Success = new SuccessAlert
 	{
 		ModelName = "DiscountCode",
-		ReturnPath = "/admin/hotels/DiscountsList?hotelCode=" + hotelCode,
-		ReturnPathName = "Discounts List",
+		ReturnUrl = "/admin/hotels/DiscountsList?hotelCode=" + hotelCode,
+		ReturnText = "Discounts List",
 		KeyPropertyLabel = "Discount Code",
 		KeyPropertyName = "Code",
 		KeyPropertyValue = Model.Code,
