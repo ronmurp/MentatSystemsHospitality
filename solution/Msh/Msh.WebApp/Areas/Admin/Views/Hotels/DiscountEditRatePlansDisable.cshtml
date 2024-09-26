@@ -30,7 +30,7 @@
 
 @await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
 {
-	ReturnUrl = $"/Admin/Hotels/DiscountList?hotelCode={@hotelCode}&code={@itemCode}",
+	ReturnUrl = $"/Admin/Hotels/DiscountsList?hotelCode={@hotelCode}&code={@itemCode}",
 	ReturnText = ConstReturnText.ReturnToList,
 	SaveOperation = "#save-button"
 })

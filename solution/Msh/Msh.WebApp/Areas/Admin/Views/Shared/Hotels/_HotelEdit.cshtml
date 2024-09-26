@@ -4,9 +4,10 @@
 @using Msh.WebApp.TagHelpers
 @model Msh.HotelCache.Models.Hotels.HotelBase;
 @{
-	var success = ViewBag.Success as SuccessAlert;
-	var formAction = success?.FormAction ?? "HotelAdd";
 	var title = ViewData["Title"];
+
+	var formParam= ViewBag.EditFormParam as EditFormParam;
+	var formAction = formParam?.FormAction ?? "HotelAdd";
 }
 
 
@@ -15,7 +16,7 @@
 	<p></p>
 </div>
 
-@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", formParam)
 
 <div class="row">
 	<div class="col-12">
@@ -27,7 +28,7 @@
 
 					<div class="form-group mb-3">
 						<label asp-for="HotelCode" class="control-label">Hotel Code <info-icon name="info-hotel-code" /></label>
-						@await Html.PartialAsync("Hotels/_EditCode", success)
+						@await Html.PartialAsync("Hotels/_EditCode", formParam)
 					</div>
 
 					<div class="form-group mb-3">

@@ -5,8 +5,8 @@
 @using Msh.WebApp.TagHelpers
 @model Msh.HotelCache.Models.Discounts.DiscountCode;
 @{
-	var success = ViewBag.Success as SuccessAlert;
-	var formAction = success?.FormAction ?? "DiscountAdd";
+	var formParam= ViewBag.EditFormParam as EditFormParam;
+	var formAction = formParam?.FormAction ?? "DiscountAdd";
 	var hotelCode = ViewBag.HotelCode;
 	var title = ViewData["Title"];
 }
@@ -16,7 +16,7 @@
 	<p></p>
 </div>
 
-@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", formParam)
 
 <div class="row">
 	<div class="col-12">
@@ -31,7 +31,7 @@
 			<div class="form-group mb-3">
 				<label asp-for="Code" class="control-label"></label>&nbsp;
 				<info-icon name="info-code"/>
-				@await Html.PartialAsync("Hotels/_EditCode", success)
+				@await Html.PartialAsync("Hotels/_EditCode", formParam)
 			</div>
 
 			<div class="form-group mb-3">
@@ -193,7 +193,7 @@
 			@* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
 			@await Html.PartialAsync("_PublishArchiveLoadLock", new PublishArchiveLoadLockVm
 			{
-				ReturnUrl = string.Format("/Admin/Hotels/DiscountList?hotelCode={0}", @hotelCode),
+				ReturnUrl = string.Format("/Admin/Hotels/DiscountsList?hotelCode={0}", @hotelCode),
 				ReturnText = ConstReturnText.ReturnToDash,
 				SaveOperation = "#save-discounts"
 			})

@@ -11,7 +11,7 @@
 	var title = "Coin Corner Config";
     ViewData["Title"] = title;
 
-    ViewBag.Success = new SuccessAlert
+    ViewBag.EditFormParam = new EditFormParam
     {
 	    ModelName = "CoinCornerConfig",
 	    ReturnUrl = "/admin/CoinCorner",
@@ -20,7 +20,7 @@
 	    KeyPropertyName = "Code",
 	    KeyPropertyValue = "",
     };
-    var success = ViewBag.Success as SuccessAlert;
+    var formParam= ViewBag.EditFormParam as EditFormParam;
 }
 
 @await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuCoinCorner, currentItem = "CcConfig" })
@@ -31,7 +31,7 @@
 	<p></p>
 </div>
 
-@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", formParam)
 
 <div class="row">
 	<div class="col-12">
@@ -132,7 +132,7 @@
 			
 			@* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
 			@await Html.PartialAsync("_PublishArchiveLoadLock", new PublishArchiveLoadLockVm
-			{
+			{   UseHotel = false,
 				ReturnUrl = "/Admin/CoinCorner/",
 				ReturnText = ConstReturnText.ReturnToDash,
 				SaveOperation = "submit"

@@ -2,21 +2,20 @@
 
 @model Msh.HotelCache.Models.Discounts.DiscountCode;
 @{
+	ViewData["Title"] = "Add Extra";
 
 	var hotelCode = ViewBag.HotelCode;
 
-	ViewBag.Success = new SuccessAlert
+	ViewBag.EditFormParam = new EditFormParam
 	{
 		ModelName = "DiscountCode",
-		ReturnUrl = "/admin/hotels/DiscountsList?hotelCode=" + hotelCode,
+		ReturnUrl = $"/admin/hotels/DiscountsList?hotelCode={hotelCode}",
 		ReturnText = "Discounts List",
 		KeyPropertyLabel = "Discount Code",
 		KeyPropertyName = "Code",
 		KeyPropertyValue = Model.Code,
 		FormAction = "DiscountAdd"
 	};
-
-	ViewData["Title"] = "Add Extra";
 }
 
 @await Html.PartialAsync("Hotels/_DiscountEdit", @Model)

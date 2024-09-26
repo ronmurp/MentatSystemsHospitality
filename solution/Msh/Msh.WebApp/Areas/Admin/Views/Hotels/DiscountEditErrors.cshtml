@@ -10,7 +10,7 @@
 	var hotelCode = ViewBag.HotelCode;
 	var itemCode = ViewBag.Code;
 
-	ViewBag.Success = new SuccessAlert
+	ViewBag.EditFormParam = new EditFormParam
 	{
 		ModelName = "DiscountErrors",
 		ReturnUrl = "/admin/hotels/DiscountsList?hotelCode=" + hotelCode,
@@ -21,10 +21,10 @@
 		FormAction = "DiscountEditErrors"
 	};
 
-	var success = ViewBag.Success as SuccessAlert;
+	var formParam= ViewBag.EditFormParam as EditFormParam;
 }
 
-@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", formParam)
 
 
 <div class="row">
@@ -210,8 +210,8 @@
 			@* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
 			@await Html.PartialAsync("_PublishArchiveLoadLock", new PublishArchiveLoadLockVm
 			{
-				ReturnUrl = string.Format("Admin/Hotels/DiscountList?hotelCode={0}", @hotelCode),
-				ReturnText = ConstReturnText.ReturnToDash,
+				ReturnUrl = string.Format("/Admin/Hotels/DiscountsList?hotelCode={0}", @hotelCode),
+				ReturnText = ConstReturnText.ReturnToList,
 				SaveOperation = "#save-discount-errors"
 			})
 

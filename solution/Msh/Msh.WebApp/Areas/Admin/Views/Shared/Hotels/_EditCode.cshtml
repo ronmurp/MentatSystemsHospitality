@@ -1,14 +1,16 @@
-﻿@model Msh.WebApp.Models.Admin.SuccessAlert
+﻿@model Msh.WebApp.Models.Admin.EditFormParam
 @{
+	// Depending on whether the form action is Add or Edit, present the primary key as an input or a label.
+	// This prevents the primary key being changes during an edit.
+
 	var name = Model.KeyPropertyName;
-	var formAction = Model.FormAction;
-	var isEdit = formAction.EndsWith("Edit");
+	var label = Model.KeyPropertyValue;
 }
 
-@if (isEdit)
+@if (Model.IsEdit)
 {
-	<label class="form-control">@Model.KeyPropertyValue</label>
-	<input type="hidden" id="@Model.KeyPropertyName" name="@Model.KeyPropertyName" value="@Model.KeyPropertyValue" />
+	<label class="form-control">@label</label>
+	<input type="hidden" id="@name" name="@name" value="@label" />
 }
 else
 {

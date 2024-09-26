@@ -6,14 +6,11 @@
 
 	var hotelCode = ViewBag.HotelCode;
 
-    ViewBag.Success = new SuccessAlert
+    ViewBag.EditFormParam = new EditFormParam
     {
 	    ModelName = "RoomRatePlan",
-	    ReturnUrl = "/admin/hotels/RatePlanList?hotelCode=" + hotelCode,
+	    ReturnUrl = "/admin/hotels/RatePlansList?hotelCode=" + hotelCode,
 	    ReturnText = "Rate Plan List",
-	    KeyPropertyLabel = "Rate Plan Code",
-	    KeyPropertyName = "RatePlanCode",
-	    KeyPropertyValue = Model.RatePlanCode,
 	    FormAction = "RatePlanEdit"
     };
 }

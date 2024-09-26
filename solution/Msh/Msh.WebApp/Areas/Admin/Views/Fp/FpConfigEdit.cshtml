@@ -16,15 +16,11 @@
 </div>
 
 
-@await Html.PartialAsync("Admin/_AdminSaveSuccess", new SuccessAlert
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", new EditFormParam
 {
 	ModelName = "FpConfig",
 	ReturnUrl = "/admin/fp",
 	ReturnText = ConstReturnText.ReturnToDash,
-	KeyPropertyLabel = title,
-	KeyPropertyName = "Code",
-	KeyPropertyValue = "",
-	FormAction = "FpConfigEdit"
 })
 
 

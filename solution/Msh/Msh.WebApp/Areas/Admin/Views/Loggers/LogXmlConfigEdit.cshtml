@@ -10,7 +10,7 @@
 
 	var group = ViewBag.Group as string ?? "Ows";
 
-	ViewBag.Success = new SuccessAlert
+	ViewBag.EditFormParam = new EditFormParam
 	{
 		ModelName = "LogXmlConfig",
 		ReturnUrl = "/admin/loggers",
@@ -20,7 +20,7 @@
 		KeyPropertyValue = group,
 		FormAction = "LogXmlConfigEdit"
 	};
-	var success = ViewBag.Success as SuccessAlert;
+	var formParam= ViewBag.EditFormParam as EditFormParam;
 }
 
 <div class="text-center">
@@ -29,7 +29,7 @@
 	<p><a asp-area="Admin" asp-controller="Loggers" asp-action="LogXmlConfigEditItems" asp-route-group="@group">Edit Items</a></p>
 </div>
 
-@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", formParam)
 
 <div class="row">
 	<div class="col-12">

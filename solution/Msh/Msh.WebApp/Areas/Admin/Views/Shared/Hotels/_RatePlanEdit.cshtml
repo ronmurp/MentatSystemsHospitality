@@ -4,8 +4,8 @@
 @using Msh.WebApp.TagHelpers
 @model Msh.HotelCache.Models.RatePlans.RoomRatePlan
 @{
-	var success = ViewBag.Success as SuccessAlert;
-	var formAction = success?.FormAction ?? "RatePlanAdd";
+	var formParam= ViewBag.EditFormParam as EditFormParam;
+	var formAction = formParam?.FormAction ?? "RatePlanAdd";
 	var hotelCode = ViewBag.HotelCode;
 	var title = ViewData["Title"];
 }
@@ -15,7 +15,7 @@
 	<p></p>
 </div>
 
-@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", formParam)
 
 <div class="row">
 	<div class="col-12">
@@ -28,7 +28,7 @@
 					<div class="form-group mb-3">
 						<label asp-for="RatePlanCode" class="control-label"></label>&nbsp;
 						<info-icon name="info-room-type-code" />
-						@await Html.PartialAsync("Hotels/_EditCode", success)
+						@await Html.PartialAsync("Hotels/_EditCode", formParam)
 					</div>
 					
 					<div class="form-check form-switch mb-3">
@@ -280,7 +280,7 @@
 
 			@await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
 			{
-				ReturnUrl = $"/Admin/Hotels/RatePlanList?hotelCode={@hotelCode}",
+				ReturnUrl = $"/Admin/Hotels/RatePlansList?hotelCode={@hotelCode}",
 				ReturnText = ConstReturnText.ReturnToDash,
 				SaveOperation = "submit"
 			})

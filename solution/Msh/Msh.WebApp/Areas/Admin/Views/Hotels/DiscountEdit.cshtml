@@ -6,10 +6,10 @@
 
 	var hotelCode = ViewBag.HotelCode;
 
-	ViewBag.Success = new SuccessAlert
+	ViewBag.EditFormParam = new EditFormParam
 	{
 		ModelName = "DiscountCode",
-		ReturnUrl = "/admin/hotels/DiscountsList?hotelCode=" + hotelCode,
+		ReturnUrl = $"/admin/hotels/DiscountsList?hotelCode={hotelCode}",
 		ReturnText = "Discounts List",
 		KeyPropertyLabel = "Discount Code",
 		KeyPropertyName = "Code",

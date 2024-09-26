@@ -8,7 +8,7 @@
 	var title = "OWS Config";
 	ViewData["Title"] = title;
 
-	ViewBag.Success = new SuccessAlert
+	ViewBag.EditFormParam = new EditFormParam
 	{
 		ModelName = "OwsConfig",
 		ReturnUrl = "/admin/ows",
@@ -17,7 +17,7 @@
 		KeyPropertyName = "Code",
 		KeyPropertyValue = "",
 	};
-	var success = ViewBag.Success as SuccessAlert;
+	var formParam= ViewBag.EditFormParam as EditFormParam;
 }
 
 <div class="text-center">
@@ -27,7 +27,7 @@
 </div>
 
 
-@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", formParam)
 
 
 <div class="row">

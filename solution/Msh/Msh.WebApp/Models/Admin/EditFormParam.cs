@@ -1,9 +1,10 @@
 ﻿namespace Msh.WebApp.Models.Admin;
 
+
 /// <summary>
-/// Parameters to pass to _AdminSaveSuccess
+/// Parameters to pass to _AdminSaveSuccess and _EditCode
 /// </summary>
-public class SuccessAlert
+public class EditFormParam
 {
 	/// <summary>
 	/// The name of the model
@@ -21,9 +22,13 @@ public class SuccessAlert
 	public string ReturnText { get; set; } = string.Empty;
 
 
+	
+	public string FormAction { get; set; } = String.Empty;
+
+	public bool IsEdit => FormAction.EndsWith("Edit");
 	public string KeyPropertyLabel { get; set; } = string.Empty;
 	public string KeyPropertyName { get; set; } = string.Empty;
 
 	public string KeyPropertyValue { get; set; } = string.Empty;
-	public string FormAction { get; set; } = String.Empty;
 }
+	

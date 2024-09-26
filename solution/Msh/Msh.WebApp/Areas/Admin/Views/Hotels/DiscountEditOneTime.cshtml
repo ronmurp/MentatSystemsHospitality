@@ -13,7 +13,7 @@
 	var hotelCode = ViewBag.HotelCode;
 	var itemCode = ViewBag.Code;
 
-	ViewBag.Success = new SuccessAlert
+	ViewBag.EditFormParam = new EditFormParam
 	{
 		ModelName = "DiscountOneTime",
 		ReturnUrl = "/admin/hotels/DiscountsList?hotelCode=" + hotelCode,
@@ -23,7 +23,7 @@
 		KeyPropertyValue = itemCode,
 		FormAction = "DiscountEditOneTime"
 	};
-	var success = ViewBag.Success as SuccessAlert;
+	var formParam= ViewBag.EditFormParam as EditFormParam;
 }
 
 
@@ -32,7 +32,7 @@
 	<p>Edit error messages for Discount @itemCode in hotel @hotelCode</p>
 </div>
 
-@await Html.PartialAsync("Admin/_AdminSaveSuccess", success)
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", formParam)
 
 
 <div class="row">
@@ -142,7 +142,7 @@
 
 			@await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
 			{
-				ReturnUrl = $"/Admin/Hotels/DiscountList?hotelCode={@hotelCode}&code={@itemCode}",
+				ReturnUrl = $"/Admin/Hotels/DiscountsList?hotelCode={@hotelCode}&code={@itemCode}",
 				ReturnText = ConstReturnText.ReturnToList,
 				SaveOperation = "submit"
 			})

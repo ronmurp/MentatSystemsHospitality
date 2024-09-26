@@ -31,10 +31,10 @@
 @* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
 @await Html.PartialAsync("_PublishArchiveLoadLock", new PublishArchiveLoadLockVm
 {
-	OnclickPublish = "window.mshMethods.publishHotels()",
-	OnclickArchive = "window.mshMethods.archiveHotels()",
-	OnclickLoad = "window.mshMethods.loadHotels()",
-	OnclickLock = "window.mshMethods.lockHotels()",
+	OnclickPublish = "window.mshMethods.publishHotels(false)",
+	OnclickArchive = "window.mshMethods.archiveHotels(false)",
+	OnclickLoad = "window.mshMethods.loadHotels(false)",
+	OnclickLock = "window.mshMethods.lockHotels(false)",
 	ReturnUrl = "/Admin/Hotels",
 	ReturnText = ConstReturnText.ReturnToDash,
 })
