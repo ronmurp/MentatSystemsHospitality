@@ -367,4 +367,61 @@ public partial class HotelApiController
 
 
 
+	[HttpGet]
+	[Route("DiscountErrors")]
+	public async Task<IActionResult> DiscountErrors(string code, string hotelCode)
+	{
+		var items = await discountRepository.GetData(hotelCode);
+		var item = items.FirstOrDefault(h => h.Code == code);
+		if (item == null)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = true,
+				UserErrorMessage = $"Errors not found for hotel {hotelCode} and {code}"
+			});
+		}
+
+		return Ok(new ObjectVm
+		{
+			Data = new
+			{
+				Errors = item.DiscountErrors,
+				Types = DiscountErrorsHelper.GetErrorTypes().Select(e => new AdminSelectItem { Value = e, Text = e }).ToList()
+			}
+		});
+	}
+
+	[HttpPost]
+	[Route("DiscountErrors")]
+	public async Task<IActionResult> DiscountErrors([FromBody] DiscountErrorsVm data)
+	{
+		try
+		{
+
+			var items = await discountRepository.GetData(data.HotelCode);
+			var index = items.FindIndex(h => h.Code == data.Code);
+
+			if (index >= 0)
+			{
+				items[index].DiscountErrors = data.Errors;
+				await discountRepository.Save(items, data.HotelCode);
+			}
+
+			return Ok(new ObjectVm
+			{
+				Data = new Hotel()
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
+
+
 }

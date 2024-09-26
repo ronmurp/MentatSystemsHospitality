@@ -185,69 +185,69 @@ public partial class HotelsController
 		}
 	}
 
-	[HttpGet]
-	[Route("DiscountEditErrors")]
-	public async Task<IActionResult> DiscountEditErrors(string code, string hotelCode, bool isSuccess = false)
-	{
-		await Task.Delay(0);
+	//[HttpGet]
+	//[Route("DiscountEditErrors")]
+	//public async Task<IActionResult> DiscountEditErrors(string code, string hotelCode, bool isSuccess = false)
+	//{
+	//	await Task.Delay(0);
 
-		ViewBag.IsSuccess = isSuccess;
-		ViewBag.Code = code;
-		ViewBag.Languages = GetLanguages();
-		ViewBag.Hotels = await GetHotels();
-		ViewBag.HotelCode = hotelCode;
+	//	ViewBag.IsSuccess = isSuccess;
+	//	ViewBag.Code = code;
+	//	ViewBag.Languages = GetLanguages();
+	//	ViewBag.Hotels = await GetHotels();
+	//	ViewBag.HotelCode = hotelCode;
 
-		var discounts = await discountRepository.GetData(hotelCode);
-		var discount = discounts.FirstOrDefault(m => m.Code == code);
-		if (discount != null)
-		{
-			return View(discount.DiscountErrors);
-		}
+	//	var discounts = await discountRepository.GetData(hotelCode);
+	//	var discount = discounts.FirstOrDefault(m => m.Code == code);
+	//	if (discount != null)
+	//	{
+	//		return View(discount.DiscountErrors);
+	//	}
 
-		return RedirectToAction(nameof(DiscountsList));
-	}
+	//	return RedirectToAction(nameof(DiscountsList));
+	//}
 
-	[HttpPost]
-	[Route("DiscountEditErrors")]
-	public async Task<IActionResult> DiscountEditErrors([FromForm] DiscountErrors discountErrors, string hotelCode, string code)
-	{
-		ViewBag.Languages = GetLanguages();
-		ViewBag.Hotels = await GetHotels();
+	//[HttpPost]
+	//[Route("DiscountEditErrors")]
+	//public async Task<IActionResult> DiscountEditErrors([FromForm] DiscountErrors discountErrors, string hotelCode, string code)
+	//{
+	//	ViewBag.Languages = GetLanguages();
+	//	ViewBag.Hotels = await GetHotels();
 
-		if (ModelState.IsValid)
-		{
-			var discounts = await discountRepository.GetData(hotelCode);
-			var index = discounts.FindIndex(m => m.Code == code);
-			if (index >= 0)
-			{
+	//	if (ModelState.IsValid)
+	//	{
+	//		var discounts = await discountRepository.GetData(hotelCode);
+	//		var index = discounts.FindIndex(m => m.Code == code);
+	//		if (index >= 0)
+	//		{
 				
-				// Now that passed parameter has been updated with properties not edited, update the original
-				discounts[index].DiscountErrors = discountErrors;
-				// And save
-				await discountRepository.Save(discounts, hotelCode);
+	//			// Now that passed parameter has been updated with properties not edited, update the original
+	//			discounts[index].DiscountErrors = discountErrors;
+	//			// And save
+	//			await discountRepository.Save(discounts, hotelCode);
 
-				return RedirectToAction(nameof(DiscountEditErrors), new { IsSuccess = true, HotelCode = hotelCode, Code = code });
-			}
-			else
-			{
-				ViewBag.IsSuccess = false;
-				ViewBag.Code = string.Empty;
+	//			return RedirectToAction(nameof(DiscountEditErrors), new { IsSuccess = true, HotelCode = hotelCode, Code = code });
+	//		}
+	//		else
+	//		{
+	//			ViewBag.IsSuccess = false;
+	//			ViewBag.Code = string.Empty;
 
-				ModelState.AddModelError("", "That Code does not exist");
+	//			ModelState.AddModelError("", "That Code does not exist");
 
-				return View(new DiscountErrors());
-			}
-		}
-		else
-		{
-			ViewBag.IsSuccess = false;
-			ViewBag.Code = string.Empty;
+	//			return View(new DiscountErrors());
+	//		}
+	//	}
+	//	else
+	//	{
+	//		ViewBag.IsSuccess = false;
+	//		ViewBag.Code = string.Empty;
 
-			ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
+	//		ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
 
-			return View(new DiscountErrors());
-		}
-	}
+	//		return View(new DiscountErrors());
+	//	}
+	//}
 
 
 	[HttpGet]
@@ -442,6 +442,28 @@ public partial class HotelsController
 			}
 
 			return View(vm);
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"{ex.Message}");
+		}
+
+		return RedirectToAction("DiscountsList");
+	}
+
+
+	[Route("DiscountErrors")]
+	public async Task<IActionResult> DiscountErrors(string hotelCode, string code, bool isSuccess = false)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+
+			ViewBag.Code = code;
+			ViewBag.HotelCode = hotelCode;
+
+			return View();
 		}
 		catch (Exception ex)
 		{

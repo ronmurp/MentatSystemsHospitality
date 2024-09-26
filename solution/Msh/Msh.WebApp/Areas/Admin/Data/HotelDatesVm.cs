@@ -1,28 +1,29 @@
 ﻿using Msh.Common.Exceptions;
 using Msh.Common.Models.Dates;
+using Msh.HotelCache.Models.Discounts;
 using Msh.HotelCache.Models.Specials;
 using Msh.Loggers.XmlLogger;
 using Msh.Opera.Ows.Models;
 
 namespace Msh.WebApp.Areas.Admin.Data;
 
-public class HotelDatesVm
-{
-	public string HotelCode { get; set; } = string.Empty;
-	public List<ItemDate> Dates { get; set; } = [];
-}
-
-public class ItemDatesVm
+public class BaseHotelCodeVm
 {
 	public string Code { get; set; } = string.Empty;
 	public string HotelCode { get; set; } = string.Empty;
+}
+public class HotelDatesVm : BaseHotelCodeVm
+{
 	public List<ItemDate> Dates { get; set; } = [];
 }
 
-public class SpecialOptionsVm
+public class ItemDatesVm : BaseHotelCodeVm
 {
-	public string Code { get; set; } = string.Empty;
-	public string HotelCode { get; set; } = string.Empty;
+	public List<ItemDate> Dates { get; set; } = [];
+}
+
+public class SpecialOptionsVm : BaseHotelCodeVm
+{
 	public List<SelectOption> Options { get; set; } = [];
 }
 
@@ -35,4 +36,9 @@ public class OwsConfigVm
 public class LogConfigVm
 {
 	public List<LogXmlConfigItem> Items { get; set; } = [];
+}
+
+public class DiscountErrorsVm : BaseHotelCodeVm
+{
+	public List<DiscountError> Errors { get; set; } = [];
 }

@@ -15,8 +15,19 @@ public class PublishArchiveLoadLockVm : SaveReturnButtonsVm
 	public bool UseHotel { get; set; }
 }
 
+public enum SaveReturnTypes
+{
+	NoSave,
+	Submit,
+	EventListener,
+	OnclickMethod
+}
+
 public class SaveReturnButtonsVm
-{/// <summary>
+{
+	public SaveReturnTypes ButtonType { get; set; } = SaveReturnTypes.NoSave;
+
+	/// <summary>
 	/// Determines the save button use:
 	/// - "" - Save button not included - typically for lists
 	/// - "Submit" - Use the form submit action
