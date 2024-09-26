@@ -5,6 +5,11 @@
 
     var app = mshPageApp;
 
+    var pallsA = app.pallsArchiveService;
+    var pallsB = app.pallsPublishService;
+    var pallsLoad = app.pallsLoadService;
+    var pallsLock = app.pallsLockService;
+
     var hotelApi = '/api/hotelapi';
     var hotelAdmin = 'admin/hotels'
 
@@ -14,7 +19,7 @@
         deleteApi: `${hotelApi}/HotelDelete`,
         copyApi: `${hotelApi}/HotelCopy`,
         moveApi: `${hotelApi}/HotelMove`,
-        listPath: `${hotelAdmin}/HotelList`,
+        listPath: `${hotelAdmin}/HotelsList`,
         codeOnly: true
     });
 
@@ -22,9 +27,20 @@
         deleteBulkApi: `${hotelApi}/HotelDeleteBulk`,
         copyBulkApi: `${hotelApi}/HotelCopyBulk`,
         sortListApi: `${hotelApi}/HotelsSort`,
-        listPath: `${hotelAdmin}/HotelList`,
+        listPath: `${hotelAdmin}/HotelsList`,
         includeBulkCopy: false
     });
+
+    var inputs = {
+        model: 'Hotels',
+        name: 'Hotels',
+        useHotelCode: false
+    }
+
+    pallsA.init(inputs);
+    pallsB.init(inputs);
+    pallsLoad.init(inputs);
+    pallsLock.init(inputs);
 
 }(jQuery));
 
@@ -160,7 +176,7 @@
             loadPair.actioned(optionsLoad);
         },
         loadHotelsConfirmed: function () {
-            util.redirectTo('admin/hotels/hotellist');
+            util.redirectTo('admin/hotels/HotelsList');
         },
 
     });
@@ -317,7 +333,7 @@
             loadPair.actioned(options);
         },
         lockHotelsConfirmed: function () {
-            //util.redirectTo('admin/hotels/hotellist');
+            //util.redirectTo('admin/hotels/HotelsList');
         },
 
     });
