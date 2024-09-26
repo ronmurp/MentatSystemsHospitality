@@ -84,7 +84,8 @@
 			{
 				ReturnUrl = $"/Admin/Hotels/TestModelList?code={Model.Code}",
 				ReturnText = ConstReturnText.ReturnToDash,
-				SaveOperation = "#save-ows-config-triggers"
+				ButtonType = SaveReturnTypes.EventListener,
+				SaveOperation = "save-ows-config-triggers"
 			})
 
 		</form>

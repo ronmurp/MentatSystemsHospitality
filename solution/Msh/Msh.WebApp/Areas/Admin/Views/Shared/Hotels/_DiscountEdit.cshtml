@@ -195,7 +195,8 @@
 			{
 				ReturnUrl = string.Format("/Admin/Hotels/DiscountsList?hotelCode={0}", @hotelCode),
 				ReturnText = ConstReturnText.ReturnToDash,
-				SaveOperation = "#save-discounts"
+				ButtonType = SaveReturnTypes.EventListener,
+				SaveOperation = "save-discounts"
 			})
 
 		</form>

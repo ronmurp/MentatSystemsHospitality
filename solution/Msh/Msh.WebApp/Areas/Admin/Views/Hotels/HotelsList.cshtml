@@ -31,10 +31,6 @@
 @* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
 @await Html.PartialAsync("_PublishArchiveLoadLock", new PublishArchiveLoadLockVm
 {
-	OnclickPublish = "window.mshMethods.publishData(false)",
-	OnclickArchive = "window.mshMethods.archiveData(false)",
-	OnclickLoad = "window.mshMethods.loadData()",
-	OnclickLock = "window.mshMethods.lockData()",
 	ReturnUrl = "/Admin/Hotels",
 	ReturnText = ConstReturnText.ReturnToDash,
 })
@@ -63,7 +59,7 @@
 @section Scripts{
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
-	<script src="~/js/admin/hotels/msh-admin-palls.js"></script>
+	<script src="~/js/admin/msh-admin-palls.js"></script>
 	<script src="~/js/admin/hotels/msh-admin-hotels.js"></script>
 }
 

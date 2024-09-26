@@ -1,24 +1,24 @@
-﻿@model Msh.WebApp.Areas.Admin.Models.SaveReturnButtonsVm
+﻿@using Msh.WebApp.Areas.Admin.Models
+@model Msh.WebApp.Areas.Admin.Models.SaveReturnButtonsVm
 @{
 	// Used to drop the save and return buttons into 
-	var saveOperation = Model.SaveOperation;
 }	
-		
 
 <div class="input-group mt-2 " style="width:auto;margin-right:3px;">
-	@if (saveOperation == "submit")
-	{
-		<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
 
-	}
-	else if (saveOperation.StartsWith("#"))
+	@switch (Model.ButtonType)
 	{
-		<button id="@saveOperation" class="btn btn-outline-primary" class="ml-3" >Save</button>
+		case SaveReturnTypes.Submit:
+			<button type="submit" name="Command" value="Save" class="btn btn-outline-primary">Save</button>
+			break;
+		case SaveReturnTypes.EventListener:
+			<button id="@Model.SaveOperation" class="btn btn-outline-primary" class="ml-3">Save</button>
+			break;
+		case SaveReturnTypes.OnclickMethod:
+			<button class="btn btn-outline-primary" class="ml-3" onclick="@Model.SaveOperation">Save</button>
+			break;
 	}
-	else if (saveOperation.StartsWith("window."))
-	{
-		<button class="btn btn-outline-primary" class="ml-3" onclick="@saveOperation">Save</button>
-	}
+
 	<a href="@Model.ReturnUrl" class="btn btn-outline-secondary">@Model.ReturnText</a>
 
 </div>

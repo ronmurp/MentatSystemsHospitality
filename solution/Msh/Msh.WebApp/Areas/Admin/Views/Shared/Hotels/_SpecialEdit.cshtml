@@ -115,7 +115,8 @@
 			{
 				ReturnUrl = $"/Admin/Hotels/SpecialsList?hotelCode={hotelCode}",
 				ReturnText = ConstReturnText.ReturnToDash,
-				SaveOperation = "#save-ows-config-triggers"
+				ButtonType = SaveReturnTypes.EventListener,
+				SaveOperation = "save-ows-config-triggers"
 			})
 
 		</form>

@@ -25,7 +25,8 @@
 {
 	ReturnUrl = "/Admin/Fp/",
 	ReturnText = ConstReturnText.ReturnToDash,
-	SaveOperation = "#save-bank"
+	ButtonType = SaveReturnTypes.EventListener,
+	SaveOperation = "save-bank"
 })
 
 @section InfoItems {
@@ -49,6 +50,7 @@
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
 	<script src="~/js/mshapp/msh-itemdatesservice.js"></script>
+	<script src="~/js/admin/msh-admin-palls.js"></script>
 	<script src="~/js/admin/fp/msh-admin-fp-bank.js"></script>
 }
 

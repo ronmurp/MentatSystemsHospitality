@@ -30,7 +30,8 @@
 {
 	ReturnUrl = $"/Admin/Hotels/DiscountsList?hotelCode={@hotelCode}&code={@itemCode}",
 	ReturnText = ConstReturnText.ReturnToList,
-	SaveOperation = "#save-dates"
+	ButtonType = SaveReturnTypes.EventListener,
+	SaveOperation = "save-dates"
 })
 
 
