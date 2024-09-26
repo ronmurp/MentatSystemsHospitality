@@ -143,6 +143,7 @@
 
         var icons = {
             info: '<i class="fa-solid fa-info-circle wbs-icon-blue"></i>',
+            times: '<i class="fa-solid fa-times wbs-icon-blue"></i>',
             warn: '<i class="fa-solid fa-triangle-exclamation wbs-icon-warn"></i>',
             add: '<i class="fa-solid fa-square-plus wbs-icon-blue"></i>',
             trash: '<i class="fa-solid fa-trash wbs-icon-blue"></i>',
@@ -375,10 +376,38 @@
                 html += `</tr>`;
                 return html;
             },
-            addTdText: function (i, name, value, attrs, inputAttrs) {
-                var a = attrs ? ` ${attrs}` : ''
+            addTdText: function (i, name, value, tdAttrs, inputAttrs) {
+                var a = tdAttrs ? ` ${tdAttrs}` : ''
                 var ia = inputAttrs ? ` ${inputAttrs}` : '';
+                
                 return `<td${a}><input type="text" id="${name}-${i}" data-msh-index="${i}" class="form-control" name=""${name}" value="${value}" ${ia} /></td>`;
+            },
+
+            addTdSelect: function (i, name, options, tdAttrs, inputAttrs) {
+                var a = tdAttrs ? ` ${tdAttrs}` : ''
+                var ia = inputAttrs ? ` ${inputAttrs}` : '';
+                var html = '';
+                html += `<td${a}>`;
+                html += `<select id="${name}-${i}" data-msh-index="${i}" class="form-control" name=""${name}"  ${ia} >`;
+                html += options;
+                html += `</select>`;
+                html += `</td>`;
+                return html;
+            },
+
+            addTdIcon: function (iconName, script, tdAttrs) {
+                var a = tdAttrs ? ` ${tdAttrs}` : ''
+                var html = `<td${a}>`;
+                html += iconScriptLink(iconName, script);
+                html += `</td>`;
+                return html;
+            },
+            addThIcon: function (iconName, script, tdAttrs) {
+                var a = tdAttrs ? ` ${tdAttrs}` : ''
+                var html = `<th${a}>`;
+                html += iconScriptLink(iconName, script);
+                html += `</th>`;
+                return html;
             }
         }
         
@@ -2745,7 +2774,17 @@
         }
 
         return {
-            init: init
+            init: init,
+
+            getHotelCode: function () {
+                return $('#hotel-code').val();
+            },
+            getItemCode: function () {
+                return $('#item-code').val();
+            },
+            getEditType: function () {
+                return $('#edit-type').val();
+            }
         }
 
     }());

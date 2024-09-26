@@ -94,6 +94,9 @@
                         : `${pallss.apiRoot}/${initData.model}Archive/${archiveCode}`;
                     options.actionConfirmApiUrl = url;
                     options.actionConfirmData = null;
+
+                    $(`#${options.modalActionId}`).remove();
+
                     archivePair.actioned(options);
                 }
             });
@@ -163,8 +166,12 @@
                         ? `${pallss.apiRoot}/${initData.model}Publish/${hotelCode}`
                         : `${pallss.apiRoot}/${initData.model}Publish`
                     options.actionConfirmApiUrl = url;
-                    publishPair.actioned(options);
+
                     $(`#${options.modalActionId}`).remove();
+
+                 
+                    publishPair.actioned(options);
+                   
                 }
             });
         }
@@ -257,11 +264,12 @@
                     getLoadList(options);
                 },
                 loadDataConfirm: function () {
+                    $(`#${options.modalActionId}`).remove();
                     updateOptions();
                     loadPair.actioned(options);
                 },
                 loadDataConfirmed: function () {
-                    util.redirectTo(`admin/hotels/${initData.model}List`);
+                    //util.redirectTo(`admin/hotels/${initData.model}List`);
                 },
             });
         }
@@ -365,6 +373,7 @@
                     var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : ``;
                     var archiveCode = $(`#selected-lock`).val();
                     var performLock = $(`#perform-lock`).is(`:checked`);
+                    $(`#${options.modalActionId}`).remove();
                     var url = initData.useHotelCode
                         ? `${pallss.apiRoot}/${initData.model}Lock/${hotelCode}`
                         : `${pallss.apiRoot}/${initData.model}Lock`;

@@ -7,6 +7,11 @@
     var modal = app.modalService;
     var api = app.apiService;
 
+    var pallsA = app.pallsArchiveService;
+    var pallsB = app.pallsPublishService;
+    var pallsLoad = app.pallsLoadService;
+    var pallsLock = app.pallsLockService;
+
     var itemDatesService = app.itemDatesService;
 
     var ids = {
@@ -42,6 +47,15 @@
         listPath: 'admin/hotels/ExtrasList'
     });
 
+    var inputs = {
+        model: 'Extras',
+        name: 'Extras',
+        useHotelCode: true
+    }
 
+    pallsA.init(inputs);
+    pallsB.init(inputs);
+    pallsLoad.init(inputs);
+    pallsLock.init(inputs);
 
 }(jQuery));
