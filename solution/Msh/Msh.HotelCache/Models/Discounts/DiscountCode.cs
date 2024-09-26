@@ -77,7 +77,7 @@ public class DiscountCode
 
     public List<ItemDate> BookDates { get; set; } = [];
 
-    public DiscountErrors DiscountErrors { get; set; } = new DiscountErrors();
+    public List<DiscountError> DiscountErrors { get; set; } = [];
 
     public List<string> DisabledHotelPlans { get; set; } = [];
     public List<string> EnabledHotelPlans { get; set; } = [];
