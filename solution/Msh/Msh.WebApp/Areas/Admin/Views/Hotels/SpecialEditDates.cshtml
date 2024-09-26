@@ -11,9 +11,13 @@
 
 @await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuHotels, currentItem = "SpecialsList" })
 
-<input type="hidden" id="edit-type" value="item-dates"/>
-<input type="hidden" id="item-code" value="@itemCode" />
-<input type="hidden" id="hotel-code" value="@hotelCode" />
+@await Html.PartialAsync("_HotelCodeHiddenFields", new HotelCodeHiddenFieldsVm
+{
+	UseHotel = true,
+	HotelCode = @hotelCode,
+	Code = itemCode,
+	EditType = "item-dates"
+})
 
 <div class="text-center">
 	<h1 class="display-6">@title for @itemCode in @hotelCode</h1>

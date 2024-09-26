@@ -7,9 +7,13 @@
 	var hotelCode = ViewBag.HotelCode as string;
 }
 
-<input type="hidden" id="edit-type" value="item-options"/>
-<input type="hidden" id="item-code" value="@itemCode" />
-<input type="hidden" id="hotel-code" value="@hotelCode" />
+@await Html.PartialAsync("_HotelCodeHiddenFields", new HotelCodeHiddenFieldsVm
+{
+	UseHotel = true,
+	HotelCode = @hotelCode,
+	Code = itemCode,
+	EditType = "item-options"
+})
 <input type="hidden" id="save-api-url" value="/api/hotelapi/SpecialRoomTypesSave" />
 
 <div class="text-center">
