@@ -52,7 +52,7 @@ public class BuildEditPageRunner
 	[Test]
 	public void BuildDiscountsErrors()
 	{
-		_helper.BuildPage(typeof(Msh.HotelCache.Models.Discounts.DiscountErrors), "Discounts Errors");
+		_helper.BuildPage(typeof(Msh.HotelCache.Models.Discounts.DiscountErrorsOld), "Discounts Errors");
 	}
 
 	[Test]

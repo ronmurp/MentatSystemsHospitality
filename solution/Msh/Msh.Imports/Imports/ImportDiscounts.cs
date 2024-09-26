@@ -145,7 +145,7 @@ public class ImportDiscounts
 			          ?? new DiscountOneTime(),
 
 					//DiscountErrors = LoadXml(c.Descendants("ErrorText")),
-					DiscountErrors2 = LoadXml(c.Descendants("ErrorText")),
+					DiscountErrors = LoadXml(c.Descendants("ErrorText")),
 
 				}).ToList();
 
@@ -159,7 +159,7 @@ public class ImportDiscounts
     public List<DiscountError> LoadXml(IEnumerable<XElement> el)
     {
 	    var config = el
-		    .Select(c => new DiscountErrors
+		    .Select(c => new DiscountErrorsOld()
 		    {
 			    InvalidCode = c.ValueE("InvalidCode"),
 
@@ -195,10 +195,10 @@ public class ImportDiscounts
 
 			    SearchError = c.ValueE("SearchError")
 
-		    }).SingleOrDefault() ?? new DiscountErrors();
+		    }).SingleOrDefault() ?? new DiscountErrorsOld();
 
 	    var list = new List<DiscountError>();
-	    PropertyInfo[] properties = typeof(DiscountErrors).GetProperties();
+	    PropertyInfo[] properties = typeof(DiscountErrorsOld).GetProperties();
 	    foreach (PropertyInfo p in properties)
 	    {
 		    var value = (p.GetValue(config) as string) ?? string.Empty;
@@ -206,7 +206,7 @@ public class ImportDiscounts
 		    {
 			    var de = new DiscountError
 			    {
-					ErrorType = p.Name.Get<DiscountErrorCodeType>(),
+					ErrorType = p.Name.Get<DiscountErrorType>(),
 					Text = value
 			    };
 			    list.Add(de);
