@@ -1,18 +1,11 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Mvc;
-using Msh.Common.Data;
 using Msh.Common.ExtensionMethods;
-using Msh.Common.Models.Configuration;
 using Msh.Common.Models.ViewModels;
-using Msh.Common.Services;
-using Msh.HotelCache.Models;
-using Msh.HotelCache.Models.Discounts;
 using Msh.HotelCache.Models.Hotels;
-using Msh.HotelCache.Models.RoomTypes;
 using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Data;
 using Msh.WebApp.Areas.Admin.Models;
-using Msh.WebApp.Models.Admin.ViewModels;
 using Msh.WebApp.Services;
 
 namespace Msh.WebApp.API.Admin.Hotels;

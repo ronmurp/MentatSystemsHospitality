@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Msh.Common.ExtensionMethods;
 using Msh.Common.Models.ViewModels;
-using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Extras;
 using Msh.HotelCache.Models.Hotels;
 using Msh.WebApp.Areas.Admin.Data;

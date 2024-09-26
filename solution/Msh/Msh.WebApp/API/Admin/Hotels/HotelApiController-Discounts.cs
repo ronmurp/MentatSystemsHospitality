@@ -1,7 +1,6 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Msh.Common.ExtensionMethods;
-using Msh.Common.Models.Dates;
 using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models.Discounts;
 using Msh.HotelCache.Models.Hotels;

@@ -335,7 +335,7 @@ public partial class HotelsController
 			logger.LogError($"{ex.Message}");
 		}
 
-		return RedirectToAction("HotelList");
+		return RedirectToAction("HotelsList");
 	}
 
 	[Route("DiscountEditDatesBook")]
@@ -356,7 +356,7 @@ public partial class HotelsController
 			logger.LogError($"{ex.Message}");
 		}
 
-		return RedirectToAction("HotelList");
+		return RedirectToAction("HotelsList");
 	}
 
 	[Route("DiscountEditRatePlansEnable")]

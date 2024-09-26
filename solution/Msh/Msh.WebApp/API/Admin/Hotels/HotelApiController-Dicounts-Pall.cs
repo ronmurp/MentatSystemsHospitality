@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Msh.Common.Models.ViewModels;
-using Msh.HotelCache.Models;
-using Msh.HotelCache.Models.Discounts;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
 

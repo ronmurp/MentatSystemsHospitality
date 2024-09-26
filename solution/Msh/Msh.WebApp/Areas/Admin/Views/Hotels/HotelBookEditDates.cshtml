@@ -6,7 +6,7 @@
 	var hotelCode = ViewBag.HotelCode as string;
 }
 
-@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuHotels, currentItem = "HotelList" })
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuHotels, currentItem = "HotelsList" })
 
 @await Html.PartialAsync("_HotelCodeHiddenFields", new HotelCodeHiddenFieldsVm
 {

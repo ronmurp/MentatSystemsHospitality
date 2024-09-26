@@ -3,8 +3,6 @@ using Msh.Common.Exceptions;
 using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Extras;
-using Msh.HotelCache.Models.Hotels;
-using Msh.HotelCache.Models.RoomTypes;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
 
@@ -199,7 +197,7 @@ public partial class HotelsController
 			//var hotel = hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
 			//if (hotel == null)
 			//{
-			//	return RedirectToAction("HotelList");
+			//	return RedirectToAction("HotelsList");
 			//}
 			ViewBag.Code = code;
 			ViewBag.HotelCode = hotelCode;
@@ -211,7 +209,7 @@ public partial class HotelsController
 			logger.LogError($"{ex.Message}");
 		}
 
-		return RedirectToAction("HotelList");
+		return RedirectToAction("HotelsList");
 	}
 
 	[HttpPost]

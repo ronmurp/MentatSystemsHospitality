@@ -1,7 +1,6 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Msh.Common.Data;
 using Msh.Common.Exceptions;
 using Msh.Common.ExtensionMethods;
 using Msh.Common.Models.ViewModels;
@@ -40,8 +39,8 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 	}
 
 
-	[Route("HotelList")]
-	public async Task<IActionResult> HotelList()
+	[Route("HotelsList")]
+	public async Task<IActionResult> HotelsList()
 	{
 		try
 		{
@@ -83,7 +82,7 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 			logger.LogError($"{ex.Message}");
 		}
 
-		return RedirectToAction("HotelList");
+		return RedirectToAction("HotelsList");
 	}
 
 	[HttpPost]
@@ -137,7 +136,7 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 			logger.LogError($"{ex.Message}");
 		}
 
-		return RedirectToAction("HotelList");
+		return RedirectToAction("HotelsList");
 	}
 
 
@@ -161,7 +160,7 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 			logger.LogError($"{ex.Message}");
 		}
 
-		return RedirectToAction("HotelList");
+		return RedirectToAction("HotelsList");
 	}
 
 	[HttpPost]
@@ -217,7 +216,7 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 			logger.LogError($"{ex.Message}");
 		}
 
-		return RedirectToAction("HotelList");
+		return RedirectToAction("HotelsList");
 	}
 
 
@@ -237,7 +236,7 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 			logger.LogError($"{ex.Message}");
 		}
 
-		return RedirectToAction("HotelList");
+		return RedirectToAction("HotelsList");
 	}
 
 	[Route("HotelBookEditDates/{hotelCode}")]
@@ -256,7 +255,7 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 			logger.LogError($"{ex.Message}");
 		}
 
-		return RedirectToAction("HotelList");
+		return RedirectToAction("HotelsList");
 	}
 
 

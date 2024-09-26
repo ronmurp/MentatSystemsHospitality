@@ -6,12 +6,13 @@
 public class PublishArchiveLoadLockVm : SaveReturnButtonsVm
 {
 	
-	public string OnclickPublish { get; set; } = "window.mshMethods.publishData()";
-	public string OnclickArchive { get; set; } = "window.mshMethods.archiveData()";
+	public string OnclickPublish { get; set; } = "window.mshMethods.publishData(true)";
+	public string OnclickArchive { get; set; } = "window.mshMethods.archiveData(true)";
 
-	public string OnclickLoad { get; set; } = "window.mshMethods.loadData()";
+	public string OnclickLoad { get; set; } = "window.mshMethods.loadData(true)";
 
-	public string OnclickLock { get; set; } = "window.mshMethods.lockData()";
+	public string OnclickLock { get; set; } = "window.mshMethods.lockData(true)";
+	public bool UseHotel { get; set; }
 }
 
 public class SaveReturnButtonsVm

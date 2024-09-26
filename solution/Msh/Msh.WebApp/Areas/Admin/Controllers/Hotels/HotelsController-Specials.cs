@@ -2,8 +2,6 @@
 using Msh.Common.Exceptions;
 using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
-using Msh.HotelCache.Models.Hotels;
-using Msh.HotelCache.Models.RoomTypes;
 using Msh.HotelCache.Models.Specials;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;

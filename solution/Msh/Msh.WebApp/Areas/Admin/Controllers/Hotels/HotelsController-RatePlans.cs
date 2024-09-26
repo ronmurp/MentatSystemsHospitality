@@ -2,9 +2,7 @@
 using Msh.Common.Exceptions;
 using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
-using Msh.HotelCache.Models.Hotels;
 using Msh.HotelCache.Models.RatePlans;
-using Msh.HotelCache.Models.RoomTypes;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
 
@@ -12,8 +10,8 @@ namespace Msh.WebApp.Areas.Admin.Controllers.Hotels;
 
 public partial class HotelsController
 {
-	[Route("RatePlanList")]
-	public async Task<IActionResult> RatePlanList([FromQuery] string hotelCode = "")
+	[Route("RatePlansList")]
+	public async Task<IActionResult> RatePlansList([FromQuery] string hotelCode = "")
 	{
 		var vm = new RatePlanListVm
 		{
@@ -142,7 +140,7 @@ public partial class HotelsController
 			return View(roomType);
 		}
 
-		return RedirectToAction(nameof(RoomTypeList));
+		return RedirectToAction(nameof(RoomTypesList));
 	}
 
 	[HttpPost]

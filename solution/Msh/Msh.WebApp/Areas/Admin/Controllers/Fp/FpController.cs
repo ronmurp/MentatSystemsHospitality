@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Msh.HotelCache.Models;
-using Msh.Opera.Ows.Cache;
-using Msh.Opera.Ows.Models;
 using Msh.Pay.FreedomPay.Models.Configuration;
 using Msh.Pay.FreedomPay.Services;
 
