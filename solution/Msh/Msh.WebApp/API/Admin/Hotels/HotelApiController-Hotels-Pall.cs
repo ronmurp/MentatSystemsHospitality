@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Msh.Common.Models;
 using Msh.Common.Models.ViewModels;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
@@ -54,14 +55,14 @@ public partial class HotelApiController
 		{
 			var list = await hotelRepository.ArchivedList();
 
-			var selectList = list.OrderBy(x => x.ConfigType).Select(x => new AdminSelectItem
+			var selectList = list.OrderBy(x => x.ConfigType).Select(x => new SelectItemVm
 			{
 				Value = x.ConfigType,
 				Text = x.ConfigType
 
 			}).ToList();
 
-			selectList.Insert(0, new AdminSelectItem
+			selectList.Insert(0, new SelectItemVm
 			{
 				Value = "Pub",
 				Text = "Published"

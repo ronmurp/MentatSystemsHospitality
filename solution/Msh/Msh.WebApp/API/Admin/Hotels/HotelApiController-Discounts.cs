@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Msh.Common.ExtensionMethods;
+using Msh.Common.Models;
 using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models.Discounts;
 using Msh.HotelCache.Models.Hotels;
@@ -387,7 +388,7 @@ public partial class HotelApiController
 			Data = new
 			{
 				Errors = item.DiscountErrors,
-				Types = DiscountErrorsHelper.GetErrorTypes().Select(e => new AdminSelectItem { Value = e, Text = e }).ToList()
+				Types = DiscountErrorsHelper.GetErrorTypes().Select(e => new SelectItemVm { Value = e, Text = e }).ToList()
 			}
 		});
 	}
