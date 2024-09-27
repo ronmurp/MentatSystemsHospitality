@@ -13,13 +13,57 @@
     var pallsLock = app.pallsLockService;
 
     var ids = {
-        selectHotel: '#selectHotel'
+        selectHotel: '#selectHotel',
+
+        stayChangeHotelCode: 'stay-change-hotel-code',
+        stayChangeCode: 'stay-change-code',
+        stayChangeRatePlanCode: 'stay-change-rpc',
+        stayChangeFrom: 'stay-change-from',
+        stayChangeTo: 'stay-change-to'
     }
 
     function getHotelCode() {
         var hotelCode = $(ids.selectHotel).val();
         hotelCode = hotelCode ? hotelCode : $('#hotelCode').val();
         return hotelCode;
+    }
+
+    var currentStayData = {};
+
+    function getEditStayForm() {
+
+        var d = currentStayData;
+
+        var html = `<p>Change the stay date range for this rate plan.</p>`;
+        html += `<div class="form-group">`;
+        html += `<label class="form-control">${d.hotelCode}</label>`;
+        html += `<label class="form-control mt-3">${d.ratePlanCode}</label>`;
+
+        
+        html += `<input id="${ids.stayChangeFrom}" type="date" class="form-control mt-3" onchange="window.mshMethods.changeFrom()" value="${d.stayFrom}" />`;
+        html += `<input id="${ids.stayChangeTo}" type="date" class="form-control mt-3" onchange="window.mshMethods.changeTo()" value="${d.stayTo}" />`;
+
+        html += `<input id="${ids.stayChangeHotelCode}" type="hidden"  value="${d.hotelCode}" />`;
+        html += `<input id="${ids.stayChangeCode}" type="hidden"  value="${d.code}" />`;
+        html += `<input id="${ids.stayChangeRatePlanCode}" type="hidden"  value="${d.ratePlanCode}" />`;
+        html += `</div>`;
+
+        return html;
+
+    }
+
+    function changeDate(isFrom) {
+        var d = {
+            dateFrom: $(`#${ids.stayChangeFrom}`).val(),
+            dateTo: $(`#${ids.stayChangeTo}`).val(),
+            isFrom: isFrom
+        }
+        var url = `/api/hotelapi/ChangeDatePair`;
+        api.postAsync(url, d, function (data) {
+            var dates = data.data;
+            $(`#${ids.stayChangeFrom}`).val(dates.dateFrom);
+            $(`#${ids.stayChangeTo}`).val(dates.dateTo)
+        });
     }
 
     meth.extendMethods({
@@ -67,17 +111,66 @@
         listPath: 'admin/hotels/RatePlansList'
     });
 
-    var inputs = {
-        model: 'RatePlans',
-        name: 'Rate Plans',
-        useHotelCode: true
+    var editType = $('#edit-type').val();
+
+    if (editType === "rate-plan-list") {
+
+        var inputs = {
+            model: 'RatePlans',
+            name: 'Rate Plans',
+            useHotelCode: true
+        }
+
+        pallsA.init(inputs);
+        pallsB.init(inputs);
+        pallsLoad.init(inputs);
+        pallsLock.init(inputs);
+
+        meth.extendMethods({
+
+            ratePlanStayChange: function (hotelCode, code, ratePlanCode, stayFrom, stayTo) {
+
+                currentStayData = {
+                    hotelCode: hotelCode,
+                    code: code,
+                    ratePlanCode: ratePlanCode,
+                    stayFrom: stayFrom,
+                    stayTo: stayTo
+                }
+
+                var body = getEditStayForm();
+                modal.showModal('stayEditModel', 'Change Stay Dates', body, {
+                    okButtonClickScript: 'onclick="window.mshMethods.ratePlanStayChangeConfirm()"',
+                    footerOk: true,
+                });
+            },
+
+            ratePlanStayChangeConfirm: function () {
+                var d = {
+                    hotelCode: $(`#${ids.stayChangeHotelCode}`).val(),
+                    code: $(`#${ids.stayChangeCode}`).val(),
+                    ratePlanCode: $(`#${ids.stayChangeRatePlanCode}`).val(),
+                    stayFrom: $(`#${ids.stayChangeFrom}`).val(),
+                    stayTo: $(`#${ids.stayChangeTo}`).val(),
+                }
+                var url = `/api/hotelapi/RatePlanStayChange`
+                api.postAsync(url, d, function (data) {
+                    if (data.success) {
+                        util.redirectTo(`admin/hotels/RatePlansList?hotelCode=${d.hotelCode}`)
+                    }
+                });
+            },
+
+            changeFrom: function () {
+                changeDate(true);
+            },
+            changeTo: function () {
+                changeDate(false);
+            }
+
+        });
     }
-
-    pallsA.init(inputs);
-    pallsB.init(inputs);
-    pallsLoad.init(inputs);
-    pallsLock.init(inputs);
-
+    
 }(jQuery));
 
 // Publish

@@ -20,6 +20,8 @@
 				</div>
 			</div>
 		</th>
+		<th></th>
+		<th>RPC</th>
 		<th>Enabled</th>
 		<th>Group Code</th>
 		<th>Description</th>
@@ -51,7 +53,21 @@
 			
 	@foreach (var rt in @Model.RatePlans)
 	{
+		var stayUrl = $"javascript:window.mshMethods.ratePlanStayChange('{Model.HotelCode}', '{rt.Code}', '{rt.RatePlanCode}', '{rt.StayFrom:yyyy-MM-dd}', '{rt.StayTo:yyyy-MM-dd}')";
+
 		<tr>
+			<td style="width:200px;">
+				@rt.Code
+			</td>
+			<td style="width:80px;">
+				<div class="cell-outer">
+					<div class="cell-inner">
+						<a href="@stayUrl">
+							<i class="fa-solid fa-calendar"></i>
+						</a>
+					</div>
+				</div>
+			</td>
 			<td>@rt.RatePlanCode</td>
 			@await Html.PartialAsync("Hotels/_TableCheckMarkCell", rt.Enabled)
 			<td>@rt.Group</td>
@@ -60,15 +76,15 @@
 				var vm = new TableCommonCellsVm
 				{
 					HotelCode = Model.HotelCode,
-					Code = rt.RatePlanCode,
+					Code = rt.Code,
 					Index = rowIndex,
 					Count = count,
 					EditAction = "RatePlanEdit"
 				};
-
 			}
 			@await Html.PartialAsync("Hotels/_TableCommonCells", vm)
 		</tr>
+
 		rowIndex++;
 	}
 </table>

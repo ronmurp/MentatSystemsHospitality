@@ -13,12 +13,17 @@
 	    ReturnText = "Rate Plans List",
 	    KeyPropertyLabel = "Rate Plans Code",
 	    KeyPropertyName = "RatePlanCode",
-	    KeyPropertyValue = Model.RatePlanCode,
+	    KeyPropertyValue = Model.Code,
 	    FormAction = "RatePlanAdd"
     };
 }
 
 @await Html.PartialAsync("Hotels/_RatePlanEdit", @Model)
+
+@section InfoItems
+{
+	@await Html.PartialAsync("Hotels/_RatePlanEditInfo", "Rate Plan Add")
+}
 
 @section Scripts {
 	<script src="~/js/mshapp/msh-apiservice.js"></script>

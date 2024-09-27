@@ -5,6 +5,7 @@
 @model Msh.HotelCache.Models.RatePlans.RoomRatePlan
 @{
 	var formParam= ViewBag.EditFormParam as EditFormParam;
+	var isEdit = formParam.IsEdit;
 	var formAction = formParam?.FormAction ?? "RatePlanAdd";
 	var hotelCode = ViewBag.HotelCode;
 	var title = ViewData["Title"];
@@ -21,21 +22,67 @@
 	<div class="col-12">
 
 		<form asp-action="@formAction" asp-route-hotelCode="@hotelCode">
-			
-			<div class="row">
-				<div class="col-md-6 col-12">
+
+		<div class="row">
+			<div class="col-md-6 col-12">
+
+					<input type="hidden" value="@Model.Code" name="Code" id="Code" />
+				
 
 					<div class="form-group mb-3">
 						<label asp-for="RatePlanCode" class="control-label"></label>&nbsp;
-						<info-icon name="info-room-type-code" />
-						@await Html.PartialAsync("Hotels/_EditCode", formParam)
+						<info-icon name="info-rate-plan-code"/>
+						@if (isEdit)
+						{
+							<input type="hidden" value="@Model.RatePlanCode" name="RatePlanCode" id="RatePlanCode" />
+							<label class="form-control">@Model.RatePlanCode</label>
+						}
+						else
+						{
+							<input asp-for="RatePlanCode" class="form-control " />
+							<span asp-validation-for="RatePlanCode" class="text-danger"></span>
+						}
 					</div>
-					
+
+
+					<div class="form-group mb-3">
+						<label asp-for="StayFrom" class="control-label"></label>&nbsp;
+						<info-icon name="info-stay-from" />
+						@if (isEdit)
+						{
+							<input type="hidden" value="@Model.StayFrom" name="StayFrom" id="StayFrom" />
+							<label class="form-control">@Model.StayFrom</label>
+						}
+						else
+						{
+							<input asp-for="StayFrom" class="form-control " />
+							<span asp-validation-for="StayFrom" class="text-danger"></span>
+						}
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="StayTo" class="control-label"></label>&nbsp;
+						<info-icon name="info-stay-to" />
+						@if (isEdit)
+						{
+							<input type="hidden" value="@Model.StayFrom" name="StayTo" id="StayTo" />
+							<label class="form-control">@Model.StayTo</label>
+						}
+						else
+						{
+							<input asp-for="StayTo" class="form-control " />
+							<span asp-validation-for="StayTo" class="text-danger"></span>
+						}
+						<span asp-validation-for="StayTo" class="text-danger"></span>
+					</div>
 					<div class="form-check form-switch mb-3">
 						<input asp-for="Enabled" type="checkbox" class="form-check-input " />
 						<label asp-for="Enabled" class="form-check-label"></label>&nbsp;
 						<info-icon name="info-enabled" />
 					</div>
+							
+
 
 					<div class="form-group mb-3">
 						<label asp-for="ConfirmationText" class="control-label"></label>&nbsp;
@@ -185,20 +232,7 @@
 						<span asp-validation-for="DepositBalanceMessage" class="text-danger"></span>
 					</div>
 
-					<div class="form-group mb-3">
-						<label asp-for="StayFrom" class="control-label"></label>&nbsp;
-						<info-icon name="info-stay-from"/>
-						<input asp-for="StayFrom" class="form-control "/>
-						<span asp-validation-for="StayFrom" class="text-danger"></span>
-					</div>
-
-
-					<div class="form-group mb-3">
-						<label asp-for="StayTo" class="control-label"></label>&nbsp;
-						<info-icon name="info-stay-to"/>
-						<input asp-for="StayTo" class="form-control "/>
-						<span asp-validation-for="StayTo" class="text-danger"></span>
-					</div>
+					
 
 					<div class="form-check form-switch mb-3">
 						<input asp-for="HasBookDates" type="checkbox" class="form-check-input "/>
@@ -291,5 +325,3 @@
 	</div>
 </div>
 
-
-@await Html.PartialAsync("Hotels/_RatePlanEditInfo", "Rate Plan Edit")

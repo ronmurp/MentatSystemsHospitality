@@ -1,12 +1,39 @@
 ﻿@* Info blocks for _RatePlanEditInfo.cshtml *@
 
-@section InfoItems {
+
+	<div data-info-for="info-code">
+		<span>Unique Code</span>
+		<div>
+			<p>
+				The <b>Unique Code</b> is a combination of the rate plan and <b>Stay From</b> date.
+				This allows you to enter the same <b>Rate Plan Code</b> more that once, as long as each has a different <b>Stay From</b>.
+			</p>
+			<p>
+				You can then set up the same rate plan for different seasons. 
+			</p>
+			<p>
+				As this is a unique identifier for a record, the <b>Stay dates cannot be simply edited here, once the record has been added.
+					Instead, use the <b>Move</b> to change the dates. This will update the <b>Unique Code</b> too.
+				</b>
+			</p>
+		</div>
+	</div>
 
 	<div data-info-for="info-rate-plan-code">
 		<span>Rate Plan Code</span>
 		<div>
 			<p>
-
+				This must be the same as the rate plan code in Opera, otherwise the system will ignore it.
+				And, any rate plan code in Opera that is to be sold through this system must have a record in the rate plans here.
+			</p>
+			<p>
+				Most data types with a code require a unique code. With Rate Plans there's the potential to have multiple plans with the same code,
+				where, for example, the same code is available at different parts of the year. 
+				So the rate plan code is combined with the <b>Stay From</b> date to form a unique code, the <b>Code</b> in the table. 
+				This is why the Stay dates cannot be edited directly in the edit from once hey have been set during an add operation.
+			</p>
+			<p>
+				This is why the date move feature is provided in the rate plan list.
 			</p>
 		</div>
 	</div>
@@ -259,4 +286,4 @@
 			</p>
 		</div>
 	</div>
-}
+

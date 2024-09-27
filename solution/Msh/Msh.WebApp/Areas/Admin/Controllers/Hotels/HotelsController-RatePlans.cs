@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Mapster;
+using Microsoft.AspNetCore.Mvc;
 using Msh.Common.Exceptions;
 using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
@@ -70,6 +71,7 @@ public partial class HotelsController
 		ViewBag.Hotels = await GetHotels();
 		ViewBag.HotelCode = hotelCode;
 
+
 		return View(new RoomRatePlan
 		{
 			StayFrom = DateOnly.FromDateTime(DateTime.Now),
@@ -79,6 +81,7 @@ public partial class HotelsController
 		});
 	}
 
+
 	[HttpPost]
 	[Route("RatePlanAdd")]
 	public async Task<IActionResult> RatePlanAdd([FromForm]RoomRatePlan ratePlan, string hotelCode)
@@ -86,18 +89,22 @@ public partial class HotelsController
 		ViewBag.Languages = GetLanguages();
 		ViewBag.Hotels = await GetHotels();
 
+		//var rp = ratePlan.Adapt<RoomRatePlan>();
+
 		if (ModelState.IsValid)
 		{
+			
+
 			var ratePlans = await ratePlanRepository.GetData(hotelCode);
 
-			if (ratePlans.All(tm => tm.RatePlanCode != ratePlan.RatePlanCode))
+			if (ratePlans.All(tm => tm.Code != ratePlan.Code))
 			{
 				//testModel.Hotels = testModel.Hotels.Where(m => !string.IsNullOrEmpty(m)).ToList();
 				ratePlan.Notes = string.IsNullOrEmpty(ratePlan.Notes) ? string.Empty : ratePlan.Notes;
 				
 				ratePlans.Add(ratePlan);
 				await ratePlanRepository.Save(ratePlans, hotelCode);
-				return RedirectToAction(nameof(RatePlanAdd), new { IsSuccess = true, HotelCode = hotelCode, Code = ratePlan.RatePlanCode });
+				return RedirectToAction(nameof(RatePlanAdd), new { IsSuccess = true, HotelCode = hotelCode, Code = ratePlan.Code });
 			}
 			else
 			{
@@ -134,36 +141,39 @@ public partial class HotelsController
 		ViewBag.HotelCode = hotelCode;
 
 		var ratePlans = await ratePlanRepository.GetData(hotelCode);
-		var roomType = ratePlans.FirstOrDefault(m => m.RatePlanCode == code);
-		if (roomType != null)
+		var ratePlan = ratePlans.FirstOrDefault(m => m.Code == code);
+		if (ratePlan != null)
 		{
-			return View(roomType);
+			var rp = ratePlan.Adapt<RoomRatePlan>();
+			return View(rp);
 		}
 
-		return RedirectToAction(nameof(RoomTypesList));
+		return RedirectToAction(nameof(RatePlansList));
 	}
 
 	[HttpPost]
 	[Route("RatePlanEdit")]
-	public async Task<IActionResult> RatePlanEdit([FromForm] RoomRatePlan roomType, string hotelCode)
+	public async Task<IActionResult> RatePlanEdit([FromForm] RoomRatePlan ratePlan, string hotelCode)
 	{
 		ViewBag.Languages = GetLanguages();
 		ViewBag.Hotels = await GetHotels();
 
+		//var rp = ratePlan.Adapt<RoomRatePlan>();
+
 		if (ModelState.IsValid)
 		{
 			var ratePlans = await ratePlanRepository.GetData(hotelCode);
-			var index = ratePlans.FindIndex(m => m.RatePlanCode == roomType.RatePlanCode);
+			var index = ratePlans.FindIndex(m => m.Code == ratePlan.Code);
 			if (index >= 0)
 			{
 				//testModel.Hotels = testModel.Hotels.Where(m => !string.IsNullOrEmpty(m)).ToList();
 				// roomType.Notes = string.IsNullOrEmpty(roomType.Notes) ? string.Empty : roomType.Notes;
 
-				ratePlans[index] = roomType;
+				ratePlans[index] = ratePlan;
 
 				await ratePlanRepository.Save(ratePlans, hotelCode);
 
-				return RedirectToAction(nameof(RatePlanEdit), new { IsSuccess = true, HotelCode = hotelCode, Code = roomType.RatePlanCode });
+				return RedirectToAction(nameof(RatePlanEdit), new { IsSuccess = true, HotelCode = hotelCode, Code = ratePlan.Code });
 			}
 			else
 			{
@@ -172,7 +182,7 @@ public partial class HotelsController
 
 				ModelState.AddModelError("", "That Code does not exist");
 
-				return View();
+				return View(ratePlan);
 			}
 		}
 		else
@@ -182,7 +192,7 @@ public partial class HotelsController
 
 			ModelState.AddModelError("", ConstHotel.Vem.GeneralSummary);
 
-			return View();
+			return View(ratePlan);
 		}
 	}
 
@@ -225,5 +235,6 @@ public partial class HotelsController
 			return GetFail(ex.Message);
 		}
 	}
+
 
 }

@@ -14,6 +14,8 @@
 
 @await Html.PartialAsync("Hotels/_HiddenHotelInputs", @Model as HotelListVm)
 
+<input type="hidden" id="edit-type" value="rate-plan-list"/>
+
 <div class="text-center">
 	<h1 class="display-6">@title</h1>
 	<p>Hotel Rate Plans. Click for more information: <info-icon name="info-rate-plans" /></p>

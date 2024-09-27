@@ -156,7 +156,7 @@ public partial class HotelApiController
 			for (var i = items.Count - 1; i >= 0; i--)
 			{
 				var item = items[i];
-				if (input.CodeList.Any(c => c.EqualsAnyCase(item.RatePlanCode)))
+				if (input.CodeList.Any(c => c.EqualsAnyCase(item.Code)))
 				{
 					items.RemoveAt(i);
 				}
@@ -202,4 +202,96 @@ public partial class HotelApiController
 		}
 	}
 
+
+
+	[HttpPost]
+	[Route("RatePlanStayChange")]
+	public async Task<IActionResult> RatePlanStayChange([FromBody] RatePlanEditStayVm input)
+	{
+		try
+		{
+			var ratePlans = await ratePlanRepository.GetData(input.HotelCode);
+			var ratePlan = ratePlans.FirstOrDefault(h => h.Code == input.Code);
+			if (ratePlan != null)
+			{
+				var index = ratePlans.IndexOf(ratePlan);
+				var ratePlanNew = ratePlan.Adapt<RoomRatePlan>();
+				ratePlanNew.StayFrom = input.StayFrom;
+				ratePlanNew.StayTo = input.StayTo;
+
+				ratePlans[index] = ratePlanNew;
+				//ratePlans.Add(ratePlanNew);
+
+				await ratePlanRepository.Save(ratePlans, input.HotelCode);
+				
+				return Ok(new ObjectVm
+				{
+					
+				});
+			}
+
+			return GetFail("Rate plan not found");
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
+	[HttpPost]
+	[Route("ChangeDatePair")]
+	public async Task<IActionResult> ChangeDatePair([FromBody] DateChangeVm input)
+	{
+		try
+		{
+			await Task.Delay(0);
+			if (input.IsFrom)
+			{
+				if (input.DateTo <= input.DateFrom)
+				{
+					input.DateTo = input.DateFrom.AddDays(1);
+				}
+			}
+			else
+			{
+				if (input.DateTo <= input.DateFrom)
+				{
+					input.DateFrom = input.DateTo.AddDays(-1);
+				}
+			}
+
+			return Ok(new ObjectVm
+			{
+				Data = input
+			});
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
+}
+
+public class RatePlanEditStayVm
+{
+	public string HotelCode { get; set; } = string.Empty;
+
+	public string Code { get; set; } = string.Empty;
+
+	public DateOnly StayFrom { get; set; }
+
+	public DateOnly StayTo { get; set; }
+
+	public string RatePlanCode { get; set; } = string.Empty;
+}
+
+public class DateChangeVm
+{
+	public DateOnly DateFrom { get; set; }
+
+	public DateOnly DateTo { get; set; }
+
+	public bool IsFrom { get; set; }
 }

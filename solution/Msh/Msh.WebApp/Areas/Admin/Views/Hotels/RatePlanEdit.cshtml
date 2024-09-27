@@ -9,13 +9,23 @@
     ViewBag.EditFormParam = new EditFormParam
     {
 	    ModelName = "RoomRatePlan",
-	    ReturnUrl = "/admin/hotels/RatePlansList?hotelCode=" + hotelCode,
+	    ReturnUrl = $"/admin/hotels/RatePlansList?hotelCode={hotelCode}",
 	    ReturnText = "Rate Plan List",
-	    FormAction = "RatePlanEdit"
+	    FormAction = "RatePlanEdit",
+		KeyPropertyLabel = "",
+		KeyPropertyName = "",
+		KeyPropertyValue = Model.Code
     };
 }
 
 @await Html.PartialAsync("Hotels/_RatePlanEdit", @Model)
+
+@section InfoItems
+{
+	@await Html.PartialAsync("Hotels/_RatePlanEditInfo", "Rate Plan Edit")
+}
+
+
 
 @section Scripts {
 	<script src="~/js/mshapp/msh-apiservice.js"></script>

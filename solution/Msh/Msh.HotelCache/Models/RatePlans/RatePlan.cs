@@ -5,9 +5,15 @@ using Msh.Common.Models;
 
 namespace Msh.HotelCache.Models.RatePlans;
 
+
 public class RoomRatePlan
 {
-    [Required][Display(Name = "Rate Plan Code"), Info("rate-plan-code")]
+	/// <summary>
+	/// A unique code that allows multiple instances of the RatePlanCode on different stay dates
+	/// </summary>
+	public string Code => $"{RatePlanCode}-{StayFrom:yyyy-MM-dd}";
+
+	[Required][Display(Name = "Rate Plan Code"), Info("rate-plan-code")]
     public string RatePlanCode { get; set; } = string.Empty;
 
 
