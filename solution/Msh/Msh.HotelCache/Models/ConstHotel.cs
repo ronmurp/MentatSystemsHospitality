@@ -17,6 +17,7 @@ public static class ConstHotel
         public const string Countries = "Countries";
         public const string CountriesIso = "CountriesIso";
         public const string CountriesConfig = "CountriesConfig";
+        public const string Companies = "Companies";
 
 		public const string DiscountConfig = "DiscountConfig";
         public const string DiscountGroups = "DiscountGroups";
