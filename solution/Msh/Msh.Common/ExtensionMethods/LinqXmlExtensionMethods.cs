@@ -70,6 +70,16 @@ public static class LinqXmlExtensionMethods
 		return DateTime.TryParse(temp, out var output) ? output : defaultValue;
 	}
 
+	public static DateOnly ValueA(this XElement e, DateOnly defaultValue, string name)
+	{
+		if (e?.Attribute(name) == null) return defaultValue;
+
+		var temp = e.Attribute(name)?.Value ?? "0001-01-01";
+
+		return DateOnly.TryParse(temp, out var output) ? output : defaultValue;
+	}
+
+
 	public static string ValueE(this XElement e)
 	{
 		return e?.Value ?? string.Empty;
@@ -147,7 +157,23 @@ public static class LinqXmlExtensionMethods
 		return defaultValue;
 	}
 
+	public static DateOnly ValueE(this XElement e, DateOnly defaultValue, string name)
+	{
+		if (e?.Element(name) != null)
+		{
+			return DateOnly.TryParse(e.Element(name).ValueE(), out var output) ? output : defaultValue;
+		}
+		return defaultValue;
+	}
 
+	public static DateOnly ValueE(this XElement e, DateOnly defaultValue)
+	{
+		if (e != null)
+		{
+			return DateOnly.TryParse(e.ValueE(), out var output) ? output : defaultValue;
+		}
+		return defaultValue;
+	}
 
 
 	/// <summary>
