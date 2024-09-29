@@ -1,22 +1,18 @@
 ﻿using System.Xml.Linq;
+using Msh.Common.Data;
 using Msh.Common.Models.Dates;
-using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Extras;
-using Msh.TestSupport;
-using NUnit.Framework;
 
-namespace Msh.Imports.Imports;
+namespace Msh.Admin.Imports;
 
-[TestFixture]
-[Explicit]
-public class ImportExtras
+
+public static class ImportExtrasHelper
 {
-	[Test]
-	public async Task ImportExtrasXml()
+	public static async Task<List<ExtrasContainer>> ImportExtrasXml(IConfigRepository repo, string filename)
 	{
-		var filename = @"C:\Proj2\elh-wbs4\solution\WbsApplication\App_Data\Extras\Extras-Live.xml";
+		var xml = await File.ReadAllTextAsync(filename);
 
-		var xdoc = XDocument.Load(filename);
+		var xdoc = XDocument.Parse(xml);
 
 		var list = xdoc.Descendants("Hotel")
 			.Select(e => new ExtrasContainer
@@ -43,15 +39,15 @@ public class ImportExtras
 
 			}).ToList();
 
-		foreach (var ec in list)
-		{
-
-			await TestConfigUtilities.SaveConfig($"{ConstHotel.Cache.Extras}-{ec.HotelCode}", ec.Extras);
-		}
-
+		return list;
 	}
 
-	
+	public static async Task<List<Extra>> ImportExtrasHotelXml(IConfigRepository repo, string filename, string hotelCode)
+	{
+		var list = await ImportExtrasXml(repo, filename);
+
+		return list.FirstOrDefault(h => h.HotelCode == hotelCode)?.Extras ?? [];
+	}
 }
 
 public class ExtrasContainer

@@ -6,8 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="NewFolder\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
+    <None Remove="NewFolder\**" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="..\Msh.Common\Msh.Common.csproj" />
+		<ProjectReference Include="..\Msh.HotelCache\Msh.HotelCache.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
