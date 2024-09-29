@@ -13,6 +13,7 @@ public class PublishArchiveLoadLockVm : SaveReturnButtonsVm
 
 	public string OnclickLock { get; set; } = "window.mshMethods.lockData(true)";
 	public bool UseHotel { get; set; }
+	
 }
 
 public enum SaveReturnTypes
@@ -39,4 +40,9 @@ public class SaveReturnButtonsVm
 	public string ReturnUrl { get; set; } = string.Empty;
 
 	public string ReturnText { get; set; } = ConstReturnText.ReturnToDash;
+
+
+	public bool ShowImportButton { get; set; }
+
+	public string? OnclickImport { get; set; } = "window.mshMethods.importData(true)";
 }

@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Mvc;
+using Msh.Common.Data;
 using Msh.Common.ExtensionMethods;
 using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models.Hotels;
@@ -12,7 +13,8 @@ namespace Msh.WebApp.API.Admin.Hotels;
 
 [ApiController]
 [Route("api/hotelapi")]
-public partial class HotelApiController(IHotelRepository hotelRepository,
+public partial class HotelApiController(IConfigRepository configRepository,
+	IHotelRepository hotelRepository,
 	IDiscountRepository discountRepository,
 	IExtraRepository extraRepository,
 	IRatePlanRepository ratePlanRepository,

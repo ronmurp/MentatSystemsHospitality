@@ -11,6 +11,7 @@
     var pallsB = app.pallsPublishService;
     var pallsLoad = app.pallsLoadService;
     var pallsLock = app.pallsLockService;
+    var pallsI = app.pallsImportService;
 
     var itemDatesService = app.itemDatesService;
 
@@ -47,15 +48,24 @@
         listPath: 'admin/hotels/ExtrasList'
     });
 
-    var inputs = {
-        model: 'Extras',
-        name: 'Extras',
-        useHotelCode: true
-    }
+    var editType = $('#edit-type').val();
 
-    pallsA.init(inputs);
-    pallsB.init(inputs);
-    pallsLoad.init(inputs);
-    pallsLock.init(inputs);
+    if (editType === "extras-list") {
+
+        var inputs = {
+            model: 'Extras',
+            name: 'Extras',
+            useHotelCode: true,
+            confirmedRedirect: true,
+            confirmedRedirectUrl: 'admin/hotels/ExtrasList'
+        }
+
+        pallsA.init(inputs);
+        pallsB.init(inputs);
+        pallsLoad.init(inputs);
+        pallsLock.init(inputs);
+        pallsI.init(inputs);
+
+    }
 
 }(jQuery));

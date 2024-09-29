@@ -393,5 +393,123 @@
 
     }());
 
+    window.mshPageApp.pallsImportService = (function () {
+
+        "use strict";
+
+        var app = mshPageApp;
+        var meth = app.methodsService;
+        var util = app.utilityService;
+        var api = app.apiService;
+        var mom = app.momentDateService;
+        var htmlS = app.htmlService;
+        var modal = app.modalService;
+        var mas = app.modalActionService;
+        var pallss = app.pallSupportService;
+
+        var initData = {
+            model: 'RatePlans',
+            name: 'Rate Plans',
+            useHotelCode: true
+        }
+        function init(inputs) {
+
+            initData = $.extend({}, initData, inputs);
+
+            var options = {
+                modalActionId: `import${initData.model}`,
+                modalActionTitle: `Import ${initData.name}`,
+                modalActionBody: `Confirm import of ${initData.name} list`,
+                modalActionOnCLick: `id="confirm-import-ok" onclick="window.mshMethods.importDataConfirm()"`,
+                modalActionOk: `OK`,
+                loadConfirmApiUrl: `${pallss.apiRoot}/${initData.model}Import`,
+
+                modalActionedId: `imported${initData.model}`,
+                modalActionedTitle: `Import ${initData.name}`,
+                modalActionedBody: `The import of ${initData.name} was successful.`,
+                modalActionedOnCLick: `onclick="window.mshMethods.importDataConfirmed()"`,
+                // modalPublishedOk: `OK`,
+                modalActionedHideModalEnd: `window.mshMethods.importDataConfirmed`,
+
+                confirmedRedirect: initData.confirmedRedirect,
+                confirmedRedirectUrl: initData.confirmedRedirectUrl
+            }
+
+            function getImportBody(optionsHtml) {
+                var html = ``;
+                html += `<p>Edit records are locked automatically when imported, to prvent accidental overwrite from another import.</p>`;
+               
+
+                html += `<div class="form-group mb-3">`;
+               
+                html += `</div>`;
+                html += `<div class="form-group mb-3">`;
+               
+                html += `</div>`;
+                return html;
+            }
+
+            function getImport(useHotel) {
+                var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : ``;
+                var url = initData.useHotelCode
+                    ? `${pallss.apiRoot}/${initData.model}ArchiveSelectList/${hotelCode}`
+                    : `${pallss.apiRoot}/${initData.model}ArchiveSelectList`;
+                api.getAsync(url, function (data) {
+                    if (data.success) {
+                        var list = data.data;
+                        var optionsHtml = ``;
+                        list.forEach((v) => {
+                            optionsHtml += `<option value="${v.value}">${v.text}</option>`
+                        });
+                        options.modalActionBody = getLoadBody(optionsHtml);
+                        loadPair.action(options);
+                        return;
+                    } else {
+                        modal.showError(data.userErrorMessage);
+
+                    }
+                })
+            }
+
+
+            var loadPair = new mas.PairOverlay(options);
+
+
+            meth.extendMethods({
+
+                importData: function (useHotel) {
+                    //getLoadList(useHotel);
+                    initData.modalActionBody = getImportBody(undefined);
+                    loadPair.action(options);
+                },
+                importDataConfirm: function (useHotel) {
+                    var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : ``;
+                  
+                    $(`#${options.modalActionId}`).remove();
+                    var url = initData.useHotelCode
+                        ? `${pallss.apiRoot}/${initData.model}Import/${hotelCode}`
+                        : `${pallss.apiRoot}/${initData.model}Import`;
+                    options.actionConfirmApiUrl = url;
+                    options.actionConfirmData = {  };
+                    loadPair.actioned(options);
+                },
+                importDataConfirmed: function () {
+                    var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : ``;
+                    if (options.confirmedRedirect) {
+                        var url = initData.useHotelCode
+                            ? `${options.confirmedRedirectUrl}?hotelCode=${hotelCode}`
+                            : `${options.confirmedRedirectUrl}`;
+                        util.redirectTo(url);
+                    }
+                },
+
+            });
+        }
+
+        return {
+            init: init
+        }
+
+    }());
 
 }(jQuery));

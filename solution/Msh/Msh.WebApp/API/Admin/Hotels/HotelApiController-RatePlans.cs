@@ -23,7 +23,7 @@ public partial class HotelApiController
 			}
 
 			var ratePlans = await ratePlanRepository.GetData(input.HotelCode);
-			var ratePlan = ratePlans.FirstOrDefault(h => h.RatePlanCode == input.Code);
+			var ratePlan = ratePlans.FirstOrDefault(h => h.Code == input.Code);
 			if (ratePlan != null)
 			{
 				var newRatePlan = ratePlan.Adapt(ratePlan);
@@ -36,7 +36,7 @@ public partial class HotelApiController
 				}
 
 				var newRatePlans = await ratePlanRepository.GetData(input.NewHotelCode);
-				if (newRatePlans.Any(c => c.RatePlanCode.EqualsAnyCase(input.NewCode)))
+				if (newRatePlans.Any(c => c.Code.EqualsAnyCase(input.NewCode)))
 				{
 					return GetFail("The code already exists.");
 				}
@@ -60,7 +60,7 @@ public partial class HotelApiController
 		try
 		{
 			var ratePlans = await ratePlanRepository.GetData(input.HotelCode);
-			var ratePlan = ratePlans.FirstOrDefault(h => h.RatePlanCode == input.Code);
+			var ratePlan = ratePlans.FirstOrDefault(h => h.Code == input.Code);
 			if (ratePlan != null)
 			{
 				ratePlans.Remove(ratePlan);
@@ -106,13 +106,13 @@ public partial class HotelApiController
 
 			foreach (var code in input.CodeList)
 			{
-				var extra = srcItems.FirstOrDefault(h => h.RatePlanCode == code);
+				var extra = srcItems.FirstOrDefault(h => h.Code == code);
 				if (extra != null)
 				{
-					if (dstItems.Any(e => e.RatePlanCode == extra.RatePlanCode))
+					if (dstItems.Any(e => e.Code == extra.Code))
 					{
 						// Already exists
-						missingList.Add(extra.RatePlanCode);
+						missingList.Add(extra.Code);
 						continue;
 					}
 					newList.Add(extra);
@@ -190,7 +190,7 @@ public partial class HotelApiController
 
 			var srcExtras = await ratePlanRepository.GetData(hotelCode);
 
-			await ratePlanRepository.Save(srcExtras.OrderBy(e => e.RatePlanCode)
+			await ratePlanRepository.Save(srcExtras.OrderBy(e => e.Code)
 				.ToList(), hotelCode);
 
 			return Ok(new ObjectVm());
