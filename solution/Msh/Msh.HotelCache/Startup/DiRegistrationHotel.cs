@@ -13,7 +13,8 @@ public static class DiRegistrationHotel
 	    services.AddScoped<IExtraRepository, ExtraRepository>();
 	    services.AddScoped<IHotelRepository, HotelRepository>();
 	    services.AddScoped<IRatePlanRepository, RatePlanRepository>();
-	    services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
+	    services.AddScoped<IRatePlanTextRepository, RatePlanTextRepository>();
+		services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
 	    services.AddScoped<ISpecialsRepository, SpecialsRepository>();
 	    services.AddScoped<ITestModelRepository, TestModelRepository>();
 

@@ -1,0 +1,65 @@
+﻿@using Msh.Admin.Models.Const
+@using Msh.WebApp.Areas.Admin.Models
+@using Msh.WebApp.Models.Admin.ViewModels
+@model Msh.WebApp.Models.Admin.ViewModels.RatePlanTextListVm;
+@{
+	var title = "Rate Plan Text List";
+	ViewData["Title"] = title;
+}
+
+@await Component.InvokeAsync("AdminMenu", new
+{
+	menuName = AdminConst.MenuHotels, currentItem = "RatePlansTextList"
+})
+
+@await Html.PartialAsync("Hotels/_HiddenHotelInputs", @Model as HotelListVm)
+
+<input type="hidden" id="edit-type" value="rate-plan-text-list"/>
+
+<div class="text-center">
+	<h1 class="display-6">@title</h1>
+	<p>Hotel Rate Plans Texts. Click for more information: <info-icon name="info-rate-plans-texts" /></p>
+</div>
+
+@await Component.InvokeAsync("AdminHotelSelect", @Model.HotelCode)
+
+<div class="row">
+	<div class="col-12" id="table-target">
+		
+		@await Html.PartialAsync("Hotels/_RatePlansTextTable", @Model)
+
+	</div>
+</div>
+
+@await Html.PartialAsync("Hotels/_BulkCopyDelButtons", @Model.HotelCode)
+
+@* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
+@await Html.PartialAsync("_PublishArchiveLoadLock", new PublishArchiveLoadLockVm
+{
+	ReturnUrl = "/Admin/Hotels",
+	ReturnText = ConstReturnText.ReturnToDash,
+})
+
+@await Html.PartialAsync("Admin/_AdminErrorBlock", @Model.ErrorMessage)
+
+@section InfoItems {
+
+	<div data-info-for="info-rate-plans">
+		<span>Rate Plans</span>
+		<div>
+			<p></p>
+			@await Html.PartialAsync("Hotels/_ListIconsInfo")
+		</div>
+	</div>
+}
+
+@section Scripts{
+	<script src="~/js/mshapp/msh-ApiService.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/mshapp/msh-itemdatesservice.js"></script>
+	<script src="~/js/admin/msh-admin-palls.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-rateplans.js"></script>
+}
+
+
+

@@ -1,0 +1,74 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.WebApp.Models.Admin.ViewModels
+@model Msh.WebApp.Models.Admin.ViewModels.RatePlanTextListVm
+@{
+	var rowIndex = 0;
+	var count = Model.RatePlansText.Count;
+}
+
+<table>
+	<tr>
+		<th>
+			<div class="cell-outer">
+				<div class="cell-inner">
+					<p>Id</p>
+				</div>
+				<div class="cell-inner">
+					<a href="javascript:window.mshMethods.sortList('@Model.HotelCode')">
+						<i class="fa-solid fa-arrow-up"></i>
+					</a>
+				</div>
+			</div>
+		</th>
+		<th>Text</th>
+		<th>Notes</th>
+		<th class="text-center" style="width:40px;">Move</th>
+		<th>   
+			<div class="cell-outer">
+				<div class="cell-inner">
+					<a asp-controller="Hotels" asp-action="RatePlanTextAdd" asp-route-hotelCode="@Model.HotelCode">
+						<i class="fa-solid fa-plus"></i>
+					</a>
+				</div>
+			</div>
+		</th>
+		<th>
+			<div class="cell-outer">
+				<div class="cell-inner">
+					Copy
+				</div>
+			</div>
+		</th>
+		<th>
+			<div class="cell-outer">
+				<div class="cell-inner">
+					<input type="checkbox" name="bulk-check" id="blk" data-msh-code="0" />
+				</div>
+			</div>
+		</th>
+	</tr>
+			
+	@foreach (var rt in @Model.RatePlansText)
+	{
+		<tr>
+			<td style="width:200px;">
+				@rt.Id
+			</td>
+			<td>@rt.Text</td>
+			<td>@rt.Notes</td>
+			@{
+				var vm = new TableCommonCellsVm
+				{
+					HotelCode = Model.HotelCode,
+					Code = rt.Id,
+					Index = rowIndex,
+					Count = count,
+					EditAction = "RatePlanTextEdit"
+				};
+			}
+			@await Html.PartialAsync("Hotels/_TableCommonCells", vm)
+		</tr>
+
+		rowIndex++;
+	}
+</table>

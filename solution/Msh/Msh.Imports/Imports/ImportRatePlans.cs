@@ -116,6 +116,30 @@ public class ImportRatePlans
 		return s == "stayFrom" ? d.StayFrom : d.StayTo;
 
 	}
+
+	[Test]
+	[TestCase("LWH")]
+	[TestCase("LHH")]
+	[TestCase("WBH")]
+	public async Task ImportRatePlanText(string hotelCode)
+	{
+		var fitEnabled = false;
+
+		var filename = @$"C:\Proj2\elh-wbs4\solution\WbsApplication\App_Data\RatePlans\RatePlans-CommonTexts.xml";
+
+		var xdoc = XDocument.Load(filename);
+
+		var ratePlansText = xdoc.Descendants("Text")
+			.Select(x => new RatePlanText()
+			{
+				
+						Id = x.ValueA("id"),
+						Text = x.ValueE()
+
+			}).ToList();
+
+		await TestConfigUtilities.SaveConfig($"{ConstHotel.Cache.RatePlansText}-{hotelCode}", ratePlansText);
+	}
 	public class RatePlanCodesList
 	{
 		public string GroupCode { get; set; }

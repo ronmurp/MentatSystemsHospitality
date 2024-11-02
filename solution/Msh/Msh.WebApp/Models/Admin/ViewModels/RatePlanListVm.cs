@@ -6,3 +6,8 @@ public class RatePlanListVm : HotelListVm
 {
 	public List<RoomRatePlan> RatePlans { get; set; } = [];
 }
+
+public class RatePlanTextListVm : HotelListVm
+{
+	public List<RatePlanText> RatePlansText { get; set; } = [];
+}

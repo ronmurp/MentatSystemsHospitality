@@ -1,0 +1,33 @@
+﻿@using Msh.WebApp.Models.Admin
+
+@model Msh.HotelCache.Models.RatePlans.RatePlanText
+@{
+	ViewData["Title"] = "Add Rate Plan Text";
+
+	var hotelCode = ViewBag.HotelCode;
+
+    ViewBag.EditFormParam = new EditFormParam
+    {
+	    ModelName = "RatePlanText",
+	    ReturnUrl = "/admin/hotels/RatePlansTextList?hotelCode=" + hotelCode,
+	    ReturnText = "Rate Plans Text List",
+	    KeyPropertyLabel = "Id",
+	    KeyPropertyName = "Id",
+	    KeyPropertyValue = Model.Id,
+	    FormAction = "RatePlanTextAdd"
+    };
+}
+
+@await Html.PartialAsync("Hotels/_RatePlanTextEdit", @Model)
+
+@section InfoItems
+{
+	@await Html.PartialAsync("Hotels/_RatePlanTextEditInfo", "Rate Plan Text Add")
+}
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/mshapp/msh-itemdatesservice.js"></script>
+	<script src="~/js/Admin/Hotels/msh-admin-rateplans.js"></script>
+}
