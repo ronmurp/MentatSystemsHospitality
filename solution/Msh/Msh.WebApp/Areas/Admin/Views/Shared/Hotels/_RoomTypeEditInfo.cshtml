@@ -1,21 +1,51 @@
 ﻿@* Info blocks for _RoomTypeEdit.cshtml *@
 
-
-@section InfoItems {
-
-	<div data-info-for="info-room-type-code">
-		<span>Room Type Code</span>
-		<div>
-			<p>
-				A unique code that must match the Opera code for the room type.
-			</p>
-		</div>
+<div data-info-for="info-room-type-groups">
+	<span>Room Type Groups</span>
+	<div>
+		<p>
+			Room Groups is a means of assigning a Group Code to a number of different but broadly similar rooms, each with unique Room Type Code. 
+			The Group Code can then be used instead of the Room Type Code for listing the rooms in results, to present a smaller list of effective room types.
+		</p>
+		<p>
+			When the user picks a room type by group, the system will assign one of the available actual room types.
+		</p>
+		<p>
+			This may change at the next stage, if the user chooses a particular room type configuration, such as a Twin or Double room.
+			If the auto assigned room type is a Twin, and the user selects a Double, the Twin Room Type Code will be swapped for a Double Room Type Code,
+			assuming both are available. If only one configuration is available, the choice of configuration will not be presented.
+		</p>
+		<p>
+			When groups are used, the descriptive texts for the room types of all rooms in the same group should be the same.
+			If groups are not used you can make the texts specific to the room type code.
+		</p>
+		
 	</div>
-	<div data-info-for="info-group-code">
+</div>
+
+<div data-info-for="info-room-type-code">
+	<span>Room Type Code</span>
+	<div>
+		<p>
+			A unique code that must match the Opera code for the room type.
+		</p>
+	</div>
+</div>
+
+<div data-info-for="info-enabled">
+	<span>Enabled</span>
+	<div>
+		<p>
+			The room type must be enabled before it can be used.
+		</p>
+	</div>
+</div>
+
+<div data-info-for="info-group-code">
 		<span>Group Code</span>
 		<div>
 			<p>
-				A code used to group similar rooms.
+				A code used to group similar rooms. It applies only if room type groups are enabled.
 			</p>
 		</div>
 	</div>
@@ -31,7 +61,7 @@
 		<span>Name</span>
 		<div>
 			<p>
-				The name of he room.
+				The name of the room.
 			</p>
 		</div>
 	</div>
@@ -39,7 +69,7 @@
 		<span>Description</span>
 		<div>
 			<p>
-				A description of the room.
+				A description of the room. This must be plain text.
 			</p>
 		</div>
 	</div>
@@ -47,7 +77,8 @@
 		<span>HTML Description</span>
 		<div>
 			<p>
-
+				This description can contain HTML, with links to pages elsewhere that describe the room in more detail. 
+				It is intended to be a longer description than the simpler description.
 			</p>
 		</div>
 	</div>
@@ -55,7 +86,8 @@
 		<span>Image File</span>
 		<div>
 			<p>
-
+				If the room is presented with a single image, enter that image here. Alternatively, if a gallery is being used,
+				enter the image gallery HTML.
 			</p>
 		</div>
 	</div>
@@ -63,7 +95,8 @@
 		<span>Room Count</span>
 		<div>
 			<p>
-
+				The number of rooms of this type available in the hotel. 
+				If this is not going to be presented to the user it can be ignored as there is no other use for this number.
 			</p>
 		</div>
 	</div>
@@ -87,7 +120,10 @@
 		<span>Twin Option</span>
 		<div>
 			<p>
-
+				Rooms are presumed to be Double, Twin or either (as different rooms or configurable)
+			</p>
+			<p>
+				If the room can be a Twin or a Double, set the Twin Option on.
 			</p>
 		</div>
 	</div>
@@ -167,7 +203,11 @@
 		<span>No Dogs</span>
 		<div>
 			<p>
-
+				Set this flag if dogs or other pest are not allowed in this room type.
+			</p>
+			<p>
+				Although originally intended for restricting dogs, this can be used to restrict any type of animal.
+				Set the No Dogs Text accordingly.
 			</p>
 		</div>
 	</div>
@@ -175,8 +215,8 @@
 		<span>No Dogs Text</span>
 		<div>
 			<p>
-
+				The text displayed to the user to explain that dogs or other pets are not allowed in this room type.
 			</p>
 		</div>
 	</div>
-}
+

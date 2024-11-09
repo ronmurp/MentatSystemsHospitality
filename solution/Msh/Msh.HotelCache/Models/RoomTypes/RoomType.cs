@@ -37,7 +37,6 @@ public class RoomType
 	/// <summary>
 	/// A group code, used when rooms are grouped
 	/// </summary>
-
 	[Display(Name = "Group Code"), Info("group-code")]
 	public string? GroupCode { get; set; } = string.Empty;
 
@@ -56,12 +55,10 @@ public class RoomType
 	[Display(Name = "Name"), Info("name")]
 	public string? Name { get; set; } = string.Empty;
 
-	/// <summary>
-	/// A short single line text description
-	/// </summary>
+	
 
-	[Display(Name = "Description"), Info("description")]
-	public string? Description { get; set; } = string.Empty;
+	[Display(Name = "Short Description"), Info("description")]
+	public string? ShortDescription { get; set; } = string.Empty;
 
 	/// <summary>
 	/// HTML description for the room
@@ -116,7 +113,7 @@ public class RoomType
 	/// When options are restricted ; 'Double only'
 	/// </summary>
 
-	[Display(Name = "Otion Warning"), Info("option-warning")]
+	[Display(Name = "Option Warning"), Info("option-warning")]
 	public string? OptionTypeWarning { get; set; } = string.Empty;
 
 
@@ -126,34 +123,6 @@ public class RoomType
 	/// </summary>
 	[Display(Name = "Image Gallery"), Info("image-gallery")]
 	public string? ImageGallery { get; set; } = string.Empty;
-
-
-
-	[Display(Name = "GroupName"), Info("group-name")]
-	public string? GroupName { get; set; } = string.Empty;
-
-
-	[Display(Name = "Group Description"), Info("group-description")]
-	public string? GroupDescription { get; set; } = string.Empty;
-
-	/// <summary>
-	/// HTML description for the room group, where room types
-	/// </summary>
-	[Display(Name = "Group HTML Description"), Info("group-html-description")]
-	public string? GroupLongDescription { get; set; } = string.Empty;
-
-
-
-    [Display(Name="Group Image"), Info("group-image")]
-	public string? GroupImageFile { get; set; } = string.Empty;
-
-
-    [Display(Name = "Group Image Gallery"), Info("group-image-gallery"), Category("Html")]
-	public string? GroupImageGallery { get; set; } = string.Empty;
-
-
-	[Display(Name = "Group Twin Option"), Info("group-twin-description")]
-	public bool GroupTwinOption { get; set; }
 
 
 	[Display(Name = "No Dogs"), Info("no-dogs")]

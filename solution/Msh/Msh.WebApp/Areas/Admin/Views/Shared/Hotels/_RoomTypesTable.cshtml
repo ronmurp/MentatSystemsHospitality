@@ -24,6 +24,11 @@
 	</th>
 	<th>Group Code</th>
 	<th>Name</th>
+	<th>Category</th>
+	<th>Occupancy</th>
+	<th>Option</th>
+	<th>Code</th>
+		<th>Warning</th>
 	<th>   
 		<div class="cell-outer">
 			Move
@@ -60,7 +65,11 @@
 			<td>@rt.Code</td>
 			<td>@rt.GroupCode</td>
 			<td>@rt.Name</td>
-			
+			<td>@rt.RoomCategory</td>
+			<td>@rt.Occupancy</td>
+				@await Html.PartialAsync("Hotels/_TableCheckMarkCell", rt.TwinOption)
+			<td>@rt.OptionTypeCode</td>
+			<td>@rt.OptionTypeWarning</td>
 				@{
 					var vm = new TableCommonCellsVm
 					{

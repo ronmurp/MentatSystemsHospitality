@@ -9,7 +9,7 @@
     ViewBag.EditFormParam = new EditFormParam
     {
 	    ModelName = "RoomType",
-	    ReturnUrl = "/admin/hotels/RoomTypeList?hotelCode=" + hotelCode,
+	    ReturnUrl = "/admin/hotels/RoomTypesList?hotelCode=" + hotelCode,
 	    ReturnText = "Room Type List",
 	    KeyPropertyLabel = "Room Type Code",
 	    KeyPropertyName = "Code",
@@ -19,6 +19,11 @@
 }
 
 @await Html.PartialAsync("Hotels/_RoomTypeEdit", @Model)
+
+@section InfoItems
+{
+	@await Html.PartialAsync("Hotels/_RoomTypeEditInfo", "Room Type Add")
+}
 
 @section Scripts {
 	<script src="~/js/mshapp/msh-apiservice.js"></script>

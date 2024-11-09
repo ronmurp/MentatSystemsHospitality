@@ -12,7 +12,9 @@
 
 <div class="text-center">
 	<h1 class="display-6">@title</h1>
-	<p></p>
+	<p>
+		Click to learn about the use of Groups of room types:  <info-icon name="info-room-type-groups" />
+	</p>
 </div>
 
 @await Html.PartialAsync("Admin/_AdminSaveSuccess", formParam)
@@ -55,24 +57,14 @@
 						<input asp-for="Name" class="form-control " />
 						<span asp-validation-for="Name" class="text-danger"></span>
 					</div>
-					<div class="form-group mb-3">
-						<label asp-for="Description" class="control-label"></label>&nbsp;
-						<info-icon name="info-description" />
-						<input asp-for="Description" class="form-control " />
-						<span asp-validation-for="Description" class="text-danger"></span>
-					</div>
+					
 					<div class="form-group mb-3">
 						<label asp-for="ImageFile" class="control-label"></label>&nbsp;
 						<info-icon name="info-image-file" />
 						<input asp-for="ImageFile" class="form-control " />
 						<span asp-validation-for="ImageFile" class="text-danger"></span>
 					</div>
-					<div class="form-group mb-3">
-						<label asp-for="ImageGallery" class="control-label"></label>&nbsp;
-						<info-icon name="info-image-gallery" />
-						<input asp-for="ImageGallery" class="form-control " />
-						<span asp-validation-for="ImageGallery" class="text-danger"></span>
-					</div>
+					
 					<div class="form-group mb-3">
 						<label asp-for="RoomCount" class="control-label"></label>&nbsp;
 						<info-icon name="info-room-count" />
@@ -85,11 +77,7 @@
 						<input asp-for="RoomCategory" class="form-control " />
 						<span asp-validation-for="RoomCategory" class="text-danger"></span>
 					</div>
-					<div class="form-check form-switch mb-3">
-						<input asp-for="RoomBlocked" type="checkbox" class="form-check-input " />
-						<label asp-for="RoomBlocked" class="form-check-label"></label>&nbsp;
-						<info-icon name="info-room-blocked" />
-					</div>
+					
 				</div>
 				<div class="col-md-6 col-12" >
 					
@@ -111,41 +99,6 @@
 						<span asp-validation-for="OptionTypeWarning" class="text-danger"></span>
 					</div>
 					
-					<div class="form-group mb-3">
-						<label asp-for="GroupName" class="control-label"></label>&nbsp;
-						<info-icon name="info-group-name" />
-						<input asp-for="GroupName" class="form-control " />
-						<span asp-validation-for="GroupName" class="text-danger"></span>
-					</div>
-					<div class="form-group mb-3">
-						<label asp-for="GroupDescription" class="control-label"></label>&nbsp;
-						<info-icon name="info-group-description" />
-						<input asp-for="GroupDescription" class="form-control " />
-						<span asp-validation-for="GroupDescription" class="text-danger"></span>
-					</div>
-					<div class="form-group mb-3">
-						<label asp-for="GroupLongDescription" class="control-label"></label>&nbsp;
-						<info-icon name="info-group-html-description" />
-						<input asp-for="GroupLongDescription" class="form-control " />
-						<span asp-validation-for="GroupLongDescription" class="text-danger"></span>
-					</div>
-					<div class="form-group mb-3">
-						<label asp-for="GroupImageFile" class="control-label"></label>&nbsp;
-						<info-icon name="info-group-image" />
-						<input asp-for="GroupImageFile" class="form-control " />
-						<span asp-validation-for="GroupImageFile" class="text-danger"></span>
-					</div>
-					<div class="form-group mb-3">
-						<label asp-for="GroupImageGallery" class="control-label"></label>&nbsp;
-						<info-icon name="info-group-image-gallery" />
-						<textarea asp-for="GroupImageGallery" class="form-control " ></textarea>
-						<span asp-validation-for="GroupImageGallery" class="text-danger"></span>
-					</div>
-					<div class="form-check form-switch mb-3">
-						<input asp-for="GroupTwinOption" type="checkbox" class="form-check-input " />
-						<label asp-for="GroupTwinOption" class="form-check-label"></label>&nbsp;
-						<info-icon name="info-group-twin-description" />
-					</div>
 					<div class="form-check form-switch mb-3">
 						<input asp-for="NoDogs" type="checkbox" class="form-check-input " />
 						<label asp-for="NoDogs" class="form-check-label"></label>&nbsp;
@@ -157,7 +110,11 @@
 						<input asp-for="NoDogsText" class="form-control " />
 						<span asp-validation-for="NoDogsText" class="text-danger"></span>
 					</div>
-					
+					<div class="form-check form-switch mb-3">
+						<input asp-for="RoomBlocked" type="checkbox" class="form-check-input " />
+						<label asp-for="RoomBlocked" class="form-check-label"></label>&nbsp;
+						<info-icon name="info-room-blocked" />
+					</div>
 				</div>
 			</div>
 			
@@ -172,9 +129,20 @@
 				</div>
 			</div>
 			
+			<div class="row">
+				<div class="col-12">
+					<div class="form-group mb-3">
+						<label asp-for="ImageGallery" class="control-label"></label>&nbsp;
+						<info-icon name="info-image-gallery" />
+						<textarea asp-for="ImageGallery" class="form-control " ></textarea>
+						<span asp-validation-for="ImageGallery" class="text-danger"></span>
+					</div>
+				</div>
+			</div>
+			
 			@await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
 			{
-				ReturnUrl = $"/Admin/Hotels/RoomTypeList?hotelCode={hotelCode}",
+				ReturnUrl = $"/Admin/Hotels/RoomTypesList?hotelCode={hotelCode}",
 				ReturnText = ConstReturnText.ReturnToDash,
 				ButtonType = SaveReturnTypes.Submit,
 				SaveOperation = "submit"
@@ -185,5 +153,3 @@
 	</div>
 </div>
 
-
-@await Html.PartialAsync("Hotels/_RoomTypeEditInfo", "Room Type Edit")

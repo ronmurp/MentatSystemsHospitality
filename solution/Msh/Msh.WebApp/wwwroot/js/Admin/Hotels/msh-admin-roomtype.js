@@ -19,7 +19,7 @@
 
     $(ids.selectHotel).on('change', () => {
         var hotelCode = getHotelCode();
-        util.redirectTo(`admin/hotels/RoomTypeList?hotelCode=${hotelCode}`);
+        util.redirectTo(`admin/hotels/RoomTypesList?hotelCode=${hotelCode}`);
     });
 
     app.hotelActionService.init({
@@ -32,7 +32,7 @@
         deleteBulkApi: '/api/hotelapi/RoomTypeDeleteBulk',
         copyBulkApi: '/api/hotelapi/RoomTypeCopyBulk',
         sortListApi: '/api/hotelapi/RoomTypesSort',
-        listPath: 'admin/hotels/RoomTypeList'
+        listPath: 'admin/hotels/RoomTypesList'
     });
 
 
