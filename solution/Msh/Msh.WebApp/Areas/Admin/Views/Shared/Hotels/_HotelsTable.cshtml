@@ -11,6 +11,7 @@
 		<th>Hotel Code</th>
 		<th>Chain Code</th>
 		<th>Enabled</th>
+		<th>Room Groups</th>
 		<th>Name</th>
 		<th>Stay Dates</th>
 		<th>Book Dates</th>
@@ -46,6 +47,7 @@
 			<td>@hotel.HotelCode</td>
 			<td>@hotel.ChainCode</td>
 			@await Html.PartialAsync("Hotels/_TableCheckMarkCell", hotel.Enabled)
+			@await Html.PartialAsync("Hotels/_TableCheckMarkCell", hotel.RoomTypeGroups)
 			<td>@hotel.Name</td>
 			<td style="width:80px;">
 				<div class="cell-outer">

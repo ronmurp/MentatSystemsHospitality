@@ -120,6 +120,12 @@ public class HotelBase
 	public string NoDogsText { get; set; } = string.Empty;
 
 	/// <summary>
+	/// Introduced for when a hotel does not allow dogs in any rooms
+	/// </summary>
+	[Description("Room Type Groups"), Info("room-type-groups")]
+	public bool RoomTypeGroups { get; set; }
+
+	/// <summary>
 	/// Notes that are only available to admin
 	/// </summary>
 	[Description("Admin Notes"), Info("admin-notes"), Category("TextArea")] 
