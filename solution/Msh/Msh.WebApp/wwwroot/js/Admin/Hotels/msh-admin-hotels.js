@@ -37,10 +37,14 @@
         useHotelCode: false
     }
 
-    pallsA.init(inputs);
-    pallsB.init(inputs);
-    pallsLoad.init(inputs);
-    pallsLock.init(inputs);
+    var editType = $('#edit-type').val();
+
+    if (editType === "hotel-list") {
+        pallsA.init(inputs);
+        pallsB.init(inputs);
+        pallsLoad.init(inputs);
+        pallsLock.init(inputs);
+    }
 
 }(jQuery));
 
