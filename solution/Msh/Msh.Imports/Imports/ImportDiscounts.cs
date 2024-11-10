@@ -3,7 +3,10 @@ using System.Xml.Linq;
 using Msh.Common.Models.OwsCommon;
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Discounts;
+using Msh.HotelCache.Models.Hotels;
 using Msh.TestSupport;
+using Msh.WebApp.Areas.Admin.Models;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace Msh.Imports.Imports;
@@ -69,10 +72,23 @@ public class ImportDiscounts
     }
 
     [Test]
-    [TestCase("LWH")]
-    public async Task ImportDiscountsByHotel(string hotelCode)
+   
+    public async Task ImportDiscountsByHotel()
     {
-	    var dir = @"C:\Proj2\elh-wbs4\solution\WbsApplication\App_Data\DiscountCodes";
+	    var sut = TestConfigUtilities.GetRepository();
+
+	    var x = await sut.GetConfigAsync(ConstHotel.Cache.Hotel);
+
+	    var hotels = JsonConvert.DeserializeObject<List<Hotel>>(x.Content);
+
+	    var allHotelsList = new Dictionary<string, List<DiscountCodeImport>>();
+
+	    foreach (var h in hotels)
+	    {
+			allHotelsList.Add(h.HotelCode, new List<DiscountCodeImport>());
+	    }
+
+		var dir = @"C:\Proj2\elh-wbs4\solution\WbsApplication\App_Data\DiscountCodes";
 	    var files = Directory.GetFiles(dir);
 
 	    var bigList = new List<DiscountCode>();
@@ -81,7 +97,7 @@ public class ImportDiscounts
 		{
 			var xdoc = XDocument.Load(f);
 			var list = xdoc.Descendants("DiscountCode")
-				.Select(c => new DiscountCode
+				.Select(c => new DiscountCodeImport
 				{
 					Code = c.ValueA("code"),
 					Enabled = c.ValueA(false, "enabled"),
@@ -112,6 +128,8 @@ public class ImportDiscounts
 					DiscountWarning = c.ValueE("DiscountWarning"),
 
 					RequiresCopyPaste = c.ValueE(false, "RequiresCopyPaste"),
+
+					HotelCodes = GetHotelCodes(c, hotels),
 
 					// OfferDates = GetOfferDates(c),
 
@@ -147,16 +165,89 @@ public class ImportDiscounts
 					//DiscountErrors = LoadXml(c.Descendants("ErrorText")),
 					DiscountErrors = LoadXml(c.Descendants("ErrorText")),
 
+					ImportRatePlansEnabled = GetEnabledPlans(c, "EnabledRatePlans"),
+					ImportRatePlansDisabled = GetEnabledPlans(c, "DisabledRatePlans")
+
 				}).ToList();
 
-			bigList.AddRange(list);
 
+			// Go through the imported list
+			foreach (var dci in list)
+			{
+				// For each case where there's a valid hotel code ...
+				foreach (var hotelCode in dci.HotelCodes)
+				{
+					allHotelsList[hotelCode].Add(dci);
+				}
+			}
 		}
 
-		await TestConfigUtilities.SaveConfig($"{ConstHotel.Cache.Discounts}-{hotelCode}", bigList);
+		foreach (var hotelCode in allHotelsList.Keys)
+		{	
+			var dciList = allHotelsList[hotelCode];
+			foreach (var dci in dciList)
+			{
+				// Copy only those rate plans for the corresponding hotelCode
+				dci.EnabledHotelPlans = dci?.ImportRatePlansEnabled?.FirstOrDefault(h => h.HotelCode == hotelCode)?.RatePlans ?? [];
+				dci.DisabledHotelPlans = dci?.ImportRatePlansDisabled?.FirstOrDefault(h => h.HotelCode == hotelCode)?.RatePlans ?? [];
+			}
+
+
+			await TestConfigUtilities.SaveConfig($"{ConstHotel.Cache.Discounts}-{hotelCode}", allHotelsList[hotelCode]);
+		}
+
+		
 	}
 
-    public List<DiscountError> LoadXml(IEnumerable<XElement> el)
+    public List<string> GetHotelCodes(XElement c, List<Hotel> hotels)
+    {
+	    var s = c.ValueE("Hotels");
+	    var list = s.Split(",".ToCharArray()).ToList();
+	    list = list.Where(d => !string.IsNullOrEmpty(d)).ToList();
+
+	    if (list.Count == 0)
+	    {
+			// If there are no hotels, it applies to all
+			foreach(var h in hotels)
+				list.Add(h.HotelCode);
+	    }
+
+	    return list;
+    }
+
+    public List<ImportHotelRp> GetEnabledPlans(XElement c, string ratePlans)
+    {
+	    var output = new List<ImportHotelRp>();
+
+	    var list = c.Descendants(ratePlans).Descendants("Hotel")
+		    .Select(h => new 
+			{
+				HotelCode = h.ValueA("hotelCode"),
+				RatePlans = h.Descendants("RatePlan")
+					.Select(r => new 
+					{
+						Code = r.ValueA("code")
+					}).ToList()
+		    }).ToList();
+
+	    foreach (var x in list)
+	    {
+		    var y = new ImportHotelRp
+		    {
+			    HotelCode = x.HotelCode
+		    };
+		    foreach (var z in x.RatePlans)
+		    {
+				y.RatePlans.Add(z.Code);
+		    }
+			output.Add(y);
+	    }
+
+	    return output;
+    }
+
+
+	public List<DiscountError> LoadXml(IEnumerable<XElement> el)
     {
 	    var config = el
 		    .Select(c => new DiscountErrorsOld()
@@ -215,5 +306,21 @@ public class ImportDiscounts
 	    }
 
 		return list;
+    }
+
+    public class DiscountCodeImport : DiscountCode
+    {
+	    public List<string> HotelCodes { get; set; } = [];
+
+		public List<ImportHotelRp> ImportRatePlansEnabled { get; set; }
+
+		public List<ImportHotelRp> ImportRatePlansDisabled { get; set; }
+	}
+
+    public class ImportHotelRp
+    {
+	    public string? HotelCode { get; set; }
+
+	    public List<string> RatePlans { get; set; } = [];
     }
 }
