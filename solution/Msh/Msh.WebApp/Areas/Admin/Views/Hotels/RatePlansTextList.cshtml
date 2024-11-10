@@ -44,10 +44,16 @@
 
 @section InfoItems {
 
-	<div data-info-for="info-rate-plans">
-		<span>Rate Plans</span>
+	<div data-info-for="info-rate-plans-texts">
+		<span>Rate Plan Texts</span>
 		<div>
-			<p></p>
+			<p>The rate plan texts are common texts that can be used in rate plans.
+				This avoids having to repeat the same text on every rate plan.
+			</p>
+			<p>
+				The ID of each common text is placed in the text field of each rate plan to which it applies.
+				Then, when you want to change the text, you change it only once, in the common text field, and the system propogates it to the rate plans.
+			</p>
 			@await Html.PartialAsync("Hotels/_ListIconsInfo")
 		</div>
 	</div>

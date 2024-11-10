@@ -128,10 +128,10 @@
 
 
 	<div data-info-for="info-elh-user-id">
-		<span>ELH User ID (Channel USer ID)</span>
+		<span>ELH User ID</span>
 		<div>
 			<p>
-
+				This is the channel user ID that is used in calls to OWS, along with the password.
 			</p>
 		</div>
 	</div>
@@ -139,7 +139,7 @@
 		<span>Password</span>
 		<div>
 			<p>
-
+				It is preferable that passwords are stored in an environment variable, but for testing of the staging site it can be stored here.
 			</p>
 		</div>
 	</div>
@@ -147,7 +147,7 @@
 		<span>Chain Code</span>
 		<div>
 			<p>
-
+				The default Chain Code used for OWS calls. Individual for individual hotels may be set in the Hotels list.
 			</p>
 		</div>
 	</div>
@@ -155,15 +155,16 @@
 		<span>Default Hotel Code</span>
 		<div>
 			<p>
-
+				The Hotel Code of the default hotel used for OWS calls that are not hotel specific but still require a Hotel Code.
 			</p>
 		</div>
 	</div>
 	<div data-info-for="info-password-env-var">
-		<span>Password Environment Variable</span>
+		<span>Password Env Var</span>
 		<div>
 			<p>
-
+				This is the environment variable name where the OWS password is stored. 
+				If this is blank the password will be expected to be in the Password field.
 			</p>
 		</div>
 	</div>
@@ -171,7 +172,7 @@
 		<span>BASE URL</span>
 		<div>
 			<p>
-
+				The base URL is that part of the URL to be used in OWS calls, but without the module specific name: Reservations, Information, etc.
 			</p>
 		</div>
 	</div>
@@ -227,7 +228,8 @@
 		<span>OWS Retry Count</span>
 		<div>
 			<p>
-
+				WHen OWS returns certain errors, the booking system might be able to try the call again. 
+				This is the number of times the booking system will retry before abandoning the attempt.
 			</p>
 		</div>
 	</div>
@@ -235,15 +237,15 @@
 		<span>Default Card Payment Method</span>
 		<div>
 			<p>
-
+				When a payment is posted to OWS it requires a Payment Method code. Enter a default here.
 			</p>
 		</div>
 	</div>
 	<div data-info-for="info-voucher-payment-method">
-		<span>Voucher Paymen tMethod</span>
+		<span>Voucher Payment Method</span>
 		<div>
 			<p>
-
+				When a payment is posted to OWS for vouchers it requires a Voucher Payment Method code. Enter a default here.
 			</p>
 		</div>
 	</div>

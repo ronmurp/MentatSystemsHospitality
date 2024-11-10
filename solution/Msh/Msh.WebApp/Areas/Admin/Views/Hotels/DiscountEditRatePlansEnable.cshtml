@@ -46,10 +46,20 @@
 		<span>Enabled Rate Plans</span>
 		<div>
 			<p>
-				A list of rate plans that can be used with this discount. This might be the case for some specific discount that applies to a particular rate plan or set of rate plans.
+				This table lists all rate plans for the hotel. 
+				You can set the checkbox for any rate plans to which this discount can apply.
 			</p>
-			<p>Set the checkbox for each rate plan you want to be included.</p>
 			<p>If no rate plans are added, the discount is available with all rate plans.</p>
+			<p>
+				<b>WARNING</b> - When editing discount rate plans you must be working with the same data set for both discounts and rate plans.
+				For example, if you have pulled the discounts from the published list, you should also pull the rate plans from the published list.
+				If you edit then publish the discounts, and you have added a rate plan that has not been published, the discount will not work as expected.
+			</p>
+			<p>
+				<b>WARNING</b> - You should generally add only Enabled rate plans or Disabled rate plans, not both.
+				If you have added Enabled rate plans, then all others are disabled, so there's no need to add any disabled rate plans.
+				If you have added Disabled rate plans, then all other rate plans are enabled.
+			</p>
 		</div>
 	</div>
 }
@@ -58,5 +68,5 @@
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
 	<script src="~/js/admin/hotels/msh-admin-check-codes-select.js"></script>
-	
+	<script src="~/js/admin/hotels/msh-admin-discounts-rateplans.js"></script>
 }

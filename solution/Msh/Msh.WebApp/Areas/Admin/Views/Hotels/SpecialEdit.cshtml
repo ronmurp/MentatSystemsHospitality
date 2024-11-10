@@ -20,6 +20,11 @@
 
 @await Html.PartialAsync("Hotels/_SpecialEdit", @Model)
 
+@section InfoItems {
+
+	@await Html.PartialAsync("Hotels/_SpecialEditInfo", "Special Edit")
+}
+
 @section Scripts {
 	<script src="~/js/mshapp/msh-apiservice.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>

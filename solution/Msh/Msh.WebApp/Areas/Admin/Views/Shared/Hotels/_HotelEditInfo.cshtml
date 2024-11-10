@@ -1,12 +1,12 @@
 ﻿@* Info blocks for _HotelEdit.cshtml *@
 
-@section InfoItems {
+
 
 	<div data-info-for="info-chain-code">
 		<span>Chain Code</span>
 		<div>
 			<p>
-				This is a code required by Opera.
+				This is a code required by Opera when posting OWS SOAP messages.
 			</p>
 		</div>
 	</div>
@@ -15,6 +15,7 @@
 		<div>
 			<p>
 				The hotel code is used to identify a hotel in Opera, and in this web booking system.
+				The hotel codes used here must be those that Opera uses.
 			</p>
 		</div>
 	</div>
@@ -23,6 +24,7 @@
 		<div>
 			<p>
 				The name of the hotel, as it will appear on pages here, and in emails to the user.
+				Typically, this would be the same as used in Opera, but can be different.
 			</p>
 		</div>
 	</div>
@@ -70,18 +72,34 @@
 		<span>CRS Number</span>
 		<div>
 			<p>
-
+				The Central Reservations Number to call to make reservations. 
+				The customer can call this number if they have an issue booking.
 			</p>
-		</div>
-	</div>
-	<div data-info-for="info-crs-number-int">
-		<span>CRS Number Int</span>
-		<div>
 			<p>
-
+				Note that a system may be employed to make this a dynamic number.
 			</p>
 		</div>
 	</div>
+<div data-info-for="info-crs-number-int">
+	<span>CRS Number Int</span>
+	<div>
+		<p>
+			The Central Reservations Number to call to make reservations, for international customers. 
+			The customer can call this number if they have an issue booking.
+		</p>
+		<p>
+			Note that a system may be employed to make this a dynamic number.
+		</p>
+	</div>
+</div>
+<div data-info-for="info-enabled">
+	<span>Enabled</span>
+	<div>
+		<p>
+			The Enabled flag must be set to be able to make bookings for the hotel.
+		</p>
+	</div>
+</div>
 	<div data-info-for="info-disabled-text">
 		<span>Disabled Text</span>
 		<div>
@@ -117,7 +135,15 @@
 		<span>Room Type Groups</span>
 		<div>
 			<p>
-				Set this if room types are presented by their group code, where room types that are slightly different.
+				Set this if room types are to be presented by their group code, where room types that are slightly different.
+				When presented using group codes, rooms with different Room Type Code values are under the same Group Code.
+			</p>
+			<p>
+				For example, room types ABC might have 5 available, and DEF might have 4 available. If they are grouped under Group Code XYZ,
+				then there would be 9 XYZ available.
+			</p>
+			<p>
+				Once the room type has been selected by the customer, the system will auto-select either an ABC or a DEF.
 			</p>
 		</div>
 	</div>
@@ -130,5 +156,3 @@
 			</p>
 		</div>
 	</div>
-
-}

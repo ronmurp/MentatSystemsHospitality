@@ -12,7 +12,7 @@ public class OwsConfig
 	/// <summary>
 	/// The channel user Id
 	/// </summary>
-	[Display(Name="ELH User ID (Channel USer ID)")]
+	[Display(Name="ELH User ID (Channel User ID)")]
 	public string ElhUserId { get; set; } = "ELH_OWS_WBS";
 
 	// Todo - OwsConfig - Get from envirnoment variable
