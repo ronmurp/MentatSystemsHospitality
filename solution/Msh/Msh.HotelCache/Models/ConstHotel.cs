@@ -8,8 +8,11 @@ public static class ConstHotel
 
 		public const string Hotel = "Hotel";
         public const string RoomTypes = "RoomTypes";
+
         public const string RatePlans = "RatePlans";
         public const string RatePlansText = "RatePlansText";
+        public const string RatePlanSort = "RatePlanSort";
+
 		public const string RoomTypeFilters = "RoomTypeFilters";
         public const string Extras = "Extras";
         public const string Specials = "Specials";

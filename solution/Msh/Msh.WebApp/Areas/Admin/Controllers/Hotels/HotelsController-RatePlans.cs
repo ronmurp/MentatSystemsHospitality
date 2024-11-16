@@ -237,4 +237,53 @@ public partial class HotelsController
 	}
 
 
+	[HttpGet]
+	[Route("RatePlanSortList")]
+	public async Task<IActionResult> RatePlanSortList([FromQuery] string hotelCode = "")
+	{
+		var vm = new RatePlanSortListVm
+		{
+			HotelCode = string.IsNullOrEmpty(hotelCode) ? string.Empty : hotelCode,
+			HotelName = string.Empty
+		};
+
+		try
+		{
+			await Task.Delay(0);
+
+			vm.Hotels = await hotelRepository.GetData();
+
+			var hotel = string.IsNullOrEmpty(hotelCode)
+				? vm.Hotels.FirstOrDefault()
+				: vm.Hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
+
+			vm.HotelCode = hotel != null ? hotel.HotelCode : string.Empty;
+			vm.HotelName = hotel != null ? hotel.Name : string.Empty;
+
+			var ratePlans = (await ratePlanSortRepository.GetData(vm.HotelCode)) ?? [];
+
+			vm.RatePlanSorts = ratePlans;
+
+			return View(vm);
+		}
+		catch (NullConfigException ex)
+		{
+			//if (!string.IsNullOrEmpty(vm.HotelCode))
+			//{
+			//	await ratePlanRepository.SaveMissingConfigAsync($"{ConstHotel.Cache.RoomTypes}-{vm.HotelCode}", new List<RoomType>());
+			//}
+
+			vm.ErrorMessage = $"No room types for hotel {vm.HotelCode}";
+
+			return View(vm);
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"{ex.Message}");
+			vm.ErrorMessage = $"Error for hotel {vm.HotelCode}. {ex.Message}";
+			return View(vm);
+		}
+	}
+
+
 }
