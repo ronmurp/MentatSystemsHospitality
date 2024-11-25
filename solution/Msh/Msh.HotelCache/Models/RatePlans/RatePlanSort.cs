@@ -21,3 +21,8 @@ public class RatePlanSort
 	[Display(Name = "Order"), Info("info-order")]
 	public int Order { get; set; }
 }
+
+public class RatePlanSortVm : RatePlanSort
+{
+	public string Text { get; set; } = string.Empty;
+}

@@ -14,5 +14,5 @@ public class RatePlanTextListVm : HotelListVm
 
 public class RatePlanSortListVm : HotelListVm
 {
-	public List<RatePlanSort> RatePlanSorts { get; set; } = [];
+	public List<RatePlanSortVm> RatePlanSorts { get; set; } = [];
 }

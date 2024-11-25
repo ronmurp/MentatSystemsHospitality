@@ -2804,26 +2804,44 @@
 
             this.options = {
 
-                modalActionId: 'publishHotel',
-                modalActionTitle: 'Confirm Hotels Publish',
-                modalActionBody: 'Confirm publish of hotels list',
-                modalActionOnCLick: `onclick="window.mshMethods.publishHotelsConfirm()"`,
+                // modalAction properties relate to a modal that pops up to confirm action.
+                modalActionId: 'actionConfirm',
+                modalActionTitle: 'Confirm Some Action',
+                modalActionBody: 'This is a base option. The desired Confirm option has not been set.',
+                modalActionOnCLick: `onclick="window.mshMethods.modalActionConfirmBase()"`, // What to call when the OK button is clicked
                 modalActionOk: 'OK',
+
                 actionConfirmApiUrl: undefined, // `/api/hotelapi/HotelsPublish`,
                 actionConfirmData: {},
 
-                modalActionedId: 'publishedHotel',
-                modalActionedTitle: 'Publish Hotels',
-                modalActionedBody: 'The list of hotels was successfully published',
-                modalActionedOnCLick: `onclick="window.mshMethods.publishHotelsConfirm()"`,
+                // modalActioned properties relate to a post-action modal.
+                // This should be merely an acknowledgement modal.
+                // If the action modal fires an extion, that calls an api, a response from the api will popup another modal to confirm or show an error
+                modalActionedId: 'actionConfirmed',
+                modalActionedTitle: 'Some Action Confirmed',
+                modalActionedBody: 'This is a base option. The desired Confirmed option has not been set.',
+                modalActionedOnCLick: `onclick="window.mshMethods.modalActionConfirmedBase()"`, // What the confirmed should do after acknowledgement
                 modalActionedOk: 'OK',
-                actionedConfirmedApiUrl: undefined,
+                modalActionPostConfirmed: undefined,
+                modalActionedFooterOk: false
             }
             if (options) {
                 this.options = $.extend({}, this.options, options);
             }
         }
 
+        meth.extendMethods({
+
+            modalActionConfirmBase: function () {
+               
+            },
+            modalActionConfirmedBase: function () {
+                
+            }
+
+        });
+
+        // Expect to show this modal
         PairOverlay.prototype.action = function (options) {
 
             if (options) {
@@ -2832,6 +2850,10 @@
 
             var self = this;
 
+            // Remove any previous instance
+            if ($(`#${self.options.modalActionId}`).length)
+                $(`#${self.options.modalActionId}`).remove();
+
             modal.showModal(self.options.modalActionId, self.options.modalActionTitle, self.options.modalActionBody, {
                 footerOk: true,
                 okButtonClickScript: self.options.modalActionOnCLick,
@@ -2839,6 +2861,8 @@
             });
         }
 
+        // The action modal may or may not require a confirmed/actioned modal
+        // It may or may not require and api call
         PairOverlay.prototype.actioned = function (options) {
 
             if (options) {
@@ -2847,15 +2871,18 @@
 
             var self = this;
 
-            $(`#${self.options.modalActionedId}`).remove();
+            // Remove any previous 
+            if ($(`#${self.options.modalActionedId}`).length)
+                $(`#${self.options.modalActionedId}`).remove();
 
+            // Should we call a confirm API post? Expects actionConfirmData
             if (self.options.actionConfirmApiUrl) {
                 api.postAsync(self.options.actionConfirmApiUrl, self.options.actionConfirmData, function (data) {
                     if (data.success) {
                         var param = undefined;
                         if (self.options.modalActionedOnCLick) {
                             param = {
-                                footerOk: false,
+                                footerOk: self.options.modalActionedFooterOk,
                                 okButtonClickScript: self.options.modalActionedOnCLick,
                                 okButtonText: self.options.modalActionedOk,
                                 hideModalEnd: self.options.modalActionedHideModalEnd
@@ -2869,10 +2896,18 @@
                 })
                 return;
             }
-
-            if (self.options.actionConfirmOnClick) {
-                self.options.actionConfirmOnClick();
+            else if (self.options.modalActionedOnCLick) {
+                var param = {
+                    footerOk: self.options.modalActionedFooterOk,
+                    okButtonClickScript: self.options.modalActionedOnCLick,
+                    okButtonText: self.options.modalActionedOk,
+                    hideModalEnd: self.options.modalActionedHideModalEnd
+                }
+                modal.showModal(self.options.modalActionedId, self.options.modalActionedTitle, self.options.modalActionedBody, param)
+                return;
             }
+           
+
         }
 
         return {

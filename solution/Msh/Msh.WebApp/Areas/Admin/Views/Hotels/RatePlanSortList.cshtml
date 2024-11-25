@@ -10,6 +10,7 @@
 @await Component.InvokeAsync("AdminMenu", new
 {
 	menuName = AdminConst.MenuHotels, currentItem = "RatePlanSortList"
+
 })
 
 @await Html.PartialAsync("Hotels/_HiddenHotelInputs", @Model as HotelListVm)
@@ -18,16 +19,21 @@
 
 <div class="text-center">
 	<h1 class="display-6">@title</h1>
-	<p>Hotel Rate Plan Sort. Click for more information: <info-icon name="info-rate-plan-sort" /></p>
+	<p>Determine what order in which rate plans are presented to the user in the results page.</p>
 </div>
 
 @await Component.InvokeAsync("AdminHotelSelect", @Model.HotelCode)
 
+<div class="row mb-3">
+	<div class="col-4">
+		<button class="btn btn-primary" onclick="mshMethods.reloadRatePlans()">Reload Rate Plans</button> <info-icon name="info-reload-rate-plans" />
+	</div>
+</div>
+
+
 <div class="row">
 	<div class="col-12" id="table-target">
-		
 		@await Html.PartialAsync("Hotels/_RatePlanSortTable", @Model)
-
 	</div>
 </div>
 
@@ -51,14 +57,25 @@
 			@await Html.PartialAsync("Hotels/_ListIconsInfo")
 		</div>
 	</div>
+	<div data-info-for="info-reload-rate-plans">
+		<span>Reload Rate Plans</span>
+		<div>
+			<p>
+				The Rate Plan Sort List determines the order in which rate plans are presented in the results table after a search.
+			</p>
+			<p>
+				Reloading the list takes the current Rate Plans, and adds any missing ones to the list, and removes any old ones. You can then re-order the list by moving codes up and down.
+			</p>
+		</div>
+	</div>
+
 }
 
 @section Scripts{
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
-	<script src="~/js/mshapp/msh-itemdatesservice.js"></script>
 	<script src="~/js/admin/msh-admin-palls.js"></script>
-	<script src="~/js/admin/hotels/msh-admin-rateplans.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-rateplanssort.js"></script>
 }
 
 

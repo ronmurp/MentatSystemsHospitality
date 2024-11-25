@@ -9,4 +9,13 @@ public class TableCommonCellsVm
 	public int Index { get; set; }
 
 	public int Count { get; set; }
+
+	/// <summary>
+	/// These flags default to true because we usually want them all.
+	/// Can deselect any we don't want.
+	/// </summary>
+	public bool IncludeMove { get; set; } = true;
+	public bool IncludeEdit { get; set; } = true;
+	public bool IncludeCopy { get; set; } = true;
+	public bool IncludeCheckbox { get; set; } = true;
 }
