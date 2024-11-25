@@ -6,11 +6,12 @@ using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.RatePlans;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
+using static Msh.Opera.Ows.Services.CustomTest.CustomAvailabilityService;
 
 namespace Msh.WebApp.Areas.Admin.Controllers.Hotels;
-
 public partial class HotelsController
 {
+
 	[Route("RatePlansList")]
 	public async Task<IActionResult> RatePlansList([FromQuery] string hotelCode = "")
 	{
@@ -84,7 +85,7 @@ public partial class HotelsController
 
 	[HttpPost]
 	[Route("RatePlanAdd")]
-	public async Task<IActionResult> RatePlanAdd([FromForm]RoomRatePlan ratePlan, string hotelCode)
+	public async Task<IActionResult> RatePlanAdd([FromForm] RoomRatePlan ratePlan, string hotelCode)
 	{
 		ViewBag.Languages = GetLanguages();
 		ViewBag.Hotels = await GetHotels();
@@ -93,7 +94,7 @@ public partial class HotelsController
 
 		if (ModelState.IsValid)
 		{
-			
+
 
 			var ratePlans = await ratePlanRepository.GetData(hotelCode);
 
@@ -101,7 +102,7 @@ public partial class HotelsController
 			{
 				//testModel.Hotels = testModel.Hotels.Where(m => !string.IsNullOrEmpty(m)).ToList();
 				ratePlan.Notes = string.IsNullOrEmpty(ratePlan.Notes) ? string.Empty : ratePlan.Notes;
-				
+
 				ratePlans.Add(ratePlan);
 				await ratePlanRepository.Save(ratePlans, hotelCode);
 				return RedirectToAction(nameof(RatePlanAdd), new { IsSuccess = true, HotelCode = hotelCode, Code = ratePlan.Code });
@@ -233,55 +234,6 @@ public partial class HotelsController
 		catch (Exception ex)
 		{
 			return GetFail(ex.Message);
-		}
-	}
-
-
-	[HttpGet]
-	[Route("RatePlanSortList")]
-	public async Task<IActionResult> RatePlanSortList([FromQuery] string hotelCode = "")
-	{
-		var vm = new RatePlanSortListVm
-		{
-			HotelCode = string.IsNullOrEmpty(hotelCode) ? string.Empty : hotelCode,
-			HotelName = string.Empty
-		};
-
-		try
-		{
-			await Task.Delay(0);
-
-			vm.Hotels = await hotelRepository.GetData();
-
-			var hotel = string.IsNullOrEmpty(hotelCode)
-				? vm.Hotels.FirstOrDefault()
-				: vm.Hotels.FirstOrDefault(h => h.HotelCode == hotelCode);
-
-			vm.HotelCode = hotel != null ? hotel.HotelCode : string.Empty;
-			vm.HotelName = hotel != null ? hotel.Name : string.Empty;
-
-			var ratePlans = (await ratePlanSortRepository.GetData(vm.HotelCode)) ?? [];
-
-			vm.RatePlanSorts = ratePlans;
-
-			return View(vm);
-		}
-		catch (NullConfigException ex)
-		{
-			//if (!string.IsNullOrEmpty(vm.HotelCode))
-			//{
-			//	await ratePlanRepository.SaveMissingConfigAsync($"{ConstHotel.Cache.RoomTypes}-{vm.HotelCode}", new List<RoomType>());
-			//}
-
-			vm.ErrorMessage = $"No room types for hotel {vm.HotelCode}";
-
-			return View(vm);
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"{ex.Message}");
-			vm.ErrorMessage = $"Error for hotel {vm.HotelCode}. {ex.Message}";
-			return View(vm);
 		}
 	}
 
