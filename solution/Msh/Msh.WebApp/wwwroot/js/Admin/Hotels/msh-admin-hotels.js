@@ -116,7 +116,7 @@
 
     var apiRoot = '/api/hotelapi';
 
-    var optionsLoad = {
+    var options = {
         modalActionId: 'loadHotel',
         modalActionTitle: 'Confirm Hotels Load',
         modalActionBody: 'Confirm load of hotels list',
@@ -124,11 +124,12 @@
         modalActionOk: 'OK',
         loadConfirmApiUrl: `${apiRoot}/HotelsLoad`,
 
-        modalActionedId: 'loadHotel',
-        modalActionedTitle: 'Load Hotels',
+        modalActionedId: 'loadedHotel',
+        modalActionedTitle: 'Loaded Hotels',
         modalActionedBody: 'The list of hotels was successfully loaded',
         modalActionedOnCLick: `onclick="window.mshMethods.loadHotelsConfirmed()"`,
         // modalPublishedOk: 'OK',
+        modalActionedFooterOk: false,
         modalActionedHideModalEnd: 'window.mshMethods.loadHotelsConfirmed'
     }
 
@@ -146,7 +147,7 @@
         return html;
     }
 
-    var loadPair = new mas.PairOverlay(optionsLoad);
+    var loadPair = new mas.PairOverlay(options);
 
     var loadSource = '';
 
@@ -158,8 +159,8 @@
                 list.forEach((v) => {
                     optionsHtml += `<option value="${v.value}">${v.text}</option>`
                 });
-                optionsLoad.modalActionBody = getLoadBody(optionsHtml);
-                loadPair.action(optionsLoad);
+                options.modalActionBody = getLoadBody(optionsHtml);
+                loadPair.action(options);
                 return;
             } else {
                 modal.showError(data.userErrorMessage);
@@ -170,14 +171,15 @@
 
     meth.extendMethods({
     
-        loadHotels: function () {
+        loadData: function () {
             getLoadList();
         },
         loadHotelsConfirm: function () {
             loadSource = $('#selected-load').val();
-            optionsLoad.actionConfirmApiUrl = `/api/hotelapi/HotelsLoad`;
-            optionsLoad.actionConfirmData = { code: loadSource };
-            loadPair.actioned(optionsLoad);
+            $(`#${options.modalActionId}`).remove();
+            options.actionConfirmApiUrl = `/api/hotelapi/HotelsLoad`;
+            options.actionConfirmData = { code: loadSource };
+            loadPair.actioned(options);
         },
         loadHotelsConfirmed: function () {
             util.redirectTo('admin/hotels/HotelsList');

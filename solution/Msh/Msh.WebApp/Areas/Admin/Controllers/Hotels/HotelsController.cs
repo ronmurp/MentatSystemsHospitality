@@ -50,6 +50,11 @@ public partial class HotelsController(ILogger<HotelsController> logger,
 
 			var hotels = await hotelRepository.GetData();
 
+			if (hotels == null)
+			{
+				hotels = new List<Hotel>();
+			}
+
 			return View(hotels);
 		}
 		catch (NullConfigException ex)
