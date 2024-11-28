@@ -22,6 +22,6 @@ public class TestModelRepository(IConfigRepository configRepository)
 		await ConfigRepository.GetConfigPubContentAsync<List<TestModel>>(ConfigType());
 
 	
-	public async Task<bool> Save(List<TestModel> items) =>
-		await ConfigRepository.SaveConfigAsync(ConfigType(), items);
+	public async Task<bool> Save(List<TestModel> items, string notes = "") =>
+		await ConfigRepository.SaveConfigAsync(ConfigType(), items, notes);
 }

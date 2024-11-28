@@ -15,9 +15,10 @@ public partial interface IConfigRepository
 	/// <param name="configType"></param>
 	/// <param name="archiveCode"></param>
 	/// <param name="userId"></param>
+	/// <param name="notes"></param>
 	/// <returns></returns>
-	Task<bool> ArchiveConfigAsync(string configType, string archiveCode, string userId);
-
+	Task<bool> ArchiveConfigAsync(string configType, string archiveCode, string userId, string notes = "");
+		
 	Task RemoveConfigArchiveAsync(string configType, string archiveCode);
 
 	Task<bool> LockArchiveConfigAsync(string configType, string archiveCode, bool performLock, string userId);

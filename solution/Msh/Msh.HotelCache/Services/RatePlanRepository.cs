@@ -24,6 +24,6 @@ public class RatePlanRepository(IConfigRepository configRepository)
 	public async Task<List<RoomRatePlan>> GetData(string hotelCode) =>
 		await ConfigRepository.GetConfigContentAsync<List<RoomRatePlan>>(ConfigType(hotelCode)) ?? [];
 
-	public async Task<bool> Save(List<RoomRatePlan> items, string hotelCode) => 
-		await ConfigRepository.SaveConfigAsync(ConfigType(hotelCode), items);
+	public async Task<bool> Save(List<RoomRatePlan> items, string hotelCode, string notes = "") => 
+		await ConfigRepository.SaveConfigAsync(ConfigType(hotelCode), items, notes);
 }

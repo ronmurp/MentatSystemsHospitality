@@ -17,11 +17,11 @@ public interface IBaseConfigRepository<T>
 
 
 	//------ SAVE ---------------------
-	Task<bool> Save(T hotels);
+	Task<bool> Save(T hotels, string notes = "");
 
-	Task<bool> Publish(string userId);
+	Task<bool> Publish(string userId, string notes = "");
 
-	Task<bool> Archive(string archiveCode, string userId);
+	Task<bool> Archive(string archiveCode, string userId, string notes = "");
 
 
 	//---- LOCK

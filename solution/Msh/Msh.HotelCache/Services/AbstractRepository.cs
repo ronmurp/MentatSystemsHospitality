@@ -22,11 +22,11 @@ public abstract class AbstractRepository(IConfigRepository configRepository)
 		await ConfigRepository.GetConfigArchiveListAsync(ConfigType());
 
 
-	public async Task<bool> Publish(string userId) =>
-		await ConfigRepository.PublishConfigAsync(ConfigType(), userId);
+	public async Task<bool> Publish(string userId, string notes = "") =>
+		await ConfigRepository.PublishConfigAsync(ConfigType(), userId, notes);
 
-	public async Task<bool> Archive(string archiveCode, string userId) =>
-		await ConfigRepository.ArchiveConfigAsync(ConfigType(), archiveCode, userId);
+	public async Task<bool> Archive(string archiveCode, string userId, string notes = "") =>
+		await ConfigRepository.ArchiveConfigAsync(ConfigType(), archiveCode, userId, notes);
 
 	public async Task<bool> LockPublished(bool performLock, string userId) =>
 		await ConfigRepository.LockPublishConfigAsync(ConfigType(), performLock, userId);

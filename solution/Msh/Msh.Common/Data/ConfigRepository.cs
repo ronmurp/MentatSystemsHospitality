@@ -55,18 +55,19 @@ public partial class ConfigRepository(ConfigDbContext configDbContext) : IConfig
 	}
 
 
-	public async Task<bool> SaveConfigAsync<T>(string configType, T value)
+	public async Task<bool> SaveConfigAsync<T>(string configType, T value, string notes = "")
 	{
 		var json = JsonSerializer.Serialize(value);
 		var config = await GetConfigAsync(configType);
 		if (config == null)
 		{
-			config = new Config { ConfigType = configType, Content = json };
+			config = new Config { ConfigType = configType, Content = json, Notes = notes };
 			await AddConfigAsync(config);
 		}
 		else
 		{
 			config.Content = json;
+			config.Notes = notes;
 			await SaveConfigAsync(config);
 		}
 

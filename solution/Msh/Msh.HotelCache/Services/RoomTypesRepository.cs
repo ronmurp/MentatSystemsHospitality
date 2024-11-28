@@ -20,6 +20,6 @@ public class RoomTypeRepository(IConfigRepository configRepository)
 	public async Task<List<RoomType>> GetData(string hotelCode) =>
 		await ConfigRepository.GetConfigContentAsync<List<RoomType>>(ConfigType(hotelCode)) ?? [];
 
-	public async Task<bool> Save(List<RoomType> items, string hotelCode) =>
-		await ConfigRepository.SaveConfigAsync(ConfigType(hotelCode), items);
+	public async Task<bool> Save(List<RoomType> items, string hotelCode, string notes = "") =>
+		await ConfigRepository.SaveConfigAsync(ConfigType(hotelCode), items, notes);
 }

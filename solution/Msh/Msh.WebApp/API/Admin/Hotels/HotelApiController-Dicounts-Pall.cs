@@ -74,10 +74,11 @@ namespace Msh.WebApp.API.Admin.Hotels
 		/// </summary>
 		/// <param name="hotelCode"></param>
 		/// <param name="archiveCode"></param>
+		/// <param name="saveData"></param>
 		/// <returns></returns>
 		[HttpPost]
 		[Route("DiscountsArchive/{hotelCode}/{archiveCode}")]
-		public async Task<IActionResult> DiscountsArchive(string hotelCode, string archiveCode)
+		public async Task<IActionResult> DiscountsArchive(string hotelCode, string archiveCode, [FromBody] ArchiveSaveData saveData)
 		{
 			var userId = userService.GetUserId();
 			if (string.IsNullOrEmpty(userId))
@@ -85,7 +86,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 				return GetFail("You must be signed-in to perform this action.");
 			}
 			
-			var result = await discountRepository.Archive(hotelCode, archiveCode, userId);
+			var result = await discountRepository.Archive(hotelCode, archiveCode, userId, saveData.Notes);
 			if (!result)
 			{
 				return GetFail("The archive operation failed. The record may be locked.");

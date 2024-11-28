@@ -21,7 +21,7 @@ public partial interface IConfigRepository
 	/// <summary>
 	/// Save the current type = must exist. NullConfigException = thrown if not.
 	/// </summary>
-	Task<bool> SaveConfigAsync<T>(string configType, T value);
+	Task<bool> SaveConfigAsync<T>(string configType, T value, string notes = "");
 
 	Task<bool> SaveMissingConfigAsync<T>(string configType, T defaultObject);
 	

@@ -18,8 +18,8 @@ public class DiscountRepository(IConfigRepository configRepository) :
 		await ConfigRepository.GetConfigContentAsync<List<DiscountCode>>(ConfigType(hotelCode)) ?? [];
 
 	
-	public async Task<bool> Save(List<DiscountCode> items, string hotelCode) => 
-		await ConfigRepository.SaveConfigAsync(ConfigType(hotelCode), items);
+	public async Task<bool> Save(List<DiscountCode> items, string hotelCode, string notes = "") => 
+		await ConfigRepository.SaveConfigAsync(ConfigType(hotelCode), items, notes);
 
 	
 }

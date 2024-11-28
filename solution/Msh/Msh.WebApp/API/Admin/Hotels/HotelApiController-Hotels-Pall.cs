@@ -16,7 +16,7 @@ public partial class HotelApiController
 	/// <returns></returns>
 	[HttpPost]
 	[Route("HotelsPublish")]
-	public async Task<IActionResult> HotelsPublish()
+	public async Task<IActionResult> HotelsPublish([FromBody] ArchiveSaveData saveData)
 	{
 		try
 		{
@@ -27,7 +27,7 @@ public partial class HotelApiController
 				return GetFail("You must be signed-in to perform this action.");
 			}
 
-			var result = await hotelRepository.Publish(userId);
+			var result = await hotelRepository.Publish(userId, saveData.Notes);
 
 			if (!result)
 			{
@@ -89,7 +89,7 @@ public partial class HotelApiController
 	/// <returns></returns>
 	[HttpPost]
 	[Route("HotelsArchive/{archiveCode}")]
-	public async Task<IActionResult> HotelsArchive(string archiveCode)
+	public async Task<IActionResult> HotelsArchive(string archiveCode, [FromBody] ArchiveSaveData saveData)
 	{
 		try
 		{
@@ -99,7 +99,7 @@ public partial class HotelApiController
 				return GetFail("You must be signed-in to perform this action.");
 			}
 
-			var result = await hotelRepository.Archive(archiveCode, userId);
+			var result = await hotelRepository.Archive(archiveCode, userId, saveData.Notes);
 			if (!result)
 			{
 				return GetFail("The publish operation failed. The record may be locked.");

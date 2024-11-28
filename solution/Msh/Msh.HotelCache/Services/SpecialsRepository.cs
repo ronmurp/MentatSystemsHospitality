@@ -19,6 +19,6 @@ public class SpecialsRepository(IConfigRepository configRepository): AbstractHot
 	public async Task<List<Special>> GetData(string hotelCode) =>
 		await ConfigRepository.GetConfigContentAsync<List<Special>>(ConfigType(hotelCode)) ?? [];
 
-	public async Task<bool> Save(List<Special> items, string hotelCode) =>
-		await ConfigRepository.SaveConfigAsync(ConfigType(hotelCode), items);
+	public async Task<bool> Save(List<Special> items, string hotelCode, string notes = "") =>
+		await ConfigRepository.SaveConfigAsync(ConfigType(hotelCode), items, notes);
 }

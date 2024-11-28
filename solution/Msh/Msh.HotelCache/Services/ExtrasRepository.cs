@@ -21,7 +21,7 @@ public class ExtraRepository(IConfigRepository configRepository)
 	public async Task<List<Extra>> GetData(string hotelCode) =>
 		await ConfigRepository.GetConfigContentAsync<List<Extra>>(ConfigType(hotelCode)) ?? [];
 
-	public async Task<bool> Save(List<Extra> items, string hotelCode) =>
-		await ConfigRepository.SaveConfigAsync(ConfigType(hotelCode), items);
+	public async Task<bool> Save(List<Extra> items, string hotelCode, string notes = "") =>
+		await ConfigRepository.SaveConfigAsync(ConfigType(hotelCode), items, notes);
 
 }

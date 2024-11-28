@@ -71,7 +71,7 @@
 
         modalActionId: 'publishHotel',
         modalActionTitle: 'Confirm Hotels Publish',
-        modalActionBody: 'Confirm publish of hotels list',
+        modalActionBody: 'Confirm you want to publish the current hotels list.',
         modalActionOnCLick: `onclick="window.mshMethods.publishHotelsConfirm()"`,
         modalActionOk: 'OK',
         actionConfirmApiUrl: `${hotelApi}/HotelsPublish`,
@@ -85,16 +85,6 @@
     }
 
     var publishPair = new mas.PairOverlay(optionsPublish);
-
-    meth.extendMethods({
-        publishHotels: function () {
-            publishPair.action();
-        },
-        publishHotelsConfirm: function () {
-            
-            publishPair.actioned();
-        }
-    });
 
 }(jQuery));
 
@@ -225,32 +215,10 @@
        
     }
 
-    function getArchiveBody() {
-        var html = '';
-        html += '<div class="form-group mb-3">';
-        html += '<input type="text" id="archive-code" class="form-control" />'
-        html += '</div>';
-        return html;
-    }
-
     var archivePair = new mas.PairOverlay(optionsArchive);
 
     var loadSource = '';
 
-   
-    meth.extendMethods({
-        archiveHotels: function () {
-            optionsArchive.modalActionBody = getArchiveBody();
-            archivePair.action(optionsArchive);
-        },
-        archiveHotelsConfirm: function () {
-            var archiveCode = $('#archive-code').val();
-            optionsArchive.actionConfirmApiUrl = `/api/hotelapi/HotelsArchive/${archiveCode}`;
-            optionsArchive.actionConfirmData = null;
-            archivePair.actioned(optionsArchive);
-        }
-
-    });
 
 }(jQuery));
 

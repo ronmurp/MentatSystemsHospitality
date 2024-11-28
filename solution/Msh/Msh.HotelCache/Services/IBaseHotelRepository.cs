@@ -22,9 +22,9 @@ public interface IBaseHotelRepository<T>
 	Task<List<T>> GetData(string hotelCode);
 
 	//- 2 Saves
-	Task<bool> Save(List<T> items, string hotelCode);
-	Task<bool> Publish(string hotelCode, string userId);
-	Task<bool> Archive(string hotelCode, string archiveCode, string userId);
+	Task<bool> Save(List<T> items, string hotelCode, string notes = "");
+	Task<bool> Publish(string hotelCode, string userId, string notes = "");
+	Task<bool> Archive(string hotelCode, string archiveCode, string userId, string notes = "");
 
 	//- 3 - Lock
 	Task<bool> LockPublished(string hotelCode, bool performLock, string userId);

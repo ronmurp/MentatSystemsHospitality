@@ -13,8 +13,9 @@ public partial interface IConfigRepository
 	/// </summary>
 	/// <param name="configType"></param>
 	/// <param name="userId"></param>
+	/// <param name="notes"></param>
 	/// <returns></returns>
-	Task<bool> PublishConfigAsync(string configType, string userId);
+	Task<bool> PublishConfigAsync(string configType, string userId, string notes = "");
 
 	Task SavePublishConfigAsync(ConfigPub configPub);
 

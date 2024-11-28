@@ -17,6 +17,6 @@ public class HotelRepository(IConfigRepository configRepository) : AbstractRepos
 	public async Task<List<Hotel>> Archived(string archiveCode) =>
 		await ConfigRepository.GetConfigArchiveContentAsync<List<Hotel>>(ConfigType(), archiveCode);
 
-	public async Task<bool> Save(List<Hotel> hotels) => 
-		await ConfigRepository.SaveConfigAsync(ConfigType(), hotels);
+	public async Task<bool> Save(List<Hotel> hotels, string notes = "") => 
+		await ConfigRepository.SaveConfigAsync(ConfigType(), hotels, notes);
 }

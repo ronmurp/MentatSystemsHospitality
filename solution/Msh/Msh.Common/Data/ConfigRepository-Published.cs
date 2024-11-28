@@ -31,7 +31,7 @@ public partial class ConfigRepository
 		return obj;
 	}
 
-	public async Task<bool> PublishConfigAsync(string configType, string userId)
+	public async Task<bool> PublishConfigAsync(string configType, string userId, string notes = "")
 	{
 		var configPub = await configDbContext.ConfigsPub.FirstOrDefaultAsync(c => c.ConfigType == configType);
 		var hasPub = configPub != null;
@@ -46,6 +46,7 @@ public partial class ConfigRepository
 		configPubSave.Locked = true;
 		configPubSave.Published = DateTime.Now;
 		configPubSave.PublishedBy = userId;
+		configPubSave.Notes = notes;
 		if (hasPub)
 			configDbContext.ConfigsPub.Update(configPubSave);
 		else

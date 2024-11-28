@@ -30,11 +30,11 @@ public abstract class AbstractHotelRepository(IConfigRepository configRepository
 		await ConfigRepository.GetConfigArchiveListAsync(ConfigType(hotelCode));
 
 
-	public async Task<bool> Publish(string hotelCode, string userId) =>
-		await ConfigRepository.PublishConfigAsync(ConfigType(hotelCode), userId);
+	public async Task<bool> Publish(string hotelCode, string userId, string notes = "") =>
+		await ConfigRepository.PublishConfigAsync(ConfigType(hotelCode), userId, notes);
 
-	public async Task<bool> Archive(string hotelCode, string archiveCode, string userId) =>
-		await ConfigRepository.ArchiveConfigAsync(ConfigType(hotelCode), archiveCode, userId);
+	public async Task<bool> Archive(string hotelCode, string archiveCode, string userId, string notes = "") =>
+		await ConfigRepository.ArchiveConfigAsync(ConfigType(hotelCode), archiveCode, userId, notes);
 
 	public async Task<bool> LockPublished(string hotelCode, bool performLock, string userId) =>
 		await ConfigRepository.LockPublishConfigAsync(ConfigType(hotelCode), performLock, userId);

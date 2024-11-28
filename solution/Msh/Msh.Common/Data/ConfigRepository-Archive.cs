@@ -53,7 +53,7 @@ public partial class ConfigRepository
 		return obj;
 	}
 
-	public async Task<bool> ArchiveConfigAsync(string configType, string archiveCode, string userId)
+	public async Task<bool> ArchiveConfigAsync(string configType, string archiveCode, string userId, string notes = "")
 	{
 		var archiveType = $"{configType}={archiveCode}";
 
@@ -71,6 +71,7 @@ public partial class ConfigRepository
 		configArchiveSave.Locked = true;
 		configArchiveSave.Published = DateTime.Now;
 		configArchiveSave.PublishedBy = userId;
+		configArchiveSave.Notes = notes;
 		if (hasArchive)
 			configDbContext.ConfigsArchive.Update(configArchiveSave);
 		else

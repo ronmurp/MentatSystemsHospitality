@@ -18,7 +18,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		/// <returns></returns>
 		[HttpPost]
 		[Route("ExtrasPublish/{hotelCode}")]
-		public async Task<IActionResult> ExtrasPublish(string hotelCode)
+		public async Task<IActionResult> ExtrasPublish(string hotelCode, [FromBody] ArchiveSaveData saveData)
 		{
 			try
 			{
@@ -30,7 +30,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 				}
 
 
-				var result = await extraRepository.Publish(hotelCode, userId);
+				var result = await extraRepository.Publish(hotelCode, userId, saveData.Notes);
 
 				if (!result)
 				{
@@ -52,7 +52,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		/// <returns></returns>
 		[HttpGet]
 		[Route("ExtrasArchiveSelectList/{hotelCode}")]
-		public async Task<IActionResult> RExtrasArchiveSelectList(string hotelCode)
+		public async Task<IActionResult> ExtrasArchiveSelectList(string hotelCode)
 		{
 			try
 			{
@@ -89,10 +89,11 @@ namespace Msh.WebApp.API.Admin.Hotels
 		/// </summary>
 		/// <param name="hotelCode"></param>
 		/// <param name="archiveCode"></param>
+		/// <param name="saveData"></param>
 		/// <returns></returns>
 		[HttpPost]
 		[Route("ExtrasArchive/{hotelCode}/{archiveCode}")]
-		public async Task<IActionResult> ExtrasArchive(string hotelCode, string archiveCode)
+		public async Task<IActionResult> ExtrasArchive(string hotelCode, string archiveCode, [FromBody] ArchiveSaveData saveData)
 		{
 			try
 			{
@@ -102,7 +103,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 					return GetFail("You must be signed-in to perform this action.");
 				}
 
-				var result = await extraRepository.Archive(hotelCode, archiveCode, userId);
+				var result = await extraRepository.Archive(hotelCode, archiveCode, userId, saveData.Notes);
 				if (!result)
 				{
 					return GetFail("The archive operation failed. The record may be locked.");

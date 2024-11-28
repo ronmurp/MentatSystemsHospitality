@@ -17,7 +17,19 @@
             getArchiveBody: function () {
                 var html = '';
                 html += '<div class="form-group mb-3">';
-                html += '<input type="text" id="archive-code" class="form-control" />'
+                html += `<p>Enter a name for the archived data.</p>`
+                html += '<input type="text" id="archive-code" class="form-control" /><br />'
+                html += `<label>Notes</label><br />`
+                html += '<textarea id="archive-notes" class="form-control" ></textarea>'
+                html += '</div>';
+                return html;
+            },
+
+            getPublishBody: function () {
+                var html = '';
+                html += '<div class="form-group mb-3">';
+                html += `<label>Notes</label><br />`
+                html += '<textarea id="publish-notes" class="form-control" ></textarea>'
                 html += '</div>';
                 return html;
             },
@@ -88,12 +100,13 @@
                 },
                 archiveDataConfirm: function () {
                     var archiveCode = $('#archive-code').val();
+                    var archiveNotes = $('#archive-notes').val();
                     var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : '';
                     var url = initData.useHotelCode
                         ? `${pallss.apiRoot}/${initData.model}Archive/${hotelCode}/${archiveCode}`
                         : `${pallss.apiRoot}/${initData.model}Archive/${archiveCode}`;
                     options.actionConfirmApiUrl = url;
-                    options.actionConfirmData = null;
+                    options.actionConfirmData = { notes: archiveNotes };
 
                     $(`#${options.modalActionId}`).remove();
 
@@ -154,6 +167,7 @@
             meth.extendMethods({
                 publishData: function () {
                     var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : '';
+                    options.modalActionBody = pallss.getPublishBody();
                     var url = initData.useHotelCode
                         ? `${pallss.apiRoot}/${initData.model}Publish/${hotelCode}`
                         : `${pallss.apiRoot}/${initData.model}Publish`
@@ -162,10 +176,12 @@
                 },
                 publishDataConfirm: function () {
                     var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : '';
+                    var publishNotes = $('#publish-notes').val();
                     var url = initData.useHotelCode
                         ? `${pallss.apiRoot}/${initData.model}Publish/${hotelCode}`
                         : `${pallss.apiRoot}/${initData.model}Publish`
                     options.actionConfirmApiUrl = url;
+                    options.actionConfirmData = { notes: publishNotes };
 
                     $(`#${options.modalActionId}`).remove();
 

@@ -131,7 +131,7 @@ public partial class HotelApiController
 
 	[HttpPost]
 	[Route("RatePlanSortArchive/{hotelCode}/{archiveCode}")]
-	public async Task<IActionResult> RatePlanSortArchive(string hotelCode, string archiveCode)
+	public async Task<IActionResult> RatePlanSortArchive(string hotelCode, string archiveCode, [FromBody] ArchiveSaveData saveData)
 	{
 		try
 		{
@@ -234,4 +234,9 @@ public partial class HotelApiController
 			return GetFail($"RatePlanSortLoad {hotelCode} {data.Code}: {ex.Message}");
 		}
 	}
+}
+
+public class ArchiveSaveData
+{
+	public string Notes { get; set; } = string.Empty;
 }
