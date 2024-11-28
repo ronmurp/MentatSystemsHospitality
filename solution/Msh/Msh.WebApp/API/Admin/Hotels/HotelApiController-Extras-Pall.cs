@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Msh.Admin.Imports;
+using Msh.Admin.Models;
 using Msh.Common.Models;
 using Msh.Common.Models.ViewModels;
 using Msh.WebApp.Areas.Admin.Models;
@@ -18,7 +19,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		/// <returns></returns>
 		[HttpPost]
 		[Route("ExtrasPublish/{hotelCode}")]
-		public async Task<IActionResult> ExtrasPublish(string hotelCode, [FromBody] ArchiveSaveData saveData)
+		public async Task<IActionResult> ExtrasPublish(string hotelCode, [FromBody] NotesSaveData saveData)
 		{
 			try
 			{
@@ -93,7 +94,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		/// <returns></returns>
 		[HttpPost]
 		[Route("ExtrasArchive/{hotelCode}/{archiveCode}")]
-		public async Task<IActionResult> ExtrasArchive(string hotelCode, string archiveCode, [FromBody] ArchiveSaveData saveData)
+		public async Task<IActionResult> ExtrasArchive(string hotelCode, string archiveCode, [FromBody] NotesSaveData saveData)
 		{
 			try
 			{

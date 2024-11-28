@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Msh.Admin.Models;
 using Msh.Common.Models;
 using Msh.Common.Models.ViewModels;
 using Msh.WebApp.Areas.Admin.Models;
@@ -16,7 +17,7 @@ public partial class HotelApiController
 	/// <returns></returns>
 	[HttpPost]
 	[Route("HotelsPublish")]
-	public async Task<IActionResult> HotelsPublish([FromBody] ArchiveSaveData saveData)
+	public async Task<IActionResult> HotelsPublish([FromBody] NotesSaveData saveData)
 	{
 		try
 		{
@@ -84,12 +85,12 @@ public partial class HotelApiController
 	/// Perform an archive save. Gets the current edited data from Config,
 	/// and stores it in ConfigArchive with the archiveCode appended
 	/// </summary>
-	/// <param name="obj">unused</param>
 	/// <param name="archiveCode"></param>
+	/// <param name="saveData"></param>
 	/// <returns></returns>
 	[HttpPost]
 	[Route("HotelsArchive/{archiveCode}")]
-	public async Task<IActionResult> HotelsArchive(string archiveCode, [FromBody] ArchiveSaveData saveData)
+	public async Task<IActionResult> HotelsArchive(string archiveCode, [FromBody] NotesSaveData saveData)
 	{
 		try
 		{

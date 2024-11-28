@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Msh.Admin.Models;
 using Msh.Common.Models;
 using Msh.Common.Models.ViewModels;
 using Msh.WebApp.Areas.Admin.Models;
@@ -78,7 +79,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		/// <returns></returns>
 		[HttpPost]
 		[Route("DiscountsArchive/{hotelCode}/{archiveCode}")]
-		public async Task<IActionResult> DiscountsArchive(string hotelCode, string archiveCode, [FromBody] ArchiveSaveData saveData)
+		public async Task<IActionResult> DiscountsArchive(string hotelCode, string archiveCode, [FromBody] NotesSaveData saveData)
 		{
 			var userId = userService.GetUserId();
 			if (string.IsNullOrEmpty(userId))

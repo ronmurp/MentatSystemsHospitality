@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Msh.Admin.Models;
 using Msh.Common.Models;
 using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models.RatePlans;
@@ -131,7 +132,7 @@ public partial class HotelApiController
 
 	[HttpPost]
 	[Route("RatePlanSortArchive/{hotelCode}/{archiveCode}")]
-	public async Task<IActionResult> RatePlanSortArchive(string hotelCode, string archiveCode, [FromBody] ArchiveSaveData saveData)
+	public async Task<IActionResult> RatePlanSortArchive(string hotelCode, string archiveCode, [FromBody] NotesSaveData saveData)
 	{
 		try
 		{
@@ -234,9 +235,4 @@ public partial class HotelApiController
 			return GetFail($"RatePlanSortLoad {hotelCode} {data.Code}: {ex.Message}");
 		}
 	}
-}
-
-public class ArchiveSaveData
-{
-	public string Notes { get; set; } = string.Empty;
 }
