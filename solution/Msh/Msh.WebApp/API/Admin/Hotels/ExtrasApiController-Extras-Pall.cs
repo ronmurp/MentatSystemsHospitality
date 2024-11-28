@@ -119,8 +119,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		}
 
 		/// <summary>
-		/// Perform an archive save. Gets the current edited data from Config,
-		/// and stores it in ConfigArchive with the archiveCode appended
+		/// Perform an archive delete.
 		/// </summary>
 		/// <param name="hotelCode"></param>
 		/// <param name="archiveCode"></param>

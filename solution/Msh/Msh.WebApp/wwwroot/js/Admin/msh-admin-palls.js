@@ -384,6 +384,7 @@
                 api.getAsync(url, function (data) {
                     if (data.success) {
                         var list = data.data;
+                        // For deletes, remove the Pub option
                         if (list.length === 1 && list[0].value === 'Pub') {
                             modal.showModal('delete-archive', 'Delete Archive', 'There are no archived records to delete.');
                             return;

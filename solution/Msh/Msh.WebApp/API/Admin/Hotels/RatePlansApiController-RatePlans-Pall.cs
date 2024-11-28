@@ -1,14 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Msh.Admin.Models;
 using Msh.Common.Models;
 using Msh.Common.Models.ViewModels;
+using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
+using Msh.WebApp.Services;
 
 namespace Msh.WebApp.API.Admin.Hotels
 {
-	public partial class HotelApiController
+	public partial class RatePlanApiController
 	{
+		
 
 		/// <summary>
 		/// Publishes the Rate Plans list, copying the hotel list from Config to ConfigPub table
@@ -22,7 +24,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var userId = userService.GetUserId();
+				var userId = _userService.GetUserId();
 
 				if (string.IsNullOrEmpty(userId))
 				{
@@ -30,7 +32,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 				}
 
 
-				var result = await ratePlanRepository.Publish(hotelCode, userId);
+				var result = await _ratePlanRepository.Publish(hotelCode, userId);
 
 				if (!result)
 				{
@@ -41,7 +43,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 			}
 			catch (Exception ex)
 			{
-				return GetFail($"RatePlansPublish for {hotelCode}: {ex.Message}");
+				return GetFail($"{ModelName} Publish for {hotelCode}: {ex.Message}");
 			}
 		}
 
@@ -56,7 +58,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var list = await ratePlanRepository.ArchivedList(hotelCode);
+				var list = await _ratePlanRepository.ArchivedList(hotelCode);
 
 				var selectList = list.OrderBy(x => x.ConfigType).Select(x => new SelectItemVm
 				{
@@ -79,7 +81,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 			}
 			catch (Exception ex)
 			{
-				return GetFail($"RatePlans Archive {hotelCode}: {ex.Message}");
+				return GetFail($"{ModelName} Archive {hotelCode}: {ex.Message}");
 			}
 		}
 
@@ -97,13 +99,13 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var userId = userService.GetUserId();
+				var userId = _userService.GetUserId();
 				if (string.IsNullOrEmpty(userId))
 				{
 					return GetFail("You must be signed-in to perform this action.");
 				}
 
-				var result = await ratePlanRepository.Archive(hotelCode, archiveCode, userId, saveData.Notes);
+				var result = await _ratePlanRepository.Archive(hotelCode, archiveCode, userId, saveData.Notes);
 				if (!result)
 				{
 					return GetFail("The archive operation failed. The record may be locked.");
@@ -113,7 +115,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 			}
 			catch (Exception ex)
 			{
-				return GetFail($"RatePlansArchive {hotelCode} {archiveCode}: {ex.Message}");
+				return GetFail($"{ModelName} Archive {hotelCode} {archiveCode}: {ex.Message}");
 			}
 		}
 
@@ -123,7 +125,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var userId = userService.GetUserId();
+				var userId = _userService.GetUserId();
 				if (string.IsNullOrEmpty(userId))
 				{
 					return GetFail("You must be signed-in to perform this action.");
@@ -134,7 +136,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 				{
 					case "Pub":
 
-						var resultP = await ratePlanRepository.LockPublished(hotelCode, input.IsTrue, userId);
+						var resultP = await _ratePlanRepository.LockPublished(hotelCode, input.IsTrue, userId);
 						if (!resultP)
 						{
 							return GetFail("The publish operation failed. The record may be locked.");
@@ -144,7 +146,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 
 					default:
 						var resultA =
-							await ratePlanRepository.LockArchived(hotelCode, input.Code, input.IsTrue, userId);
+							await _ratePlanRepository.LockArchived(hotelCode, input.Code, input.IsTrue, userId);
 						if (!resultA)
 						{
 							return GetFail("The archive operation failed. The record may be locked.");
@@ -158,7 +160,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 			}
 			catch (Exception ex)
 			{
-				return GetFail($"RatePlansLock: {ex.Message}");
+				return GetFail($"{ModelName} Lock: {ex.Message}");
 			}
 		}
 
@@ -168,7 +170,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var userId = userService.GetUserId();
+				var userId = _userService.GetUserId();
 				if (string.IsNullOrEmpty(userId))
 				{
 					return GetFail("You must be signed-in to perform this action.");
@@ -179,13 +181,13 @@ namespace Msh.WebApp.API.Admin.Hotels
 				switch (archiveCode)
 				{
 					case "Pub":
-						var recordsPub = await ratePlanRepository.Published(hotelCode);
-						await ratePlanRepository.Save(recordsPub, hotelCode);
+						var recordsPub = await _ratePlanRepository.Published(hotelCode);
+						await _ratePlanRepository.Save(recordsPub, hotelCode);
 						break;
 
 					default:
-						var recordsArch = await ratePlanRepository.Archived(hotelCode, archiveCode);
-						await ratePlanRepository.Save(recordsArch, hotelCode);
+						var recordsArch = await _ratePlanRepository.Archived(hotelCode, archiveCode);
+						await _ratePlanRepository.Save(recordsArch, hotelCode);
 						break;
 				}
 
@@ -193,7 +195,39 @@ namespace Msh.WebApp.API.Admin.Hotels
 			}
 			catch (Exception ex)
 			{
-				return GetFail($"RatePlansLoad {hotelCode} {data.Code}: {ex.Message}");
+				return GetFail($"{ModelName} Load {hotelCode} {data.Code}: {ex.Message}");
+			}
+		}
+
+		/// <summary>
+		/// Perform an archive delete.
+		/// </summary>
+		/// <param name="hotelCode"></param>
+		/// <param name="archiveCode"></param>
+		/// <returns></returns>
+		[HttpPost]
+		[Route("RatePlansArchiveDelete/{hotelCode}/{archiveCode}")]
+		public async Task<IActionResult> RatePlansArchiveDelete(string hotelCode, string archiveCode)
+		{
+			try
+			{
+				var userId = _userService.GetUserId();
+				if (string.IsNullOrEmpty(userId))
+				{
+					return GetFail("You must be signed-in to perform this action.");
+				}
+
+				var result = await _ratePlanRepository.ArchiveDelete(hotelCode, archiveCode, userId);
+				if (!result)
+				{
+					return GetFail("The archive delete operation failed. The record may be locked.");
+				}
+
+				return Ok(new ObjectVm());
+			}
+			catch (Exception ex)
+			{
+				return GetFail($"{ModelName} Archive {hotelCode} {archiveCode}: {ex.Message}");
 			}
 		}
 
