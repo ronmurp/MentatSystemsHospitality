@@ -8,7 +8,7 @@
     var api = app.apiService;
 
     var pallsA = app.pallsArchiveService;
-    var pallsB = app.pallsPublishService;
+    var pallsP = app.pallsPublishService;
     var pallsLoad = app.pallsLoadService;
     var pallsLock = app.pallsLockService;
     var pallsI = app.pallsImportService;
@@ -60,8 +60,11 @@
             confirmedRedirectUrl: 'admin/hotels/ExtrasList'
         }
 
-        pallsA.init(inputs);
-        pallsB.init(inputs);
+        // How to add a custom body text to the standard body (code and notes)
+        var archiveInputs = $.extend({}, inputs, { modalActionBody: '<p class="mb-2">Test modalActionBody in msh-admin-extras.js</p>' } );
+
+        pallsA.init(archiveInputs);
+        pallsP.init(inputs);
         pallsLoad.init(inputs);
         pallsLock.init(inputs);
         pallsI.init(inputs);

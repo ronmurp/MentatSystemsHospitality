@@ -7,6 +7,13 @@
     var modal = app.modalService;
     var api = app.apiService;
 
+    var pallsA = app.pallsArchiveService;
+    var pallsP = app.pallsPublishService;
+    var pallsLoad = app.pallsLoadService;
+    var pallsLock = app.pallsLockService;
+    var pallsI = app.pallsImportService;
+
+
     var ids = {
         selectHotel: '#selectHotel'
     }
@@ -34,6 +41,28 @@
         sortListApi: '/api/hotelapi/RoomTypesSort',
         listPath: 'admin/hotels/RoomTypesList'
     });
+
+    var editType = $('#edit-type').val();
+
+    if (editType === "roomtypes-list") {
+
+        var inputs = {
+            model: 'RoomTypesList',
+            name: 'Room Types',
+            useHotelCode: true,
+            confirmedRedirect: true,
+            confirmedRedirectUrl: 'admin/hotels/RoomTypesList'
+        }
+
+      
+
+        pallsA.init(inputs);
+        pallsP.init(inputs);
+        pallsLoad.init(inputs);
+        pallsLock.init(inputs);
+        pallsI.init(inputs);
+
+    }
 
 
 }(jQuery));

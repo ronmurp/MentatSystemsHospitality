@@ -16,6 +16,8 @@
 
 @await Html.PartialAsync("Hotels/_HiddenHotelInputs", @Model as HotelListVm)
 
+<input type="hidden" id="edit-type" value="roomtypes-list" />
+
 <div class="text-center">
 	<h1 class="display-6">@title</h1>
 	<p>Hotel Room Types. Click for more information: <info-icon name="info-room-types" /> </p>

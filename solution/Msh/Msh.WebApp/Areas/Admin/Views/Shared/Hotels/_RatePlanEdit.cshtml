@@ -317,7 +317,7 @@
 			@await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
 			{
 				ReturnUrl = $"/Admin/Hotels/RatePlansList?hotelCode={@hotelCode}",
-				ReturnText = ConstReturnText.ReturnToDash,
+				ReturnText = ConstReturnText.ReturnToList,
 				ButtonType = SaveReturnTypes.Submit,
 				SaveOperation = "submit"
 			})

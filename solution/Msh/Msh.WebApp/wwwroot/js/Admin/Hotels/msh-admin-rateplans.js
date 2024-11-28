@@ -187,7 +187,7 @@
     var modal = app.modalService;
     var mas = app.modalActionService;
 
-
+   
     var hotelApi = '/api/hotelapi';
 
     var ids = {

@@ -14,8 +14,11 @@
                 hotelCode = hotelCode ? hotelCode : $('#hotelCode').val();
                 return hotelCode;
             },
-            getArchiveBody: function () {
+            getArchiveBody: function (options) {
                 var html = '';
+                if (options && options.modalActionBody) {                   
+                    html += options.modalActionBody;                
+                }
                 html += '<div class="form-group mb-3">';
                 html += `<p>Enter a name for the archived data.</p>`
                 html += '<input type="text" id="archive-code" class="form-control" /><br />'
@@ -25,8 +28,11 @@
                 return html;
             },
 
-            getPublishBody: function () {
+            getPublishBody: function (options) {
                 var html = '';
+                if (options && options.modalActionBody) {
+                    html += options.modalActionBody;
+                }
                 html += '<div class="form-group mb-3">';
                 html += `<label>Notes</label><br />`
                 html += '<textarea id="publish-notes" class="form-control" ></textarea>'
@@ -70,7 +76,8 @@
         var initData = {
             model: 'RatePlans',
             name: 'Rate Plans',
-            useHotelCode: true
+            useHotelCode: true,
+            modalActionBody: ''
         }
         function init(inputs) {
 
@@ -79,7 +86,7 @@
             var options = {
                 modalActionId: `archive${initData.model}`,
                 modalActionTitle: `Confirm ${initData.name} Archive`,
-                modalActionBody: `Confirm archive of ${initData.name} list`,
+                modalActionBody: initData.modalActionBody ? initData.modalActionBody : '',
                 modalActionOnCLick: `id="confirm-archive-ok" onclick="window.mshMethods.archiveDataConfirm()"`,
                 modalActionOk: 'OK',
                 actionConfirmApiUrl: `${apiRoot}/${initData.model}Archive`,
@@ -95,7 +102,8 @@
 
             meth.extendMethods({
                 archiveData: function () {
-                    options.modalActionBody = pallss.getArchiveBody();
+                    options.modalActionBody = initData.modalActionBody ? initData.modalActionBody : '',
+                    options.modalActionBody = pallss.getArchiveBody(options);
                     archivePair.action(options);
                 },
                 archiveDataConfirm: function () {
@@ -138,7 +146,8 @@
         var initData = {
             model: 'RatePlans',
             name: 'Rate Plans',
-            useHotelCode: true
+            useHotelCode: true,
+            modalActionBody: ''
         }
         function init(inputs) {
 
@@ -148,7 +157,7 @@
 
                 modalActionId: `publish${initData.model}`,
                 modalActionTitle: `Confirm ${initData.name} Publish`,
-                modalActionBody: `Confirm publish of ${initData.name} list`,
+                modalActionBody: initData.modalActionBody ? initData.modalActionBody : '',
                 modalActionOnCLick: `onclick="window.mshMethods.publishDataConfirm()"`,
                 modalActionOk: 'OK',
                 actionConfirmApiUrl: '', //`${hotelApi}/${initData.model}Publish`,
@@ -167,7 +176,8 @@
             meth.extendMethods({
                 publishData: function () {
                     var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : '';
-                    options.modalActionBody = pallss.getPublishBody();
+                    options.modalActionBody = initData.modalActionBody ? initData.modalActionBody : '',
+                    options.modalActionBody = pallss.getPublishBody(options);
                     var url = initData.useHotelCode
                         ? `${pallss.apiRoot}/${initData.model}Publish/${hotelCode}`
                         : `${pallss.apiRoot}/${initData.model}Publish`
