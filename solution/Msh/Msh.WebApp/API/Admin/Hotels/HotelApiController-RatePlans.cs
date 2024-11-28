@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Mvc;
+using Msh.Admin.Models.ViewModels;
 using Msh.Common.ExtensionMethods;
 using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models.RatePlans;
@@ -272,26 +273,4 @@ public partial class HotelApiController
 		}
 	}
 
-}
-
-public class RatePlanEditStayVm
-{
-	public string HotelCode { get; set; } = string.Empty;
-
-	public string Code { get; set; } = string.Empty;
-
-	public DateOnly StayFrom { get; set; }
-
-	public DateOnly StayTo { get; set; }
-
-	public string RatePlanCode { get; set; } = string.Empty;
-}
-
-public class DateChangeVm
-{
-	public DateOnly DateFrom { get; set; }
-
-	public DateOnly DateTo { get; set; }
-
-	public bool IsFrom { get; set; }
 }
