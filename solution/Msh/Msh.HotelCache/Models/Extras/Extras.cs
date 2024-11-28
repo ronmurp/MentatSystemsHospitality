@@ -24,10 +24,6 @@ public class Extra
 	public string? DisplayText { get; set; } = string.Empty;
 
 
-	[Description("Description"), Info("extra-description")]
-	public string? Description { get; set; } = string.Empty;
-
-
 	[Description("Updated"), Info("extra-updated")]
 	public bool Updated { get; set; }
 

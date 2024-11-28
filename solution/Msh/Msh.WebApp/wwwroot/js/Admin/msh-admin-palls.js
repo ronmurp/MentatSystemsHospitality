@@ -6,6 +6,11 @@
 
     window.mshPageApp.pallSupportService = (function () {
 
+   
+        function isValidPathCode(code) {
+            const regex = /^[a-zA-Z0-9\-_\.]+$/;
+            return regex.test(code);
+        }
 
         return {
             apiRoot: '/api/hotelapi',
@@ -27,6 +32,20 @@
                 html += '</div>';
                 return html;
             },
+
+            getDeleteBody: function (optionsHtml) {
+                var html = '';
+             
+                html += '<div class="form-group mb-3">';
+                html += '<label class="form-label">Select the archive to delete</label>';
+                html += `<select class="form-control" id="selected-load" >`;
+                html += optionsHtml;
+                html += '</select>';
+                html += '</div>';
+                
+                return html;
+            },
+
 
             getPublishBody: function (options) {
                 var html = '';
@@ -52,7 +71,9 @@
                 html += '</select>';
                 html += '</div>';
                 return html;
-            }
+            },
+
+            isValidPathCode: isValidPathCode
         }
 
     }());
@@ -71,13 +92,12 @@
         var mas = app.modalActionService;
         var pallss = app.pallSupportService;
 
-        var apiRoot = '/api/hotelapi';
-
         var initData = {
             model: 'RatePlans',
             name: 'Rate Plans',
             useHotelCode: true,
-            modalActionBody: ''
+            modalActionBody: '',
+            apiRoot: pallss.apiRoot
         }
         function init(inputs) {
 
@@ -89,7 +109,7 @@
                 modalActionBody: initData.modalActionBody ? initData.modalActionBody : '',
                 modalActionOnCLick: `id="confirm-archive-ok" onclick="window.mshMethods.archiveDataConfirm()"`,
                 modalActionOk: 'OK',
-                actionConfirmApiUrl: `${apiRoot}/${initData.model}Archive`,
+                actionConfirmApiUrl: `${initData.apiRoot}/${initData.model}Archive`,
                 actionConfirmData: {},
 
                 modalActionedId: `archived${initData.model}`,
@@ -108,11 +128,15 @@
                 },
                 archiveDataConfirm: function () {
                     var archiveCode = $('#archive-code').val();
+                    if (!pallss.isValidPathCode(archiveCode)) {
+                        modal.showModal('invalid-code', "Invalid Code", "The code is invalid");
+                        return;
+                    }
                     var archiveNotes = $('#archive-notes').val();
                     var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : '';
                     var url = initData.useHotelCode
-                        ? `${pallss.apiRoot}/${initData.model}Archive/${hotelCode}/${archiveCode}`
-                        : `${pallss.apiRoot}/${initData.model}Archive/${archiveCode}`;
+                        ? `${initData.apiRoot}/${initData.model}Archive/${hotelCode}/${archiveCode}`
+                        : `${initData.apiRoot}/${initData.model}Archive/${archiveCode}`;
                     options.actionConfirmApiUrl = url;
                     options.actionConfirmData = { notes: archiveNotes };
 
@@ -147,7 +171,8 @@
             model: 'RatePlans',
             name: 'Rate Plans',
             useHotelCode: true,
-            modalActionBody: ''
+            modalActionBody: '',
+            apiRoot: pallss.apiRoot
         }
         function init(inputs) {
 
@@ -179,8 +204,8 @@
                     options.modalActionBody = initData.modalActionBody ? initData.modalActionBody : '',
                     options.modalActionBody = pallss.getPublishBody(options);
                     var url = initData.useHotelCode
-                        ? `${pallss.apiRoot}/${initData.model}Publish/${hotelCode}`
-                        : `${pallss.apiRoot}/${initData.model}Publish`
+                        ? `${initData.apiRoot}/${initData.model}Publish/${hotelCode}`
+                        : `${initData.apiRoot}/${initData.model}Publish`
                     options.actionConfirmApiUrl = url;
                     publishPair.action(options);              
                 },
@@ -188,8 +213,8 @@
                     var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : '';
                     var publishNotes = $('#publish-notes').val();
                     var url = initData.useHotelCode
-                        ? `${pallss.apiRoot}/${initData.model}Publish/${hotelCode}`
-                        : `${pallss.apiRoot}/${initData.model}Publish`
+                        ? `${initData.apiRoot}/${initData.model}Publish/${hotelCode}`
+                        : `${initData.apiRoot}/${initData.model}Publish`
                     options.actionConfirmApiUrl = url;
                     options.actionConfirmData = { notes: publishNotes };
 
@@ -225,7 +250,8 @@
         var initData = {
             model: 'RatePlans',
             name: 'Rate Plans',
-            useHotelCode: true
+            useHotelCode: true,
+            apiRoot: pallss.apiRoot
         }
         function init(inputs) {
 
@@ -238,7 +264,7 @@
                 modalActionBody: `Confirm load of ${initData.name} list`,
                 modalActionOnCLick: `id="confirm-load-ok" onclick="window.mshMethods.loadDataConfirm()"`,
                 modalActionOk: 'OK',
-                loadConfirmApiUrl: `${pallss.apiRoot}/${initData.model}Load`,
+                loadConfirmApiUrl: `${initData.apiRoot}/${initData.model}Load`,
 
                 modalActionedId: `loaded${initData.model}`,
                 modalActionedTitle: `Load ${initData.name}`,
@@ -253,8 +279,8 @@
                 var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : '';
 
                 var url = initData.useHotelCode
-                    ? `${pallss.apiRoot}/${initData.model}ArchiveSelectList/${hotelCode}`
-                    : `${pallss.apiRoot}/${initData.model}ArchiveSelectList/`;
+                    ? `${initData.apiRoot}/${initData.model}ArchiveSelectList/${hotelCode}`
+                    : `${initData.apiRoot}/${initData.model}ArchiveSelectList/`;
                 api.getAsync(url, function (data) {
                     if (data.success) {
                         var list = data.data;
@@ -276,10 +302,10 @@
                 var archiveCode = $('#selected-load').val();
                 var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : '';
                 var url = initData.useHotelCode
-                    ? `${pallss.apiRoot}/${initData.model}Load/${hotelCode}`
-                    : `${pallss.apiRoot}/${initData.model}Load`;
+                    ? `${initData.apiRoot}/${initData.model}Load/${hotelCode}`
+                    : `${initData.apiRoot}/${initData.model}Load`;
                 options.actionConfirmApiUrl = url;
-                options.actionConfirmData = { code: archiveCode };
+                options.actionConfirmData = { code: archiveCode, hotelCode: hotelCode };
             }
 
             var loadPair = new mas.PairOverlay(options);
@@ -289,12 +315,120 @@
                     updateOptions();
                     getLoadList(options);
                 },
-                loadDataConfirm: function () {
-                    $(`#${options.modalActionId}`).remove();
+                loadDataConfirm: function () {             
                     updateOptions();
+                    $(`#${options.modalActionId}`).remove();
                     loadPair.actioned(options);
                 },
                 loadDataConfirmed: function () {
+                    //util.redirectTo(`admin/hotels/${initData.model}List`);
+                },
+            });
+        }
+
+        return {
+            init: init
+        }
+
+    }());
+
+
+    window.mshPageApp.pallsDeleteService = (function () {
+
+        "use strict";
+
+        var app = mshPageApp;
+        var meth = app.methodsService;
+        var util = app.utilityService;
+        var api = app.apiService;
+        var mom = app.momentDateService;
+        var htmlS = app.htmlService;
+        var modal = app.modalService;
+        var mas = app.modalActionService;
+        var pallss = app.pallSupportService;
+
+        var initData = {
+            model: 'RatePlans',
+            name: 'Rate Plans',
+            useHotelCode: true,
+            apiRoot: pallss.apiRoot
+        }
+        function init(inputs) {
+
+            initData = $.extend({}, initData, inputs);
+
+            var options = {
+
+                modalActionId: `delete${initData.model}`,
+                modalActionTitle: `Confirm ${initData.name} Archive Delete`,
+                modalActionBody: `Confirm delete of ${initData.name} archive`,
+                modalActionOnCLick: `id="confirm-delete-ok" onclick="window.mshMethods.deleteDataConfirm()"`,
+                modalActionOk: 'OK',
+                loadConfirmApiUrl: `${initData.apiRoot}/${initData.model}Delete`,
+
+                modalActionedId: `deleted${initData.model}`,
+                modalActionedTitle: `Delete ${initData.name}`,
+                modalActionedBody: `The list of ${initData.name} archive was successfully deleted`,
+                modalActionedOnCLick: `onclick="window.mshMethods.deleteDataConfirmed()"`,
+                // modalPublishedOk: 'OK',
+                modalActionedHideModalEnd: `window.mshMethods.deleteDataConfirmed`
+            }
+
+            function getLoadList() {
+
+                var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : '';
+
+                var url = initData.useHotelCode
+                    ? `${initData.apiRoot}/${initData.model}ArchiveSelectList/${hotelCode}`
+                    : `${initData.apiRoot}/${initData.model}ArchiveSelectList/`;
+                api.getAsync(url, function (data) {
+                    if (data.success) {
+                        var list = data.data;
+                        if (list.length === 1 && list[0].value === 'Pub') {
+                            modal.showModal('delete-archive', 'Delete Archive', 'There are no archived records to delete.');
+                            return;
+                        }
+                        var optionsHtml = '';
+                        optionsHtml += `<option value="">Select ...</option>`
+                        list.forEach((v) => {
+                            if(v.value !== 'Pub')
+                                optionsHtml += `<option value="${v.value}">${v.text}</option>`
+                        });
+                        options.modalActionBody = pallss.getDeleteBody(optionsHtml);
+                        loadPair.action(options);
+                        return;
+                    } else {
+                        modal.showError(data.userErrorMessage);
+                    }
+                })
+            }
+
+            function updateOptions() {
+                var archiveCode = $('#selected-load').val();
+                if (!archiveCode) {
+                    return;
+                }
+                var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : '';
+                var url = initData.useHotelCode
+                    ? `${initData.apiRoot}/${initData.model}ArchiveDelete/${hotelCode}/${archiveCode}`
+                    : `${initData.apiRoot}/${initData.model}ArchiveDelete/${archiveCode}`;
+                options.actionConfirmApiUrl = url;
+                options.actionConfirmData = undefined;
+            }
+
+            var loadPair = new mas.PairOverlay(options);
+
+            meth.extendMethods({
+                deleteData: function () {
+                    updateOptions();
+                    getLoadList(options);
+                },
+                deleteDataConfirm: function () {
+                    updateOptions();
+                    $(`#${options.modalActionId}`).remove();
+                    loadPair.actioned(options);
+                },
+                deleteDataConfirmed: function () {
                     //util.redirectTo(`admin/hotels/${initData.model}List`);
                 },
             });
@@ -323,7 +457,8 @@
         var initData = {
             model: 'RatePlans',
             name: 'Rate Plans',
-            useHotelCode: true
+            useHotelCode: true,
+            apiRoot: pallss.apiRoot
         }
         function init(inputs) {
 
@@ -335,7 +470,7 @@
                 modalActionBody: `Confirm lock/unlock of ${initData.name} list`,
                 modalActionOnCLick: `id="confirm-load-ok" onclick="window.mshMethods.lockDataConfirm()"`,
                 modalActionOk: `OK`,
-                loadConfirmApiUrl: `${pallss.apiRoot}/${initData.model}Load`,
+                loadConfirmApiUrl: `${initData.apiRoot}/${initData.model}Load`,
 
                 modalActionedId: `locked${initData.model}`,
                 modalActionedTitle: `Lock/Unlock ${initData.name}`,
@@ -367,8 +502,8 @@
             function getLoadList(useHotel) {
                 var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : ``;
                 var url = initData.useHotelCode
-                    ? `${pallss.apiRoot}/${initData.model}ArchiveSelectList/${hotelCode}`
-                    : `${pallss.apiRoot}/${initData.model}ArchiveSelectList`;
+                    ? `${initData.apiRoot}/${initData.model}ArchiveSelectList/${hotelCode}`
+                    : `${initData.apiRoot}/${initData.model}ArchiveSelectList`;
                 api.getAsync(url, function (data) {
                     if (data.success) {
                         var list = data.data;
@@ -401,8 +536,8 @@
                     var performLock = $(`#perform-lock`).is(`:checked`);
                     $(`#${options.modalActionId}`).remove();
                     var url = initData.useHotelCode
-                        ? `${pallss.apiRoot}/${initData.model}Lock/${hotelCode}`
-                        : `${pallss.apiRoot}/${initData.model}Lock`;
+                        ? `${initData.apiRoot}/${initData.model}Lock/${hotelCode}`
+                        : `${initData.apiRoot}/${initData.model}Lock`;
                     options.actionConfirmApiUrl = url;
                     options.actionConfirmData = { code: archiveCode, isTrue: performLock };
                     loadPair.actioned(options);
@@ -436,7 +571,8 @@
         var initData = {
             model: 'RatePlans',
             name: 'Rate Plans',
-            useHotelCode: true
+            useHotelCode: true,
+            apiRoot: pallss.apiRoot
         }
         function init(inputs) {
 
@@ -448,7 +584,7 @@
                 modalActionBody: `Confirm import of ${initData.name} list`,
                 modalActionOnCLick: `id="confirm-import-ok" onclick="window.mshMethods.importDataConfirm()"`,
                 modalActionOk: `OK`,
-                loadConfirmApiUrl: `${pallss.apiRoot}/${initData.model}Import`,
+                loadConfirmApiUrl: `${initData.apiRoot}/${initData.model}Import`,
 
                 modalActionedId: `imported${initData.model}`,
                 modalActionedTitle: `Import ${initData.name}`,
@@ -478,8 +614,8 @@
             function getImport(useHotel) {
                 var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : ``;
                 var url = initData.useHotelCode
-                    ? `${pallss.apiRoot}/${initData.model}ArchiveSelectList/${hotelCode}`
-                    : `${pallss.apiRoot}/${initData.model}ArchiveSelectList`;
+                    ? `${initData.apiRoot}/${initData.model}ArchiveSelectList/${hotelCode}`
+                    : `${initData.apiRoot}/${initData.model}ArchiveSelectList`;
                 api.getAsync(url, function (data) {
                     if (data.success) {
                         var list = data.data;
@@ -513,8 +649,8 @@
                   
                     $(`#${options.modalActionId}`).remove();
                     var url = initData.useHotelCode
-                        ? `${pallss.apiRoot}/${initData.model}Import/${hotelCode}`
-                        : `${pallss.apiRoot}/${initData.model}Import`;
+                        ? `${initData.apiRoot}/${initData.model}Import/${hotelCode}`
+                        : `${initData.apiRoot}/${initData.model}Import`;
                     options.actionConfirmApiUrl = url;
                     options.actionConfirmData = {  };
                     loadPair.actioned(options);

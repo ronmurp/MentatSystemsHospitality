@@ -70,6 +70,8 @@ public partial class ConfigRepository
 			throw new NullConfigException($"Remove: Published Config type not found: {configType}");
 		}
 
+		
+
 		configDbContext.ConfigsPub.Remove(config);
 		await configDbContext.SaveChangesAsync();
 	}

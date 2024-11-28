@@ -26,6 +26,8 @@ public interface IBaseHotelRepository<T>
 	Task<bool> Publish(string hotelCode, string userId, string notes = "");
 	Task<bool> Archive(string hotelCode, string archiveCode, string userId, string notes = "");
 
+	Task<bool> ArchiveDelete(string hotelCode, string archiveCode, string userId);
+
 	//- 3 - Lock
 	Task<bool> LockPublished(string hotelCode, bool performLock, string userId);
 	Task<bool> LockArchived(string hotelCode, string archiveCode, bool performLock, string userId);

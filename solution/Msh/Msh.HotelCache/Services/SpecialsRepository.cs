@@ -21,4 +21,9 @@ public class SpecialsRepository(IConfigRepository configRepository): AbstractHot
 
 	public async Task<bool> Save(List<Special> items, string hotelCode, string notes = "") =>
 		await ConfigRepository.SaveConfigAsync(ConfigType(hotelCode), items, notes);
+
+	public Task<bool> ArchiveDelete(string hotelCode, string archiveCode, string userId)
+	{
+		throw new NotImplementedException();
+	}
 }

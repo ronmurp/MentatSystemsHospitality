@@ -115,5 +115,27 @@ public partial class ConfigRepository
 	private async Task<ConfigArchive?> GetConfigArchiveAsync(string configType) =>
 		await configDbContext.ConfigsArchive.FirstOrDefaultAsync(a => a.ConfigType == configType);
 
+	public async Task<bool> DeleteArchiveConfigAsync(string configType, string archiveCode, string userId)
+	{
+		var archiveType = $"{configType}={archiveCode}";
+
+		var config = configDbContext.ConfigsArchive.FirstOrDefault(c => c.ConfigType == archiveType);
+		if (config == null)
+		{
+			throw new NullConfigException($"Remove: Archive Config type not found: {configType} - {archiveCode}");
+		}
+
+		if (config is { Locked: true })
+		{
+			return false;
+		}
+
+		configDbContext.ConfigsArchive.Remove(config);
+
+		await configDbContext.SaveChangesAsync();
+
+		return true;
+	}
+
 	public string ArchiveType(string configType, string archiveCode) => $"{configType}={archiveCode}";
 }

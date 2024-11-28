@@ -73,7 +73,13 @@ public partial class ConfigRepository(ConfigDbContext configDbContext) : IConfig
 
 		return true;
 	}
-	
+
+	public Task<bool> DeleteConfigAsync(string configType)
+	{
+		throw new NotImplementedException();
+	}
+
+
 	public async Task<bool> SaveMissingConfigAsync<T>(string configType, T defaultObject)
 	{
 		var config = await GetConfigAsync(configType);

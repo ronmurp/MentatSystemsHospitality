@@ -11,6 +11,8 @@ public class PublishArchiveLoadLockVm : SaveReturnButtonsVm
 
 	public string OnclickLoad { get; set; } = "window.mshMethods.loadData(true)";
 
+	public string OnClickDelete { get; set; } = "window.mshMethods.deleteData(true)";
+
 	public string OnclickLock { get; set; } = "window.mshMethods.lockData(true)";
 	public bool UseHotel { get; set; }
 	

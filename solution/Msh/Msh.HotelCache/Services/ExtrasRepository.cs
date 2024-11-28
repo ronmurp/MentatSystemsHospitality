@@ -24,4 +24,7 @@ public class ExtraRepository(IConfigRepository configRepository)
 	public async Task<bool> Save(List<Extra> items, string hotelCode, string notes = "") =>
 		await ConfigRepository.SaveConfigAsync(ConfigType(hotelCode), items, notes);
 
+	public async Task<bool> ArchiveDelete(string hotelCode, string archiveCode, string userId) =>
+		await ConfigRepository.DeleteArchiveConfigAsync(ConfigType(hotelCode), archiveCode, userId);
+
 }

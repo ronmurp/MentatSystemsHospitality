@@ -1,5 +1,4 @@
-﻿using Msh.Common.Exceptions;
-using Msh.Common.Models.Configuration;
+﻿using Msh.Common.Models.Configuration;
 
 namespace Msh.Common.Data;
 
@@ -19,7 +18,7 @@ public partial interface IConfigRepository
 	/// <returns></returns>
 	Task<bool> ArchiveConfigAsync(string configType, string archiveCode, string userId, string notes = "");
 		
-	Task RemoveConfigArchiveAsync(string configType, string archiveCode);
+	Task<bool> DeleteArchiveConfigAsync(string configType, string archiveCode, string userId);
 
 	Task<bool> LockArchiveConfigAsync(string configType, string archiveCode, bool performLock, string userId);
 }

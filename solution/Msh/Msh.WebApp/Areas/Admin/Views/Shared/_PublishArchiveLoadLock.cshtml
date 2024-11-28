@@ -1,10 +1,12 @@
 ﻿@model Msh.WebApp.Areas.Admin.Models.PublishArchiveLoadLockVm
+
 @{
 	var publishMethod = Model.OnclickPublish;
 	var loadMethod = Model.OnclickLoad;
 	var lockMethod = Model.OnclickLock;
 	var archiveMethod = Model.OnclickArchive;
 	var importMethod = Model.OnclickImport;
+	var deleteArchive = Model.OnClickDelete;
 }	
 
 <div class="row mt-3 sticky-bottom">
@@ -15,22 +17,26 @@
 		<div class="input-group mt-2 ms-1" style="width:auto;margin-right:3px;">
 			<button class="btn btn-outline-primary" onclick="@publishMethod">Publish</button>
 			<button class="btn btn-outline-primary" onclick="@archiveMethod">Archive</button>
-
+			<button class="btn btn-outline-primary" onclick="@deleteArchive">Delete</button>
 		</div>
+
 		<div class="input-group mt-2 ms-1" style="width:auto;">
 			<button class="btn btn-outline-primary" onclick="@loadMethod">Load</button>
 			<button class="btn btn-outline-primary" onclick="@lockMethod">Lock</button>
 		</div>
+
 		@if (Model.ShowImportButton)
 		{
 			<div class="input-group mt-2 ms-1" style="width:auto;">
 				<button class="btn btn-outline-primary" onclick="@importMethod">Import</button>
 			</div>
 		}
+
 		<div class="input-group mt-2 ms-1" style="width:auto;">
 			<div class="btn btn-outline-primary">
 				<info-icon name="info-publish" />
 			</div>
 		</div>
+
 	</div>
 </div>

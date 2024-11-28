@@ -55,7 +55,7 @@
 			<td>@item.Code</td>
 			@await Html.PartialAsync("Hotels/_TableCheckMarkCell", item.Enabled)
 			<td class="text-end">@item.Price.ToString("C2")</td>
-			<td>@item.Description</td>
+			<td>@item.DisplayText</td>
 			<td style="width:80px;">
 				<div class="cell-outer">
 					<div class="cell-inner">

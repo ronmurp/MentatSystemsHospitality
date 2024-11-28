@@ -9,6 +9,7 @@
 
     var pallsA = app.pallsArchiveService;
     var pallsP = app.pallsPublishService;
+    var pallsD = app.pallsDeleteService;
     var pallsLoad = app.pallsLoadService;
     var pallsLock = app.pallsLockService;
     var pallsI = app.pallsImportService;
@@ -18,6 +19,8 @@
     var ids = {
         selectHotel: '#selectHotel'
     }
+    var apiRoot = '/api/extrasapi';
+    var listPath = 'admin/hotels/ExtrasList';
 
     function getHotelCode() {
         var hotelCode = $(ids.selectHotel).val();
@@ -27,7 +30,7 @@
 
     $(ids.selectHotel).on('change', () => {
         var hotelCode = getHotelCode();
-        util.redirectTo(`admin/hotels/ExtrasList?hotelCode=${hotelCode}`);
+        util.redirectTo(`${listPath}?hotelCode=${hotelCode}`);
     });
 
     if (app.itemDatesService) {
@@ -35,17 +38,17 @@
     }
    
     app.hotelActionService.init({
-        deleteApi: '/api/hotelapi/ExtraDelete',
-        copyApi: '/api/hotelapi/ExtraCopy',
-        moveApi: '/admin/hotels/ExtraMove',
-        listPath: 'admin/hotels/ExtrasList'
+        deleteApi: `${apiRoot}/ExtraDelete`,
+        copyApi: `${apiRoot}/ExtraCopy`,
+        moveApi: `${apiRoot}/ExtraMove`,
+        listPath: listPath
     });
 
     app.hotelActionBulkService.init({
-        deleteBulkApi: '/api/hotelapi/ExtraDeleteBulk',
-        copyBulkApi: '/api/hotelapi/ExtraCopyBulk',
-        sortListApi: '/api/hotelapi/ExtrasSort',
-        listPath: 'admin/hotels/ExtrasList'
+        deleteBulkApi: `${apiRoot}/ExtraDeleteBulk`,
+        copyBulkApi: `${apiRoot}/ExtraCopyBulk`,
+        sortListApi: `${apiRoot}/ExtrasSort`,
+        listPath: listPath
     });
 
     var editType = $('#edit-type').val();
@@ -57,7 +60,8 @@
             name: 'Extras',
             useHotelCode: true,
             confirmedRedirect: true,
-            confirmedRedirectUrl: 'admin/hotels/ExtrasList'
+            confirmedRedirectUrl: listPath,
+            apiRoot: apiRoot
         }
 
         // How to add a custom body text to the standard body (code and notes)
@@ -65,6 +69,7 @@
 
         pallsA.init(archiveInputs);
         pallsP.init(inputs);
+        pallsD.init(inputs);
         pallsLoad.init(inputs);
         pallsLock.init(inputs);
         pallsI.init(inputs);

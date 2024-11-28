@@ -23,6 +23,8 @@ public partial interface IConfigRepository
 	/// </summary>
 	Task<bool> SaveConfigAsync<T>(string configType, T value, string notes = "");
 
+	Task<bool> DeleteConfigAsync(string configType);
+
 	Task<bool> SaveMissingConfigAsync<T>(string configType, T defaultObject);
 	
 

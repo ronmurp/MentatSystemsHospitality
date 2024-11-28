@@ -8,7 +8,7 @@ using Msh.WebApp.Models.Admin.ViewModels;
 
 namespace Msh.WebApp.API.Admin.Hotels
 {
-	public partial class HotelApiController
+	public partial class ExtrasApiController
 	{
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var userId = userService.GetUserId();
+				var userId = _userService.GetUserId();
 
 				if (string.IsNullOrEmpty(userId))
 				{
@@ -31,7 +31,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 				}
 
 
-				var result = await extraRepository.Publish(hotelCode, userId, saveData.Notes);
+				var result = await _extraRepository.Publish(hotelCode, userId, saveData.Notes);
 
 				if (!result)
 				{
@@ -42,7 +42,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 			}
 			catch (Exception ex)
 			{
-				return GetFail($"ExtrasPublish for {hotelCode}: {ex.Message}");
+				return GetFail($"{ModelName} Publish for {hotelCode}: {ex.Message}");
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var list = await extraRepository.ArchivedList(hotelCode);
+				var list = await _extraRepository.ArchivedList(hotelCode);
 
 				var selectList = list.OrderBy(x => x.ConfigType).Select(x => new SelectItemVm
 				{
@@ -80,7 +80,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 			}
 			catch (Exception ex)
 			{
-				return GetFail($"RatePlans Archive {hotelCode}: {ex.Message}");
+				return GetFail($"{ModelName} Archive {hotelCode}: {ex.Message}");
 			}
 		}
 
@@ -98,13 +98,13 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var userId = userService.GetUserId();
+				var userId = _userService.GetUserId();
 				if (string.IsNullOrEmpty(userId))
 				{
 					return GetFail("You must be signed-in to perform this action.");
 				}
 
-				var result = await extraRepository.Archive(hotelCode, archiveCode, userId, saveData.Notes);
+				var result = await _extraRepository.Archive(hotelCode, archiveCode, userId, saveData.Notes);
 				if (!result)
 				{
 					return GetFail("The archive operation failed. The record may be locked.");
@@ -114,9 +114,43 @@ namespace Msh.WebApp.API.Admin.Hotels
 			}
 			catch (Exception ex)
 			{
-				return GetFail($"ExtrasArchive {hotelCode} {archiveCode}: {ex.Message}");
+				return GetFail($"{ModelName} Archive {hotelCode} {archiveCode}: {ex.Message}");
 			}
 		}
+
+		/// <summary>
+		/// Perform an archive save. Gets the current edited data from Config,
+		/// and stores it in ConfigArchive with the archiveCode appended
+		/// </summary>
+		/// <param name="hotelCode"></param>
+		/// <param name="archiveCode"></param>
+		/// <returns></returns>
+		[HttpPost]
+		[Route("ExtrasArchiveDelete/{hotelCode}/{archiveCode}")]
+		public async Task<IActionResult> ExtrasArchiveDelete(string hotelCode, string archiveCode)
+		{
+			try
+			{
+				var userId = _userService.GetUserId();
+				if (string.IsNullOrEmpty(userId))
+				{
+					return GetFail("You must be signed-in to perform this action.");
+				}
+
+				var result = await _extraRepository.ArchiveDelete(hotelCode, archiveCode, userId);
+				if (!result)
+				{
+					return GetFail("The archive delete operation failed. The record may be locked.");
+				}
+
+				return Ok(new ObjectVm());
+			}
+			catch (Exception ex)
+			{
+				return GetFail($"{ModelName} Archive {hotelCode} {archiveCode}: {ex.Message}");
+			}
+		}
+
 
 		[HttpPost]
 		[Route("ExtrasLock/{hotelCode}")]
@@ -124,7 +158,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var userId = userService.GetUserId();
+				var userId = _userService.GetUserId();
 				if (string.IsNullOrEmpty(userId))
 				{
 					return GetFail("You must be signed-in to perform this action.");
@@ -135,7 +169,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 				{
 					case "Pub":
 
-						var resultP = await extraRepository.LockPublished(hotelCode, input.IsTrue, userId);
+						var resultP = await _extraRepository.LockPublished(hotelCode, input.IsTrue, userId);
 						if (!resultP)
 						{
 							return GetFail("The lock operation failed. The record may be locked.");
@@ -145,7 +179,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 
 					default:
 						var resultA =
-							await ratePlanRepository.LockArchived(hotelCode, input.Code, input.IsTrue, userId);
+							await _extraRepository.LockArchived(hotelCode, input.Code, input.IsTrue, userId);
 						if (!resultA)
 						{
 							return GetFail("The archive operation failed. The record may be locked.");
@@ -159,7 +193,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 			}
 			catch (Exception ex)
 			{
-				return GetFail($"RatePlansLock: {ex.Message}");
+				return GetFail($"{ModelName} Lock: {ex.Message}");
 			}
 		}
 
@@ -169,7 +203,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var userId = userService.GetUserId();
+				var userId = _userService.GetUserId();
 				if (string.IsNullOrEmpty(userId))
 				{
 					return GetFail("You must be signed-in to perform this action.");
@@ -180,13 +214,13 @@ namespace Msh.WebApp.API.Admin.Hotels
 				switch (archiveCode)
 				{
 					case "Pub":
-						var recordsPub = await extraRepository.Published(hotelCode);
-						await extraRepository.Save(recordsPub, hotelCode);
+						var recordsPub = await _extraRepository.Published(hotelCode);
+						await _extraRepository.Save(recordsPub, hotelCode);
 						break;
 
 					default:
-						var recordsArch = await extraRepository.Archived(hotelCode, archiveCode);
-						await extraRepository.Save(recordsArch, hotelCode);
+						var recordsArch = await _extraRepository.Archived(hotelCode, archiveCode);
+						await _extraRepository.Save(recordsArch, hotelCode);
 						break;
 				}
 
@@ -194,7 +228,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 			}
 			catch (Exception ex)
 			{
-				return GetFail($"ExtrasLoad {hotelCode} {data.Code}: {ex.Message}");
+				return GetFail($"{ModelName} Load {hotelCode} {data.Code}: {ex.Message}");
 			}
 		}
 
@@ -204,7 +238,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var userId = userService.GetUserId();
+				var userId = _userService.GetUserId();
 				if (string.IsNullOrEmpty(userId))
 				{
 					return GetFail("You must be signed-in to perform this action.");
@@ -217,15 +251,15 @@ namespace Msh.WebApp.API.Admin.Hotels
 					return GetFail($"ExtrasImport {hotelCode}: The import file does not exist.");
 				}
 
-				var list = await ImportExtrasHelper.ImportExtrasHotelXml(configRepository, filename, hotelCode);
-				// var recordsPub = await extraRepository.Published(hotelCode);
-				await extraRepository.Save(list, hotelCode);
+				var list = await ImportExtrasHelper.ImportExtrasHotelXml(_configRepository, filename, hotelCode);
+				// var recordsPub = await _extraRepository.Published(hotelCode);
+				await _extraRepository.Save(list, hotelCode);
 
 				return Ok(new ObjectVm());
 			}
 			catch (Exception ex)
 			{
-				return GetFail($"ExtrasImport {hotelCode} {data.Code}: {ex.Message}");
+				return GetFail($"{ModelName} Import {hotelCode} {data.Code}: {ex.Message}");
 			}
 		}
 
