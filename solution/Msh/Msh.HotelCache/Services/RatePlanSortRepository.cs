@@ -22,8 +22,6 @@ public class RatePlanSortRepository(IConfigRepository configRepository)
 	public async Task<bool> Save(List<RatePlanSort> items, string hotelCode, string notes = "") =>
 		await ConfigRepository.SaveConfigAsync(ConfigType(hotelCode), items, notes);
 
-	public Task<bool> ArchiveDelete(string hotelCode, string archiveCode, string userId)
-	{
-		throw new NotImplementedException();
-	}
+	public async Task<bool> ArchiveDelete(string hotelCode, string archiveCode, string userId) =>
+		await ConfigRepository.DeleteArchiveConfigAsync(ConfigType(hotelCode), archiveCode, userId);
 }

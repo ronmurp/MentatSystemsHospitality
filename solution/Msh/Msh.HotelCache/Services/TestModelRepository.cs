@@ -24,4 +24,7 @@ public class TestModelRepository(IConfigRepository configRepository)
 	
 	public async Task<bool> Save(List<TestModel> items, string notes = "") =>
 		await ConfigRepository.SaveConfigAsync(ConfigType(), items, notes);
+
+	public async Task<bool> ArchiveDelete(string archiveCode, string userId) =>
+		await ConfigRepository.DeleteArchiveConfigAsync(ConfigType(), archiveCode, userId);
 }

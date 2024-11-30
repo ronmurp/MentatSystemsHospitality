@@ -19,4 +19,7 @@ public class HotelRepository(IConfigRepository configRepository) : AbstractRepos
 
 	public async Task<bool> Save(List<Hotel> hotels, string notes = "") => 
 		await ConfigRepository.SaveConfigAsync(ConfigType(), hotels, notes);
+
+	public async Task<bool> ArchiveDelete(string archiveCode, string userId) =>
+		await ConfigRepository.DeleteArchiveConfigAsync(ConfigType(), archiveCode, userId);
 }

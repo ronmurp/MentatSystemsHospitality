@@ -28,4 +28,6 @@ public interface IBaseConfigRepository<T>
 	Task<bool> LockPublished(bool performLock, string userId);
 
 	Task<bool> LockArchived(string archiveCode, bool performLock, string userId);
+
+	Task<bool> ArchiveDelete(string archiveCode, string userId);
 }

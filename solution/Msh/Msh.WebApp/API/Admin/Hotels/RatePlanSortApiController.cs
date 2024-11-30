@@ -1,15 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Msh.Admin.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Msh.Common.Models;
 using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models.RatePlans;
+using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
+using Msh.WebApp.Services;
 
 namespace Msh.WebApp.API.Admin.Hotels;
 
-public partial class HotelApiController
+[ApiController]
+[Route("api/rateplansortapi")]
+public class RatePlanSortApiController : PrivateApiController
 {
+	private const string ModelName = "RatePlanSort";
+
+	private readonly IRatePlanRepository _ratePlanRepository;
+	private readonly IRatePlanSortRepository _ratePlanSortRepository;
+	private readonly IUserService _userService;
+
+	public RatePlanSortApiController(IHotelRepository hotelRepository,
+		IRatePlanRepository ratePlanRepository,
+		IRatePlanSortRepository ratePlanSortRepository,
+		IUserService userService):base(hotelRepository)
+	{
+		_ratePlanRepository = ratePlanRepository;
+		_ratePlanSortRepository = ratePlanSortRepository;
+		_userService = userService;
+	}
 	
 	/// <summary>
 	/// Add the current rate plans - add any missing, remove any extras
@@ -22,9 +41,9 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var ratePlans = await ratePlanRepository.GetData(input.HotelCode);
+			var ratePlans = await _ratePlanRepository.GetData(input.HotelCode);
 
-			var sortList = await ratePlanSortRepository.GetData(input.HotelCode);
+			var sortList = await _ratePlanSortRepository.GetData(input.HotelCode);
 			var index = sortList.Count;
 
 			foreach (var rp in ratePlans)
@@ -51,7 +70,7 @@ public partial class HotelApiController
 				}
 			}
 
-			await ratePlanSortRepository.Save(sortList, input.HotelCode);
+			await _ratePlanSortRepository.Save(sortList, input.HotelCode);
 
 			return Ok(new ObjectVm
 			{
@@ -70,11 +89,11 @@ public partial class HotelApiController
 
 	[HttpPost]
 	[Route("RatePlanSortPublish/{hotelCode}")]
-	public async Task<IActionResult> RatePlanSortPublish(string hotelCode)
+	public async Task<IActionResult> RatePlanSortPublish(string hotelCode, [FromBody] NotesSaveData saveData)
 	{
 		try
 		{
-			var userId = userService.GetUserId();
+			var userId = _userService.GetUserId();
 
 			if (string.IsNullOrEmpty(userId))
 			{
@@ -82,7 +101,7 @@ public partial class HotelApiController
 			}
 
 
-			var result = await ratePlanSortRepository.Publish(hotelCode, userId);
+			var result = await _ratePlanSortRepository.Publish(hotelCode, userId, saveData.Notes);
 
 			if (!result)
 			{
@@ -103,7 +122,7 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var list = await ratePlanSortRepository.ArchivedList(hotelCode);
+			var list = await _ratePlanSortRepository.ArchivedList(hotelCode);
 
 			var selectList = list.OrderBy(x => x.ConfigType).Select(x => new SelectItemVm
 			{
@@ -136,13 +155,13 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var userId = userService.GetUserId();
+			var userId = _userService.GetUserId();
 			if (string.IsNullOrEmpty(userId))
 			{
 				return GetFail("You must be signed-in to perform this action.");
 			}
 
-			var result = await ratePlanSortRepository.Archive(hotelCode, archiveCode, userId);
+			var result = await _ratePlanSortRepository.Archive(hotelCode, archiveCode, userId, saveData.Notes);
 			if (!result)
 			{
 				return GetFail("The archive operation failed. The record may be locked.");
@@ -162,7 +181,7 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var userId = userService.GetUserId();
+			var userId = _userService.GetUserId();
 			if (string.IsNullOrEmpty(userId))
 			{
 				return GetFail("You must be signed-in to perform this action.");
@@ -173,7 +192,7 @@ public partial class HotelApiController
 			{
 				case "Pub":
 
-					var resultP = await ratePlanSortRepository.LockPublished(hotelCode, input.IsTrue, userId);
+					var resultP = await _ratePlanSortRepository.LockPublished(hotelCode, input.IsTrue, userId);
 					if (!resultP)
 					{
 						return GetFail("The publish operation failed. The record may be locked.");
@@ -183,7 +202,7 @@ public partial class HotelApiController
 
 				default:
 					var resultA =
-						await ratePlanSortRepository.LockArchived(hotelCode, input.Code, input.IsTrue, userId);
+						await _ratePlanSortRepository.LockArchived(hotelCode, input.Code, input.IsTrue, userId);
 					if (!resultA)
 					{
 						return GetFail("The archive operation failed. The record may be locked.");
@@ -207,7 +226,7 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var userId = userService.GetUserId();
+			var userId = _userService.GetUserId();
 			if (string.IsNullOrEmpty(userId))
 			{
 				return GetFail("You must be signed-in to perform this action.");
@@ -218,13 +237,13 @@ public partial class HotelApiController
 			switch (archiveCode)
 			{
 				case "Pub":
-					var recordsPub = await ratePlanSortRepository.Published(hotelCode);
-					await ratePlanSortRepository.Save(recordsPub, hotelCode);
+					var recordsPub = await _ratePlanSortRepository.Published(hotelCode);
+					await _ratePlanSortRepository.Save(recordsPub, hotelCode);
 					break;
 
 				default:
-					var recordsArch = await ratePlanSortRepository.Archived(hotelCode, archiveCode);
-					await ratePlanSortRepository.Save(recordsArch, hotelCode);
+					var recordsArch = await _ratePlanSortRepository.Archived(hotelCode, archiveCode);
+					await _ratePlanSortRepository.Save(recordsArch, hotelCode);
 					break;
 			}
 
@@ -235,4 +254,37 @@ public partial class HotelApiController
 			return GetFail($"RatePlanSortLoad {hotelCode} {data.Code}: {ex.Message}");
 		}
 	}
+
+	/// <summary>
+	/// Perform an archive delete.
+	/// </summary>
+	/// <param name="hotelCode"></param>
+	/// <param name="archiveCode"></param>
+	/// <returns></returns>
+	[HttpPost]
+	[Route("RatePlanSortArchiveDelete/{hotelCode}/{archiveCode}")]
+	public async Task<IActionResult> RatePlanSortArchiveDelete(string hotelCode, string archiveCode)
+	{
+		try
+		{
+			var userId = _userService.GetUserId();
+			if (string.IsNullOrEmpty(userId))
+			{
+				return GetFail("You must be signed-in to perform this action.");
+			}
+
+			var result = await _ratePlanSortRepository.ArchiveDelete(hotelCode, archiveCode, userId);
+			if (!result)
+			{
+				return GetFail("The archive delete operation failed. The record may be locked.");
+			}
+
+			return Ok(new ObjectVm());
+		}
+		catch (Exception ex)
+		{
+			return GetFail($"{ModelName} Archive {hotelCode} {archiveCode}: {ex.Message}");
+		}
+	}
+
 }

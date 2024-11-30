@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Msh.Admin.Models;
 using Msh.Common.Models;
 using Msh.Common.Models.ViewModels;
@@ -9,6 +10,8 @@ namespace Msh.WebApp.API.Admin.Hotels;
 
 public partial class HotelApiController
 {
+	private const string ModelName = "Hotel";
+
 	/// <summary>
 	/// Publishes the Hotels list, copying the hotel list from Config to ConfigPub table
 	/// with the Hotel configType. The user must be signed in, and the Published record in ConfigPub
@@ -188,6 +191,37 @@ public partial class HotelApiController
 		catch (Exception ex)
 		{
 			return GetFail($"Hotels Load {data.Code}: {ex.Message}");
+		}
+	}
+
+	/// <summary>
+	/// Perform an archive delete.
+	/// </summary>
+	/// <param name="archiveCode"></param>
+	/// <returns></returns>
+	[HttpPost]
+	[Route("HotelsArchiveDelete/{archiveCode}")]
+	public async Task<IActionResult> HotelsArchiveDelete(string archiveCode)
+	{
+		try
+		{
+			var userId = userService.GetUserId();
+			if (string.IsNullOrEmpty(userId))
+			{
+				return GetFail("You must be signed-in to perform this action.");
+			}
+
+			var result = await hotelRepository.ArchiveDelete(archiveCode, userId);
+			if (!result)
+			{
+				return GetFail("The archive delete operation failed. The record may be locked.");
+			}
+
+			return Ok(new ObjectVm());
+		}
+		catch (Exception ex)
+		{
+			return GetFail($"{ModelName} Archive {archiveCode}: {ex.Message}");
 		}
 	}
 }
