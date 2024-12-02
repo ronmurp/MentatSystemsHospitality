@@ -1,14 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Msh.Common.Models;
 using Msh.Common.Models.ViewModels;
+using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
+using Msh.WebApp.Services;
 
 namespace Msh.WebApp.API.Admin.Hotels
 {
-	public partial class RatePlanApiController
+	[ApiController]
+	[Route("api/rateplantextapi")]
+	public partial class RatePlanTextApiController : PrivateApiController
 	{
-		
+		private const string ModelName = "RatePlanText";
+
+		private readonly IUserService _userService;
+		private readonly IRatePlanTextRepository _ratePlanTextRepository;
+
+		public RatePlanTextApiController(IHotelRepository hotelRepository,
+			IUserService userService,
+			IRatePlanTextRepository ratePlanTextRepository) : base(hotelRepository)
+		{
+			_userService = userService;
+			_ratePlanTextRepository = ratePlanTextRepository;
+		}
 
 		/// <summary>
 		/// Publishes the Rate Plans list, copying the hotel list from Config to ConfigPub table
@@ -17,8 +32,8 @@ namespace Msh.WebApp.API.Admin.Hotels
 		/// </summary>
 		/// <returns></returns>
 		[HttpPost]
-		[Route("RatePlansPublish/{hotelCode}")]
-		public async Task<IActionResult> RatePlansPublish(string hotelCode, [FromBody] NotesSaveData saveData)
+		[Route("RatePlanTextPublish/{hotelCode}")]
+		public async Task<IActionResult> RatePlanTextPublish(string hotelCode, [FromBody] NotesSaveData saveData)
 		{
 			try
 			{
@@ -30,7 +45,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 				}
 
 
-				var result = await _ratePlanRepository.Publish(hotelCode, userId, saveData.Notes);
+				var result = await _ratePlanTextRepository.Publish(hotelCode, userId, saveData.Notes);
 
 				if (!result)
 				{
@@ -51,12 +66,12 @@ namespace Msh.WebApp.API.Admin.Hotels
 		/// </summary>
 		/// <returns></returns>
 		[HttpGet]
-		[Route("RatePlansArchiveSelectList/{hotelCode}")]
-		public async Task<IActionResult> RatePlansArchiveSelectList(string hotelCode)
+		[Route("RatePlanTextArchiveSelectList/{hotelCode}")]
+		public async Task<IActionResult> RatePlanTextArchiveSelectList(string hotelCode)
 		{
 			try
 			{
-				var list = await _ratePlanRepository.ArchivedList(hotelCode);
+				var list = await _ratePlanTextRepository.ArchivedList(hotelCode);
 
 				var selectList = list.OrderBy(x => x.ConfigType).Select(x => new SelectItemVm
 				{
@@ -92,8 +107,8 @@ namespace Msh.WebApp.API.Admin.Hotels
 		/// <param name="saveData"></param>
 		/// <returns></returns>
 		[HttpPost]
-		[Route("RatePlansArchive/{hotelCode}/{archiveCode}")]
-		public async Task<IActionResult> RatePlansArchive(string hotelCode, string archiveCode, [FromBody] NotesSaveData saveData)
+		[Route("RatePlanTextArchive/{hotelCode}/{archiveCode}")]
+		public async Task<IActionResult> RatePlanTextArchive(string hotelCode, string archiveCode, [FromBody] NotesSaveData saveData)
 		{
 			try
 			{
@@ -103,7 +118,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 					return GetFail("You must be signed-in to perform this action.");
 				}
 
-				var result = await _ratePlanRepository.Archive(hotelCode, archiveCode, userId, saveData.Notes);
+				var result = await _ratePlanTextRepository.Archive(hotelCode, archiveCode, userId, saveData.Notes);
 				if (!result)
 				{
 					return GetFail("The archive operation failed. The record may be locked.");
@@ -118,8 +133,8 @@ namespace Msh.WebApp.API.Admin.Hotels
 		}
 
 		[HttpPost]
-		[Route("RatePlansLock/{hotelCode}")]
-		public async Task<IActionResult> RatePlansLock([FromBody] ApiInput input, string hotelCode)
+		[Route("RatePlanTextLock/{hotelCode}")]
+		public async Task<IActionResult> RatePlanTextLock([FromBody] ApiInput input, string hotelCode)
 		{
 			try
 			{
@@ -134,7 +149,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 				{
 					case "Pub":
 
-						var resultP = await _ratePlanRepository.LockPublished(hotelCode, input.IsTrue, userId);
+						var resultP = await _ratePlanTextRepository.LockPublished(hotelCode, input.IsTrue, userId);
 						if (!resultP)
 						{
 							return GetFail("The publish operation failed. The record may be locked.");
@@ -144,7 +159,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 
 					default:
 						var resultA =
-							await _ratePlanRepository.LockArchived(hotelCode, input.Code, input.IsTrue, userId);
+							await _ratePlanTextRepository.LockArchived(hotelCode, input.Code, input.IsTrue, userId);
 						if (!resultA)
 						{
 							return GetFail("The archive operation failed. The record may be locked.");
@@ -163,8 +178,8 @@ namespace Msh.WebApp.API.Admin.Hotels
 		}
 
 		[HttpPost]
-		[Route("RatePlansLoad/{hotelCode}")]
-		public async Task<IActionResult> RatePlansLoad([FromBody] HotelBaseVm data, string hotelCode)
+		[Route("RatePlanTextLoad/{hotelCode}")]
+		public async Task<IActionResult> RatePlanTextLoad([FromBody] HotelBaseVm data, string hotelCode)
 		{
 			try
 			{
@@ -179,13 +194,13 @@ namespace Msh.WebApp.API.Admin.Hotels
 				switch (archiveCode)
 				{
 					case "Pub":
-						var recordsPub = await _ratePlanRepository.Published(hotelCode);
-						await _ratePlanRepository.Save(recordsPub, hotelCode);
+						var recordsPub = await _ratePlanTextRepository.Published(hotelCode);
+						await _ratePlanTextRepository.Save(recordsPub, hotelCode);
 						break;
 
 					default:
-						var recordsArch = await _ratePlanRepository.Archived(hotelCode, archiveCode);
-						await _ratePlanRepository.Save(recordsArch, hotelCode);
+						var recordsArch = await _ratePlanTextRepository.Archived(hotelCode, archiveCode);
+						await _ratePlanTextRepository.Save(recordsArch, hotelCode);
 						break;
 				}
 
@@ -204,8 +219,8 @@ namespace Msh.WebApp.API.Admin.Hotels
 		/// <param name="archiveCode"></param>
 		/// <returns></returns>
 		[HttpPost]
-		[Route("RatePlansArchiveDelete/{hotelCode}/{archiveCode}")]
-		public async Task<IActionResult> RatePlansArchiveDelete(string hotelCode, string archiveCode)
+		[Route("RatePlanTextArchiveDelete/{hotelCode}/{archiveCode}")]
+		public async Task<IActionResult> RatePlanTextArchiveDelete(string hotelCode, string archiveCode)
 		{
 			try
 			{
@@ -215,7 +230,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 					return GetFail("You must be signed-in to perform this action.");
 				}
 
-				var result = await _ratePlanRepository.ArchiveDelete(hotelCode, archiveCode, userId);
+				var result = await _ratePlanTextRepository.ArchiveDelete(hotelCode, archiveCode, userId);
 				if (!result)
 				{
 					return GetFail("The archive delete operation failed. The record may be locked.");
