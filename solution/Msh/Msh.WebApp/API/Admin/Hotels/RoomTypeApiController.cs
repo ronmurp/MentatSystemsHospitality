@@ -3,11 +3,28 @@ using Microsoft.AspNetCore.Mvc;
 using Msh.Common.ExtensionMethods;
 using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models.RoomTypes;
+using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Models;
+using Msh.WebApp.Services;
 
 namespace Msh.WebApp.API.Admin.Hotels;
-public partial class HotelApiController
+
+[ApiController]
+[Route("api/roomtypeapi")]
+public partial class RoomTypeApiController : PrivateApiController
 {
+	private const string ModelName = "Room Types";
+
+	private readonly IUserService _userService;
+	private readonly IRoomTypeRepository _roomTypeRepository;
+
+	public RoomTypeApiController(IHotelRepository hotelRepository,
+		IUserService userService,
+		IRoomTypeRepository roomTypeRepository) : base(hotelRepository)
+	{
+		_userService = userService;
+		_roomTypeRepository = roomTypeRepository;
+	}
 	[HttpGet]
 	[Route("RoomTypeConfig")]
 	public async Task<IActionResult> RoomTypeConfig()
@@ -25,7 +42,7 @@ public partial class HotelApiController
 			{
 				return GetFail("At least one code must change");
 			}
-			var roomTypes = await roomTypeRepository.GetData(input.HotelCode);
+			var roomTypes = await _roomTypeRepository.GetData(input.HotelCode);
 			var roomType = roomTypes.FirstOrDefault(h => h.Code == input.Code);
 			if (roomType != null)
 			{
@@ -38,14 +55,14 @@ public partial class HotelApiController
 					return GetFail("The hotel does not exist.");
 				}
 
-				var newRoomTypes = await roomTypeRepository.GetData(input.NewHotelCode);
+				var newRoomTypes = await _roomTypeRepository.GetData(input.NewHotelCode);
 				if (newRoomTypes.Any(c => c.Code.EqualsAnyCase(input.NewCode)))
 				{
 					return GetFail("The code already exists.");
 				}
 
 				newRoomTypes.Add(newRoomType);
-				await roomTypeRepository.Save(newRoomTypes, input.NewHotelCode);
+				await _roomTypeRepository.Save(newRoomTypes, input.NewHotelCode);
 			}
 
 			return Ok(new ObjectVm());
@@ -63,12 +80,12 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var roomTypes = await roomTypeRepository.GetData(input.HotelCode);
+			var roomTypes = await _roomTypeRepository.GetData(input.HotelCode);
 			var roomType = roomTypes.FirstOrDefault(h => h.Code == input.Code);
 			if (roomType != null)
 			{
 				roomTypes.Remove(roomType);
-				await roomTypeRepository.Save(roomTypes, input.HotelCode);
+				await _roomTypeRepository.Save(roomTypes, input.HotelCode);
 			}
 
 			return Ok(new ObjectVm
@@ -97,7 +114,7 @@ public partial class HotelApiController
 				return GetFail("At least one code must change");
 			}
 
-			var hotels = await hotelRepository.GetData();
+			var hotels = await HotelRepository.GetData();
 
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
 			{
@@ -111,8 +128,8 @@ public partial class HotelApiController
 			var missingList = new List<string>();
 			var newList = new List<RoomType>();
 
-			var srcItems = await roomTypeRepository.GetData(input.HotelCode);
-			var dstItems = await roomTypeRepository.GetData(input.NewHotelCode);
+			var srcItems = await _roomTypeRepository.GetData(input.HotelCode);
+			var dstItems = await _roomTypeRepository.GetData(input.NewHotelCode);
 
 			foreach (var code in input.CodeList)
 			{
@@ -131,7 +148,7 @@ public partial class HotelApiController
 
 			dstItems.AddRange(newList);
 
-			await roomTypeRepository.Save(dstItems, input.NewHotelCode);
+			await _roomTypeRepository.Save(dstItems, input.NewHotelCode);
 
 			if (missingList.Count > 0)
 			{
@@ -155,13 +172,13 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var hotels = await hotelRepository.GetData();
+			var hotels = await HotelRepository.GetData();
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
 			{
 				return GetFail($"Invalid source hotel code {input.HotelCode}");
 			}
 
-			var items = await roomTypeRepository.GetData(input.HotelCode);
+			var items = await _roomTypeRepository.GetData(input.HotelCode);
 
 			for (var i = items.Count - 1; i >= 0; i--)
 			{
@@ -172,7 +189,7 @@ public partial class HotelApiController
 				}
 			}
 
-			await roomTypeRepository.Save(items, input.HotelCode);
+			await _roomTypeRepository.Save(items, input.HotelCode);
 
 			return Ok(new ObjectVm());
 
@@ -191,15 +208,15 @@ public partial class HotelApiController
 		try
 		{
 			var hotelCode = input.HotelCode;
-			var hotels = await hotelRepository.GetData();
+			var hotels = await HotelRepository.GetData();
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
 			{
 				return GetFail($"Invalid hotel code {hotelCode}");
 			}
 
-			var items = await roomTypeRepository.GetData(hotelCode);
+			var items = await _roomTypeRepository.GetData(hotelCode);
 
-			await roomTypeRepository.Save(items.OrderBy(e => e.Code).ToList(), hotelCode);
+			await _roomTypeRepository.Save(items.OrderBy(e => e.Code).ToList(), hotelCode);
 
 			return Ok(new ObjectVm());
 

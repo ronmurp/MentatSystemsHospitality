@@ -9,6 +9,7 @@
 
     var pallsA = app.pallsArchiveService;
     var pallsP = app.pallsPublishService;
+    var pallsD = app.pallsDeleteService;
     var pallsLoad = app.pallsLoadService;
     var pallsLock = app.pallsLockService;
     var pallsI = app.pallsImportService;
@@ -18,6 +19,9 @@
         selectHotel: '#selectHotel'
     }
 
+    var apiRoot = '/api/roomtypeapi'
+    var listPath = 'admin/hotels/RoomTypesList';
+
     function getHotelCode() {
         var hotelCode = $(ids.selectHotel).val();
         hotelCode = hotelCode ? hotelCode : $('#hotelCode').val();
@@ -26,20 +30,20 @@
 
     $(ids.selectHotel).on('change', () => {
         var hotelCode = getHotelCode();
-        util.redirectTo(`admin/hotels/RoomTypesList?hotelCode=${hotelCode}`);
+        util.redirectTo(`${listPath}?hotelCode=${hotelCode}`);
     });
 
     app.hotelActionService.init({
-        deleteApi: '/api/hotelapi/RoomTypeDelete',
-        copyApi: '/api/hotelapi/RoomTypeCopy',
-        listPath: 'admin/hotels/RoomTypesList'
+        deleteApi: `${apiRoot}/RoomTypeDelete`,
+        copyApi: `${apiRoot}/RoomTypeCopy`,
+        listPath: listPath
     });
 
     app.hotelActionBulkService.init({
-        deleteBulkApi: '/api/hotelapi/RoomTypeDeleteBulk',
-        copyBulkApi: '/api/hotelapi/RoomTypeCopyBulk',
-        sortListApi: '/api/hotelapi/RoomTypesSort',
-        listPath: 'admin/hotels/RoomTypesList'
+        deleteBulkApi: `${apiRoot}/RoomTypeDeleteBulk`,
+        copyBulkApi: `${apiRoot}/RoomTypeCopyBulk`,
+        sortListApi: `${apiRoot}/RoomTypesSort`,
+        listPath: listPath
     });
 
     var editType = $('#edit-type').val();
@@ -47,17 +51,19 @@
     if (editType === "roomtypes-list") {
 
         var inputs = {
-            model: 'RoomTypesList',
+            model: 'RoomType',
             name: 'Room Types',
             useHotelCode: true,
+            apiRoot: apiRoot,
             confirmedRedirect: true,
-            confirmedRedirectUrl: 'admin/hotels/RoomTypesList'
+            confirmedRedirectUrl: listPath
         }
 
       
 
         pallsA.init(inputs);
         pallsP.init(inputs);
+        pallsD.init(inputs);
         pallsLoad.init(inputs);
         pallsLock.init(inputs);
         pallsI.init(inputs);

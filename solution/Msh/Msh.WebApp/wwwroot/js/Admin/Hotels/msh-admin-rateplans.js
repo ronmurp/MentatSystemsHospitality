@@ -112,7 +112,7 @@
         deleteBulkApi: `${apiRoot}/RatePlanDeleteBulk`,
         copyBulkApi: `${apiRoot}/RatePlanCopyBulk`,
         sortListApi: `${apiRoot}/RatePlansSort`,
-        listPath: `${listPath}/RatePlansList`
+        listPath: listPath
     });
 
     var editType = $('#edit-type').val();
