@@ -27,6 +27,8 @@
             editTypeValue: 'item-options'
         };
 
+        var apiRoot = '/api/specialsapi';
+
         var currentCode = '';
         var currentHotelCode = '';
         
@@ -69,7 +71,7 @@
         }
 
         function loadOptions(code, hotelCode) {
-            var url = `/api/hotelapi/SpecialOptions?code=${code}&hotelCode=${hotelCode}`;
+            var url = `${apiRoot}/SpecialOptions?code=${code}&hotelCode=${hotelCode}`;
             api.getAsync(url, (data) => {
                 if (data.success) {
                     itemOptions = data.data.options;                 
@@ -94,7 +96,7 @@
             const x = itemOptions.splice(index, 1);
             var html = getTableHtml(itemOptions);
             $(options.tableTargetId).html(html);
-            updateInputs();
+            // updateInputs();
         }
 
        
@@ -117,7 +119,7 @@
                 hotelCode: currentHotelCode,
                 options: itemOptions
             };
-            var url = `/api/hotelapi/SpecialOptions`;
+            var url = `${apiRoot}/SpecialOptions`;
             api.postAsync(url, d, (data) => {
                 if (data.success) {
                     loadOptions(currentCode, currentHotelCode);

@@ -3,6 +3,7 @@ using Msh.Common.Exceptions;
 using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Specials;
+using Msh.WebApp.Areas.Admin.Data;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
 
@@ -214,7 +215,20 @@ public partial class HotelsController
 			ViewBag.Code = code;
 			ViewBag.HotelCode = hotelCode;
 
-			return View();
+			var vm = new SpecialOptionsVm
+			{
+				HotelCode = hotelCode,
+				Code = code
+			};
+
+			var specials = await specialsRepository.GetData(hotelCode);
+			var special = specials.FirstOrDefault(s => s.Code.EqualsAnyCase(code));
+			if (special != null)
+			{
+				vm.Options = special.Options;
+			}
+
+			return View(vm);
 		}
 		catch (Exception ex)
 		{
@@ -286,14 +300,14 @@ public partial class HotelsController
 				Code = code
 			};
 
-			var roomTypes = await ratePlanRepository.GetData(hotelCode);
+			var ratePlans = await ratePlanRepository.GetData(hotelCode);
 			var specials = await specialsRepository.GetData(hotelCode);
 			var special = specials.FirstOrDefault(s => s.Code.EqualsAnyCase(code));
 			if (special != null)
 			{
-				var selected = special.RoomTypeCodes;
+				var selected = special.RatePlanCodes;
 
-				foreach (var rt in roomTypes.OrderBy(x => x.Group).ThenBy(x => x.RatePlanCode).ToList())
+				foreach (var rt in ratePlans.OrderBy(x => x.Group).ThenBy(x => x.RatePlanCode).ToList())
 				{
 					var rtr = new CodeCheckListRow
 					{

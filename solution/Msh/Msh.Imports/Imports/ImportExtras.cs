@@ -1,7 +1,5 @@
 ﻿using Msh.Admin.Imports;
-using Msh.Common.Models.Dates;
 using Msh.HotelCache.Models;
-using Msh.HotelCache.Models.Extras;
 using Msh.TestSupport;
 using NUnit.Framework;
 
@@ -23,8 +21,5 @@ public class ImportExtras
 
 			await TestConfigUtilities.SaveConfig($"{ConstHotel.Cache.Extras}-{ec.HotelCode}", ec.Extras);
 		}
-
 	}
-
-	
 }

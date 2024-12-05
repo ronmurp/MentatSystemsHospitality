@@ -4,13 +4,28 @@ using Msh.Common.ExtensionMethods;
 using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models.Hotels;
 using Msh.HotelCache.Models.Specials;
+using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Data;
 using Msh.WebApp.Areas.Admin.Models;
+using Msh.WebApp.Services;
 
 namespace Msh.WebApp.API.Admin.Hotels;
 
-public partial class HotelApiController
+[ApiController]
+[Route("api/specialsapi")]
+public partial class SpecialsApiController : PrivateApiController
 {
+	private readonly IUserService _userService;
+	private readonly ISpecialsRepository _specialsRepository;
+	private const string ModelName = "Specials";
+
+	public SpecialsApiController(IHotelRepository hotelRepository,
+		IUserService userService,
+		ISpecialsRepository specialsRepository) : base(hotelRepository)
+	{
+		_userService = userService;
+		_specialsRepository = specialsRepository;
+	}
 
 	[HttpPost]
 	[Route("SpecialDelete")]
@@ -18,12 +33,12 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var items = await specialsRepository.GetData(input.HotelCode);
+			var items = await _specialsRepository.GetData(input.HotelCode);
 			var item = items.FirstOrDefault(h => h.Code == input.Code);
 			if (item != null)
 			{
 				items.Remove(item);
-				await specialsRepository.Save(items, input.HotelCode);
+				await _specialsRepository.Save(items, input.HotelCode);
 			}
 
 			return Ok(new ObjectVm
@@ -53,7 +68,7 @@ public partial class HotelApiController
 				return GetFail("At least one code must change");
 			}
 
-			var items = await specialsRepository.GetData(input.HotelCode);
+			var items = await _specialsRepository.GetData(input.HotelCode);
 			var item = items.FirstOrDefault(h => h.Code == input.Code);
 			if (item != null)
 			{
@@ -66,14 +81,14 @@ public partial class HotelApiController
 					return result.fail;
 				}
 
-				var newItems = await specialsRepository.GetData(input.NewHotelCode);
+				var newItems = await _specialsRepository.GetData(input.NewHotelCode);
 				if (newItems.Any(c => c.Code.EqualsAnyCase(input.NewCode)))
 				{
 					return GetFail("The code already exists.");
 				}
 
 				newItems.Add(newItem);
-				await specialsRepository.Save(newItems, input.NewHotelCode);
+				await _specialsRepository.Save(newItems, input.NewHotelCode);
 			}
 
 			return Ok(new ObjectVm());
@@ -96,7 +111,7 @@ public partial class HotelApiController
 				return GetFail("At least one code must change");
 			}
 
-			var hotels = await hotelRepository.GetData();
+			var hotels = await HotelRepository.GetData();
 
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
 			{
@@ -110,8 +125,8 @@ public partial class HotelApiController
 			var missingList = new List<string>();
 			var newList = new List<Special>();
 
-			var srcItems = await specialsRepository.GetData(input.HotelCode);
-			var dstItems = await specialsRepository.GetData(input.NewHotelCode);
+			var srcItems = await _specialsRepository.GetData(input.HotelCode);
+			var dstItems = await _specialsRepository.GetData(input.NewHotelCode);
 
 			foreach (var code in input.CodeList)
 			{
@@ -130,7 +145,7 @@ public partial class HotelApiController
 
 			dstItems.AddRange(newList);
 
-			await specialsRepository.Save(dstItems, input.NewHotelCode);
+			await _specialsRepository.Save(dstItems, input.NewHotelCode);
 
 			if (missingList.Count > 0)
 			{
@@ -154,13 +169,13 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var hotels = await hotelRepository.GetData();
+			var hotels = await HotelRepository.GetData();
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
 			{
 				return GetFail($"Invalid source hotel code {input.HotelCode}");
 			}
 
-			var items = await specialsRepository.GetData(input.HotelCode);
+			var items = await _specialsRepository.GetData(input.HotelCode);
 
 			for (var i = items.Count - 1; i >= 0; i--)
 			{
@@ -171,7 +186,7 @@ public partial class HotelApiController
 				}
 			}
 
-			await specialsRepository.Save(items, input.HotelCode);
+			await _specialsRepository.Save(items, input.HotelCode);
 
 			
 
@@ -191,15 +206,15 @@ public partial class HotelApiController
 		try
 		{
 			var hotelCode = input.HotelCode;
-			var hotels = await hotelRepository.GetData();
+			var hotels = await HotelRepository.GetData();
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
 			{
 				return GetFail($"Invalid hotel code {hotelCode}");
 			}
 			
-			var srcItems = await specialsRepository.GetData(hotelCode);
+			var srcItems = await _specialsRepository.GetData(hotelCode);
 
-			await specialsRepository.Save(srcItems.OrderBy(e => e.Code).ToList(), hotelCode);
+			await _specialsRepository.Save(srcItems.OrderBy(e => e.Code).ToList(), hotelCode);
 
 			return Ok(new ObjectVm());
 
@@ -216,7 +231,7 @@ public partial class HotelApiController
 	[Route("SpecialDates")]
 	public async Task<IActionResult> SpecialDates(string code, string hotelCode)
 	{
-		var items = await specialsRepository.GetData(hotelCode);
+		var items = await _specialsRepository.GetData(hotelCode);
 		var item = items.FirstOrDefault(h => h.Code == code);
 		if (item == null)
 		{
@@ -245,13 +260,13 @@ public partial class HotelApiController
 		{
 			await Task.Delay(0);
 
-			var items = await specialsRepository.GetData(data.HotelCode);
+			var items = await _specialsRepository.GetData(data.HotelCode);
 			var index = items.FindIndex(h => h.Code == data.Code);
 
 			if (index >= 0)
 			{
 				items[index].ItemDates = data.Dates;
-				await specialsRepository.Save(items, data.HotelCode);
+				await _specialsRepository.Save(items, data.HotelCode);
 			}
 
 			return Ok(new ObjectVm
@@ -274,7 +289,7 @@ public partial class HotelApiController
 	[Route("SpecialOptions")]
 	public async Task<IActionResult> SpecialOptions(string code, string hotelCode)
 	{
-		var items = await specialsRepository.GetData(hotelCode);
+		var items = await _specialsRepository.GetData(hotelCode);
 		var item = items.FirstOrDefault(h => h.Code == code);
 		if (item == null)
 		{
@@ -302,13 +317,13 @@ public partial class HotelApiController
 		{
 			await Task.Delay(0);
 
-			var items = await specialsRepository.GetData(data.HotelCode);
+			var items = await _specialsRepository.GetData(data.HotelCode);
 			var index = items.FindIndex(h => h.Code == data.Code);
 
 			if (index >= 0)
 			{
 				items[index].Options = data.Options;
-				await specialsRepository.Save(items, data.HotelCode);
+				await _specialsRepository.Save(items, data.HotelCode);
 			}
 
 			return Ok(new ObjectVm
@@ -336,13 +351,13 @@ public partial class HotelApiController
 		{
 			await Task.Delay(0);
 
-			var items = await specialsRepository.GetData(data.HotelCode);
+			var items = await _specialsRepository.GetData(data.HotelCode);
 			var index = items.FindIndex(h => h.Code == data.Code);
 
 			if (index >= 0)
 			{
 				items[index].RoomTypeCodes = data.CodeList;
-				await specialsRepository.Save(items, data.HotelCode);
+				await _specialsRepository.Save(items, data.HotelCode);
 			}
 
 			return Ok(new ObjectVm
@@ -369,13 +384,13 @@ public partial class HotelApiController
 		{
 			await Task.Delay(0);
 
-			var items = await specialsRepository.GetData(data.HotelCode);
+			var items = await _specialsRepository.GetData(data.HotelCode);
 			var index = items.FindIndex(h => h.Code == data.Code);
 
 			if (index >= 0)
 			{
 				items[index].RatePlanCodes = data.CodeList;
-				await specialsRepository.Save(items, data.HotelCode);
+				await _specialsRepository.Save(items, data.HotelCode);
 			}
 
 			return Ok(new ObjectVm
@@ -399,7 +414,7 @@ public partial class HotelApiController
 	[Route("SpecialRatePlans")]
 	public async Task<IActionResult> SpecialRatePlans(string code, string hotelCode)
 	{
-		var items = await specialsRepository.GetData(hotelCode);
+		var items = await _specialsRepository.GetData(hotelCode);
 		var item = items.FirstOrDefault(h => h.Code == code);
 		if (item == null)
 		{
@@ -428,13 +443,13 @@ public partial class HotelApiController
 		{
 			await Task.Delay(0);
 
-			var items = await specialsRepository.GetData(data.HotelCode);
+			var items = await _specialsRepository.GetData(data.HotelCode);
 			var index = items.FindIndex(h => h.Code == data.Code);
 
 			if (index >= 0)
 			{
 				items[index].RatePlanCodes = data.CodeList;
-				await specialsRepository.Save(items, data.HotelCode);
+				await _specialsRepository.Save(items, data.HotelCode);
 			}
 
 			return Ok(new ObjectVm
