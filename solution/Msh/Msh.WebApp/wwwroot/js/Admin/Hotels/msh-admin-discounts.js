@@ -8,7 +8,8 @@
     var api = app.apiService;
 
     var pallsA = app.pallsArchiveService;
-    var pallsB = app.pallsPublishService;
+    var pallsP = app.pallsPublishService;
+    var pallsD = app.pallsDeleteService;
     var pallsLoad = app.pallsLoadService;
     var pallsLock = app.pallsLockService;
 
@@ -18,6 +19,10 @@
         selectHotel: '#selectHotel'
     }
 
+    var apiRoot = `/api/discountsapi`;
+    var listRoot = `admin/hotels`
+    var listPath = `${listRoot}/DiscountsList`
+
     function getHotelCode() {
         var hotelCode = $(ids.selectHotel).val();
         hotelCode = hotelCode ? hotelCode : $('#hotelCode').val();
@@ -26,33 +31,42 @@
 
     $(ids.selectHotel).on('change', () => {
         var hotelCode = getHotelCode();
-        util.redirectTo(`admin/hotels/DiscountsList?hotelCode=${hotelCode}`);
+        util.redirectTo(`${listPath}?hotelCode=${hotelCode}`);
     });
 
     app.hotelActionService.init({
-        deleteApi: '/api/hotelapi/DiscountDelete',
-        copyApi: '/api/hotelapi/DiscountCopy',
-        moveApi: '/admin/hotels/DiscountMove',
-        listPath: 'admin/hotels/DiscountList'
+        deleteApi: `${apiRoot}/DiscountDelete`,
+        copyApi: `${apiRoot}/DiscountCopy`,
+        moveApi: `${apiRoot}/DiscountMove`,
+        listPath: `${apiRoot}/DiscountList`
     });
 
     app.hotelActionBulkService.init({
-        deleteBulkApi: '/api/hotelapi/DiscountDeleteBulk',
-        copyBulkApi: '/api/hotelapi/DiscountCopyBulk',
-        sortListApi: '/api/hotelapi/DiscountsSort',
-        listPath: 'admin/hotels/DiscountsList'
+        deleteBulkApi: `${apiRoot}/DiscountDeleteBulk`,
+        copyBulkApi: `${apiRoot}/DiscountCopyBulk`,
+        sortListApi: `${apiRoot}/DiscountsSort`,
+        listPath: listPath
     });
 
-    var inputs = {
-        model: 'Discounts',
-        name: 'Discounts',
-        useHotelCode: true
-    }
+    var editType = $('#edit-type').val();
 
-    pallsA.init(inputs);
-    pallsB.init(inputs);
-    pallsLoad.init(inputs);
-    pallsLock.init(inputs);
+    if (editType === "discounts-list") {
+
+        var inputs = {
+            model: 'Discounts',
+            name: 'Discounts',
+            useHotelCode: true,
+            apiRoot: apiRoot,
+            confirmedRedirect: true,
+            confirmedRedirectUrl: listPath
+        }
+
+        pallsA.init(inputs);
+        pallsP.init(inputs);
+        pallsD.init(inputs);
+        pallsLoad.init(inputs);
+        pallsLock.init(inputs);
+    }
 
 }(jQuery));
 

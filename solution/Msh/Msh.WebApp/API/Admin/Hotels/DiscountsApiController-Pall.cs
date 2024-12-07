@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Msh.Admin.Models;
 using Msh.Common.Models;
 using Msh.Common.Models.ViewModels;
@@ -7,8 +8,9 @@ using Msh.WebApp.Models.Admin.ViewModels;
 
 namespace Msh.WebApp.API.Admin.Hotels
 {
-	public partial class HotelApiController
+	public partial class DiscountsApiController
 	{
+		private const string ModelName = "Discounts";
 
 		/// <summary>
 		/// Publishes the Hotels list, copying the hotel list from Config to ConfigPub table
@@ -18,9 +20,9 @@ namespace Msh.WebApp.API.Admin.Hotels
 		/// <returns></returns>
 		[HttpPost]
 		[Route("DiscountsPublish/{hotelCode}")]
-		public async Task<IActionResult> DiscountsPublish(string hotelCode)
+		public async Task<IActionResult> DiscountsPublish(string hotelCode, [FromBody] NotesSaveData saveData)
 		{
-			var userId = userService.GetUserId();
+			var userId = _userService.GetUserId();
 
 			if (string.IsNullOrEmpty(userId))
 			{
@@ -28,7 +30,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 			}
 
 			
-			var result = await discountRepository.Publish(hotelCode, userId);
+			var result = await _discountRepository.Publish(hotelCode, userId, saveData.Notes);
 
 			if (!result)
 			{
@@ -47,7 +49,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		[Route("DiscountsArchiveSelectList/{hotelCode}")]
 		public async Task<IActionResult> DiscountsArchiveSelectList(string hotelCode)
 		{
-			var list = await discountRepository.ArchivedList(hotelCode);
+			var list = await _discountRepository.ArchivedList(hotelCode);
 
 			var selectList = list.OrderBy(x => x.ConfigType).Select(x => new SelectItemVm
 			{
@@ -81,13 +83,13 @@ namespace Msh.WebApp.API.Admin.Hotels
 		[Route("DiscountsArchive/{hotelCode}/{archiveCode}")]
 		public async Task<IActionResult> DiscountsArchive(string hotelCode, string archiveCode, [FromBody] NotesSaveData saveData)
 		{
-			var userId = userService.GetUserId();
+			var userId = _userService.GetUserId();
 			if (string.IsNullOrEmpty(userId))
 			{
 				return GetFail("You must be signed-in to perform this action.");
 			}
 			
-			var result = await discountRepository.Archive(hotelCode, archiveCode, userId, saveData.Notes);
+			var result = await _discountRepository.Archive(hotelCode, archiveCode, userId, saveData.Notes);
 			if (!result)
 			{
 				return GetFail("The archive operation failed. The record may be locked.");
@@ -96,11 +98,43 @@ namespace Msh.WebApp.API.Admin.Hotels
 			return Ok(new ObjectVm());
 		}
 
+		/// <summary>
+		/// Perform an archive delete.
+		/// </summary>
+		/// <param name="hotelCode"></param>
+		/// <param name="archiveCode"></param>
+		/// <returns></returns>
+		[HttpPost]
+		[Route("DiscountsArchiveDelete/{hotelCode}/{archiveCode}")]
+		public async Task<IActionResult> DiscountsArchiveDelete(string hotelCode, string archiveCode)
+		{
+			try
+			{
+				var userId = _userService.GetUserId();
+				if (string.IsNullOrEmpty(userId))
+				{
+					return GetFail("You must be signed-in to perform this action.");
+				}
+
+				var result = await _discountRepository.ArchiveDelete(hotelCode, archiveCode, userId);
+				if (!result)
+				{
+					return GetFail("The archive delete operation failed. The record may be locked.");
+				}
+
+				return Ok(new ObjectVm());
+			}
+			catch (Exception ex)
+			{
+				return GetFail($"{ModelName} Archive {hotelCode} {archiveCode}: {ex.Message}");
+			}
+		}
+
 		[HttpPost]
 		[Route("DiscountsLock/{hotelCode}")]
 		public async Task<IActionResult> DiscountsLock([FromBody] ApiInput input, string hotelCode)
 		{
-			var userId = userService.GetUserId();
+			var userId = _userService.GetUserId();
 			if (string.IsNullOrEmpty(userId))
 			{
 				return GetFail("You must be signed-in to perform this action.");
@@ -111,7 +145,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 			{
 				case "Pub":
 					
-					var resultP = await discountRepository.LockPublished(hotelCode, input.IsTrue, userId);
+					var resultP = await _discountRepository.LockPublished(hotelCode, input.IsTrue, userId);
 					if (!resultP)
 					{
 						return GetFail("The publish operation failed. The record may be locked.");
@@ -119,7 +153,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 					break;
 
 				default:
-					var resultA = await discountRepository.LockArchived(hotelCode, input.Code, input.IsTrue, userId);
+					var resultA = await _discountRepository.LockArchived(hotelCode, input.Code, input.IsTrue, userId);
 					if (!resultA)
 					{
 						return GetFail("The archive operation failed. The record may be locked.");
@@ -135,7 +169,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		[Route("DiscountsLoad/{hotelCode}")]
 		public async Task<IActionResult> DiscountsLoad([FromBody] HotelBaseVm data, string hotelCode)
 		{
-			var userId = userService.GetUserId();
+			var userId = _userService.GetUserId();
 			if (string.IsNullOrEmpty(userId))
 			{
 				return GetFail("You must be signed-in to perform this action.");
@@ -146,13 +180,13 @@ namespace Msh.WebApp.API.Admin.Hotels
 			switch (archiveCode)
 			{
 				case "Pub":
-					var recordsPub = await discountRepository.Published(hotelCode);
-					await discountRepository.Save(recordsPub, hotelCode);
+					var recordsPub = await _discountRepository.Published(hotelCode);
+					await _discountRepository.Save(recordsPub, hotelCode);
 					break;
 
 				default:
-					var recordsArch = await discountRepository.Archived(hotelCode, archiveCode);
-					await discountRepository.Save(recordsArch, hotelCode);
+					var recordsArch = await _discountRepository.Archived(hotelCode, archiveCode);
+					await _discountRepository.Save(recordsArch, hotelCode);
 					break;
 			}
 
