@@ -39,10 +39,10 @@
         confirmReloadRatePlans: function () {
 
             var hotelCode = getHotelCode();
-            api.postAsync('/api/hotelapi/RatePlanSortAdd', { hotelCode: hotelCode }, function (data) {
+            api.postAsync(`${apiRoot}/RatePlanSortAdd`, { hotelCode: hotelCode }, function (data) {
                 var x = data;
                 // Nothing to to, already loaded in the call
-                window.location = `/admin/hotels/RatePlanSortList?hotelCode=${hotelCode}`
+                window.location = `${listPath}?hotelCode=${hotelCode}`
             });
         }
     });

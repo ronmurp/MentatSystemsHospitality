@@ -73,6 +73,8 @@ namespace Msh.WebApp.API.Admin.Hotels
 			{
 				var list = await _ratePlanTextRepository.ArchivedList(hotelCode);
 
+				list = list ?? [];
+
 				var selectList = list.OrderBy(x => x.ConfigType).Select(x => new SelectItemVm
 				{
 					Value = x.ConfigType,

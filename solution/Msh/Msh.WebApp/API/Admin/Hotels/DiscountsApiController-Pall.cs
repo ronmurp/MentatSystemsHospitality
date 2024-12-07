@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Msh.Admin.Models;
 using Msh.Common.Models;
+using Msh.Common.Models.Configuration;
 using Msh.Common.Models.ViewModels;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
@@ -50,6 +51,8 @@ namespace Msh.WebApp.API.Admin.Hotels
 		public async Task<IActionResult> DiscountsArchiveSelectList(string hotelCode)
 		{
 			var list = await _discountRepository.ArchivedList(hotelCode);
+
+			list = list ?? [];
 
 			var selectList = list.OrderBy(x => x.ConfigType).Select(x => new SelectItemVm
 			{

@@ -18,7 +18,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		/// <returns></returns>
 		[HttpPost]
 		[Route("RoomTypePublish/{hotelCode}")]
-		public async Task<IActionResult> RoomTypePublish(string hotelCode)
+		public async Task<IActionResult> RoomTypePublish(string hotelCode, [FromBody] NotesSaveData saveData)
 		{
 			try
 			{
@@ -30,7 +30,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 				}
 
 
-				var result = await _roomTypeRepository.Publish(hotelCode, userId);
+				var result = await _roomTypeRepository.Publish(hotelCode, userId, saveData.Notes);
 
 				if (!result)
 				{
@@ -57,6 +57,8 @@ namespace Msh.WebApp.API.Admin.Hotels
 			try
 			{
 				var list = await _roomTypeRepository.ArchivedList(hotelCode);
+
+				list = list ?? [];
 
 				var selectList = list.OrderBy(x => x.ConfigType).Select(x => new SelectItemVm
 				{

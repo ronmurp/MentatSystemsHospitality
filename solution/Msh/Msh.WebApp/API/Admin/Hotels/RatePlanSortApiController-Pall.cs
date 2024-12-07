@@ -1,25 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Msh.Admin.Models;
 using Msh.Common.Models;
 using Msh.Common.Models.ViewModels;
+using Msh.HotelCache.Models.RatePlans;
+using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
+using Msh.WebApp.Services;
 
 namespace Msh.WebApp.API.Admin.Hotels;
 
-public partial class HotelApiController
+
+public partial class RatePlanSortApiController
 {
 
-	/// <summary>
-	/// Publishes the Hotels list, copying the hotel list from Config to ConfigPub table
-	/// with the Hotel configType. The user must be signed in, and the Published record in ConfigPub
-	/// must not be locked.
-	/// </summary>
-	/// <returns></returns>
 	[HttpPost]
-	[Route("HotelsPublish")]
-	public async Task<IActionResult> HotelsPublish([FromBody] NotesSaveData saveData)
+	[Route("RatePlanSortPublish/{hotelCode}")]
+	public async Task<IActionResult> RatePlanSortPublish(string hotelCode, [FromBody] NotesSaveData saveData)
 	{
 		try
 		{
@@ -30,7 +27,8 @@ public partial class HotelApiController
 				return GetFail("You must be signed-in to perform this action.");
 			}
 
-			var result = await HotelRepository.Publish(userId, saveData.Notes);
+
+			var result = await _ratePlanSortRepository.Publish(hotelCode, userId, saveData.Notes);
 
 			if (!result)
 			{
@@ -41,22 +39,17 @@ public partial class HotelApiController
 		}
 		catch (Exception ex)
 		{
-			return GetFail($"Hotels Publish: {ex.Message}");
+			return GetFail($"RatePlanSortPublish for {hotelCode}: {ex.Message}");
 		}
 	}
 
-	/// <summary>
-	/// Returns a select list so that the user can select one of the archive records from ConfigArchive,
-	/// or the published data from ConfigPub
-	/// </summary>
-	/// <returns></returns>
 	[HttpGet]
-	[Route("HotelsArchiveSelectList")]
-	public async Task<IActionResult> HotelsArchiveSelectList()
+	[Route("RatePlanSortArchiveSelectList/{hotelCode}")]
+	public async Task<IActionResult> RatePlanSortArchiveSelectList(string hotelCode)
 	{
 		try
 		{
-			var list = await HotelRepository.ArchivedList();
+			var list = await _ratePlanSortRepository.ArchivedList(hotelCode);
 
 			list = list ?? [];
 
@@ -81,20 +74,13 @@ public partial class HotelApiController
 		}
 		catch (Exception ex)
 		{
-			return GetFail($"Hotels Archive List: {ex.Message}");
+			return GetFail($"RatePlanSortArchive {hotelCode}: {ex.Message}");
 		}
 	}
 
-	/// <summary>
-	/// Perform an archive save. Gets the current edited data from Config,
-	/// and stores it in ConfigArchive with the archiveCode appended
-	/// </summary>
-	/// <param name="archiveCode"></param>
-	/// <param name="saveData"></param>
-	/// <returns></returns>
 	[HttpPost]
-	[Route("HotelsArchive/{archiveCode}")]
-	public async Task<IActionResult> HotelsArchive(string archiveCode, [FromBody] NotesSaveData saveData)
+	[Route("RatePlanSortArchive/{hotelCode}/{archiveCode}")]
+	public async Task<IActionResult> RatePlanSortArchive(string hotelCode, string archiveCode, [FromBody] NotesSaveData saveData)
 	{
 		try
 		{
@@ -104,23 +90,23 @@ public partial class HotelApiController
 				return GetFail("You must be signed-in to perform this action.");
 			}
 
-			var result = await HotelRepository.Archive(archiveCode, userId, saveData.Notes);
+			var result = await _ratePlanSortRepository.Archive(hotelCode, archiveCode, userId, saveData.Notes);
 			if (!result)
 			{
-				return GetFail("The publish operation failed. The record may be locked.");
+				return GetFail("The archive operation failed. The record may be locked.");
 			}
 
 			return Ok(new ObjectVm());
 		}
 		catch (Exception ex)
 		{
-			return GetFail($"Hotels Archive {archiveCode}: {ex.Message}");
+			return GetFail($"RatePlanSortArchive {hotelCode} {archiveCode}: {ex.Message}");
 		}
 	}
 
 	[HttpPost]
-	[Route("HotelsLock")]
-	public async Task<IActionResult> HotelsLock([FromBody] ApiInput input)
+	[Route("RatePlanSortLock/{hotelCode}")]
+	public async Task<IActionResult> RatePlanSortLock([FromBody] ApiInput input, string hotelCode)
 	{
 		try
 		{
@@ -130,10 +116,12 @@ public partial class HotelApiController
 				return GetFail("You must be signed-in to perform this action.");
 			}
 
+
 			switch (input.Code)
 			{
 				case "Pub":
-					var resultP = await HotelRepository.LockPublished(input.IsTrue, userId);
+
+					var resultP = await _ratePlanSortRepository.LockPublished(hotelCode, input.IsTrue, userId);
 					if (!resultP)
 					{
 						return GetFail("The publish operation failed. The record may be locked.");
@@ -142,10 +130,11 @@ public partial class HotelApiController
 					break;
 
 				default:
-					var resultA = await HotelRepository.LockArchived(input.Code, input.IsTrue, userId);
+					var resultA =
+						await _ratePlanSortRepository.LockArchived(hotelCode, input.Code, input.IsTrue, userId);
 					if (!resultA)
 					{
-						return GetFail("The publish operation failed. The record may be locked.");
+						return GetFail("The archive operation failed. The record may be locked.");
 					}
 
 					break;
@@ -156,13 +145,13 @@ public partial class HotelApiController
 		}
 		catch (Exception ex)
 		{
-			return GetFail($"Hotels Lock: {ex.Message}");
+			return GetFail($"RatePlanSortLock: {ex.Message}");
 		}
 	}
 
 	[HttpPost]
-	[Route("HotelsLoad")]
-	public async Task<IActionResult> HotelsLoad([FromBody] HotelBaseVm data)
+	[Route("RatePlanSortLoad/{hotelCode}")]
+	public async Task<IActionResult> RatePlanSortLoad([FromBody] HotelBaseVm data, string hotelCode)
 	{
 		try
 		{
@@ -177,13 +166,13 @@ public partial class HotelApiController
 			switch (archiveCode)
 			{
 				case "Pub":
-					var hotelsPub = await HotelRepository.Published();
-					await HotelRepository.Save(hotelsPub);
+					var recordsPub = await _ratePlanSortRepository.Published(hotelCode);
+					await _ratePlanSortRepository.Save(recordsPub, hotelCode);
 					break;
 
 				default:
-					var hotelsArch = await HotelRepository.Archived(archiveCode);
-					await HotelRepository.Save(hotelsArch);
+					var recordsArch = await _ratePlanSortRepository.Archived(hotelCode, archiveCode);
+					await _ratePlanSortRepository.Save(recordsArch, hotelCode);
 					break;
 			}
 
@@ -191,18 +180,19 @@ public partial class HotelApiController
 		}
 		catch (Exception ex)
 		{
-			return GetFail($"Hotels Load {data.Code}: {ex.Message}");
+			return GetFail($"RatePlanSortLoad {hotelCode} {data.Code}: {ex.Message}");
 		}
 	}
 
 	/// <summary>
 	/// Perform an archive delete.
 	/// </summary>
+	/// <param name="hotelCode"></param>
 	/// <param name="archiveCode"></param>
 	/// <returns></returns>
 	[HttpPost]
-	[Route("HotelsArchiveDelete/{archiveCode}")]
-	public async Task<IActionResult> HotelsArchiveDelete(string archiveCode)
+	[Route("RatePlanSortArchiveDelete/{hotelCode}/{archiveCode}")]
+	public async Task<IActionResult> RatePlanSortArchiveDelete(string hotelCode, string archiveCode)
 	{
 		try
 		{
@@ -212,7 +202,7 @@ public partial class HotelApiController
 				return GetFail("You must be signed-in to perform this action.");
 			}
 
-			var result = await HotelRepository.ArchiveDelete(archiveCode, userId);
+			var result = await _ratePlanSortRepository.ArchiveDelete(hotelCode, archiveCode, userId);
 			if (!result)
 			{
 				return GetFail("The archive delete operation failed. The record may be locked.");
@@ -222,7 +212,8 @@ public partial class HotelApiController
 		}
 		catch (Exception ex)
 		{
-			return GetFail($"{ModelName} Archive {archiveCode}: {ex.Message}");
+			return GetFail($"{ModelName} Archive {hotelCode} {archiveCode}: {ex.Message}");
 		}
 	}
+
 }
