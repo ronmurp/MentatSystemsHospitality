@@ -10,7 +10,6 @@ namespace Msh.WebApp.API.Admin.Hotels;
 
 public partial class HotelApiController
 {
-	private const string ModelName = "Hotel";
 
 	/// <summary>
 	/// Publishes the Hotels list, copying the hotel list from Config to ConfigPub table
@@ -24,14 +23,14 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var userId = userService.GetUserId();
+			var userId = _userService.GetUserId();
 
 			if (string.IsNullOrEmpty(userId))
 			{
 				return GetFail("You must be signed-in to perform this action.");
 			}
 
-			var result = await hotelRepository.Publish(userId, saveData.Notes);
+			var result = await HotelRepository.Publish(userId, saveData.Notes);
 
 			if (!result)
 			{
@@ -57,7 +56,7 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var list = await hotelRepository.ArchivedList();
+			var list = await HotelRepository.ArchivedList();
 
 			var selectList = list.OrderBy(x => x.ConfigType).Select(x => new SelectItemVm
 			{
@@ -97,13 +96,13 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var userId = userService.GetUserId();
+			var userId = _userService.GetUserId();
 			if (string.IsNullOrEmpty(userId))
 			{
 				return GetFail("You must be signed-in to perform this action.");
 			}
 
-			var result = await hotelRepository.Archive(archiveCode, userId, saveData.Notes);
+			var result = await HotelRepository.Archive(archiveCode, userId, saveData.Notes);
 			if (!result)
 			{
 				return GetFail("The publish operation failed. The record may be locked.");
@@ -123,7 +122,7 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var userId = userService.GetUserId();
+			var userId = _userService.GetUserId();
 			if (string.IsNullOrEmpty(userId))
 			{
 				return GetFail("You must be signed-in to perform this action.");
@@ -132,7 +131,7 @@ public partial class HotelApiController
 			switch (input.Code)
 			{
 				case "Pub":
-					var resultP = await hotelRepository.LockPublished(input.IsTrue, userId);
+					var resultP = await HotelRepository.LockPublished(input.IsTrue, userId);
 					if (!resultP)
 					{
 						return GetFail("The publish operation failed. The record may be locked.");
@@ -141,7 +140,7 @@ public partial class HotelApiController
 					break;
 
 				default:
-					var resultA = await hotelRepository.LockArchived(input.Code, input.IsTrue, userId);
+					var resultA = await HotelRepository.LockArchived(input.Code, input.IsTrue, userId);
 					if (!resultA)
 					{
 						return GetFail("The publish operation failed. The record may be locked.");
@@ -165,7 +164,7 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var userId = userService.GetUserId();
+			var userId = _userService.GetUserId();
 			if (string.IsNullOrEmpty(userId))
 			{
 				return GetFail("You must be signed-in to perform this action.");
@@ -176,13 +175,13 @@ public partial class HotelApiController
 			switch (archiveCode)
 			{
 				case "Pub":
-					var hotelsPub = await hotelRepository.Published();
-					await hotelRepository.Save(hotelsPub);
+					var hotelsPub = await HotelRepository.Published();
+					await HotelRepository.Save(hotelsPub);
 					break;
 
 				default:
-					var hotelsArch = await hotelRepository.Archived(archiveCode);
-					await hotelRepository.Save(hotelsArch);
+					var hotelsArch = await HotelRepository.Archived(archiveCode);
+					await HotelRepository.Save(hotelsArch);
 					break;
 			}
 
@@ -205,13 +204,13 @@ public partial class HotelApiController
 	{
 		try
 		{
-			var userId = userService.GetUserId();
+			var userId = _userService.GetUserId();
 			if (string.IsNullOrEmpty(userId))
 			{
 				return GetFail("You must be signed-in to perform this action.");
 			}
 
-			var result = await hotelRepository.ArchiveDelete(archiveCode, userId);
+			var result = await HotelRepository.ArchiveDelete(archiveCode, userId);
 			if (!result)
 			{
 				return GetFail("The archive delete operation failed. The record may be locked.");
