@@ -1,0 +1,440 @@
+﻿using Mapster;
+using Microsoft.AspNetCore.Mvc;
+using Msh.Common.Data;
+using Msh.Common.ExtensionMethods;
+using Msh.Common.Models;
+using Msh.Common.Models.ViewModels;
+using Msh.HotelCache.Models.Discounts;
+using Msh.HotelCache.Models.Hotels;
+using Msh.HotelCache.Services;
+using Msh.WebApp.Areas.Admin.Data;
+using Msh.WebApp.Areas.Admin.Models;
+using Msh.WebApp.Services;
+
+namespace Msh.WebApp.API.Admin.Hotels;
+
+[ApiController]
+[Route("{{ApiRoot}}")]
+public partial class {{ModelName}}ApiController : PrivateApiController
+{
+	private readonly I{{ModelNameSing}}Repository {{LocalRepo}};
+	private readonly IUserService _userService;
+
+	public {{ModelName}}ApiController(IHotelRepository hotelRepository,
+		I{{ModelNameSing}}Repository {{PrivateRepo}},
+		IUserService userService) : base(hotelRepository)
+	{
+		{{LocalRepo}} = {{PrivateRepo}};
+		_userService = userService;
+	}
+
+	[HttpPost]
+	[Route("{{ModelNameSing}}Copy")]
+	public async Task<IActionResult> {{ModelNameSing}}Copy(ApiInput input)
+	{
+		try
+		{
+			if (SameCodes(input))
+			{
+				return GetFail("At least one code must change");
+			}
+
+			var discounts = await {{LocalRepo}}.GetData(input.HotelCode);
+
+			var discount = discounts.FirstOrDefault(h => h.Code == input.Code);
+			if (discount != null)
+			{
+				var newDiscount = discount.Adapt(discount);
+				newDiscount.Code = input.NewCode;
+
+				var result = await CheckHotel(input.NewHotelCode);
+				if (!result.success)
+				{
+					return result.fail;
+				}
+
+				var newDiscounts = await {{LocalRepo}}.GetData(input.NewHotelCode);
+				if (newDiscounts.Any(c => c.Code.EqualsAnyCase(input.NewCode)))
+				{
+					return GetFail("The code already exists.");
+				}
+
+				newDiscounts.Add(newDiscount);
+				await {{LocalRepo}}.Save(newDiscounts, input.NewHotelCode);
+			}
+
+			return Ok(new ObjectVm());
+			
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
+	[HttpPost]
+	[Route("{{ModelNameSing}}CopyBulk")]
+	public async Task<IActionResult>{{ModelNameSing}}CopyBulk(ApiInput input)
+	{
+		try
+		{
+			if (SameCodes(input))
+			{
+				return GetFail("At least one code must change");
+			}
+
+			var hotels = await HotelRepository.GetData();
+
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
+			{
+				return GetFail($"Invalid source hotel code {input.HotelCode}");
+			}
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.NewHotelCode)))
+			{
+				return GetFail($"Invalid destination hotel code {input.NewHotelCode}");
+			}
+
+			var missingList = new List<string>();
+			var newList = new List<DiscountCode>();
+
+			var srcItems = await {{LocalRepo}}.GetData(input.HotelCode);
+			var dstItems = await {{LocalRepo}}.GetData(input.NewHotelCode);
+
+			foreach (var code in input.CodeList)
+			{
+				var item = srcItems.FirstOrDefault(h => h.Code == code);
+				if (item != null)
+				{
+					if (dstItems.Any(e => e.Code == item.Code))
+					{
+						// Already exists
+						missingList.Add(item.Code);
+						continue;
+					}
+					newList.Add(item);
+				}
+			}
+
+			dstItems.AddRange(newList);
+
+			await {{LocalRepo}}.Save(dstItems, input.NewHotelCode);
+
+			if (missingList.Count > 0)
+			{
+				var list = string.Join(",", missingList);
+				return GetFail($"The following codes already exist in the destination hotel: {list}");
+
+			}
+
+			return Ok(new ObjectVm());
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
+	[HttpPost]
+	[Route("{{ModelNameSing}}DeleteBulk")]
+	public async Task<IActionResult> {{ModelNameSing}}DeleteBulk(ApiInput input)
+	{
+		try
+		{
+			var hotels = await HotelRepository.GetData();
+
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
+			{
+				return GetFail($"Invalid source hotel code {input.HotelCode}");
+			}
+
+			var items = await {{LocalRepo}}.GetData(input.HotelCode);
+
+			for (var i = items.Count - 1; i >= 0; i--)
+			{
+				var item = items[i];
+				if (input.CodeList.Any(c => c.EqualsAnyCase(item.Code)))
+				{
+					items.RemoveAt(i);
+				}
+			}
+
+			await {{LocalRepo}}.Save(items, input.HotelCode);
+
+
+			return Ok(new ObjectVm());
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
+	[HttpPost]
+	[Route("{{DiscountModel}}Sort")]
+	public async Task<IActionResult> {{DiscountModel}}Sort(ApiInput input)
+	{
+		try
+		{
+			var hotelCode = input.HotelCode;
+			var hotels = await HotelRepository.GetData();
+
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
+			{
+				return GetFail($"Invalid hotel code {hotelCode}");
+			}
+
+			var srcItems = await {{LocalRepo}}.GetData(input.HotelCode);
+
+			await {{LocalRepo}}.Save(srcItems.OrderBy(e => e.Code).ToList(), input.HotelCode);
+
+			return Ok(new ObjectVm());
+
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
+
+
+
+	[HttpGet]
+	[Route("{{ModelNameSing}}OfferDates")]
+	public async Task<IActionResult> {{ModelNameSing}}OfferDates(string code, string hotelCode)
+	{
+		var items = await {{LocalRepo}}.GetData(hotelCode);
+		var item = items.FirstOrDefault(h => h.Code == code);
+		if (item == null)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = true,
+				UserErrorMessage = $"Dates not found for hotel {hotelCode} and {code}"
+			});
+		}
+
+		return Ok(new ObjectVm
+		{
+			Data = new
+			{
+				Dates = item.OfferDates,
+				MinDate = DateOnly.FromDateTime(DateTime.Now)
+			}
+		});
+	}
+
+	[HttpPost]
+	[Route("{{ModelNameSing}}OfferDates")]
+	public async Task<IActionResult> {{ModelNameSing}}OfferDates([FromBody] ItemDatesVm data)
+	{
+		try
+		{
+
+			var items = await {{LocalRepo}}.GetData(data.HotelCode);
+			var index = items.FindIndex(h => h.Code == data.Code);
+
+			if (index >= 0)
+			{
+				items[index].OfferDates = data.Dates;
+				await {{LocalRepo}}.Save(items, data.HotelCode);
+			}
+
+			return Ok(new ObjectVm
+			{
+				Data = new Hotel()
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
+
+
+	[HttpGet]
+	[Route("{{ModelNameSing}}BookDates")]
+	public async Task<IActionResult> {{ModelNameSing}}BookDates(string code, string hotelCode)
+	{
+		var items = await {{LocalRepo}}.GetData(hotelCode);
+		var item = items.FirstOrDefault(h => h.Code == code);
+		if (item == null)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = true,
+				UserErrorMessage = $"Dates not found for hotel {hotelCode} and {code}"
+			});
+		}
+
+		return Ok(new ObjectVm
+		{
+			Data = new
+			{
+				Dates = item.BookDates,
+				MinDate = DateOnly.FromDateTime(DateTime.Now)
+			}
+		});
+	}
+
+	[HttpPost]
+	[Route("{{ModelNameSing}}BookDates")]
+	public async Task<IActionResult> {{ModelNameSing}}BookDates([FromBody] ItemDatesVm data)
+	{
+		try
+		{
+			
+			var items = await {{LocalRepo}}.GetData(data.HotelCode);
+			var index = items.FindIndex(h => h.Code == data.Code);
+
+			if (index >= 0)
+			{
+				items[index].BookDates = data.Dates;
+				await {{LocalRepo}}.Save(items, data.HotelCode);
+			}
+
+			return Ok(new ObjectVm
+			{
+				Data = new Hotel()
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
+
+
+	[HttpPost]
+	[Route("{{ModelNameSing}}RatePlansSaveEnable")]
+	public async Task<IActionResult> {{ModelNameSing}}RatePlansSaveEnable([FromBody] ApiInput data)
+	{
+		try
+		{
+			
+			var items = await {{LocalRepo}}.GetData(data.HotelCode);
+			var index = items.FindIndex(h => h.Code == data.Code);
+
+			if (index >= 0)
+			{
+				items[index].EnabledHotelPlans = data.CodeList;
+				await {{LocalRepo}}.Save(items, data.HotelCode);
+			}
+
+			return Ok(new ObjectVm
+			{
+				Data = new Hotel()
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
+
+
+	[HttpPost]
+	[Route("{{ModelNameSing}}RatePlansSaveDisable")]
+	public async Task<IActionResult> {{ModelNameSing}}RatePlansSaveDisable([FromBody] ApiInput data)
+	{
+		try
+		{
+			await Task.Delay(0);
+
+			var items = await {{LocalRepo}}.GetData(data.HotelCode);
+			var index = items.FindIndex(h => h.Code == data.Code);
+
+			if (index >= 0)
+			{
+				items[index].DisabledHotelPlans = data.CodeList;
+				await {{LocalRepo}}.Save(items, data.HotelCode);
+			}
+
+			return Ok(new ObjectVm
+			{
+				Data = new Hotel()
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
+
+
+
+	[HttpGet]
+	[Route("{{ModelNameSing}}Errors")]
+	public async Task<IActionResult> {{ModelNameSing}}Errors(string code, string hotelCode)
+	{
+		var items = await {{LocalRepo}}.GetData(hotelCode);
+		var item = items.FirstOrDefault(h => h.Code == code);
+		if (item == null)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = true,
+				UserErrorMessage = $"Errors not found for hotel {hotelCode} and {code}"
+			});
+		}
+
+		return Ok(new ObjectVm
+		{
+			Data = new
+			{
+				Errors = item.{{ModelNameSing}}Errors,
+				Types = {{ModelNameSing}}ErrorsHelper.GetErrorTypes().Select(e => new SelectItemVm { Value = e, Text = e }).ToList()
+			}
+		});
+	}
+
+	[HttpPost]
+	[Route("{{ModelNameSing}}Errors")]
+	public async Task<IActionResult> {{ModelNameSing}}Errors([FromBody] DiscountErrorsVm data)
+	{
+		try
+		{
+
+			var items = await {{LocalRepo}}.GetData(data.HotelCode);
+			var index = items.FindIndex(h => h.Code == data.Code);
+
+			if (index >= 0)
+			{
+				items[index].DiscountErrors = data.Errors;
+				await {{LocalRepo}}.Save(items, data.HotelCode);
+			}
+
+			return Ok(new ObjectVm
+			{
+				Data = new Hotel()
+			});
+		}
+		catch (Exception ex)
+		{
+			return Ok(new ObjectVm
+			{
+				Success = false,
+				UserErrorMessage = ex.Message
+			});
+		}
+	}
+
+
+}
