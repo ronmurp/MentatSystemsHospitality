@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Msh.Common.Models;
 using Msh.Common.Models.ViewModels;
-using Msh.HotelCache.Models.RatePlans;
-using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
-using Msh.WebApp.Services;
 
 namespace Msh.WebApp.API.Admin.Hotels;
 

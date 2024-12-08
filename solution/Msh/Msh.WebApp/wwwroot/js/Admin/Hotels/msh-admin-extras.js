@@ -7,6 +7,7 @@
     var modal = app.modalService;
     var api = app.apiService;
 
+    var pallsS = app.pallSupportService;
     var pallsA = app.pallsArchiveService;
     var pallsP = app.pallsPublishService;
     var pallsD = app.pallsDeleteService;
@@ -16,20 +17,11 @@
 
     var itemDatesService = app.itemDatesService;
 
-    var ids = {
-        selectHotel: '#selectHotel'
-    }
     var apiRoot = '/api/extrasapi';
     var listPath = 'admin/hotels/ExtrasList';
 
-    function getHotelCode() {
-        var hotelCode = $(ids.selectHotel).val();
-        hotelCode = hotelCode ? hotelCode : $('#hotelCode').val();
-        return hotelCode;
-    }
-
     $(ids.selectHotel).on('change', () => {
-        var hotelCode = getHotelCode();
+        var hotelCode = pallsS.getHotelCode();
         util.redirectTo(`${listPath}?hotelCode=${hotelCode}`);
     });
 

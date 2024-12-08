@@ -7,6 +7,7 @@
     var modal = app.modalService;
     var api = app.apiService;
 
+    var pallsS = app.pallSupportService;
     var pallsA = app.pallsArchiveService;
     var pallsP = app.pallsPublishService;
     var pallsD = app.pallsDeleteService;
@@ -14,8 +15,6 @@
     var pallsLock = app.pallsLockService;
 
     var ids = {
-        selectHotel: '#selectHotel',
-
         stayChangeHotelCode: 'stay-change-hotel-code',
         stayChangeCode: 'stay-change-code',
         stayChangeRatePlanCode: 'stay-change-rpc',
@@ -25,12 +24,6 @@
 
     var apiRoot = `/api/rateplanapi`;
     var listPath = 'admin/hotels/RatePlansList';
-
-    function getHotelCode() {
-        var hotelCode = $(ids.selectHotel).val();
-        hotelCode = hotelCode ? hotelCode : $('#hotelCode').val();
-        return hotelCode;
-    }
 
     var currentStayData = {};
 
@@ -62,7 +55,7 @@
             dateTo: $(`#${ids.stayChangeTo}`).val(),
             isFrom: isFrom
         }
-        var url = `/api/hotelapi/ChangeDatePair`;
+        var url = `${apiRoot}/ChangeDatePair`;
         api.postAsync(url, d, function (data) {
             var dates = data.data;
             $(`#${ids.stayChangeFrom}`).val(dates.dateFrom);
@@ -72,14 +65,14 @@
 
     meth.extendMethods({
         confirmDeleteRatePlan: function (code, hotelCode) {
-            var url = `/api/hotelapi/RatePlanDelete`;
+            var url = `${apiRoot}/RatePlanDelete`;
             var d = {
                 code: code,
                 hotelCode: hotelCode
             }
             api.postAsync(url, d, function (data) {
 
-                util.redirectTo(`admin/hotels/RatePlansList?hotelCode=${hotelCode}`)
+                util.redirectTo(`${ listPath }?hotelCode=${hotelCode}`)
             });
         },
 
@@ -94,7 +87,7 @@
     });
 
     $(ids.selectHotel).on('change', () => {
-        var hotelCode = getHotelCode();
+        var hotelCode = pallsS.getHotelCode();
         util.redirectTo(`${listPath}?hotelCode=${hotelCode}`);
     });
 
@@ -163,7 +156,7 @@
                 var url = `${apiRoot}/RatePlanStayChange`
                 api.postAsync(url, d, function (data) {
                     if (data.success) {
-                        util.redirectTo(`admin/hotels/RatePlansList?hotelCode=${d.hotelCode}`)
+                        util.redirectTo(`${listPath}?hotelCode=${d.hotelCode}`)
                     }
                 });
             },

@@ -8,7 +8,6 @@ namespace Msh.WebApp.API.Admin.Hotels
 {
 	public partial class SpecialsApiController
 	{
-		
 
 		/// <summary>
 		/// Publishes the Rate Plans list, copying the hotel list from Config to ConfigPub table

@@ -17,16 +17,13 @@ namespace Msh.WebApp.API.Admin.Hotels;
 [Route("api/discountsapi")]
 public partial class DiscountsApiController : PrivateApiController
 {
-	private readonly IConfigRepository _configRepository;
 	private readonly IDiscountRepository _discountRepository;
 	private readonly IUserService _userService;
 
-	public DiscountsApiController(IConfigRepository configRepository,
-		IHotelRepository hotelRepository,
+	public DiscountsApiController(IHotelRepository hotelRepository,
 		IDiscountRepository discountRepository,
 		IUserService userService) : base(hotelRepository)
 	{
-		_configRepository = configRepository;
 		_discountRepository = discountRepository;
 		_userService = userService;
 	}
