@@ -7,10 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Areas\Admin\Pages\Captcha\Index.cshtml" />
     <None Remove="Pages\Shared\Components\AdminMenu\Default.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Areas\Admin\Pages\Captcha\Index.cshtml" />
     <Content Include="Pages\Shared\Components\AdminMenu\Default.cshtml" />
   </ItemGroup>
 

@@ -1,7 +1,6 @@
-﻿using Msh.Common.Data;
-using Msh.Common.Models.Configuration;
+﻿using Msh.Common.Models.Configuration;
 
-namespace Msh.HotelCache.Services;
+namespace Msh.Common.Data;
 
 public abstract class AbstractRepository(IConfigRepository configRepository)
 {

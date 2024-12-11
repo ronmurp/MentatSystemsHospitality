@@ -1,0 +1,220 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.Admin.Models.Const
+@using Msh.WebApp.Areas.Admin.Models
+@using Msh.WebApp.Models.Admin
+@using Msh.WebApp.TagHelpers
+
+@model Msh.Common.Models.Captcha.CaptchaConfig;
+@{
+	var title = "Captcha Config";
+	ViewData["Title"] = title;
+
+	ViewBag.EditFormParam = new EditFormParam
+			{
+				ModelName = "CaptchaConfig",
+				ReturnUrl = "/admin/CaptchaConfig",
+				ReturnText = ConstReturnText.ReturnToList,
+				KeyPropertyLabel = title,
+				KeyPropertyName = "Label",
+				KeyPropertyValue = "",
+			};
+	var formParam = ViewBag.EditFormParam as EditFormParam;
+}
+
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuAdmin, currentItem = "CaptchaConfig" })
+
+<input type="hidden" id="edit-type" value="captcha-edit" />
+
+<div class="text-center">
+	<h1 class="display-6">@title</h1>
+	<p></p>
+</div>
+
+@await Html.PartialAsync("Admin/_AdminSaveSuccess", formParam)
+
+<div class="row">
+	<div class="col-12">
+
+		<form asp-action="Config">
+
+			<div class="row">
+				<div class="col-md-6 col-12">
+
+					<div class="form-group mb-3">
+						<label asp-for="Label" class="control-label">User ID <info-icon name="info-label" /></label>
+						<input asp-for="Label" class="form-control" />
+						<span asp-validation-for="Label" class="text-danger"></span>
+					</div>
+
+					<div class="form-group mb-3">
+						<label asp-for="ClientKey" class="control-label">Client Key <info-icon name="info-client-key" /></label>
+						<input asp-for="ClientKey" class="form-control" />
+						<span asp-validation-for="ClientKey" class="text-danger"></span>
+					</div>
+
+					<div class="form-group mb-3">
+						<label asp-for="SecretKey" class="control-label">Secret Key <info-icon name="info-secret" /></label>
+						<input asp-for="SecretKey" class="form-control" />
+						<span asp-validation-for="SecretKey" class="text-danger"></span>
+					</div>
+
+					<div class="form-group mb-3">
+						<label asp-for="ScoreLimit" class="control-label">Score Limit <info-icon name="info-score-limit" /></label>
+						<input asp-for="ScoreLimit" class="form-control" />
+						<span asp-validation-for="ScoreLimit" class="text-danger"></span>
+					</div>
+
+					<div class="form-group mb-3">
+						<label asp-for="ScriptUrl" class="control-label">Script URL <info-icon name="info-script-url" /></label>
+						<input asp-for="ScriptUrl" class="form-control" />
+						<span asp-validation-for="ScriptUrl" class="text-danger"></span>
+					</div>
+
+					<div class="form-group mb-3">
+						<label asp-for="VerifyUrl" class="control-label">Verify URL <info-icon name="info-verify-url" /></label>
+						<input asp-for="VerifyUrl" class="form-control" />
+						<span asp-validation-for="VerifyUrl" class="text-danger"></span>
+					</div>
+
+				</div> @* End Col *@
+
+				<div class="col-md-6 col-12">
+				</div> @* End Column *@
+			</div> @* End Row *@
+
+			@* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
+			@await Html.PartialAsync("_PublishArchiveLoadLock", new PublishArchiveLoadLockVm
+			{
+				UseHotel = false,
+				ReturnUrl = "/Admin/Captcha/",
+				ReturnText = ConstReturnText.ReturnToDash,
+				ButtonType = SaveReturnTypes.Submit,
+				SaveOperation = "submit",
+
+			})
+
+		</form>
+
+	</div>
+</div>
+
+@section InfoItems {
+
+	<div data-info-for="info-user-id">
+		<span>User ID</span>
+		<div>
+			<p>One of the unique fields that is used to send to Coin Corner as part of the data that identifies the ELH account.</p>
+		</div>
+	</div>
+
+	<div data-info-for="info-public-key">
+		<span>Public Key</span>
+		<div>
+			<p>One of the unique fields that is used to send to Coin Corner as part of the data that identifies the ELH account.</p>
+		</div>
+	</div>
+
+	<div data-info-for="info-secret-source">
+		<span>Secret Source</span>
+		<div>
+			<p>
+				The Coin Corner API requires a secret key be sent with each API call.
+				The secret should not be stored in the application source code.
+			</p>
+			<p>Where is the secret stored?</p>
+			<ul>
+				<li>Config - Directly in the config</li>
+				<li>Env - In an environment variable (as in name)</li>
+				<li>Azure - In Azure</li>
+			</ul>
+		</div>
+	</div>
+
+	<div data-info-for="info-secret-target">
+		<span>Environment Variable Target</span>
+		<div>
+			<p>If the secret is stored in an Environment Variable, this determines the target.</p>
+		</div>
+	</div>
+
+	<div data-info-for="info-secret-name">
+		<span>Environment Variable Name</span>
+		<div>
+			<p>
+				This is the name of the Environment Variable, used if the secret is stored in an Environment Variable.
+				If stored in Azure, this will identify the location.
+			</p>
+		</div>
+	</div>
+
+	<div data-info-for="info-secret">
+		<span>The Secret</span>
+		<div>
+			<p>
+				The Coin Corner API requires a secret key be sent with each API call.
+				The secret should not be stored in the application source code.
+				This should be empty if the secret is stored elsewhere - as determined by the other Secret configuration values.
+			</p>
+		</div>
+	</div>
+
+	<div data-info-for="info-checkout-url">
+		<span>Checkout URL</span>
+		<div>
+			<p></p>
+		</div>
+	</div>
+
+	<div data-info-for="info-success-url">
+		<span>Success Redirect URL</span>
+		<div>
+			<p></p>
+		</div>
+	</div>
+
+	<div data-info-for="info-fail-url">
+		<span>Fail Redirect URL</span>
+		<div>
+			<p></p>
+		</div>
+	</div>
+
+	<div data-info-for="info-notify-url">
+		<span>Notify URL</span>
+		<div>
+			<p>
+				When the status of a transaction occurs in Coin Corner, this address will be used to
+				notify our booking system that a state change has occurred. The booking system should then perform a status
+				check to get the actual status.
+			</p>
+			<p>
+				Refer to the <a href="https://checkout.coincorner.com/Help/WebHook" target="_blank">WebHook</a> information from Coin Corner.
+			</p>
+		</div>
+	</div>
+
+	<div data-info-for="info-logfile">
+		<span>Logfile Path</span>
+		<div>
+			<p>
+				If logging of API calls is enabled (Log Enabled), this is the path to the file system where these logs are stored.
+				You will need to understand the way logs are stored to determine this value.
+			</p>
+		</div>
+	</div>
+
+	<div data-info-for="info-log-enabled">
+		<span>Log Enabled</span>
+		<div>
+			<p>Set this to enable the logging of Coin Corner API records (as json files)</p>
+		</div>
+	</div>
+
+}
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/msh-admin-palls.js"></script>
+	<script src="~/js/admin/config/msh-admin-captcha.js"></script>
+}

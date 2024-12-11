@@ -18,4 +18,5 @@ public static partial class ConstCom
 public static class RepoConst
 {
 	public const string ConfigState = "ConfigState";
+	public const string CaptchaConfig = "CaptchaConfig";
 }
