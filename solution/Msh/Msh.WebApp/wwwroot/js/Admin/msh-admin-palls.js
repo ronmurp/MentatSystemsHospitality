@@ -199,7 +199,14 @@
             var publishPair = new mas.PairOverlay(options);
 
             meth.extendMethods({
+
+                publishTest: function () {
+                    modal.showModal('TestId', 'Test', 'Test Body');
+                    return;
+                },
                 publishData: function () {
+
+                   
                     var hotelCode = initData.useHotelCode ? pallss.getHotelCode() : '';
                     options.modalActionBody = initData.modalActionBody ? initData.modalActionBody : '',
                     options.modalActionBody = pallss.getPublishBody(options);

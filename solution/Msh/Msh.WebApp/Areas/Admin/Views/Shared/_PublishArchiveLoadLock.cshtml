@@ -15,20 +15,20 @@
 		@await Html.PartialAsync("_SaveReturnButtonsPart", Model)
 
 		<div class="input-group mt-2 ms-1" style="width:auto;margin-right:3px;">
-			<button class="btn btn-outline-primary" onclick="@publishMethod">Publish</button>
-			<button class="btn btn-outline-primary" onclick="@archiveMethod">Archive</button>
-			<button class="btn btn-outline-primary" onclick="@deleteArchive">Delete</button>
+			<button type="button" class="btn btn-outline-primary" onclick="@publishMethod">Publish</button>
+			<button type="button" class="btn btn-outline-primary" onclick="@archiveMethod">Archive</button>
+			<button type="button" class="btn btn-outline-primary" onclick="@deleteArchive">Delete</button>
 		</div>
 
 		<div class="input-group mt-2 ms-1" style="width:auto;">
-			<button class="btn btn-outline-primary" onclick="@loadMethod">Load</button>
-			<button class="btn btn-outline-primary" onclick="@lockMethod">Lock</button>
+			<button type="button" class="btn btn-outline-primary" onclick="@loadMethod">Load</button>
+			<button type="button" class="btn btn-outline-primary" onclick="@lockMethod">Lock</button>
 		</div>
 
 		@if (Model.ShowImportButton)
 		{
 			<div class="input-group mt-2 ms-1" style="width:auto;">
-				<button class="btn btn-outline-primary" onclick="@importMethod">Import</button>
+				<button type="button" class="btn btn-outline-primary" onclick="@importMethod">Import</button>
 			</div>
 		}
 

@@ -43,8 +43,8 @@ public class CaptchaApiController : PrivateApiController
 	/// </summary>
 	/// <returns></returns>
 	[HttpPost]
-	[Route("CaptchaPublish/{hotelCode}")]
-	public async Task<IActionResult> CaptchaPublish(string hotelCode, [FromBody] NotesSaveData saveData)
+	[Route("CaptchaConfigPublish")]
+	public async Task<IActionResult> CaptchaConfigPublish([FromBody] NotesSaveData saveData)
 	{
 		try
 		{
@@ -66,7 +66,7 @@ public class CaptchaApiController : PrivateApiController
 		}
 		catch (Exception ex)
 		{
-			return GetFail($"{ModelName} Publish for {hotelCode}: {ex.Message}");
+			return GetFail($"{ModelName} Publish for: {ex.Message}");
 		}
 	}
 
@@ -76,8 +76,8 @@ public class CaptchaApiController : PrivateApiController
 	/// </summary>
 	/// <returns></returns>
 	[HttpGet]
-	[Route("CaptchaArchiveSelectList")]
-	public async Task<IActionResult> CaptchaArchiveSelectList()
+	[Route("CaptchaConfigArchiveSelectList")]
+	public async Task<IActionResult> CaptchaConfigArchiveSelectList()
 	{
 		try
 		{
@@ -119,8 +119,8 @@ public class CaptchaApiController : PrivateApiController
 	/// <param name="saveData"></param>
 	/// <returns></returns>
 	[HttpPost]
-	[Route("CaptchaArchive/{hotelCode}/{archiveCode}")]
-	public async Task<IActionResult> CaptchaArchive(string hotelCode, string archiveCode, [FromBody] NotesSaveData saveData)
+	[Route("CaptchaConfigArchive/{archiveCode}")]
+	public async Task<IActionResult> CaptchaConfigArchive(string archiveCode, [FromBody] NotesSaveData saveData)
 	{
 		try
 		{
@@ -140,7 +140,7 @@ public class CaptchaApiController : PrivateApiController
 		}
 		catch (Exception ex)
 		{
-			return GetFail($"{ModelName} Archive {hotelCode} {archiveCode}: {ex.Message}");
+			return GetFail($"{ModelName} Archive {archiveCode}: {ex.Message}");
 		}
 	}
 
@@ -151,8 +151,8 @@ public class CaptchaApiController : PrivateApiController
 	/// <param name="archiveCode"></param>
 	/// <returns></returns>
 	[HttpPost]
-	[Route("CaptchaArchiveDelete/{hotelCode}/{archiveCode}")]
-	public async Task<IActionResult> CaptchaArchiveDelete(string archiveCode)
+	[Route("CaptchaConfigArchiveDelete/{hotelCode}/{archiveCode}")]
+	public async Task<IActionResult> CaptchaConfigArchiveDelete(string archiveCode)
 	{
 		try
 		{
@@ -178,8 +178,8 @@ public class CaptchaApiController : PrivateApiController
 
 
 	[HttpPost]
-	[Route("CaptchaLock/{hotelCode}")]
-	public async Task<IActionResult> CaptchaLock([FromBody] ApiInput input, string hotelCode)
+	[Route("CaptchaConfigLock")]
+	public async Task<IActionResult> CaptchaConfigLock([FromBody] ApiInput input)
 	{
 		try
 		{
@@ -223,8 +223,8 @@ public class CaptchaApiController : PrivateApiController
 	}
 
 	[HttpPost]
-	[Route("CaptchaLoad/{hotelCode}")]
-	public async Task<IActionResult> CaptchaLoad([FromBody] HotelBaseVm data, string hotelCode)
+	[Route("CaptchaConfigLoad")]
+	public async Task<IActionResult> CaptchaConfigLoad([FromBody] HotelBaseVm data)
 	{
 		try
 		{
