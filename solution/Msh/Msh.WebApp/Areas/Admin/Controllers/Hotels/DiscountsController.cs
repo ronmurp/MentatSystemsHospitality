@@ -1,13 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Msh.Common.Exceptions;
 using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Discounts;
+using Msh.HotelCache.Services;
 using Msh.WebApp.Models.Admin.ViewModels;
+using Msh.WebApp.Services;
 
 namespace Msh.WebApp.Areas.Admin.Controllers.Hotels;
 
-public partial class HotelsController
+[Authorize]
+[Area("Admin")]
+[Route("admin/Discounts")]
+public class DiscountsController(ILogger<HotelsController> logger,
+	IHotelRepository hotelRepository,
+	IDiscountRepository discountRepository,
+	IRatePlanRepository ratePlanRepository,
+	IUserService userService) : BaseAdminController(hotelRepository)
 {
 	[Route("DiscountsList")]
 	public async Task<IActionResult> DiscountsList([FromQuery] string hotelCode = "")
@@ -20,7 +30,7 @@ public partial class HotelsController
 		try
 		{
 
-			vm.Hotels = await hotelRepository.GetData();
+			vm.Hotels = await HotelRepository.GetData();
 			var hotel = string.IsNullOrEmpty(hotelCode)
 				? vm.Hotels.FirstOrDefault()
 				: vm.Hotels.FirstOrDefault(h => h.HotelCode == hotelCode);

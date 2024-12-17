@@ -1,7 +1,7 @@
 ﻿@using Msh.Admin.Models.Const
 @using Msh.WebApp.Areas.Admin.Models
 @{
-	var title = "Discount Errors List";
+	var title = "Discount Offer Dates List";
 	ViewData["Title"] = title;
 	var itemCode = ViewBag.Code as string;
 	var hotelCode = ViewBag.HotelCode as string;
@@ -14,13 +14,12 @@
 	UseHotel = true,
 	HotelCode = @hotelCode,
 	Code = itemCode,
-	EditType = "discount-errors"
+	EditType = "item-dates"
 })
 
 <div class="text-center">
 	<h1 class="display-6">@title for @itemCode in @hotelCode</h1>
-	<p>Hotel Discount Errors are part of a discount code: Discount <b>@itemCode</b> in Hotel <b>@hotelCode</b>.</p>
-	<p>For more information click <info-icon name="info-discount-errors" /></p>
+	<p>For more information click <info-icon name="info-discount-dates" /></p>
 </div>
 
 <div class="row">
@@ -31,20 +30,22 @@
 
 @await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
 {
-	ReturnUrl = $"/Admin/Hotels/DiscountsList?hotelCode={@hotelCode}&code={@itemCode}",
+	ReturnUrl = $"/Admin/discounts/DiscountsList?hotelCode={@hotelCode}&code={@itemCode}",
 	ReturnText = ConstReturnText.ReturnToList,
 	ButtonType = SaveReturnTypes.EventListener,
-	SaveOperation = "save-discount-errors"
+	SaveOperation = "save-dates"
 })
 
 @section InfoItems {
 
-	<div data-info-for="info-discount-errors">
-		<span>Discounts Errors</span>
+	<div data-info-for="info-discount-dates">
+		<span>Discounts Offer Dates</span>
 		<div>
-			<p>A list of error message types and their message content. Add only those required for the particular type of error.</p>
-			<p>You can save changes into the current Discount. To publish these error messages you must publish the discount list.</p>
-			<p>Each error message type should be added once only.</p>
+			<p>A set of date ranges used to prohibit or allow Discounts.</p>
+			<p>Prohibit date ranges might be used for discounts that are generally available but occasionally are not.</p>
+			<p>Allow date ranges might be used for discounts that are seasonal and available for a short time.</p>
+			<p>If no dates are supplied the discount will be available all the time, though that may also be determined by Opera for some discount types.</p>
+			<p>Editing the date list: <info-icon name="info-date-range-list"/></p>
 		</div>
 	</div>
 
@@ -54,6 +55,6 @@
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
 	<script src="~/js/mshapp/msh-itemdatesservice.js"></script>
-	<script src="~/js/admin/hotels/msh-admin-discounts-errors.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-discounts-offerdates.js"></script>
 }
 

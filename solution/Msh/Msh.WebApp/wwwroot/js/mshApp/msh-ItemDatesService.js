@@ -24,7 +24,8 @@
             tableTargetId: '#table-target',
             saveButtonId: '#save-dates',
             editTypeId: '#edit-type',
-            editTypeValue: 'item-dates'
+            editTypeValue: 'item-dates',
+            apiRoot: '/api/hotelapi'
         };
 
         var currentCode = '';
@@ -131,7 +132,7 @@
         }
 
         function loadDates(code, hotelCode) {
-            var url = `/api/hotelapi/${options.datesApiAction}?code=${code}&hotelCode=${hotelCode}`;
+            var url = `${options.apiRoot}/${options.datesApiAction}?code=${code}&hotelCode=${hotelCode}`;
             api.getAsync(url, (data) => {
                 if (data.success) {
                     itemDates = data.data.dates;                 
@@ -185,7 +186,7 @@
                 hotelCode: currentHotelCode,
                 dates: itemDates
             };
-            var url = `/api/hotelapi/${options.datesApiAction}`;
+            var url = `${options.apiRoot}/${options.datesApiAction}`;
             api.postAsync(url, d, (data) => {
                 if (data.success) {
                     loadDates(currentCode, currentHotelCode);

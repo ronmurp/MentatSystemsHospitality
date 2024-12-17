@@ -15,7 +15,8 @@
         apiUrl: `/api/fpapi/FpErrorBankList`,
 
         editTypeValue: '',
-        editTypeValueExpected: ''
+        editTypeValueExpected: '',
+        apiRoot: '/api/discountsapi'
     }
 
     var items = [];
@@ -89,7 +90,7 @@
     function loadItems() {
         var hotelCode = sel.getHotelCode();
         var code = sel.getItemCode();
-        var url = `/api/hotelapi/DiscountErrors?hotelCode=${hotelCode}&code=${code}`;
+        var url = `${options.apiRoot}/DiscountErrors?hotelCode=${hotelCode}&code=${code}`;
         api.getAsync(url, (data) => {
             if (data.success) {
                 items = data.data.errors;
@@ -138,7 +139,7 @@
         editTypeId: '#edit-type',
         tableTargetId: '#table-target',
         saveButtonId: '#save-discount-errors',
-        apiUrl: `/api/hotelapi/DiscountErrors`,
+        apiUrl: `/api/discountsapi/DiscountErrors`,
         editTypeValue: '',
         editTypeValueExpected: 'discount-errors'
     })

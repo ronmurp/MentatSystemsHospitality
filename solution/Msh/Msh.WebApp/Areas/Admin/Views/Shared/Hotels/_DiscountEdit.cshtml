@@ -193,7 +193,7 @@
 			@* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
 			@await Html.PartialAsync("_PublishArchiveLoadLock", new PublishArchiveLoadLockVm
 			{
-				ReturnUrl = string.Format("/Admin/Hotels/DiscountsList?hotelCode={0}", @hotelCode),
+				ReturnUrl = string.Format("/Admin/Discounts/DiscountsList?hotelCode={0}", @hotelCode),
 				ReturnText = ConstReturnText.ReturnToDash,
 				ButtonType = SaveReturnTypes.EventListener,
 				SaveOperation = "save-discounts"

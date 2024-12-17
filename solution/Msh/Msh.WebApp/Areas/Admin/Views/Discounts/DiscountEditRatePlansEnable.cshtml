@@ -1,21 +1,24 @@
 ﻿@using Msh.WebApp.Areas.Admin.Models
-@using Msh.WebApp.TagHelpers
 @model Msh.WebApp.Models.Admin.ViewModels.CodeCheckListVm
 @{
-	var title = "Disabled Rate Plans";
+	var title = "Enabled Rate Plans";
 	ViewData["Title"] = title;
 	var itemCode = ViewBag.Code as string;
 	var hotelCode = ViewBag.HotelCode as string;
 }
 
-<input type="hidden" id="edit-type" value="item-options"/>
-<input type="hidden" id="item-code" value="@itemCode" />
-<input type="hidden" id="hotel-code" value="@hotelCode" />
-<input type="hidden" id="save-api-url" value="/api/hotelapi/DiscountRatePlansSaveDisable" />
+@await Html.PartialAsync("_HotelCodeHiddenFields", new HotelCodeHiddenFieldsVm
+{
+	UseHotel = true,
+	HotelCode = @hotelCode,
+	Code = itemCode,
+	EditType = "item-options"
+})
+<input type="hidden" id="save-api-url" value="/api/hotelapi/DiscountRatePlansSaveEnable" />
 
 <div class="text-center">
 	<h1 class="display-6">@title for Special  @itemCode in @hotelCode</h1>
-	<p>This Discount, @itemCode, cannot be used for the rate plans selected here.</p>
+	<p>This Discount, @itemCode, can be used only for the rate plans selected here.</p>
 	<p>For more information click <info-icon name="info-special-rate-plans" /></p>
 </div>
 
@@ -27,9 +30,10 @@
 </div>
 
 
+
 @await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
 {
-	ReturnUrl = $"/Admin/Hotels/DiscountsList?hotelCode={@hotelCode}&code={@itemCode}",
+	ReturnUrl = $"/Admin/Discounts/DiscountsList?hotelCode={@hotelCode}&code={@itemCode}",
 	ReturnText = ConstReturnText.ReturnToList,
 	ButtonType = SaveReturnTypes.EventListener,
 	SaveOperation = "save-button"
@@ -39,12 +43,13 @@
 @section InfoItems {
 
 	<div data-info-for="info-special-rate-plans">
-		<span>Disabled Rate Plans</span>
+		<span>Enabled Rate Plans</span>
 		<div>
 			<p>
-				This table lists all rate plans for the hotel.
-				You can set the checkbox for any rate plans to which this discount DOES NOT apply.
+				This table lists all rate plans for the hotel. 
+				You can set the checkbox for any rate plans to which this discount can apply.
 			</p>
+			<p>If no rate plans are added, the discount is available with all rate plans.</p>
 			<p>
 				<b>WARNING</b> - When editing discount rate plans you must be working with the same data set for both discounts and rate plans.
 				For example, if you have pulled the discounts from the published list, you should also pull the rate plans from the published list.

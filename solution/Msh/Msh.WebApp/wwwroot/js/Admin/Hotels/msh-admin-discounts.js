@@ -17,10 +17,10 @@
     var itemDatesService = app.itemDatesService;
 
     var apiRoot = `/api/discountsapi`;
-    var listRoot = `admin/hotels`
+    var listRoot = `admin/discounts`
     var listPath = `${listRoot}/DiscountsList`
 
-    $(ids.selectHotel).on('change', () => {
+    $('#selectHotel').on('change', () => {
         var hotelCode = pallsS.getHotelCode();
         util.redirectTo(`${listPath}?hotelCode=${hotelCode}`);
     });

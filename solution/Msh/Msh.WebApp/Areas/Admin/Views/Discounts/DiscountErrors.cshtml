@@ -1,0 +1,59 @@
+﻿@using Msh.Admin.Models.Const
+@using Msh.WebApp.Areas.Admin.Models
+@{
+	var title = "Discount Errors List";
+	ViewData["Title"] = title;
+	var itemCode = ViewBag.Code as string;
+	var hotelCode = ViewBag.HotelCode as string;
+}
+
+@await Component.InvokeAsync("AdminMenu", new { menuName = AdminConst.MenuHotels, currentItem = "DiscountsList" })
+
+@await Html.PartialAsync("_HotelCodeHiddenFields", new HotelCodeHiddenFieldsVm
+{
+	UseHotel = true,
+	HotelCode = @hotelCode,
+	Code = itemCode,
+	EditType = "discount-errors"
+})
+
+<div class="text-center">
+	<h1 class="display-6">@title for @itemCode in @hotelCode</h1>
+	<p>Hotel Discount Errors are part of a discount code: Discount <b>@itemCode</b> in Hotel <b>@hotelCode</b>.</p>
+	<p>For more information click <info-icon name="info-discount-errors" /></p>
+</div>
+
+<div class="row">
+	<div class="col-12" id="table-target">
+	
+	</div>
+</div>
+
+@await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
+{
+	ReturnUrl = $"/Admin/Discounts/DiscountsList?hotelCode={@hotelCode}&code={@itemCode}",
+	ReturnText = ConstReturnText.ReturnToList,
+	ButtonType = SaveReturnTypes.EventListener,
+	SaveOperation = "save-discount-errors"
+})
+
+@section InfoItems {
+
+	<div data-info-for="info-discount-errors">
+		<span>Discounts Errors</span>
+		<div>
+			<p>A list of error message types and their message content. Add only those required for the particular type of error.</p>
+			<p>You can save changes into the current Discount. To publish these error messages you must publish the discount list.</p>
+			<p>Each error message type should be added once only.</p>
+		</div>
+	</div>
+
+}
+
+@section Scripts {
+	<script src="~/js/mshapp/msh-ApiService.js"></script>
+	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/mshapp/msh-itemdatesservice.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-discounts-errors.js"></script>
+}
+

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Msh.Common.Exceptions;
 using Msh.Common.Models.ViewModels;
 using Msh.HotelCache.Models;
@@ -184,30 +183,5 @@ public partial class HotelsController
 		}
 	}
 
-	private List<SelectListItem> GetLanguages()
-	{
-		var gEurope = new SelectListGroup { Name = "Europe" };
-		var gAsia = new SelectListGroup { Name = "Asia" };
-		return [
-			new SelectListItem { Text = "English", Selected = true, Group = gEurope},
-			new SelectListItem { Text = "French", Disabled = true, Group = gEurope },
-			new SelectListItem { Text = "German", Group = gEurope },
-			new SelectListItem { Text = "Chinese", Group = gAsia },
-			new SelectListItem { Text = "Japanese", Group = gAsia }
-		];
-	}
-
-	private async Task<List<SelectListItem>> GetHotels()
-	{
-		var hotels = await hotelRepository.GetData();
-
-		var list = new List<SelectListItem>();
-
-		foreach (var h in hotels)
-		{
-			list.Add(new SelectListItem { Value = h.HotelCode, Text = h.Name });
-		}
-
-		return list;
-	}
+	
 }

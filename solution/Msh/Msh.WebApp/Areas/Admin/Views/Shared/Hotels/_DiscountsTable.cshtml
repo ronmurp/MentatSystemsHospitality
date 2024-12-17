@@ -4,6 +4,7 @@
 @{
 	var rowIndex = 0;
 	var count = Model.Discounts.Count;
+	var controllerName = "Discounts";
 }
 <table>
 	<tr>
@@ -67,7 +68,7 @@
 						@item.EnabledHotelPlans.Count
 					</div>
 					<div class="cell-inner">
-						<a asp-controller="Hotels" asp-action="DiscountEditRatePlansEnable" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
+						<a asp-controller="@controllerName" asp-action="DiscountEditRatePlansEnable" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
 							<i class="fab fa-windows"></i>
 						</a>
 					</div>
@@ -79,7 +80,7 @@
 						@item.DisabledHotelPlans.Count
 					</div>
 					<div class="cell-inner">
-						<a asp-controller="Hotels" asp-action="DiscountEditRatePlansDisable" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
+						<a asp-controller="@controllerName" asp-action="DiscountEditRatePlansDisable" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
 							<i class="fab fa-windows"></i>
 						</a>
 					</div>
@@ -91,7 +92,7 @@
 						@item.OfferDates.Count
 					</div>
 					<div class="cell-inner">
-						<a asp-controller="Hotels" asp-action="DiscountEditDatesOffer" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
+						<a asp-controller="@controllerName" asp-action="DiscountEditDatesOffer" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
 							<i class="fa-solid fa-calendar"></i>
 						</a>
 					</div>
@@ -103,7 +104,7 @@
 						@item.BookDates.Count
 					</div>
 					<div class="cell-inner">
-						<a asp-controller="Hotels" asp-action="DiscountEditDatesBook" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
+						<a asp-controller="@controllerName" asp-action="DiscountEditDatesBook" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
 							<i class="fa-solid fa-calendar"></i>
 						</a>
 					</div>
@@ -112,7 +113,7 @@
 			<td style="width:80px;">
 				<div class="cell-outer">
 					<div class="cell-inner">
-						<a asp-controller="Hotels" asp-action="DiscountErrors" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
+						<a asp-controller="@controllerName" asp-action="DiscountErrors" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
 							<i class="fas fa-exclamation-triangle"></i>
 						</a>
 					</div>
@@ -121,7 +122,7 @@
 			<td style="width:80px;">
 				<div class="cell-outer">
 					<div class="cell-inner">
-						<a asp-controller="Hotels" asp-action="DiscountEditOneTime" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
+						<a asp-controller="@controllerName" asp-action="DiscountEditOneTime" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
 							<i class="fas fa-clock"></i>
 						</a>
 					</div>
@@ -134,7 +135,8 @@
 					Code = item.Code,
 					Index = rowIndex,
 					Count = count,
-					EditAction = "DiscountEdit"
+					EditAction = "DiscountEdit",
+					EditController = controllerName
 				};
 
 			}

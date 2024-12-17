@@ -6,7 +6,8 @@
     var itemDatesService = app.itemDatesService;
 
     itemDatesService.init({
-        datesApiAction: 'DiscountBookDates'
+        datesApiAction: 'DiscountBookDates',
+        apiRoot: '/api/discountsapi'
     });
 
 }(jQuery));
