@@ -1,4 +1,5 @@
-﻿@using Msh.WebApp.Models.Admin
+﻿@using Msh.Admin.Models.Const
+@using Msh.WebApp.Models.Admin
 
 @model Msh.HotelCache.Models.Extras.Extra;
 @{
@@ -9,7 +10,7 @@
 	ViewBag.EditFormParam = new EditFormParam
 	{
 		ModelName = "Extra",
-		ReturnUrl = "/admin/hotels/ExtrasList?hotelCode=" + hotelCode,
+		ReturnUrl = $"{AdminRoutes.Extras}/ExtrasList?hotelCode={hotelCode}",
 		ReturnText = "Extras List",
 		KeyPropertyLabel = "Extra Code",
 		KeyPropertyName = "Code",
@@ -28,6 +29,7 @@
 
 
 @section Scripts {
+	<script src="~/js/mshapp/msh-routes.js"></script>
 	<script src="~/js/mshapp/msh-apiservice.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
 	<script src="~/js/admin/hotels/msh-admin-extras.js"></script>

@@ -934,7 +934,8 @@
             },
 
             redirectTo: function (newPath) {
-                var path = `${window.location.origin}/${newPath}`;
+                var sep = newPath.charAt(0) === '/' ? '' : '/';
+                var path = `${window.location.origin}${sep}${newPath}`;
                 window.location.assign(path);
             }
         }

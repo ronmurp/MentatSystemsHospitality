@@ -2,6 +2,7 @@
 
     "use strict";
     var app = mshPageApp;
+    var routes = app.routes;
     var meth = app.methodsService;
     var util = app.utilityService;
     var modal = app.modalService;
@@ -17,22 +18,24 @@
 
     var itemDatesService = app.itemDatesService;
 
-    var apiRoot = '/api/extrasapi';
-    var listPath = 'admin/hotels/ExtrasList';
+    var apiRoot = routes.ExtrasApi;
+    var controllerPath = routes.Extras;
+    var listPath = `${controllerPath}/ExtrasList`;
 
-    $(ids.selectHotel).on('change', () => {
+    $('#selectHotel').on('change', () => {
         var hotelCode = pallsS.getHotelCode();
         util.redirectTo(`${listPath}?hotelCode=${hotelCode}`);
     });
 
     if (app.itemDatesService) {
-        app.itemDatesService.init({ datesApiAction: 'ExtraDates' });
+        app.itemDatesService.init({ datesApiAction: 'ExtraDates', apiRoot: apiRoot });
     }
    
     app.hotelActionService.init({
         deleteApi: `${apiRoot}/ExtraDelete`,
         copyApi: `${apiRoot}/ExtraCopy`,
-        moveApi: `${apiRoot}/ExtraMove`,
+        moveApi: `${controllerPath}/ExtraMove`,
+        apiRoot: apiRoot,
         listPath: listPath
     });
 
@@ -40,6 +43,7 @@
         deleteBulkApi: `${apiRoot}/ExtraDeleteBulk`,
         copyBulkApi: `${apiRoot}/ExtraCopyBulk`,
         sortListApi: `${apiRoot}/ExtrasSort`,
+        apiRoot: apiRoot,
         listPath: listPath
     });
 

@@ -1,14 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Msh.Admin.Models.Const;
 using Msh.Common.Exceptions;
 using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.Extras;
+using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
+using Msh.WebApp.Services;
 
 namespace Msh.WebApp.Areas.Admin.Controllers.Hotels;
 
-public partial class HotelsController
+[Authorize]
+[Area("Admin")]
+[Route(AdminRoutes.Extras)]
+public class ExtrasController(ILogger<HotelsController> logger,
+	IHotelRepository hotelRepository,
+	IExtraRepository extraRepository,
+	IUserService userService) : BaseAdminController(hotelRepository)
 {
 	[Route("ExtrasList")]
 	public async Task<IActionResult> ExtrasList([FromQuery] string hotelCode = "")
@@ -23,7 +33,7 @@ public partial class HotelsController
 		{
 			await Task.Delay(0);
 
-			vm.Hotels = await hotelRepository.GetData();
+			vm.Hotels = await HotelRepository.GetData();
 
 			var hotel = string.IsNullOrEmpty(hotelCode)
 				? vm.Hotels.FirstOrDefault()
@@ -220,7 +230,7 @@ public partial class HotelsController
 		{
 
 			var hotelCode = input.HotelCode;
-			var hotels = await hotelRepository.GetData();
+			var hotels = await HotelRepository.GetData();
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
 			{
 				return GetFail($"Invalid hotel code {hotelCode}");

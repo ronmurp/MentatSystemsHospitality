@@ -27,7 +27,7 @@
 		<th>
 			<div class="cell-outer">
 				<div class="cell-inner">
-					<a asp-controller="Hotels" asp-action="ExtraAdd" asp-route-hotelCode="@Model.HotelCode">
+					<a asp-controller="Extras" asp-action="ExtraAdd" asp-route-hotelCode="@Model.HotelCode">
 						<i class="fa-solid fa-plus"></i>
 					</a>
 				</div>
@@ -62,7 +62,7 @@
 						@item.ItemDates.Count
 					</div>
 					<div class="cell-inner">
-						<a asp-controller="Hotels" asp-action="ExtraEditDates" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
+						<a asp-controller="Extras" asp-action="ExtraEditDates" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@item.Code">
 							<i class="fa-solid fa-calendar"></i>
 						</a>
 					</div>
@@ -76,7 +76,8 @@
 					Code = item.Code,
 					Index = rowIndex,
 					Count = count,
-					EditAction = "ExtraEdit"
+					EditAction = "ExtraEdit",
+					EditController = "Extras"
 				};
 
 			}

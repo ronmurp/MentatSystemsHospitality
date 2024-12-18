@@ -136,7 +136,7 @@ public partial class HotelsController
 			return View(special);
 		}
 
-		return RedirectToAction(nameof(ExtrasList));
+		return RedirectToAction(nameof(SpecialsList));
 	}
 
 	[HttpPost]

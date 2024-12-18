@@ -31,7 +31,7 @@
 
 @await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
 {
-	ReturnUrl = "/Admin/Hotels/ExtrasList?hotelCode={hotelCode}&code={itemCode}",
+	ReturnUrl = $"/{AdminRoutes.Extras}/ExtrasList?hotelCode={hotelCode}&code={itemCode}",
 	ReturnText = ConstReturnText.ReturnToList,
 	ButtonType = SaveReturnTypes.EventListener,
 	SaveOperation = "save-dates"
@@ -55,6 +55,7 @@
 }
 
 @section Scripts {
+	<script src="~/js/mshapp/msh-routes.js"></script>
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
 	<script src="~/js/mshapp/msh-itemdatesservice.js"></script>

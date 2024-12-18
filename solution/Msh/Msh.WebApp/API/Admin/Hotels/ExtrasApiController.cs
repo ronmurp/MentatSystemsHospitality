@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Mvc;
+using Msh.Admin.Models.Const;
 using Msh.Common.Data;
 using Msh.Common.ExtensionMethods;
 using Msh.Common.Models.ViewModels;
@@ -13,7 +14,7 @@ using Msh.WebApp.Services;
 namespace Msh.WebApp.API.Admin.Hotels;
 
 [ApiController]
-[Route("api/extrasapi")]
+[Route(AdminRoutes.ExtrasApi)]
 public partial class ExtrasApiController : PrivateApiController
 {
 	private const string ModelName = "Extras";
