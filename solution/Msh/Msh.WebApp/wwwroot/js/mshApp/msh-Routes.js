@@ -8,7 +8,9 @@
        
         return {
             Extras: '/Admin/Extras',
-            ExtrasApi: '/api/ExtrasApi'
+            ExtrasApi: '/api/ExtrasApi',
+            Specials: '/Admin/Specials',
+            SpecialsApi: '/api/SpecialsApi'
         }
 
     })();

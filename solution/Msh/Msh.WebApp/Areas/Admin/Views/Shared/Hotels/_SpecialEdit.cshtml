@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.Admin.Models.Const
 @using Msh.HotelCache.Models.Specials
 @using Msh.WebApp.Areas.Admin.Models
 @using Msh.WebApp.Models.Admin
@@ -120,7 +121,7 @@
 			
 			@await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
 			{
-				ReturnUrl = $"/Admin/Hotels/SpecialsList?hotelCode={hotelCode}",
+				ReturnUrl = $"{AdminRoutes.Specials}/SpecialsList?hotelCode={hotelCode}",
 				ReturnText = ConstReturnText.ReturnToDash,
 				ButtonType = SaveReturnTypes.EventListener,
 				SaveOperation = "save-ows-config-triggers"

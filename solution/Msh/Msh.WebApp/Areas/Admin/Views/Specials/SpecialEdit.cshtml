@@ -1,23 +1,22 @@
-﻿@using Msh.WebApp.Models.Admin
+﻿@using Msh.Admin.Models.Const
+@using Msh.WebApp.Models.Admin
 
-@model Msh.HotelCache.Models.Specials.Special;
+@model Msh.HotelCache.Models.Specials.Special
 @{
-	
+	ViewData["Title"] = "Edit Special";
 
 	var hotelCode = ViewBag.HotelCode;
 
 	ViewBag.EditFormParam = new EditFormParam
 	{
 		ModelName = "Special",
-		ReturnUrl = "/admin/hotels/SpecialsList?hotelCode=" + hotelCode,
+		ReturnUrl = $"{AdminRoutes.Specials}/SpecialsList?hotelCode=" + hotelCode,
 		ReturnText = "Specials List",
 		KeyPropertyLabel = "Special Code",
 		KeyPropertyName = "Code",
 		KeyPropertyValue = Model.Code,
-		FormAction = "SpecialAdd"
+		FormAction = "SpecialEdit"
 	};
-
-	ViewData["Title"] = "Special Extra";
 }
 
 @await Html.PartialAsync("Hotels/_SpecialEdit", @Model)
@@ -28,7 +27,9 @@
 }
 
 @section Scripts {
+	<script src="~/js/mshapp/msh-routes.js"></script>
 	<script src="~/js/mshapp/msh-apiservice.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
-	<script src="~/js/Admin/Hotels/msh-admin-specials.js"></script>
+	<script src="~/js/admin/msh-admin-palls.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-specials.js"></script>
 }

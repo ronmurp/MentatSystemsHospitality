@@ -34,7 +34,7 @@
 @* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
 @await Html.PartialAsync("_PublishArchiveLoadLock", new PublishArchiveLoadLockVm
 {
-	ReturnUrl = "/Admin/Hotels",
+	ReturnUrl = $"{AdminRoutes.Specials}",
 	ReturnText = ConstReturnText.ReturnToDash,
 })
 
@@ -59,6 +59,7 @@
 }
 
 @section Scripts{
+	<script src="~/js/mshapp/msh-routes.js"></script>
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
 	<script src="~/js/admin/msh-admin-palls.js"></script>

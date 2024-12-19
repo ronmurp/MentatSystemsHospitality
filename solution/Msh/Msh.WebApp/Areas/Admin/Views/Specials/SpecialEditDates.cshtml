@@ -1,7 +1,8 @@
 ﻿@using Msh.Admin.Models.Const
 @using Msh.WebApp.Areas.Admin.Models
+@using Msh.WebApp.TagHelpers
 @{
-	var title = "Special Options List";
+	var title = "Special Dates List";
 	ViewData["Title"] = title;
 	var itemCode = ViewBag.Code as string;
 	var hotelCode = ViewBag.HotelCode as string;
@@ -14,12 +15,12 @@
 	UseHotel = true,
 	HotelCode = @hotelCode,
 	Code = itemCode,
-	EditType = "item-options"
+	EditType = "item-dates"
 })
 
 <div class="text-center">
 	<h1 class="display-6">@title for @itemCode in @hotelCode</h1>
-	<p>For more information click <info-icon name="info-special-options" /></p>
+	<p>For more information click <info-icon name="info-special-dates" /></p>
 </div>
 
 <div class="row">
@@ -28,19 +29,19 @@
 	</div>
 </div>
 
+
 @await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
 {
-	ReturnUrl = $"/Admin/Hotels/SpecialsList?hotelCode={hotelCode}&code={itemCode}",
-	ReturnText = ConstReturnText.ReturnToList,
+	ReturnUrl = $"{AdminRoutes.Specials}/SpecialsList?hotelCode={hotelCode}&code={itemCode}",
+	ReturnText = ConstReturnText.ReturnToDash,
 	ButtonType = SaveReturnTypes.EventListener,
-	SaveOperation = "save-options"
+	SaveOperation = "save-dates"
 })
 
 
 @section InfoItems {
-
-	<div data-info-for="info-special-options">
-		<span>Special Options</span>
+	<div data-info-for="info-special-dates">
+		<span>Special Dates</span>
 		<div>
 
 		</div>
@@ -48,9 +49,11 @@
 }
 
 @section Scripts {
+	<script src="~/js/mshapp/msh-routes.js"></script>
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
-	<script src="~/js/admin/hotels/msh-admin-specials-options.js"></script>
-	
+	<script src="~/js/admin/msh-admin-palls.js"></script>
+	<script src="~/js/mshapp/msh-itemdatesservice.js"></script>
+	<script src="~/js/admin/hotels/msh-admin-specials.js"></script>
 }
 

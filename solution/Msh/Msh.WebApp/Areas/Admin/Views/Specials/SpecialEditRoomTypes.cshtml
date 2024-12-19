@@ -1,7 +1,8 @@
-﻿@using Msh.WebApp.Areas.Admin.Models
+﻿@using Msh.Admin.Models.Const
+@using Msh.WebApp.Areas.Admin.Models
 @model Msh.WebApp.Models.Admin.ViewModels.CodeCheckListVm
 @{
-	var title = "Disabled Rate Plans";
+	var title = "Disabled Room Types";
 	ViewData["Title"] = title;
 	var itemCode = ViewBag.Code as string;
 	var hotelCode = ViewBag.HotelCode as string;
@@ -14,13 +15,14 @@
 	Code = itemCode,
 	EditType = "item-options"
 })
-<input type="hidden" id="save-api-url" value="/api/specialsapi/SpecialRatePlansSave" />
+<input type="hidden" id="save-api-url" value="/api/specialsapi/SpecialRoomTypesSave" />
 
 <div class="text-center">
 	<h1 class="display-6">@title for Special  @itemCode in @hotelCode</h1>
-	<p>This Special, @itemCode, cannot be used for the rate plans selected here.</p>
-	<p>For more information click <info-icon name="info-special-rate-plans" /></p>
+	<p>This Special, @itemCode, cannot be used for the room types selected here.</p>
+	<p>For more information click <info-icon name="info-special-room-types" /></p>
 </div>
+
 
 <div class="row">
 	<div class="col-12" id="table-target">
@@ -32,28 +34,30 @@
 
 @await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
 {
-	ReturnUrl = $"/Admin/Hotels/SpecialsList?hotelCode={hotelCode}&code={itemCode}",
+	ReturnUrl = $"{AdminRoutes.Specials}/SpecialsList?hotelCode={hotelCode}&code={itemCode}",
 	ReturnText = ConstReturnText.ReturnToList,
 	ButtonType = SaveReturnTypes.OnclickMethod,
 	SaveOperation = "window.mshMethods.saveCodeCheckList()"
 })
 
-
 @section InfoItems {
 
-	<div data-info-for="info-special-rate-plans">
+	<div data-info-for="info-special-room-types">
 		<span>Disabled Room Types</span>
 		<div>
 			<p>
-				Select the rate plans for which this room type cannot be used.
+				Select the room types for which this special cannot be used.
 			</p>
 		</div>
 	</div>
 }
 
 @section Scripts {
+	<script src="~/js/mshapp/msh-routes.js"></script>
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/msh-admin-palls.js"></script>
 	<script src="~/js/admin/hotels/msh-admin-check-codes-select.js"></script>
 	
 }
+

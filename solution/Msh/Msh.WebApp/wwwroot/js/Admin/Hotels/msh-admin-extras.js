@@ -21,11 +21,8 @@
     var apiRoot = routes.ExtrasApi;
     var controllerPath = routes.Extras;
     var listPath = `${controllerPath}/ExtrasList`;
-
-    $('#selectHotel').on('change', () => {
-        var hotelCode = pallsS.getHotelCode();
-        util.redirectTo(`${listPath}?hotelCode=${hotelCode}`);
-    });
+    
+    pallsS.initHotelSelectEvent(listPath);
 
     if (app.itemDatesService) {
         app.itemDatesService.init({ datesApiAction: 'ExtraDates', apiRoot: apiRoot });

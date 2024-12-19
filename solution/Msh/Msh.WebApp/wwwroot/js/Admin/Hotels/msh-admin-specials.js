@@ -2,11 +2,13 @@
 
     "use strict";
     var app = mshPageApp;
+    var routes = app.routes;
     var meth = app.methodsService;
     var util = app.utilityService;
     var modal = app.modalService;
     var api = app.apiService;
 
+    var pallsS = app.pallSupportService;
     var pallsA = app.pallsArchiveService;
     var pallsP = app.pallsPublishService;
     var pallsD = app.pallsDeleteService;
@@ -15,33 +17,21 @@
 
     var itemDatesService = app.itemDatesService;
 
-    var ids = {
-        selectHotel: '#selectHotel'
-    }
-
-    var apiRoot = `/api/specialsapi`;
-    var controllerPath = `admin/hotels`
+    var apiRoot = routes.SpecialsApi;
+    var controllerPath = routes.Specials;
     var listPath = `${controllerPath}/SpecialsList`;
 
-    function getHotelCode() {
-        var hotelCode = $(ids.selectHotel).val();
-        hotelCode = hotelCode ? hotelCode : $('#hotelCode').val();
-        return hotelCode;
-    }
-
-    $(ids.selectHotel).on('change', () => {
-        var hotelCode = getHotelCode();
-        util.redirectTo(`${listPath}?hotelCode=${hotelCode}`);
-    });
+    pallsS.initHotelSelectEvent(listPath);
 
     if (app.itemDatesService) {
-        app.itemDatesService.init({ datesApiAction: 'SpecialDates' });
+        app.itemDatesService.init({ datesApiAction: 'SpecialDates', apiRoot: apiRoot });
     }
    
     app.hotelActionService.init({
         deleteApi: `${apiRoot}/SpecialDelete`,
         copyApi: `${apiRoot}/SpecialCopy`,
         moveApi: `${controllerPath}/SpecialMove`,
+        apiRoot: apiRoot,
         listPath: listPath
     });
 
@@ -49,6 +39,7 @@
         deleteBulkApi: `${apiRoot}/SpecialDeleteBulk`,
         copyBulkApi: `${apiRoot}/SpecialCopyBulk`,
         sortListApi: `${apiRoot}/SpecialsSort`,
+        apiRoot: apiRoot,
         listPath: listPath
     });
 
@@ -60,6 +51,8 @@
             model: 'Specials',
             name: 'Specials',
             useHotelCode: true,
+            confirmedRedirect: true,
+            confirmedRedirectUrl: listPath,
             apiRoot: apiRoot,
             listPath: listPath
         }

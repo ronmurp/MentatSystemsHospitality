@@ -6,19 +6,35 @@
 
     window.mshPageApp.pallSupportService = (function () {
 
-   
+        var app = mshPageApp;
+        var util = app.utilityService;
+
         function isValidPathCode(code) {
             const regex = /^[a-zA-Z0-9\-_\.]+$/;
             return regex.test(code);
         }
 
+        function getHotelCode() {
+            var hotelCode = $('#selectHotel').val();
+            hotelCode = hotelCode ? hotelCode : $('#hotelCode').val();
+            return hotelCode;
+        }
+
+        function initHotelSelectEvent(listPath) {
+            $('#selectHotel').on('change', () => {
+                var hotelCode = getHotelCode();
+                util.redirectTo(`${listPath}?hotelCode=${hotelCode}`);
+            });
+        }
+
         return {
+
             apiRoot: '/api/hotelapi',
-            getHotelCode: function() {
-                var hotelCode = $('#selectHotel').val();
-                hotelCode = hotelCode ? hotelCode : $('#hotelCode').val();
-                return hotelCode;
-            },
+
+            getHotelCode: getHotelCode,
+
+            initHotelSelectEvent, initHotelSelectEvent,
+
             getArchiveBody: function (options) {
                 var html = '';
                 if (options && options.modalActionBody) {                   
@@ -45,7 +61,6 @@
                 
                 return html;
             },
-
 
             getPublishBody: function (options) {
                 var html = '';

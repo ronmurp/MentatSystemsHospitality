@@ -4,6 +4,7 @@
 @{
 	var rowIndex = 0;
 	var count = Model.Specials.Count;
+	var controller = "Specials";
 }
 <table>
 	<tr>
@@ -30,7 +31,7 @@
 		<th>
 			<div class="cell-outer">
 				<div class="cell-inner">
-					<a asp-controller="Hotels" asp-action="SpecialAdd" asp-route-hotelCode="@Model.HotelCode">
+					<a asp-controller="@controller" asp-action="SpecialAdd" asp-route-hotelCode="@Model.HotelCode">
 						<i class="fa-solid fa-plus"></i>
 					</a>
 				</div>
@@ -66,7 +67,7 @@
 						@rt.Options.Count
 					</div>
 					<div class="cell-inner">
-						<a asp-controller="Hotels" asp-action="SpecialEditOptions" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
+						<a asp-controller="@controller" asp-action="SpecialEditOptions" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
 							<i class="fa-solid fa-list"></i>
 						</a>
 					</div>
@@ -78,7 +79,7 @@
 						@rt.ItemDates.Count
 					</div>
 					<div class="cell-inner">
-						<a asp-controller="Hotels" asp-action="SpecialEditDates" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
+						<a asp-controller="@controller" asp-action="SpecialEditDates" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
 							<i class="fa-solid fa-calendar"></i>
 						</a>
 					</div>
@@ -90,7 +91,7 @@
 						@rt.RoomTypeCodes.Count
 					</div>
 					<div class="cell-inner">
-						<a asp-controller="Hotels" asp-action="SpecialEditRoomTypes" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
+						<a asp-controller="@controller" asp-action="SpecialEditRoomTypes" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
 							<i class="fab fa-windows"></i>
 						</a>
 					</div>
@@ -102,7 +103,7 @@
 						@rt.RatePlanCodes.Count
 					</div>
 					<div class="cell-inner">
-						<a asp-controller="Hotels" asp-action="SpecialEditRatePlans" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
+						<a asp-controller="@controller" asp-action="SpecialEditRatePlans" asp-route-hotelCode="@Model.HotelCode" asp-route-code="@rt.Code">
 							<i class="fab fa-windows"></i>
 						</a>
 					</div>
@@ -116,7 +117,8 @@
 					Code = rt.Code,
 					Index = rowIndex,
 					Count = count,
-					EditAction = "SpecialEdit"
+					EditAction = "SpecialEdit",
+					EditController = controller
 				};
 				
 			}
