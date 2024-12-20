@@ -10,6 +10,9 @@
             RatePlans: '/Admin/RatePlans',
             RatePlansApi: '/api/RatePlanApi',
 
+            RatePlansSort: '/Admin/RatePlansSort',
+            RatePlansSortApi: '/api/RatePlanSortApi',
+
             Extras: '/Admin/Extras',
             ExtrasApi: '/api/ExtrasApi',
 

@@ -7,7 +7,7 @@ using Msh.WebApp.Models.Admin.ViewModels;
 namespace Msh.WebApp.API.Admin.Hotels;
 
 
-public partial class RatePlanSortApiController
+public partial class RatePlansSortApiController
 {
 
 	[HttpPost]

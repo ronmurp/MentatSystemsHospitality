@@ -12,7 +12,7 @@ namespace Msh.WebApp.API.Admin.Hotels;
 
 [ApiController]
 [Route("api/rateplansortapi")]
-public partial class RatePlanSortApiController : PrivateApiController
+public partial class RatePlansSortApiController : PrivateApiController
 {
 	private const string ModelName = "RatePlanSort";
 
@@ -20,7 +20,7 @@ public partial class RatePlanSortApiController : PrivateApiController
 	private readonly IRatePlanSortRepository _ratePlanSortRepository;
 	private readonly IUserService _userService;
 
-	public RatePlanSortApiController(IHotelRepository hotelRepository,
+	public RatePlansSortApiController(IHotelRepository hotelRepository,
 		IRatePlanRepository ratePlanRepository,
 		IRatePlanSortRepository ratePlanSortRepository,
 		IUserService userService):base(hotelRepository)

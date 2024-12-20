@@ -1,14 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Msh.Admin.Models.Const;
 using Msh.Common.Exceptions;
 using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models.RatePlans;
+using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
+using Msh.WebApp.Services;
 
 namespace Msh.WebApp.Areas.Admin.Controllers.Hotels
 {
 
-	public partial class HotelsController
+	[Authorize]
+	[Area("Admin")]
+	[Route(AdminRoutes.RatePlansSort)]
+	public class RatePlansSortController(ILogger<HotelsController> logger,
+		IHotelRepository hotelRepository,
+		IRatePlanSortRepository ratePlanSortRepository,
+		IRoomTypeRepository roomTypeRepository,
+		IRatePlanRepository ratePlanRepository,
+		IUserService userService) : BaseAdminController(hotelRepository)
 	{
 
 		private async Task<List<RatePlanSortVm>> TransformList(List<RatePlanSort> ratePlanSort, string hotelCode)
@@ -48,7 +60,7 @@ namespace Msh.WebApp.Areas.Admin.Controllers.Hotels
 			{
 				await Task.Delay(0);
 
-				vm.Hotels = await hotelRepository.GetData();
+				vm.Hotels = await HotelRepository.GetData();
 
 				var hotel = string.IsNullOrEmpty(hotelCode)
 					? vm.Hotels.FirstOrDefault()
@@ -94,7 +106,7 @@ namespace Msh.WebApp.Areas.Admin.Controllers.Hotels
 			{
 
 				var hotelCode = input.HotelCode;
-				var hotels = await hotelRepository.GetData();
+				var hotels = await HotelRepository.GetData();
 				if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
 				{
 					return GetFail($"Invalid hotel code {hotelCode}");

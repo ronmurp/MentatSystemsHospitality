@@ -7,6 +7,9 @@ public static class AdminRoutes
 	public const string RatePlans = "/admin/RatePlans";
 	public const string RatePlansApi = "/api/RatePlanApi";
 
+	public const string RatePlansSort = "/admin/RatePlansSort";
+	public const string RatePlansSortApi = "/api/RatePlansSortApi";
+
 	public const string Extras = "/admin/Extras";
 	public const string ExtrasApi = "/api/ExtrasApi";
 
