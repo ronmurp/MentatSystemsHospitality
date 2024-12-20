@@ -19,4 +19,5 @@ public class TableCommonCellsVm
 	public bool IncludeEdit { get; set; } = true;
 	public bool IncludeCopy { get; set; } = true;
 	public bool IncludeCheckbox { get; set; } = true;
+	public string BaseCode { get; set; } = string.Empty;
 }

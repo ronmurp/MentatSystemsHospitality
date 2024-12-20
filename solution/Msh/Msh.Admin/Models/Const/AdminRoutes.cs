@@ -2,6 +2,11 @@
 
 public static class AdminRoutes
 {
+	public const string HotelsDash = "/admin/Hotels";
+
+	public const string RatePlans = "/admin/RatePlans";
+	public const string RatePlansApi = "/api/RatePlanApi";
+
 	public const string Extras = "/admin/Extras";
 	public const string ExtrasApi = "/api/ExtrasApi";
 

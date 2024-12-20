@@ -18,7 +18,8 @@
 
 <div class="text-center">
 	<h1 class="display-6">@title</h1>
-	<p>Hotel Rate Plans. Click for more information: <info-icon name="info-rate-plans" /></p>
+	<p>Hotel Rate Plans. Click for more information on the table icons: <info-icon name="info-rate-plans" /></p>
+	<p>Click for an explanation of the various codes and dates: <info-icon name="info-rate-codes" /></p>
 </div>
 
 @await Component.InvokeAsync("AdminHotelSelect", @Model.HotelCode)
@@ -36,7 +37,7 @@
 @* Include the Save/Return/Publish/Archive/Load/Lock/Info buttons *@
 @await Html.PartialAsync("_PublishArchiveLoadLock", new PublishArchiveLoadLockVm
 {
-	ReturnUrl = "/Admin/Hotels",
+	ReturnUrl = AdminRoutes.HotelsDash,
 	ReturnText = ConstReturnText.ReturnToDash,
 })
 
@@ -51,9 +52,38 @@
 			@await Html.PartialAsync("Hotels/_ListIconsInfo")
 		</div>
 	</div>
+
+	<div data-info-for="info-rate-codes">
+		<span>Rate Plan Codes</span>
+		<div>
+			<p>There are two main codes in the table, RPC and Group, and one derived code, Code.</p>
+			<ul>
+				<li>
+					<b>Rate Plan Code - RPC</b>
+					<p>This is the main Opera code that identifies the rate plan in Opera and WBS.</p>
+				</li>
+				<li>
+					<b>Group Code</b>
+					<p>This code is known only to WBS. Opera has no information about this code.
+						Its purpose is to group rape plans.
+					</p>
+				</li>
+				<li>
+					<b>Code</b>
+					<p>This code is derived from the Rate Plan Code and the Stay From date.</p>
+					<p>Unlike many other codes in WBS, Rate Plan Codes need not be unique. The same code may be used, with different values, descriptions and so on,
+						at different times of the year, or in different years.</p>
+					<p>WBS distinguishes these multiple instances of the same Rate Plan Code 
+						by considering the dates for which they apply. This code is the Rate Plan Code with the Stay From date appended, to make it unique.
+					</p>
+				</li>
+			</ul>
+		</div>
+	</div>
 }
 
 @section Scripts{
+	<script src="~/js/mshapp/msh-routes.js"></script>
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
 	<script src="~/js/mshapp/msh-itemdatesservice.js"></script>

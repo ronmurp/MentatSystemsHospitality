@@ -118,7 +118,7 @@ namespace Msh.WebApp.Components
 			AdminRootItem(AdminConst.MenuHotels),
 			new AdminMenuItem { Name = "HotelsList", Controller = "Hotels", Action = "HotelsList", Text = "Hotels" },
 			new AdminMenuItem { Name = "RoomTypesList", Controller = "Hotels", Action = "RoomTypesList", Text = "Room Types" },
-			new AdminMenuItem { Name = "RatePlansList", Controller = "Hotels", Action = "RatePlansList", Text = "Rate Plans" },
+			new AdminMenuItem { Name = "RatePlansList", Controller = "RatePlans", Action = "RatePlansList", Text = "Rate Plans" },
 			new AdminMenuItem { Name = "RatePlansTextList", Controller = "Hotels", Action = "RatePlansTextList", Text = "Rate Plans Text" },
 			new AdminMenuItem { Name = "RatePlanSortList", Controller = "Hotels", Action = "RatePlanSortList", Text = "Rate Plan Sort" },
 			new AdminMenuItem { Name = "ExtrasList", Controller = "Extras", Action = "ExtrasList", Text = "Extras" },

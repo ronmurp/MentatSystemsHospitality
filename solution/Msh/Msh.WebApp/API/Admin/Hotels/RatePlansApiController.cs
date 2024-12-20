@@ -11,20 +11,13 @@ namespace Msh.WebApp.API.Admin.Hotels;
 
 [ApiController]
 [Route("api/rateplanapi")]
-public partial class RatePlanApiController : PrivateApiController
+public partial class RatePlanApiController(
+	IHotelRepository hotelRepository,
+	IUserService userService,
+	IRatePlanRepository ratePlanRepository)
+	: PrivateApiController(hotelRepository)
 {
 	private const string ModelName = "RatePlans";
-
-	private readonly IUserService _userService;
-	private readonly IRatePlanRepository _ratePlanRepository;
-
-	public RatePlanApiController(IHotelRepository hotelRepository,
-		IUserService userService,
-		IRatePlanRepository ratePlanRepository) : base(hotelRepository)
-	{
-		_userService = userService;
-		_ratePlanRepository = ratePlanRepository;
-	}
 
 	[HttpPost]
 	[Route("RatePlanCopy")]
@@ -32,32 +25,43 @@ public partial class RatePlanApiController : PrivateApiController
 	{
 		try
 		{
-			if (SameCodes(input))
-			{
-				return GetFail("At least one code must change");
-			}
+			//if (SameCodes(input))
+			//{
+			//	return GetFail("At least one code must change");
+			//}
 
-			var ratePlans = await _ratePlanRepository.GetData(input.HotelCode);
+			var ratePlans = await ratePlanRepository.GetData(input.HotelCode);
 			var ratePlan = ratePlans.FirstOrDefault(h => h.Code == input.Code);
 			if (ratePlan != null)
 			{
+				
+
 				var newRatePlan = ratePlan.Adapt(ratePlan);
+
 				newRatePlan.RatePlanCode = input.NewCode;
 
+				if (!DateOnly.TryParse(input.NewDate, out DateOnly dt))
+				{
+					var now = DateTime.Now;
+					dt = new DateOnly(now.Year, now.Month, now.Day);
+				}
+
+				newRatePlan.StayFrom = dt;
+				newRatePlan.StayTo = dt.AddMonths(1);
 				var result = await CheckHotel(input.NewHotelCode);
 				if (!result.success)
 				{
 					return GetFail("The hotel does not exist.");
 				}
 
-				var newRatePlans = await _ratePlanRepository.GetData(input.NewHotelCode);
-				if (newRatePlans.Any(c => c.Code.EqualsAnyCase(input.NewCode)))
+				var newRatePlans = await ratePlanRepository.GetData(input.NewHotelCode);
+				if (newRatePlans.Any(c => c.Code.EqualsAnyCase(newRatePlan.Code)))
 				{
 					return GetFail("The code already exists.");
 				}
 
 				newRatePlans.Add(newRatePlan);
-				await _ratePlanRepository.Save(newRatePlans, input.NewHotelCode);
+				await ratePlanRepository.Save(newRatePlans, input.NewHotelCode);
 			}
 
 			return Ok(new ObjectVm());
@@ -74,12 +78,12 @@ public partial class RatePlanApiController : PrivateApiController
 	{
 		try
 		{
-			var ratePlans = await _ratePlanRepository.GetData(input.HotelCode);
+			var ratePlans = await ratePlanRepository.GetData(input.HotelCode);
 			var ratePlan = ratePlans.FirstOrDefault(h => h.Code == input.Code);
 			if (ratePlan != null)
 			{
 				ratePlans.Remove(ratePlan);
-				await _ratePlanRepository.Save(ratePlans, input.HotelCode);
+				await ratePlanRepository.Save(ratePlans, input.HotelCode);
 			}
 
 			return Ok(new ObjectVm());
@@ -116,8 +120,8 @@ public partial class RatePlanApiController : PrivateApiController
 			var missingList = new List<string>();
 			var newList = new List<RoomRatePlan>();
 
-			var srcItems = await _ratePlanRepository.GetData(input.HotelCode);
-			var dstItems = await _ratePlanRepository.GetData(input.NewHotelCode);
+			var srcItems = await ratePlanRepository.GetData(input.HotelCode);
+			var dstItems = await ratePlanRepository.GetData(input.NewHotelCode);
 
 			foreach (var code in input.CodeList)
 			{
@@ -136,7 +140,7 @@ public partial class RatePlanApiController : PrivateApiController
 
 			dstItems.AddRange(newList);
 
-			await _ratePlanRepository.Save(dstItems, input.NewHotelCode);
+			await ratePlanRepository.Save(dstItems, input.NewHotelCode);
 
 			if (missingList.Count > 0)
 			{
@@ -166,7 +170,7 @@ public partial class RatePlanApiController : PrivateApiController
 				return GetFail($"Invalid source hotel code {input.HotelCode}");
 			}
 
-			var items = await _ratePlanRepository.GetData(input.HotelCode);
+			var items = await ratePlanRepository.GetData(input.HotelCode);
 
 			for (var i = items.Count - 1; i >= 0; i--)
 			{
@@ -177,7 +181,7 @@ public partial class RatePlanApiController : PrivateApiController
 				}
 			}
 
-			await _ratePlanRepository.Save(items, input.HotelCode);
+			await ratePlanRepository.Save(items, input.HotelCode);
 
 
 
@@ -203,9 +207,9 @@ public partial class RatePlanApiController : PrivateApiController
 				return GetFail($"Invalid hotel code {hotelCode}");
 			}
 
-			var srcExtras = await _ratePlanRepository.GetData(hotelCode);
+			var srcExtras = await ratePlanRepository.GetData(hotelCode);
 
-			await _ratePlanRepository.Save(srcExtras.OrderBy(e => e.Code)
+			await ratePlanRepository.Save(srcExtras.OrderBy(e => e.Code)
 				.ToList(), hotelCode);
 
 			return Ok(new ObjectVm());
@@ -225,7 +229,7 @@ public partial class RatePlanApiController : PrivateApiController
 	{
 		try
 		{
-			var ratePlans = await _ratePlanRepository.GetData(input.HotelCode);
+			var ratePlans = await ratePlanRepository.GetData(input.HotelCode);
 			var ratePlan = ratePlans.FirstOrDefault(h => h.Code == input.Code);
 			if (ratePlan != null)
 			{
@@ -237,7 +241,7 @@ public partial class RatePlanApiController : PrivateApiController
 				ratePlans[index] = ratePlanNew;
 				//ratePlans.Add(ratePlanNew);
 
-				await _ratePlanRepository.Save(ratePlans, input.HotelCode);
+				await ratePlanRepository.Save(ratePlans, input.HotelCode);
 				
 				return Ok(new ObjectVm
 				{

@@ -2470,7 +2470,7 @@
                 }
                 
             });
-            html += '<select>';
+            html += '</select>';
             return html;
         }
 
@@ -2570,7 +2570,7 @@
                     return;
                 html += `<option value="${hCode}">${hName}</option>`;
             });
-            html += '<select>';
+            html += '</select>';
             return html;
         }
 

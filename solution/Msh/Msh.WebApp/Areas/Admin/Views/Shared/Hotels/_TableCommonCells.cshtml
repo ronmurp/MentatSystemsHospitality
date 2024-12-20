@@ -46,10 +46,11 @@ Add cells for common list actions
 }
 @if (Model.IncludeCopy)
 {
+	var hasUniqueCode = !string.IsNullOrEmpty(Model.BaseCode);
 	<td>
 		<div class="cell-outer">
 			<div class="cell-inner">
-				<a href="javascript:window.mshMethods.copyItem('@Model.Code', '@Model.HotelCode')">
+				<a href="javascript:window.mshMethods.copyItem('@Model.Code', '@Model.HotelCode', '@Model.BaseCode')">
 					<i class="fa-solid fa-copy"></i>
 				</a>
 			</div>

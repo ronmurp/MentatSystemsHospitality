@@ -1,15 +1,27 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Msh.Admin.Models.Const;
 using Msh.Common.Exceptions;
 using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.RatePlans;
+using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
-using static Msh.Opera.Ows.Services.CustomTest.CustomAvailabilityService;
+using Msh.WebApp.Services;
 
 namespace Msh.WebApp.Areas.Admin.Controllers.Hotels;
-public partial class HotelsController
+
+[Authorize]
+[Area("Admin")]
+[Route(AdminRoutes.RatePlans)]
+public class RatePlansController(ILogger<HotelsController> logger,
+	IHotelRepository hotelRepository,
+	ISpecialsRepository specialsRepository,
+	IRoomTypeRepository roomTypeRepository,
+	IRatePlanRepository ratePlanRepository,
+	IUserService userService) : BaseAdminController(hotelRepository)
 {
 
 	[Route("RatePlansList")]
@@ -25,7 +37,7 @@ public partial class HotelsController
 		{
 			await Task.Delay(0);
 
-			vm.Hotels = await hotelRepository.GetData();
+			vm.Hotels = await HotelRepository.GetData();
 
 			var hotel = string.IsNullOrEmpty(hotelCode)
 				? vm.Hotels.FirstOrDefault()
@@ -206,14 +218,14 @@ public partial class HotelsController
 		{
 
 			var hotelCode = input.HotelCode;
-			var hotels = await hotelRepository.GetData();
+			var hotels = await HotelRepository.GetData();
 			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
 			{
 				return GetFail($"Invalid hotel code {hotelCode}");
 			}
 
 			var srcItems = await ratePlanRepository.GetData(hotelCode);
-			var currentIndex = srcItems.FindIndex(item => item.RatePlanCode.EqualsAnyCase(input.Code));
+			var currentIndex = srcItems.FindIndex(item => item.Code.EqualsAnyCase(input.Code));
 			var swapIndex = input.Direction == 0 ? currentIndex - 1 : currentIndex + 1;
 			var currentItem = srcItems[currentIndex];
 			var swapItem = srcItems[swapIndex];

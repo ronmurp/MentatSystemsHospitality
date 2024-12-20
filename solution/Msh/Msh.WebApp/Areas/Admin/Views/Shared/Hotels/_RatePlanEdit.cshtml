@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.Admin.Models.Const
 @using Msh.WebApp.Areas.Admin.Models
 @using Msh.WebApp.Models.Admin
 @using Msh.WebApp.TagHelpers
@@ -316,7 +317,7 @@
 
 			@await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
 			{
-				ReturnUrl = $"/Admin/Hotels/RatePlansList?hotelCode={@hotelCode}",
+				ReturnUrl = $"{AdminRoutes.RatePlans}/RatePlansList?hotelCode={@hotelCode}",
 				ReturnText = ConstReturnText.ReturnToList,
 				ButtonType = SaveReturnTypes.Submit,
 				SaveOperation = "submit"

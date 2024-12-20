@@ -4,6 +4,7 @@
 @{
 	var rowIndex = 0;
 	var count = Model.RatePlans.Count;
+	var controller = "RatePlans";
 }
 
 <table>
@@ -29,7 +30,7 @@
 		<th>   
 			<div class="cell-outer">
 				<div class="cell-inner">
-					<a asp-controller="Hotels" asp-action="RatePlanAdd" asp-route-hotelCode="@Model.HotelCode">
+					<a asp-controller="@controller" asp-action="RatePlanAdd" asp-route-hotelCode="@Model.HotelCode">
 						<i class="fa-solid fa-plus"></i>
 					</a>
 				</div>
@@ -79,7 +80,9 @@
 					Code = rt.Code,
 					Index = rowIndex,
 					Count = count,
-					EditAction = "RatePlanEdit"
+					EditAction = "RatePlanEdit",
+					EditController = @controller,
+					BaseCode = rt.RatePlanCode
 				};
 			}
 			@await Html.PartialAsync("Hotels/_TableCommonCells", vm)

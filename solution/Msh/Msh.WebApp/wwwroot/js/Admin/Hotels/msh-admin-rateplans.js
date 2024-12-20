@@ -2,6 +2,7 @@
 
     "use strict";
     var app = mshPageApp;
+    var routes = app.routes;
     var meth = app.methodsService;
     var util = app.utilityService;
     var modal = app.modalService;
@@ -22,8 +23,11 @@
         stayChangeTo: 'stay-change-to'
     }
 
-    var apiRoot = `/api/rateplanapi`;
-    var listPath = 'admin/hotels/RatePlansList';
+    var apiRoot = routes.RatePlansApi;
+    var controllerRoot = routes.RatePlans;
+    var listPath = `${controllerRoot}/RatePlansList`;
+
+    pallsS.initHotelSelectEvent(listPath);
 
     var currentStayData = {};
 
@@ -72,7 +76,7 @@
             }
             api.postAsync(url, d, function (data) {
 
-                util.redirectTo(`${ listPath }?hotelCode=${hotelCode}`)
+                util.redirectTo(`${listPath}?hotelCode=${hotelCode}`)
             });
         },
 
@@ -86,19 +90,15 @@
         },
     });
 
-    $(ids.selectHotel).on('change', () => {
-        var hotelCode = pallsS.getHotelCode();
-        util.redirectTo(`${listPath}?hotelCode=${hotelCode}`);
-    });
-
     app.itemDatesService.initDatePair('StayFrom', 'StayTo');
+
     app.itemDatesService.initDatePair('BookFrom', 'BookTo', 'HasBookDates');
 
     app.hotelActionService.init({
         deleteApi: `${apiRoot}/RatePlanDelete`,
         copyApi: `${apiRoot}/RatePlanCopy`,
-        moveApi: `${apiRoot}/RatePlanMove`,
-        listPath: `${apiRoot}/RatePlansList`
+        moveApi: `${controllerRoot}/RatePlanMove`,
+        listPath: listPath
     });
 
     app.hotelActionBulkService.init({
@@ -120,6 +120,22 @@
             listPath: listPath
         }
 
+        function getHotelSelect(hotelCode) {
+            var html = '<select class="form-control" id="copy-hotel">';
+            $('[name="hotel-codes"]').each(function (v) {
+                var hName = $(this).val();
+                var hCode = $(this).attr('data-msh-option');
+                if (hCode === hotelCode) {
+                    html += `<option value="${hCode}" selected>${hName}</option>`;
+                } else {
+                    html += `<option value="${hCode}">${hName}</option>`;
+                }
+
+            });
+            html += '</select>';
+            return html;
+        }
+
         pallsA.init(inputs);
         pallsP.init(inputs);
         pallsD.init(inputs);
@@ -127,6 +143,53 @@
         pallsLock.init(inputs);
 
         meth.extendMethods({
+
+            // Overrides standard copy because we need a date too
+            copyItem: function (code, hotelCode, baseCode) {
+
+                var html = '<div>';
+                html += '<p>Change the hotel code, or the item code, or both, to copy the record.</p>';
+                var hotelSelect = getHotelSelect(hotelCode);
+                html += `<div class="form-group mb-3">${hotelSelect}</div>`;
+                html += `<div id="copyBaseCode" class="form-group mb-3">${code}</div>`
+                html += `<div class="form-group mb-3"><input id="copyCode" class="form-control" value="${baseCode}" /></div>`,
+                html += `<div class="form-group mb-3"><input id="copyDate" class="form-control" value="" placeholder="2025-01-01" /></div>`
+                html += `<div id="confirm-error" class="form-group mb-3 d-none text-danger">xxx</div>`
+                html += '</div>';
+                modal.showModal('copyModalId', "Copy", html, {
+                    footerOk: true,
+                    okButtonClickScript: `onclick="window.mshMethods.confirmCopyItem('${code}', '${hotelCode}')""`,
+                    okButtonText: 'OK'
+                });
+            },
+
+            confirmCopyItem: function (code, hotelCode) {
+                
+                var newHotelCode = $('#copy-hotel').val();
+                var newCode = $('#copyCode').val();
+                var newDate = $('#copyDate').val();
+                var copyBaseCode = $('#copyBaseCode').text();
+
+                var url = `/api/RatePlanApi/RatePlanCopy`;
+                var d = {
+                    code: code,
+                    hotelCode: hotelCode,
+                    newCode: newCode,
+                    newHotelCode: newHotelCode,
+                    newDate: newDate,
+                    baseCode: copyBaseCode
+                }
+                api.postAsync(url, d, function (data) {
+                    if (!data.success) {
+                        $('#confirm-error')
+                            .html(data.userErrorMessage)
+                            .removeClass('d-none');
+                        return;
+                    }
+                    $('#copyModalId').remove();
+                    util.redirectTo(`${listPath}?hotelCode=${hotelCode}`)
+                });
+            },
 
             ratePlanStayChange: function (hotelCode, code, ratePlanCode, stayFrom, stayTo) {
 
