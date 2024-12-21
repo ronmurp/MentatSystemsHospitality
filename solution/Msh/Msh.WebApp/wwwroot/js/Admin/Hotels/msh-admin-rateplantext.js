@@ -1,33 +1,29 @@
 ﻿(function ($) {
 
     "use strict";
+
     var app = mshPageApp;
+    var routes = app.routes;
     var meth = app.methodsService;
     var util = app.utilityService;
-    var modal = app.modalService;
+    var modal = app.modalService
+
     var api = app.apiService;
 
+    var pallsS = app.pallSupportService;
     var pallsA = app.pallsArchiveService;
     var pallsP = app.pallsPublishService;
     var pallsD = app.pallsDeleteService;
     var pallsLoad = app.pallsLoadService;
     var pallsLock = app.pallsLockService;
 
-    var ids = {
-        selectHotel: '#selectHotel',
-    }
+    var apiRoot = routes.RatePlansTextApi;
+    var controllerRoot = routes.RatePlansTexts;
+    var listPath = `${controllerRoot}/RatePlansTextList`;
 
-    var apiRoot = `/api/rateplantextapi`;
-    var listPath = 'admin/hotels/RatePlansTextList';
-
-    function getHotelCode() {
-        var hotelCode = $(ids.selectHotel).val();
-        hotelCode = hotelCode ? hotelCode : $('#hotelCode').val();
-        return hotelCode;
-    }
+    pallsS.initHotelSelectEvent(listPath);
 
     var currentStayData = {};
-
 
     meth.extendMethods({
         confirmDeleteRatePlanText: function (code, hotelCode) {
@@ -52,18 +48,13 @@
         },
     });
 
-    $(ids.selectHotel).on('change', () => {
-        var hotelCode = getHotelCode();
-        util.redirectTo(`${listPath}?hotelCode=${hotelCode}`);
-    });
-
     app.itemDatesService.initDatePair('StayFrom', 'StayTo');
     app.itemDatesService.initDatePair('BookFrom', 'BookTo', 'HasBookDates');
 
     app.hotelActionService.init({
         deleteApi: `${apiRoot}/RatePlanTextDelete`,
         copyApi: `${apiRoot}/RatePlanTextCopy`,
-        moveApi: `${apiRoot}/RatePlanTextMove`,
+        moveApi: `${controllerRoot}/RatePlanTextMove`,
         listPath: listPath
     });
 
@@ -82,8 +73,9 @@
             model: 'RatePlanText',
             name: 'Rate Plan Text',
             useHotelCode: true,
-            apiRoot: apiRoot,
-            listPath: listPath
+            confirmedRedirect: true,
+            confirmedRedirectUrl: listPath,
+            apiRoot: apiRoot
         }
 
         pallsA.init(inputs);

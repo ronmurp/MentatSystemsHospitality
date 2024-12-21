@@ -1,15 +1,25 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Msh.Admin.Models.Const;
 using Msh.Common.Exceptions;
 using Msh.Common.ExtensionMethods;
 using Msh.HotelCache.Models;
 using Msh.HotelCache.Models.RatePlans;
+using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
+using Msh.WebApp.Services;
 
 namespace Msh.WebApp.Areas.Admin.Controllers.Hotels;
 
-public partial class HotelsController
+[Authorize]
+[Area("Admin")]
+[Route(AdminRoutes.RatePlansTexts)]
+public class RatePlansTextsController(ILogger<HotelsController> logger,
+	IHotelRepository hotelRepository,
+	IRatePlanTextRepository ratePlanTextRepository,
+	IUserService userService) : BaseAdminController(hotelRepository)
 {
 	[Route("RatePlansTextList")]
 	public async Task<IActionResult> RatePlansTextList([FromQuery] string hotelCode = "")
@@ -24,7 +34,7 @@ public partial class HotelsController
 		{
 			await Task.Delay(0);
 
-			vm.Hotels = await hotelRepository.GetData();
+			vm.Hotels = await HotelRepository.GetData();
 
 			var hotel = string.IsNullOrEmpty(hotelCode)
 				? vm.Hotels.FirstOrDefault()
@@ -194,44 +204,44 @@ public partial class HotelsController
 	}
 
 
-	//[HttpPost]
-	//[Route("RatePlanMove")]
-	//public async Task<IActionResult> RatePlanMove([FromBody] ApiInput input)
-	//{
-	//	try
-	//	{
+	[HttpPost]
+	[Route("RatePlanTextMove")]
+	public async Task<IActionResult> RatePlanTextMove([FromBody] ApiInput input)
+	{
+		try
+		{
 
-	//		var hotelCode = input.HotelCode;
-	//		var hotels = await hotelRepository.GetData();
-	//		if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
-	//		{
-	//			return GetFail($"Invalid hotel code {hotelCode}");
-	//		}
+			var hotelCode = input.HotelCode;
+			var hotels = await hotelRepository.GetData();
+			if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(hotelCode)))
+			{
+				return GetFail($"Invalid hotel code {hotelCode}");
+			}
 
-	//		var srcItems = await ratePlanRepository.GetData(hotelCode);
-	//		var currentIndex = srcItems.FindIndex(item => item.RatePlanCode.EqualsAnyCase(input.Code));
-	//		var swapIndex = input.Direction == 0 ? currentIndex - 1 : currentIndex + 1;
-	//		var currentItem = srcItems[currentIndex];
-	//		var swapItem = srcItems[swapIndex];
-	//		srcItems[swapIndex] = currentItem;
-	//		srcItems[currentIndex] = swapItem;
-	//		await ratePlanRepository.Save(srcItems, hotelCode);
+			var srcItems = await ratePlanTextRepository.GetData(hotelCode);
+			var currentIndex = srcItems.FindIndex(item => item.Id.EqualsAnyCase(input.Code));
+			var swapIndex = input.Direction == 0 ? currentIndex - 1 : currentIndex + 1;
+			var currentItem = srcItems[currentIndex];
+			var swapItem = srcItems[swapIndex];
+			srcItems[swapIndex] = currentItem;
+			srcItems[currentIndex] = swapItem;
+			await ratePlanTextRepository.Save(srcItems, hotelCode);
 
-	//		var table = new RatePlanListVm
-	//		{
-	//			Hotels = hotels,
-	//			HotelCode = hotelCode,
-	//			RatePlans = srcItems
-	//		};
+			var table = new RatePlanTextListVm
+			{
+				Hotels = hotels,
+				HotelCode = hotelCode,
+				RatePlansText = srcItems
+			};
 
-	//		return PartialView("Hotels/_RatePlansTable", table);
+			return PartialView("Hotels/_RatePlansTextTable", table);
 
-	//	}
-	//	catch (Exception ex)
-	//	{
-	//		return GetFail(ex.Message);
-	//	}
-	//}
+		}
+		catch (Exception ex)
+		{
+			return GetFail(ex.Message);
+		}
+	}
 
 
 }

@@ -13,6 +13,9 @@
             RatePlansSort: '/Admin/RatePlansSort',
             RatePlansSortApi: '/api/RatePlanSortApi',
 
+            RatePlansTexts: '/Admin/RatePlansTexts',
+            RatePlansTextApi: '/api/RatePlanTextApi',
+
             Extras: '/Admin/Extras',
             ExtrasApi: '/api/ExtrasApi',
 

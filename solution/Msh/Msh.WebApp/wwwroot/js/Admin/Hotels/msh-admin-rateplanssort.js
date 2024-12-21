@@ -1,6 +1,7 @@
 ﻿(function ($) {
 
     "use strict";
+
     var app = mshPageApp;
     var routes = app.routes;
     var meth = app.methodsService;

@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.Admin.Models.Const
 @using Msh.WebApp.Areas.Admin.Models
 @using Msh.WebApp.Models.Admin
 @using Msh.WebApp.TagHelpers
@@ -23,15 +24,15 @@
 
 		<form asp-action="@formAction" asp-route-hotelCode="@hotelCode">
 
-		<div class="row">
-			<div class="col-md-6 col-12">
+			<div class="row">
+				<div class="col-md-6 col-12">
 
-				<div class="form-group mb-3">
-					<label asp-for="Id" class="control-label"></label>&nbsp;
-					<info-icon name="info-id" />
-					<input asp-for="Id" class="form-control " />
-					<span asp-validation-for="Id" class="text-danger"></span>
-				</div>
+					<div class="form-group mb-3">
+						<label asp-for="Id" class="control-label"></label>&nbsp;
+						<info-icon name="info-id" />
+						<input asp-for="Id" class="form-control " />
+						<span asp-validation-for="Id" class="text-danger"></span>
+					</div>
 				
 
 					<div class="form-group mb-3">
@@ -55,7 +56,7 @@
 
 			@await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
 			{
-				ReturnUrl = $"/Admin/Hotels/RatePlansTextList?hotelCode={@hotelCode}",
+				ReturnUrl = $"{AdminRoutes.RatePlansTexts}/RatePlansTextList?hotelCode={@hotelCode}",
 				ReturnText = ConstReturnText.ReturnToDash,
 				ButtonType = SaveReturnTypes.Submit,
 				SaveOperation = "submit"
@@ -65,4 +66,3 @@
 
 	</div>
 </div>
-

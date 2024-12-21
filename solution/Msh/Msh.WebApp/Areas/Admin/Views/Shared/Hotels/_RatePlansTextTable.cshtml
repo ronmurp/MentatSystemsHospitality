@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.Admin.Models.Const
 @using Msh.WebApp.Models.Admin.ViewModels
 @model Msh.WebApp.Models.Admin.ViewModels.RatePlanTextListVm
 @{
@@ -26,7 +27,7 @@
 		<th>   
 			<div class="cell-outer">
 				<div class="cell-inner">
-					<a asp-controller="Hotels" asp-action="RatePlanTextAdd" asp-route-hotelCode="@Model.HotelCode">
+					<a asp-controller="RatePlansTexts" asp-action="RatePlanTextAdd" asp-route-hotelCode="@Model.HotelCode">
 						<i class="fa-solid fa-plus"></i>
 					</a>
 				</div>
@@ -63,7 +64,8 @@
 					Code = rt.Id,
 					Index = rowIndex,
 					Count = count,
-					EditAction = "RatePlanTextEdit"
+					EditAction = "RatePlanTextEdit",
+					EditController = "RatePlansTexts"
 				};
 			}
 			@await Html.PartialAsync("Hotels/_TableCommonCells", vm)

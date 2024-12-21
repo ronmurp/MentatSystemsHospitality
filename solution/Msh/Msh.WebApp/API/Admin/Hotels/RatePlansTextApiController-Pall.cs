@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Mapster;
+using Microsoft.AspNetCore.Mvc;
+using Msh.Common.ExtensionMethods;
 using Msh.Common.Models;
 using Msh.Common.Models.ViewModels;
+using Msh.HotelCache.Models.RatePlans;
 using Msh.HotelCache.Services;
 using Msh.WebApp.Areas.Admin.Models;
 using Msh.WebApp.Models.Admin.ViewModels;
@@ -10,20 +13,13 @@ namespace Msh.WebApp.API.Admin.Hotels
 {
 	[ApiController]
 	[Route("api/rateplantextapi")]
-	public partial class RatePlanTextApiController : PrivateApiController
+	public partial class RatePlanTextApiController(
+		IHotelRepository hotelRepository,
+		IUserService userService,
+		IRatePlanTextRepository ratePlanTextRepository)
+		: PrivateApiController(hotelRepository)
 	{
 		private const string ModelName = "RatePlanText";
-
-		private readonly IUserService _userService;
-		private readonly IRatePlanTextRepository _ratePlanTextRepository;
-
-		public RatePlanTextApiController(IHotelRepository hotelRepository,
-			IUserService userService,
-			IRatePlanTextRepository ratePlanTextRepository) : base(hotelRepository)
-		{
-			_userService = userService;
-			_ratePlanTextRepository = ratePlanTextRepository;
-		}
 
 		/// <summary>
 		/// Publishes the Rate Plans list, copying the hotel list from Config to ConfigPub table
@@ -37,7 +33,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var userId = _userService.GetUserId();
+				var userId = userService.GetUserId();
 
 				if (string.IsNullOrEmpty(userId))
 				{
@@ -45,7 +41,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 				}
 
 
-				var result = await _ratePlanTextRepository.Publish(hotelCode, userId, saveData.Notes);
+				var result = await ratePlanTextRepository.Publish(hotelCode, userId, saveData.Notes);
 
 				if (!result)
 				{
@@ -71,7 +67,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var list = await _ratePlanTextRepository.ArchivedList(hotelCode);
+				var list = await ratePlanTextRepository.ArchivedList(hotelCode);
 
 				list = list ?? [];
 
@@ -114,13 +110,13 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var userId = _userService.GetUserId();
+				var userId = userService.GetUserId();
 				if (string.IsNullOrEmpty(userId))
 				{
 					return GetFail("You must be signed-in to perform this action.");
 				}
 
-				var result = await _ratePlanTextRepository.Archive(hotelCode, archiveCode, userId, saveData.Notes);
+				var result = await ratePlanTextRepository.Archive(hotelCode, archiveCode, userId, saveData.Notes);
 				if (!result)
 				{
 					return GetFail("The archive operation failed. The record may be locked.");
@@ -140,7 +136,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var userId = _userService.GetUserId();
+				var userId = userService.GetUserId();
 				if (string.IsNullOrEmpty(userId))
 				{
 					return GetFail("You must be signed-in to perform this action.");
@@ -151,7 +147,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 				{
 					case "Pub":
 
-						var resultP = await _ratePlanTextRepository.LockPublished(hotelCode, input.IsTrue, userId);
+						var resultP = await ratePlanTextRepository.LockPublished(hotelCode, input.IsTrue, userId);
 						if (!resultP)
 						{
 							return GetFail("The publish operation failed. The record may be locked.");
@@ -161,7 +157,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 
 					default:
 						var resultA =
-							await _ratePlanTextRepository.LockArchived(hotelCode, input.Code, input.IsTrue, userId);
+							await ratePlanTextRepository.LockArchived(hotelCode, input.Code, input.IsTrue, userId);
 						if (!resultA)
 						{
 							return GetFail("The archive operation failed. The record may be locked.");
@@ -185,7 +181,7 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var userId = _userService.GetUserId();
+				var userId = userService.GetUserId();
 				if (string.IsNullOrEmpty(userId))
 				{
 					return GetFail("You must be signed-in to perform this action.");
@@ -196,13 +192,13 @@ namespace Msh.WebApp.API.Admin.Hotels
 				switch (archiveCode)
 				{
 					case "Pub":
-						var recordsPub = await _ratePlanTextRepository.Published(hotelCode);
-						await _ratePlanTextRepository.Save(recordsPub, hotelCode);
+						var recordsPub = await ratePlanTextRepository.Published(hotelCode);
+						await ratePlanTextRepository.Save(recordsPub, hotelCode);
 						break;
 
 					default:
-						var recordsArch = await _ratePlanTextRepository.Archived(hotelCode, archiveCode);
-						await _ratePlanTextRepository.Save(recordsArch, hotelCode);
+						var recordsArch = await ratePlanTextRepository.Archived(hotelCode, archiveCode);
+						await ratePlanTextRepository.Save(recordsArch, hotelCode);
 						break;
 				}
 
@@ -226,13 +222,13 @@ namespace Msh.WebApp.API.Admin.Hotels
 		{
 			try
 			{
-				var userId = _userService.GetUserId();
+				var userId = userService.GetUserId();
 				if (string.IsNullOrEmpty(userId))
 				{
 					return GetFail("You must be signed-in to perform this action.");
 				}
 
-				var result = await _ratePlanTextRepository.ArchiveDelete(hotelCode, archiveCode, userId);
+				var result = await ratePlanTextRepository.ArchiveDelete(hotelCode, archiveCode, userId);
 				if (!result)
 				{
 					return GetFail("The archive delete operation failed. The record may be locked.");
@@ -246,5 +242,148 @@ namespace Msh.WebApp.API.Admin.Hotels
 			}
 		}
 
+		[HttpPost]
+		[Route("RatePlanTextCopy")]
+		public async Task<IActionResult> RatePlanTextCopy(ApiInput input)
+		{
+			try
+			{
+				if (SameCodes(input))
+				{
+					return GetFail("At least one code must change");
+				}
+
+				var ratePlans = await ratePlanTextRepository.GetData(input.HotelCode);
+				var ratePlan = ratePlans.FirstOrDefault(h => h.Id == input.Code);
+				if (ratePlan != null)
+				{
+
+
+					var newRatePlan = ratePlan.Adapt(ratePlan);
+
+					newRatePlan.Id = input.NewCode;
+
+					var result = await CheckHotel(input.NewHotelCode);
+					if (!result.success)
+					{
+						return GetFail("The hotel does not exist.");
+					}
+
+					var newRatePlans = await ratePlanTextRepository.GetData(input.NewHotelCode);
+					if (newRatePlans.Any(c => c.Id.EqualsAnyCase(newRatePlan.Id)))
+					{
+						return GetFail("The code already exists.");
+					}
+
+					newRatePlans.Add(newRatePlan);
+					await ratePlanTextRepository.Save(newRatePlans, input.NewHotelCode);
+				}
+
+				return Ok(new ObjectVm());
+			}
+			catch (Exception ex)
+			{
+				return GetFail(ex.Message);
+			}
+		}
+
+		[HttpPost]
+		[Route("RatePlanTextCopyBulk")]
+		public async Task<IActionResult> RatePlanTextCopyBulk(ApiInput input)
+		{
+			try
+			{
+				if (SameCodes(input))
+				{
+					return GetFail("At least one code must change");
+				}
+
+				var hotels = await HotelRepository.GetData();
+
+				if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
+				{
+					return GetFail($"Invalid source hotel code {input.HotelCode}");
+				}
+				if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.NewHotelCode)))
+				{
+					return GetFail($"Invalid destination hotel code {input.NewHotelCode}");
+				}
+
+				var missingList = new List<string>();
+				var newList = new List<RatePlanText>();
+
+				var srcItems = await ratePlanTextRepository.GetData(input.HotelCode);
+				var dstItems = await ratePlanTextRepository.GetData(input.NewHotelCode);
+
+				foreach (var code in input.CodeList)
+				{
+					var extra = srcItems.FirstOrDefault(h => h.Id == code);
+					if (extra != null)
+					{
+						if (dstItems.Any(e => e.Id == extra.Id))
+						{
+							// Already exists
+							missingList.Add(extra.Id);
+							continue;
+						}
+						newList.Add(extra);
+					}
+				}
+
+				dstItems.AddRange(newList);
+
+				await ratePlanTextRepository.Save(dstItems, input.NewHotelCode);
+
+				if (missingList.Count > 0)
+				{
+					var list = string.Join(",", missingList);
+					return GetFail($"The following codes already exist in the destination hotel: {list}");
+
+				}
+
+				return Ok(new ObjectVm());
+
+			}
+			catch (Exception ex)
+			{
+				return GetFail(ex.Message);
+			}
+		}
+
+		[HttpPost]
+		[Route("RatePlanTextDeleteBulk")]
+		public async Task<IActionResult> RatePlanTextDeleteBulk(ApiInput input)
+		{
+			try
+			{
+				var hotels = await HotelRepository.GetData();
+				if (!hotels.Any(h => h.HotelCode.EqualsAnyCase(input.HotelCode)))
+				{
+					return GetFail($"Invalid source hotel code {input.HotelCode}");
+				}
+
+				var items = await ratePlanTextRepository.GetData(input.HotelCode);
+
+				for (var i = items.Count - 1; i >= 0; i--)
+				{
+					var item = items[i];
+					if (input.CodeList.Any(c => c.EqualsAnyCase(item.Id)))
+					{
+						items.RemoveAt(i);
+					}
+				}
+
+				await ratePlanTextRepository.Save(items, input.HotelCode);
+
+
+
+				return Ok(new ObjectVm());
+
+			}
+			catch (Exception ex)
+			{
+				return GetFail(ex.Message);
+			}
+		}
 	}
 }
