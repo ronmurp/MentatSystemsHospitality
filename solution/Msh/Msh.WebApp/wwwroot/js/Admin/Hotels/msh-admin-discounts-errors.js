@@ -1,6 +1,7 @@
 ﻿(function ($) {
     "use strict";
     var app = mshPageApp;
+    var routes = app.routes;
     var meth = app.methodsService;
     var util = app.utilityService;
     var modal = app.modalService;
@@ -16,7 +17,7 @@
 
         editTypeValue: '',
         editTypeValueExpected: '',
-        apiRoot: '/api/discountsapi'
+        apiRoot: routes.DiscountsApi
     }
 
     var items = [];
@@ -139,7 +140,7 @@
         editTypeId: '#edit-type',
         tableTargetId: '#table-target',
         saveButtonId: '#save-discount-errors',
-        apiUrl: `/api/discountsapi/DiscountErrors`,
+        apiUrl: `${routes.DiscountsApi}/DiscountErrors`,
         editTypeValue: '',
         editTypeValueExpected: 'discount-errors'
     })

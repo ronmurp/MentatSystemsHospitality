@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Msh.Admin.Models.Const
 @using Msh.Common.Models.OwsCommon
 @using Msh.HotelCache.Models.Discounts
 @using Msh.WebApp.Areas.Admin.Models
@@ -16,7 +17,7 @@
 	ViewBag.EditFormParam = new EditFormParam
 	{
 		ModelName = "DiscountOneTime",
-		ReturnUrl = "/admin/discounts/DiscountsList?hotelCode=" + hotelCode,
+				ReturnUrl = $"{AdminRoutes.Discounts}/DiscountsList?hotelCode=" + hotelCode,
 		ReturnText = "Discounts List",
 		KeyPropertyLabel = "Discount One-Time",
 		KeyPropertyName = "Code",
@@ -142,7 +143,7 @@
 
 			@await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
 			{
-				ReturnUrl = $"/Admin/Hotels/DiscountsList?hotelCode={@hotelCode}&code={@itemCode}",
+				ReturnUrl = $"{AdminRoutes.Discounts}/DiscountsList?hotelCode={@hotelCode}&code={@itemCode}",
 				ReturnText = ConstReturnText.ReturnToList,
 				ButtonType = SaveReturnTypes.Submit,
 				SaveOperation = "submit"
@@ -315,7 +316,9 @@
 }
 
 @section Scripts {
-	<script src="~/js/mshapp/msh-apiservice.js"></script>
+	<script src="~/js/mshapp/msh-routes.js"></script>
+	<script src="~/js/mshapp/msh-ApiService.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/msh-admin-palls.js"></script>
 	<script src="~/js/admin/hotels/msh-admin-discounts.js"></script>
 }

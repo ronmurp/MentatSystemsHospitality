@@ -16,6 +16,9 @@
             RatePlansTexts: '/Admin/RatePlansTexts',
             RatePlansTextApi: '/api/RatePlanTextApi',
 
+            Discounts: '/Admin/Discounts',
+            DiscountsApi: '/api/DiscountsApi',
+
             Extras: '/Admin/Extras',
             ExtrasApi: '/api/ExtrasApi',
 

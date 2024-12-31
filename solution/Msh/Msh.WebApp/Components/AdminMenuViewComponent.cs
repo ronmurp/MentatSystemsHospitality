@@ -117,13 +117,13 @@ namespace Msh.WebApp.Components
 			AdminRootItem(AdminConst.MenuAdmin),
 			AdminRootItem(AdminConst.MenuHotels),
 			new AdminMenuItem { Name = "HotelsList", Controller = "Hotels", Action = "HotelsList", Text = "Hotels" },
-			new AdminMenuItem { Name = "RoomTypesList", Controller = "Hotels", Action = "RoomTypesList", Text = "Room Types" },
-			new AdminMenuItem { Name = "RatePlansList", Controller = "RatePlans", Action = "RatePlansList", Text = "Rate Plans" },
-			new AdminMenuItem { Name = "RatePlansTextList", Controller = "RatePlansTexts", Action = "RatePlansTextList", Text = "Rate Plans Text" },
-			new AdminMenuItem { Name = "RatePlanSortList", Controller = "RatePlansSort", Action = "RatePlanSortList", Text = "Rate Plan Sort" },
-			new AdminMenuItem { Name = "ExtrasList", Controller = "Extras", Action = "ExtrasList", Text = "Extras" },
-			new AdminMenuItem { Name = "SpecialsList", Controller = "Specials", Action = "SpecialsList", Text = "Specials" },
-			new AdminMenuItem { Name = "DiscountsList", Controller = "Discounts", Action = "DiscountsList", Text = "Discounts" },
+			new AdminMenuItem { Name = "RoomTypesList", Controller = AdminRoutes.RoomTypes, Action = "RoomTypesList", Text = "Room Types" },
+			new AdminMenuItem { Name = "RatePlansList", Controller = AdminRoutes.RatePlans, Action = "RatePlansList", Text = "Rate Plans" },
+			new AdminMenuItem { Name = "RatePlansTextList", Controller = AdminRoutes.RatePlansTexts, Action = "RatePlansTextList", Text = "Rate Plans Text" },
+			new AdminMenuItem { Name = "RatePlanSortList", Controller = AdminRoutes.RatePlansSort, Action = "RatePlanSortList", Text = "Rate Plan Sort" },
+			new AdminMenuItem { Name = "ExtrasList", Controller = AdminRoutes.Extras, Action = "ExtrasList", Text = "Extras" },
+			new AdminMenuItem { Name = "SpecialsList", Controller = AdminRoutes.Specials, Action = "SpecialsList", Text = "Specials" },
+			new AdminMenuItem { Name = "DiscountsList", Controller = AdminRoutes.Discounts, Action = "DiscountsList", Text = "Discounts" },
 			new AdminMenuItem { Name = "TestModelList", Controller = "Hotels", Action = "TestModelList", Text = "Test Models" }
 		];
 		private List<AdminMenuItem> AdminMenuDev() =>

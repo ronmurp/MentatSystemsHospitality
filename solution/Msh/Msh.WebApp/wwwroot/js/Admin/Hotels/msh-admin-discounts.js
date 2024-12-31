@@ -2,6 +2,7 @@
 
     "use strict";
     var app = mshPageApp;
+    var routes = app.routes;
     var meth = app.methodsService;
     var util = app.utilityService;
     var modal = app.modalService;
@@ -16,8 +17,8 @@
 
     var itemDatesService = app.itemDatesService;
 
-    var apiRoot = `/api/discountsapi`;
-    var listRoot = `admin/discounts`
+    var apiRoot = routes.DiscountsApi;
+    var listRoot = routes.Discounts;
     var listPath = `${listRoot}/DiscountsList`
 
     $('#selectHotel').on('change', () => {

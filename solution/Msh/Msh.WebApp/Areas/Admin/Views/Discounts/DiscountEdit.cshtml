@@ -1,4 +1,5 @@
-﻿@using Msh.WebApp.Models.Admin
+﻿@using Msh.Admin.Models.Const
+@using Msh.WebApp.Models.Admin
 
 @model Msh.HotelCache.Models.Discounts.DiscountCode;
 @{
@@ -9,7 +10,7 @@
 	ViewBag.EditFormParam = new EditFormParam
 	{
 		ModelName = "DiscountCode",
-		ReturnUrl = $"/admin/discounts/DiscountsList?hotelCode={hotelCode}",
+		ReturnUrl = $"{AdminRoutes.Discounts}/DiscountsList?hotelCode={hotelCode}",
 		ReturnText = "Discounts List",
 		KeyPropertyLabel = "Discount Code",
 		KeyPropertyName = "Code",
@@ -21,7 +22,9 @@
 @await Html.PartialAsync("Hotels/_DiscountEdit", @Model)
 
 @section Scripts {
-	<script src="~/js/mshapp/msh-apiservice.js"></script>
-	<script src="~/js/mshapp/mshapp.js"></script>
-	<script src="~/js/admin/hotels/msh-admin-discounts.js"></script>
+		<script src="~/js/mshapp/msh-routes.js"></script>
+		<script src="~/js/mshapp/msh-ApiService.js"></script>
+		<script src="~/js/mshapp/mshapp.js"></script>
+		<script src="~/js/admin/msh-admin-palls.js"></script>
+		<script src="~/js/Admin/Hotels/msh-admin-discounts.js"></script>
 }

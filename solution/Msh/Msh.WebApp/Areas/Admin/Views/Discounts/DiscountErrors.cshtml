@@ -31,7 +31,7 @@
 
 @await Html.PartialAsync("_SaveReturnButtons", new SaveReturnButtonsVm
 {
-	ReturnUrl = $"/Admin/Discounts/DiscountsList?hotelCode={@hotelCode}&code={@itemCode}",
+	ReturnUrl = $"{AdminRoutes.Discounts}/DiscountsList?hotelCode={@hotelCode}&code={@itemCode}",
 	ReturnText = ConstReturnText.ReturnToList,
 	ButtonType = SaveReturnTypes.EventListener,
 	SaveOperation = "save-discount-errors"
@@ -51,8 +51,10 @@
 }
 
 @section Scripts {
+	<script src="~/js/mshapp/msh-routes.js"></script>
 	<script src="~/js/mshapp/msh-ApiService.js"></script>
 	<script src="~/js/mshapp/mshapp.js"></script>
+	<script src="~/js/admin/msh-admin-palls.js"></script>
 	<script src="~/js/mshapp/msh-itemdatesservice.js"></script>
 	<script src="~/js/admin/hotels/msh-admin-discounts-errors.js"></script>
 }
